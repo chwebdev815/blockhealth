@@ -1,0 +1,66 @@
+{
+    "_readme": [
+        "This file locks the dependencies of your project to a known state",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
+        "This file is @generated automatically"
+    ],
+    "content-hash": "4347c5b6e711488ab26386ccde8ee018",
+    "packages": [
+        {
+            "name": "convertapi/convertapi-php",
+            "version": "v1.0.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ConvertAPI/convertapi-php.git",
+                "reference": "169b1688e45e4b7276b2475c5d2d8bd2ac4bd599"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ConvertAPI/convertapi-php/zipball/169b1688e45e4b7276b2475c5d2d8bd2ac4bd599",
+                "reference": "169b1688e45e4b7276b2475c5d2d8bd2ac4bd599",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "ext-json": "*",
+                "php": ">=5.4.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "ConvertApi\\": "lib/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "ConvertAPI and contributors",
+                    "homepage": "https://github.com/ConvertAPI/convertapi-php/graphs/contributors"
+                }
+            ],
+            "description": "Convert API PHP Client",
+            "homepage": "https://github.com/ConvertAPI/convertapi-php",
+            "keywords": [
+                "api",
+                "client",
+                "conversion",
+                "convert"
+            ],
+            "time": "2018-08-16T18:41:24+00:00"
+        }
+    ],
+    "packages-dev": [],
+    "aliases": [],
+    "minimum-stability": "stable",
+    "stability-flags": [],
+    "prefer-stable": false,
+    "prefer-lowest": false,
+    "platform": [],
+    "platform-dev": []
+}

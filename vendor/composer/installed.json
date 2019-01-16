@@ -1,0 +1,52 @@
+[
+    {
+        "name": "convertapi/convertapi-php",
+        "version": "v1.0.3",
+        "version_normalized": "1.0.3.0",
+        "source": {
+            "type": "git",
+            "url": "https://github.com/ConvertAPI/convertapi-php.git",
+            "reference": "169b1688e45e4b7276b2475c5d2d8bd2ac4bd599"
+        },
+        "dist": {
+            "type": "zip",
+            "url": "https://api.github.com/repos/ConvertAPI/convertapi-php/zipball/169b1688e45e4b7276b2475c5d2d8bd2ac4bd599",
+            "reference": "169b1688e45e4b7276b2475c5d2d8bd2ac4bd599",
+            "shasum": ""
+        },
+        "require": {
+            "ext-curl": "*",
+            "ext-json": "*",
+            "php": ">=5.4.0"
+        },
+        "require-dev": {
+            "phpunit/phpunit": "~4.0"
+        },
+        "time": "2018-08-16T18:41:24+00:00",
+        "type": "library",
+        "installation-source": "dist",
+        "autoload": {
+            "psr-0": {
+                "ConvertApi\\": "lib/"
+            }
+        },
+        "notification-url": "https://packagist.org/downloads/",
+        "license": [
+            "MIT"
+        ],
+        "authors": [
+            {
+                "name": "ConvertAPI and contributors",
+                "homepage": "https://github.com/ConvertAPI/convertapi-php/graphs/contributors"
+            }
+        ],
+        "description": "Convert API PHP Client",
+        "homepage": "https://github.com/ConvertAPI/convertapi-php",
+        "keywords": [
+            "api",
+            "client",
+            "conversion",
+            "convert"
+        ]
+    }
+]

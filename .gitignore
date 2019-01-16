@@ -1,0 +1,9 @@
+nbproject
+uploads/*
+application/config/database.php
+application/config/config.php
+application/config/email.php
+#codeigniter 3
+application/logs/*
+!application/logs/index.html
+!application/logs/.htaccess

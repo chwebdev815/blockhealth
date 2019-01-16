@@ -1,0 +1,1 @@
+<script>    $(document).ready(function () {        $("#li_dashboard").addClass("active");    });</script> 

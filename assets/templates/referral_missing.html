@@ -1,0 +1,621 @@
+<!doctype html>
+<html lang="en" class="no-js">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>BloclHealth.co</title>
+        <style>
+
+            h2 {
+                margin: 0 0 5px;
+                font-weight: 700;
+                color: #898989;
+                font-size: 16px;
+            }
+            .awsm-timeline *,
+            .awsm-timeline *::after,
+            .awsm-timeline *::before,
+            .awsm-timeline,
+            .awsm-timeline::after,
+            .awsm-timeline::before {
+                -webkit-box-sizing: border-box;
+                -moz-box-sizing: border-box;
+                box-sizing: border-box;
+            }
+
+            .awsm-timeline a {
+                text-decoration: none;
+            }
+
+            .awsm-timeline img {
+                max-width: 100%;
+                height: auto;
+            }
+
+            .awsm-container {
+                /*max-width: 8.5in;
+                margin: 0 auto;
+                padding: 75px 90px -0px 100px;*/
+                /*height: 11in;*/
+                max-width: 8.5in;
+                margin: 0 auto;
+                padding: 0;
+                /* height: 11in; */
+                width: 100%;
+                padding: 50px;
+            }
+
+            .awsm-container::after {
+                /* clearfix */
+                content: '';
+                display: table;
+                clear: both;
+            }
+
+            .awsm-timeline {
+                position: relative;
+            }
+
+            .awsm-right-align {
+                text-align: right;
+            }
+
+            .awsm-timeline-block {
+                position: relative;
+                min-height: 16px;
+                padding-left: 35px;
+                padding-right: 35px;
+            }
+
+
+            .awsm-timeline-block:last-child::before {
+                display: none;
+            }
+
+
+
+            .awsm-right-align .awsm-timeline-block::before {
+                right: 0;
+                left: auto !important;
+                margin-left: 0 !important;
+            }
+
+            .awsm-timeline-block::after {
+                content: "";
+                display: table;
+                clear: both;
+            }
+
+            .awsm-timeline-img {
+                position: absolute;
+                min-width: 1px;
+                min-height: 1px;
+                left: 0;
+                top: 0;
+            }
+
+            .awsm-timeline-img i {
+                display: block;
+            }
+
+            .awsm-right-align .awsm-timeline-img {
+                margin-left: 0 !important;
+                left: auto !important;
+                right: 0;
+            }
+
+            .awsm-last-empty-item .awsm-timeline-img span {
+                vertical-align: top;
+            }
+
+            .awsm-timeline-content-inner {
+                position: relative;
+            }
+
+            .awsm-date {
+                display: block;
+            }
+
+            .cssanimations .awsm-timeline-content.is-hidden {
+                visibility: hidden;
+            }
+
+            .cssanimations .awsm-timeline-content.animated {
+                visibility: visible;
+            }
+
+            .awsm-labels span {
+                display: inline-block;
+            }
+
+            .awsm-labels {
+                padding: 20px 0;
+            }
+
+            .awsm-labels.awsm-start-label {
+                padding-top: 0 !important;
+            }
+
+            .awsm-labels.awsm-end-label {
+                margin-bottom: 0 !important;
+            }
+
+            @media only screen and (min-width:679px) {
+                .awsm-date-opposite {
+                    margin-left: 190px;
+                }
+
+                .awsm-left-align.awsm-date-opposite {
+                    margin-left: 190px;
+                }
+
+                .awsm-right-align.awsm-date-opposite {
+                    margin-right: 190px;
+                    margin-left: 0;
+                    text-align: right;
+                }
+
+                .awsm-date-opposite.awsm-alternate {
+                    margin: 0;
+                }
+
+                .awsm-timeline.awsm-alternate.awsm-left-align .awsm-timeline-content,
+                .awsm-timeline.awsm-date-opposite.awsm-left-align .awsm-timeline-content,
+                .awsm-timeline.awsm-alternate.awsm-right-align .awsm-timeline-content,
+                .awsm-timeline.awsm-date-opposite.awsm-right-align .awsm-timeline-content {
+                    width: 100%;
+                }
+
+                .awsm-alternate .awsm-timeline-block::before {
+                    left: 50%;
+                }
+
+                .awsm-timeline-img {
+                    left: 50% !important;
+                }
+
+                .awsm-alternate .awsm-timeline-block.awsm-even-item .awsm-timeline-content {
+                    float: right;
+                }
+
+                .awsm-alternate .awsm-timeline-block.awsm-odd-item .awsm-timeline-content {
+                    float: left;
+                }
+
+                .awsm-date-opposite .awsm-date {
+                    position: absolute;
+                    top: 0;
+                    text-align: right;
+                }
+
+                .awsm-alternate .awsm-timeline-block.awsm-odd-item .awsm-timeline-content,
+                .awsm-alternate.awsm-date-opposite .awsm-timeline-block.awsm-even-item .awsm-date,
+                .awsm-date-opposite.awsm-left-align .awsm-date,
+                .awsm-right-align {
+                    text-align: right;
+                }
+
+                .awsm-alternate.awsm-date-opposite .awsm-timeline-block.awsm-odd-item .awsm-timeline-content .awsm-date,
+                .awsm-date-opposite.awsm-right-align .awsm-date {
+                    text-align: left;
+                }
+
+                .awsm-alternate .awsm-timeline-label-block {
+                    text-align: center;
+                }
+
+                .awsm-alternate .awsm-timeline-label-block .awsm-labels span {
+                    left: 0;
+                    right: 0;
+                }
+            }
+
+            @media only screen and (max-width:678px) {
+                .awsm-timeline {
+                    margin-left: 20px;
+                }
+
+                .awsm-timeline.awsm-right-align,
+                .awsm-timeline.awsm-responsive-right {
+                    margin-right: 20px;
+                    margin-left: 0;
+                }
+
+                .awsm-responsive-right .awsm-timeline-block::before {
+                    right: 0;
+                    left: auto !important;
+                    margin-left: 0 !important;
+                }
+
+                .awsm-responsive-right {
+                    text-align: right;
+                }
+
+                .awsm-responsive-right .awsm-timeline-img {
+                    margin-left: 0 !important;
+                    left: auto !important;
+                    right: 0;
+                }
+
+                .awsm-date {
+                    margin-bottom: 10px;
+                }
+            }
+            /*-------- Type- 01 ------*/
+
+            .awsm-timeline-style-8 {
+                color: #000;
+            }
+
+            .awsm-timeline-style-8 .awsm-timeline-block::before {
+                width: 4px;
+                background: rgba(0, 0, 0, 0);
+                margin-left: -2px;
+                background: #d8d8d8;
+            }
+
+            .awsm-even-item:nth-last-child(2)::before {
+                display: none;
+            }
+
+            /*.awsm-timeline-style-8 .awsm-timeline-block .awsm-even-item:last-child::before{
+              display: none;
+              }*/
+
+            .awsm-timeline-style-8.awsm-right-align .awsm-timeline-block::before {
+                margin-right: -2px;
+            }
+
+            .awsm-timeline-block {
+                padding-bottom: 30px;
+                /*padding-left: 45px;
+                padding-right: 45px;*/
+                padding-left:0px;
+                padding-right:0px;
+            }
+
+            .awsm-timeline-style-8 .awsm-timeline-img {
+                padding: 0;
+                margin-left: -21px;
+                width: 42px;
+                height: 42px;
+                color: #0bac98;
+                text-align: center;
+                font-size: 24px;
+            }
+
+            .awsm-timeline-style-8 .awsm-timeline-img span {
+                display: inline-block;
+                margin: auto;
+                padding: 6px;
+                min-height: 16px;
+                min-width: 16px;
+                background: white;
+                -webkit-border-radius: 50%;
+                border-radius: 50%;
+                vertical-align: top;
+                border: 3px solid #fff;
+                box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+                -webkit-box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.5);
+                vertical-align: middle;
+            }
+
+            .awsm-timeline-style-8 .awsm-timeline-img i {
+                display: block;
+            }
+
+            .awsm-timeline-style-8.awsm-right-align .awsm-timeline-img {
+                margin-right: -21px;
+            }
+
+            .awsm-timeline-style-8 .awsm-timeline-content {
+                color: #777;
+            }
+
+            .awsm-timeline-style-8 .awsm-date {
+                color: #9c9c9c;
+            }
+
+
+
+
+            .awsm-timeline-style-8 p {
+                margin: 0;
+            }
+
+            .awsm-timeline-style-8 .awsm-timeline-label-block {
+                padding-top: 0;
+            }
+
+            .awsm-timeline-style-8 .awsm-labels span {
+                position: relative;
+                background: black;
+                color: #fff;
+                font-weight: 700;
+                padding: 8px 30px;
+                -webkit-border-radius: 4px;
+                border-radius: 4px;
+
+                text-align: center;
+                font-size: 14px;
+            }
+
+            .awsm-timeline-style-8.awsm-right-align .awsm-labels span {
+                left: auto;
+                right: -47px;
+            }
+
+            /*--------- news-------*/
+
+            .awsm-timeline-style-8 .awsm-timeline-content-inner {
+                border: 2px solid #d8d8d8;
+                padding: 15px;
+                position: relative;
+                -webkit-border-radius: 4px;
+                border-radius: 4px;
+            }
+
+
+
+            .awsm-timeline-style-8 .awsm-timeline-content-inner::before {
+                border-width: 10px 11px 10px 0px;
+
+                border-right-color: #0BAC98;
+                left: -11px;
+                top: 10px;
+                color: #0BAC98;
+            }
+
+            .awsm-timeline-style-8 .awsm-timeline-content-inner::after {
+                border-width: 8px 9px 8px 0;
+                border-right-color: #fff;
+                left: -9px;
+                top: 12px;
+            }
+
+            .awsm-timeline-style-8.awsm-right-align .awsm-timeline-content-inner::before {
+                border-width: 10px 0 10px 11px;
+                border-left-color: #d8d8d8;
+                left: auto;
+                right: -11px;
+            }
+
+            .awsm-timeline-style-8.awsm-right-align .awsm-timeline-content-inner::after {
+                border-width: 8px 0 8px 9px;
+                border-left-color: #fff;
+                right: -8px;
+                left: auto;
+            }
+
+            /*---------- Responsive part ------------*/
+
+            @media only screen and (min-width:679px) {
+                .awsm-date-opposite {
+                    margin-left: 203px;
+                }
+
+                .awsm-left-align.awsm-date-opposite {
+                    margin-left: 203px;
+                }
+
+                .awsm-right-align.awsm-date-opposite {
+                    margin-right: 203px;
+                    margin-left: 0;
+                }
+
+                .awsm-timeline-style-8.awsm-alternate .awsm-timeline-content,
+                .awsm-timeline-style-8.awsm-date-opposite .awsm-timeline-content {
+                    /*width: calc(50% - 44px);*/
+                    width: 100%;
+                }
+
+                .awsm-timeline-style-8.awsm-date-opposite .awsm-date {
+                    left: -248px;
+                    line-height: 32px;
+                    width: 160px;
+                }
+
+                .awsm-timeline-style-8.awsm-date-opposite.awsm-right-align .awsm-date,
+                .awsm-timeline-style-8.awsm-date-opposite.awsm-alternate .awsm-timeline-block.awsm-odd-item .awsm-date {
+                    right: -248px;
+                    left: auto;
+                    text-align: left;
+                }
+
+                .awsm-timeline-style-8.awsm-right-align .awsm-date {
+                    left: auto;
+                    right: 0;
+                }
+
+                /*--------- news-------*/
+
+                .awsm-timeline-style-8.awsm-alternate .awsm-odd-item .awsm-timeline-content-inner::before {
+                    border-width: 10px 0 10px 11px;
+                    border-left-color: #d8d8d8;
+                    left: auto;
+                    right: -11px;
+                }
+
+                .awsm-timeline-style-8.awsm-alternate .awsm-odd-item .awsm-timeline-content-inner::after {
+                    border-width: 8px 0 8px 9px;
+                    border-left-color: #fff;
+                    right: -8px;
+                    left: auto;
+                }
+            }
+
+            @media only screen and (max-width:678px) {
+                .awsm-timeline-style-8.awsm-responsive-right .awsm-labels span {
+                    left: auto;
+                    right: -47px;
+                }
+
+                .awsm-timeline-style-8.awsm-responsive-right .awsm-timeline-block::before {
+                    margin-right: -2px;
+                }
+
+                .awsm-timeline-style-8.awsm-responsive-right .awsm-timeline-img {
+                    margin-right: -21px;
+                }
+
+                /*--------- news-------*/
+
+                .awsm-timeline-style-8.awsm-responsive-right .awsm-timeline-content-inner::before {
+                    border-width: 10px 0 10px 11px;
+                    border-left-color: #d8d8d8;
+                    left: auto;
+                    right: -11px;
+                }
+
+                .awsm-timeline-style-8.awsm-responsive-right .awsm-timeline-content-inner::after {
+                    border-width: 8px 0 8px 9px;
+                    border-left-color: #fff;
+                    right: -8px;
+                    left: auto;
+                }
+
+
+                .fas fa-heartbeat
+                {padding: 0;
+                 margin-left: -21px;
+                 width: 42px;
+                 height: 42px;
+                 color: #0bac98;
+                 text-align: center;
+                 font-size: 24px;
+                }
+                #new::before{
+                    border-width: 10px 11px 10px 0px;
+                    border-right-color: blue;
+                    left: -11px;
+                    top: 10px;
+                    color: blue;
+                }
+            }
+
+            .circleBase {
+                border-radius: 50%;
+            }
+            .startingBubble {
+
+                width:10px;
+                height:10px;
+                left: 643px;
+                top:354px;
+                position: absolute;
+                background: #fff;
+                border: 3px solid #000;
+            }
+            .middleBubble {
+                width:25px;
+                height:25px;
+                left: 633px;
+                top:510px;
+                padding-left:2px;
+                padding-top: 2px; 
+                position: absolute;
+                background: #fff;
+                border: 3px solid #000;
+            }
+            .lastBubble {
+                width:25px;
+                height:25px;
+                left: 633px;
+                top:680px;
+                padding-left:2px;
+                padding-top: 2px; 
+                position: absolute;
+                background: #fff;
+                border: 3px solid #000;
+            }
+
+        </style>
+        <!-- Resource style -->
+
+        <script defer src="https://use.fontawesome.com/releases/v5.0.13/js/all.js" integrity="sha384-xymdQtn1n3lH2wcu0qhcdaOpQwyoarkgLVxC/wZ5q7h9gHtxICrpcaSUfygqZGOe" crossorigin="anonymous"></script>
+
+
+    </head>
+
+    <body style="font-family:Verdana;">
+
+
+        <div class="awsm-container">
+            <div class="awsm-timeline awsm-timeline-style-8 awsm-date-opposite awsm-alternate awsm-responsive-left" style="text-align: center;margin-bottom: 50px;border-bottom: 1px solid #dedede;padding-bottom: 30px;width: 100%;float: left;">
+                <h1 style="font-size: 2.5em;font-weight: 100;margin-bottom:0px;">###clinic_name### has requested
+                    <br>missing referral items </h1>
+
+                <!-- <p style="line-height: 1.7em;letter-spacing: 1px;"> Follow these steps to review and upload missing items for <br> <strong> &lt;Patient Name&gt; </strong> </p> -->
+            </div>
+
+            <!-- awsm-left-align/awsm-right-align/awsm-alternate/awsm-date-opposite/awsm-responsive-right-->
+            <div class="awsm-timeline awsm-timeline-style-8 awsm-date-opposite awsm-alternate awsm-responsive-left">
+
+                <div style="display:inline-block;vertical-align:top;width:50%;float:left;">
+                    <div style="">
+                        <h3 style="color: black;font-weight: 100; font-size: 22px;" > 1)&nbsp;Visit: </h3>
+                        <h3 style="margin-bottom: 1.5em;  font-size: 25px;"> www.blockhealth.co/status</h3>
+                        <h3 style="color: black;font-weight: 100; font-size: 22px;"> 2)&nbsp;Enter the following 6-digit code: </h3>
+                        <h3 style="margin-bottom: 1.5em;  font-size: 25px;"> ###referral_code### </h3>
+                        <h3 style="color: black;font-weight: 100; font-size: 22px;"> 3)&nbsp;Signup and upload the missing items: </h3>
+                        ###missing_items###       
+                    </div>
+                </div>
+
+                <div style="display:inline-block;vertical-align:top;width:50%;float:left;">
+                    <div class="awsm-timeline-block awsm-even-item" style="display:inline-block;vertical-align:top;width:100%;padding:0px;">
+                        <div class="awsm-timeline-content awsm-timeline-block awsm-timeline-label-block" style="display:inline-block;vertical-align:top;width: calc(100% - 0px);padding:0px;">
+                            <div class="awsm-labels awsm-start-label">
+                                <span style="">Referral sent to ###clinic_name###</span>
+                            </div>
+                        </div>
+                    </div> 
+
+                    <!-- awsm-timeline-block -->
+                    <div class="awsm-timeline-block awsm-even-item" data-animation="slideInUp">
+                        <!-- awsm-timeline-img -->
+                        <div class="awsm-timeline-content">
+                            <div class="awsm-timeline-content-inner" id="new">
+                                <p style="margin: 0 0;margin-bottom: 1em;font-size: 18px;">###time1###</p>
+                                <h2>Referral has been received </h2>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="awsm-timeline-block awsm-even-item" data-animation="slideInUp">
+                        <div class="awsm-timeline-content">
+                            <div class="awsm-timeline-content-inner" id="new">
+                                <p style="margin: 0 0;margin-bottom: 1em;font-size: 18px;">###time2###</p>
+                                ###text2###
+                            </div>
+                        </div>
+                    </div>		
+                </div>
+            </div>
+            <!-- .awsm-start-label -->
+
+            <div class="awsm-timeline awsm-timeline-style-8 awsm-date-opposite awsm-alternate awsm-responsive-left" style="text-align: center;font-size: 22px;float:left;border-top: 1px solid #dedede;padding-top: 0px;">
+                <h4 style="line-height: 1.7em;"> You only need to follow these steps once, and all future referrals to ###clinic_name### will appear in your BlockHealth portal</h4>
+            </div>
+
+        </div>
+
+    </body>
+    <script src="js/modernizr.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
+    <script src="js/awsm-timeline.min.js"></script>
+    <script>
+
+        document.getElementById("button").onclick = function () {
+            let doc = new jsPDF('p', 'pt', 'a4');
+            doc.addHTML(document.body, function () {
+                doc.save("html.pdf");
+            })
+
+        };
+
+    </script>
+</html>

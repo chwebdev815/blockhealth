@@ -1,0 +1,1 @@
+<script>    $(document).ready(function () {        // $(".gear-switcher").click();        $("#submitButton").click();        $("#second_menu_list").find("#li_analytics").addClass("active");    });</script>
