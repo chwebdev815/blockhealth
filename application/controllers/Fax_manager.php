@@ -76,34 +76,35 @@ class Fax_manager extends CI_Controller {
             log_message("error", "Before 5 min time = " . json_encode($before_5_mins)); // . " , and end DT = " . json_encode($end_datetime);
 //            echo "Start DT = " . json_encode($start_datetime) . "<br/>";
             $faxes = $result->Result;
-            log_message("error", "faxes = " . json_encode($faxes));
-            foreach ($faxes as $fax) {
-                log_message("error", "fax = " . json_encode($fax));
-                $fax_date = DateTime::createFromFormat('M d/y h:i a', $fax->Date);
-                log_message("error", "check fax timing fax (".json_encode($before_5_mins) . ") and (".json_encode($fax_date) . ")");
-                
-                if ($fax_date > $before_5_mins) {
-                    log_message("error", "The fax was in time");
-                    $fax_details_id = substr($fax->FileName, strpos($fax->FileName, "|") + 1);
-                    $this->db->select("id as family_physician_id");
-                    $this->db->from("physician_info");
-                    $this->db->where(array(
-                        "fax_number" => $fax->CallerID
-                    ));
-                    $result = $this->db->get()->result();
-                    $from = ($result) ? $result[0]->family_physician_id : "";
-                    $to = $clinic_id; // clinic id
-                    $pages = $fax->Pages;
-                    $sender_fax = $fax->CallerID;
-                    if (strlen($sender_fax) == 10) {
-                        $sender_fax = "1$sender_fax";
+            if ($faxes != null) {
+                log_message("error", "faxes = " . json_encode($faxes));
+                foreach ($faxes as $fax) {
+                    log_message("error", "fax = " . json_encode($fax));
+                    $fax_date = DateTime::createFromFormat('M d/y h:i a', $fax->Date);
+                    log_message("error", "check fax timing fax (" . json_encode($before_5_mins) . ") and (" . json_encode($fax_date) . ")");
+
+                    if ($fax_date > $before_5_mins) {
+                        log_message("error", "The fax was in time");
+                        $fax_details_id = substr($fax->FileName, strpos($fax->FileName, "|") + 1);
+                        $this->db->select("id as family_physician_id");
+                        $this->db->from("physician_info");
+                        $this->db->where(array(
+                            "fax_number" => $fax->CallerID
+                        ));
+                        $result = $this->db->get()->result();
+                        $from = ($result) ? $result[0]->family_physician_id : "";
+                        $to = $clinic_id; // clinic id
+                        $pages = $fax->Pages;
+                        $sender_fax = $fax->CallerID;
+                        if (strlen($sender_fax) == 10) {
+                            $sender_fax = "1$sender_fax";
+                        }
+                        log_message("error", "fax received. detail id = " . $fax_details_id . "<br/>");
+                        echo "fax details = $fax_details_id, $from, $to, $pages, $sender_fax" . "<br/>";
+                        $this->retrieve_fax($fax_details_id, $from, $to, $pages, $sender_fax, $access_id, $access_pwd);
+                    } else {
+                        log_message("error", "The fax was out of time");
                     }
-                    log_message("error", "fax received. detail id = " . $fax_details_id . "<br/>");
-                    echo "fax details = $fax_details_id, $from, $to, $pages, $sender_fax" . "<br/>";
-                    $this->retrieve_fax($fax_details_id, $from, $to, $pages, $sender_fax, $access_id, $access_pwd);
-                }
-                else {
-                    log_message("error", "The fax was out of time");
                 }
             }
         }
