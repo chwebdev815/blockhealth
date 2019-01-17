@@ -18,8 +18,9 @@ class Fax_manager extends CI_Controller {
     }
 
     public function hwaBoWSDmTNblPFakqzEhzASerOeKGAc() {
-        log_message("error", "===========================> version => 1.0");
-        $cur_time = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
+        log_message("error", "===========================> version => 1.1 set time 9 hr");
+        //addedd 
+        $cur_time = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-9 hour")));
         // echo "system time = " . json_encode(date('Y-m-d H:i:s')) . "<br/>";
         // echo "-6 hours = " . json_encode($cur_time) . "<br/>";
 //        $sStartDate = "20180606"; //$cur_time->sub(new DateInterval('PT5M'))->format("Ymd");
