@@ -231,3 +231,5 @@ class Fax_manager extends CI_Controller {
         return $timestamp . "_" . $randomString;
     }
 }
+
+
