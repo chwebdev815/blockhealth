@@ -64,7 +64,7 @@ class Fax_manager extends CI_Controller {
                 // "sStartDate" => "20180201",
                 // "sEndDate" => "20180331",
                 "sIncludeSubUsers" => "Y",
-                //    "sViewedStatus" => "UNREAD" //-- Uncomment in medstack, comment in godaddy
+                    // "sViewedStatus" => "UNREAD" -- Uncomment in medstack, comment in godaddy
             );
             $curlDefaults = array(
                 CURLOPT_POST => 1,
