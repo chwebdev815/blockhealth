@@ -72,7 +72,7 @@ class Fax_manager extends CI_Controller {
             curl_setopt_array($ch, $curlDefaults);
             $result = json_decode(curl_exec($ch));
 
-            $before_5_mins = $system_time->sub(new DateInterval('PT0M'));
+            $before_5_mins = $system_time->sub(new DateInterval('PT5M'));
             //        $end_datetime = date('Y-m-d H:i:s');
             log_message("error", "Before 5 min time = " . json_encode($before_5_mins)); // . " , and end DT = " . json_encode($end_datetime);
 //            echo "Start DT = " . json_encode($start_datetime) . "<br/>";
@@ -84,7 +84,7 @@ class Fax_manager extends CI_Controller {
                     $fax_date = DateTime::createFromFormat('M d/y h:i a', $fax->Date);
                     log_message("error", "check fax timing fax (" . json_encode($before_5_mins) . ") and (" . json_encode($fax_date) . ")");
 
-                    if ($fax_date > $before_5_mins) {
+                    if ($fax_date >= $before_5_mins) {
                         log_message("error", "The fax was in time");
                         $fax_details_id = substr($fax->FileName, strpos($fax->FileName, "|") + 1);
                         $this->db->select("id as family_physician_id");
@@ -202,6 +202,7 @@ class Fax_manager extends CI_Controller {
             "tiff_file_name" => $tiff_fax_file_name,
             "pages" => $pages,
             "sender_fax_number" => $sender_fax
+//            "created_datetime" => date("Y-m-d H:i:s")
         ));
         log_message("error", " ==================================== > saved fax files => $pdf_fax_file_name $tiff_fax_file_name");
         //make viewed status read
