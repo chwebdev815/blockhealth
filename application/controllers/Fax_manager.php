@@ -18,16 +18,22 @@ class Fax_manager extends CI_Controller {
     }
 
     public function hwaBoWSDmTNblPFakqzEhzASerOeKGAc() {
-        log_message("error", "===========================> version => 1.7 at same time");
+        log_message("error", "===========================> version => 1.8 at same time");
         //addedd 
         $system_time = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
+        $before_5_mins = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-5 minute")));
+        $before_10_mins = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-10 minute")));
         // echo "system time = " . json_encode(date('Y-m-d H:i:s')) . "<br/>";
         // echo "-6 hours = " . json_encode($cur_time) . "<br/>";
 //        $sStartDate = "20180606"; //$cur_time->sub(new DateInterval('PT5M'))->format("Ymd");
-        $sStartDate = $system_time->sub(new DateInterval('PT5M'))->format("Ymd");
-        $sEndDate = $system_time->format('Ymd');
-        $before_5_mins = $system_time->sub(new DateInterval('PT5M'));
+        $sStartDate = $before_10_mins->format("Ymd");
+        $sEndDate = $before_5_mins->format('Ymd');
+//        $before_5_mins = $system_time->sub(new DateInterval('PT5M'));
+//        $before_10_mins = $system_time->sub(new DateInterval('PT5M'));
         log_message("error", "start = " . $sStartDate . ", and end = " . $sEndDate);
+        log_message("error", "systime => " . json_encode($system_time));
+        log_message("error", "5 min before => " . json_encode($before_5_mins));
+        log_message("error", "10 min before => " . json_encode($before_10_mins));
         // echo "start = " . $sStartDate . ", and end = " . $sEndDate . "<br/>";
 
 
@@ -73,18 +79,18 @@ class Fax_manager extends CI_Controller {
             curl_setopt_array($ch, $curlDefaults);
             $result = json_decode(curl_exec($ch));
 
-            //        $end_datetime = date('Y-m-d H:i:s');
-            log_message("error", "Before 5 min time = " . json_encode($before_5_mins)); // . " , and end DT = " . json_encode($end_datetime);
-//            echo "Start DT = " . json_encode($start_datetime) . "<br/>";
             $faxes = $result->Result;
             if ($faxes != null) {
                 log_message("error", "faxes = " . json_encode($faxes));
                 foreach ($faxes as $fax) {
                     log_message("error", "fax = " . json_encode($fax));
                     $fax_date = DateTime::createFromFormat('M d/y h:i a', $fax->Date);
-                    log_message("error", "check fax timing fax (" . json_encode($before_5_mins) . ") and (" . json_encode($fax_date) . ")");
+                    log_message("error", "fax time = " . json_encode($fax_date));
+                    log_message("error", "<5 condition = " . ($fax_date < $before_5_mins));
+                    log_message("error", ">=10 condition = " . ($fax_date >= $before_10_mins));
+//                    log_message("error", "fax time = " . json_encode($fax_date));
 
-                    if ($fax_date >= $before_5_mins) {
+                    if ($fax_date < $before_5_mins && $fax_date >= $before_10_mins) {
                         log_message("error", "The fax was in time");
                         $fax_details_id = substr($fax->FileName, strpos($fax->FileName, "|") + 1);
                         $this->db->select("id as family_physician_id");
