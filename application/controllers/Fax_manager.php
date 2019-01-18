@@ -18,14 +18,14 @@ class Fax_manager extends CI_Controller {
     }
 
     public function hwaBoWSDmTNblPFakqzEhzASerOeKGAc() {
-        log_message("error", "===========================> version => 1.1 set time 9 hr");
+        log_message("error", "===========================> version => 1.4 at same time");
         //addedd 
-        $cur_time = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-9 hour")));
+        $system_time = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
         // echo "system time = " . json_encode(date('Y-m-d H:i:s')) . "<br/>";
         // echo "-6 hours = " . json_encode($cur_time) . "<br/>";
 //        $sStartDate = "20180606"; //$cur_time->sub(new DateInterval('PT5M'))->format("Ymd");
-        $sStartDate = $cur_time->sub(new DateInterval('PT5M'))->format("Ymd");
-        $sEndDate = $cur_time->format('Ymd');
+        $sStartDate = $system_time->sub(new DateInterval('PT5M'))->format("Ymd");
+        $sEndDate = $system_time->format('Ymd');
         log_message("error", "start = " . $sStartDate . ", and end = " . $sEndDate);
         // echo "start = " . $sStartDate . ", and end = " . $sEndDate . "<br/>";
 
@@ -72,7 +72,7 @@ class Fax_manager extends CI_Controller {
             curl_setopt_array($ch, $curlDefaults);
             $result = json_decode(curl_exec($ch));
 
-            $before_5_mins = $cur_time->sub(new DateInterval('PT0M'));
+            $before_5_mins = $system_time->sub(new DateInterval('PT0M'));
             //        $end_datetime = date('Y-m-d H:i:s');
             log_message("error", "Before 5 min time = " . json_encode($before_5_mins)); // . " , and end DT = " . json_encode($end_datetime);
 //            echo "Start DT = " . json_encode($start_datetime) . "<br/>";
@@ -247,5 +247,5 @@ class Fax_manager extends CI_Controller {
         }
         return $timestamp . "_" . $randomString;
     }
-
+    //change updated
 }
