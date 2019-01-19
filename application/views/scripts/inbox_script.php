@@ -23,42 +23,42 @@
 
 <style>
 
-#modal_preview{
-     background: rgba(255,255,255,0.5) !important;
- }
+    #modal_preview{
+        background: rgba(255,255,255,0.5) !important;
+    }
 
-.imggy-preview::before{
-    background:rgba(255,255,255,0.5);
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-
-#hover-img-preview {
-    left: 75%!important;
-    top: 50%;
-    z-index:1000!important;
-}
+    .imggy-preview::before{
+        background:rgba(255,255,255,0.5);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
 
 
-.popup_content {
-  margin: 10px;
-  padding: 0 10px;
-  max-width: 100%;
-  background: white;
--webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
-box-shadow: 0 5px 15px rgba(0,0,0,.5);
-}
+    #hover-img-preview {
+        left: 75%!important;
+        top: 50%;
+        z-index:1000!important;
+    }
 
-.popup_wrapper{
-    
-    top: 10%!important;
-}
 
-.popup_background{
-    z-index: 0!important;
-}
+    .popup_content {
+        margin: 10px;
+        padding: 0 10px;
+        max-width: 100%;
+        background: white;
+        -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    }
+
+    .popup_wrapper{
+
+        top: 10%!important;
+    }
+
+    .popup_background{
+        z-index: 0!important;
+    }
 
 </style>
 
@@ -86,7 +86,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         content:"X";
     }   
 
-    
+
     #form_patient_save .col-lg-12 {
         margin-top: 10px;
     }
@@ -106,7 +106,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         background:url('assets/img/check-mark.png') no-repeat 98% center;
         background-color: #f9f9f9 !important;
     }
-    
+
     /*#preview_image_container{
         position: absolute;
         left: 0;
@@ -1396,7 +1396,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         // });
 
 
-        
+
         $('#table-hover-edit-trigger').click(function () {
             let id = $(this).parent().data("id");
             let tiff = $(this).parent().data("file-tif");
@@ -1623,6 +1623,8 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                     processData: false,
                     contentType: false,
                     success: function (response) {
+                        console.log(response);
+                        debugger
                         tmp_selector = "#anything_fake";
                         root = $("#form_patient_save");
                         data_points = 0;
@@ -1634,7 +1636,10 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                         data_points_captured.dob_month = "";
                         data_points_captured.dob_year = "";
                         data_points_captured.icn = "";
-                        data_points_captured.phone = "";
+                        data_points_captured.phone = {};
+                        data_points_captured.phone.phone = "";
+                        data_points_captured.phone.cell = "";
+                        data_points_captured.phone.work = "";
                         data_points_captured.email = "";
                         data_points_captured.gender = "";
                         data_points_captured.address = "";
@@ -1694,11 +1699,53 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                 }
                             }
                             if (response.predictions.hasOwnProperty('phone')) {
-                                if (response.predictions.phone != "") {
-                                    root.find("#patient-cell-phone").val(response.predictions.phone);
-                                    data_points_captured.phone = response.predictions.phone;
-                                    tmp_selector += ', #patient-cell-phone';
-                                    data_points += 1;
+                                if (response.predictions.phone.hasOwnProperty('phone')) {
+                                    if (response.predictions.phone.phone != "") {
+                                        root.find("#patient-cell-phone").val(response.predictions.phone.phone);
+                                        data_points_captured.phone.phone = response.predictions.phone.phone;
+                                        tmp_selector += ', #patient-cell-phone';
+                                        data_points += 1;
+                                    }
+                                }
+                                if (response.predictions.phone.hasOwnProperty('phone')) {
+                                    if (response.predictions.phone.phone != "") {
+                                        root.find("#patient-cell-phone").val(response.predictions.phone.phone);
+                                        data_points_captured.phone.phone = response.predictions.phone.phone;
+                                        tmp_selector += ', #patient-cell-phone';
+                                        data_points += 1;
+                                    }
+                                }
+                                if (response.predictions.phone.hasOwnProperty('cell')) {
+                                    if (response.predictions.cell != "") {
+                                        root.find("#patient-cell-phone").val(response.predictions.phone.cell);
+                                        data_points_captured.phone.cell = response.predictions.phone.cell;
+                                        tmp_selector += ', #patient-cell-phone';
+                                        data_points += 1;
+                                    }
+                                }
+                                if (response.predictions.phone.hasOwnProperty('home')) {
+                                    if (response.predictions.phone.home != "") {
+                                        root.find("#patient-home-phone").val(response.predictions.phone.home);
+                                        data_points_captured.phone.home = response.predictions.phone.home;
+                                        tmp_selector += ', #patient-home-phone';
+                                        data_points += 1;
+                                    }
+                                }
+                                if (response.predictions.phone.hasOwnProperty('work')) {
+                                    if (response.predictions.phone.work != "") {
+                                        root.find("#patient-work-phone").val(response.predictions.phone.work);
+                                        data_points_captured.phone.work = response.predictions.phone.work;
+                                        tmp_selector += ', #patient-work-phone';
+                                        data_points += 1;
+                                    }
+                                }
+                                if (response.predictions.phone.hasOwnProperty('business')) {
+                                    if (response.predictions.phone.business != "") {
+                                        root.find("#patient-work-phone").val(response.predictions.phone.business);
+                                        data_points_captured.phone.business = response.predictions.phone.business;
+                                        tmp_selector += ', #patient-work-phone';
+                                        data_points += 1;
+                                    }
                                 }
                             }
                             if (response.predictions.hasOwnProperty('email')) {
@@ -1809,10 +1856,10 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         horizontal: 'left',
         vertical: 'middle',
 
-          onopen: function() {
+        onopen: function () {
             $('button.popup2_open').attr("disabled", true);
-          },
-        closetransitionend: function() {
+        },
+        closetransitionend: function () {
             $('button.popup2_open').attr("disabled", false);
         }
     });

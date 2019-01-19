@@ -1,39 +1,39 @@
 <style>
-.popup_content {
-  margin: 10px;
-  padding: 0 10px;
-  max-width: 100%;
-  background: white;
--webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
-box-shadow: 0 5px 15px rgba(0,0,0,.5);
-}
+    .popup_content {
+        margin: 10px;
+        padding: 0 10px;
+        max-width: 100%;
+        background: white;
+        -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    }
 
-.popup_wrapper{
-	
-	top: 10%!important;
-}
+    .popup_wrapper{
 
-.popup_background{
-	z-index: 0!important;
-}
+        top: 10%!important;
+    }
+
+    .popup_background{
+        z-index: 0!important;
+    }
 
 </style>
 
-      <!-- <button class="popup2_open">Click me 2!</button>
-	  
-	  <button class="popup3_open">Click me 2!</button> -->
+<!-- <button class="popup2_open">Click me 2!</button>
+    
+    <button class="popup3_open">Click me 2!</button> -->
 
-	  
+
 <section id="popup2">
- <img id="image_for_preview" width="" height="500" src="" />
+    <img id="image_for_preview" width="" height="500" src="" />
 </section>
 
 
-	<!--   
- <div class="preview-image-container">
-    <img id="hover-img-preview" class="imggy-preview">
+<!--   
+<div class="preview-image-container">
+<img id="hover-img-preview" class="imggy-preview">
 </div> 
- -->
+-->
 <div class="db-content-inside">
     <div id="table-action" class="btn-group" role="group" data-patient-id="0">
         <button type="button" id="" class="btn btn-default popup2_open"><i class="fa fa-eye"></i></button>
@@ -208,6 +208,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                                 </div>
                                             </div>
                                         </div>
+                                        
                                         <div class="form-group row">
                                             <div class="col-lg-12 cl-t-listing wrapper_div">
                                                 <button type="button" id="btn_save_task" class="btn btn-theme">Save</button>
@@ -220,7 +221,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                                 </div>
                                             </div>
                                         </div> 
-                                        
+
                                     </div>
                                 </div>
                             </form>
@@ -296,11 +297,17 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                         <div class="form-group row">
                                             <div class="col-lg-12">
                                                 <label for="">
-                                                    Cell Phone
+                                                   Phone
                                                 </label>
                                             </div>
-                                            <div class="col-lg-12">
-                                                <input type="text" class="form-control" name="pat_cell_phone" id="patient-cell-phone" placeholder="Mobile Number" autocomplete="off">
+                                            <div class="col-lg-4">
+                                                <input type="text" class="form-control" name="pat_home_phone" id="patient-home-phone" placeholder="Home Phone" autocomplete="off">
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <input type="text" class="form-control" name="pat_cell_phone" id="patient-cell-phone" placeholder="Cell Phone" autocomplete="off">
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <input type="text" class="form-control" name="pat_work_phone" id="patient-work-phone" placeholder="Work Phone" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -682,14 +689,14 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
 
 
 <script>
-$('#popup2, #popup3').popup({
-  pagecontainer: '#page',
-  type: 'tooltip',
-  background: true,
-color: '#fff',
-  escape: true,
-  horizontal: 'left',
-  vertical: 'middle'
+    $('#popup2, #popup3').popup({
+        pagecontainer: '#page',
+        type: 'tooltip',
+        background: true,
+        color: '#fff',
+        escape: true,
+        horizontal: 'left',
+        vertical: 'middle'
 
-});
+    });
 </script>	

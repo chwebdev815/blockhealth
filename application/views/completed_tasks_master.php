@@ -6,7 +6,7 @@
                 <th>Record Type</th>
                 <th>Details</th>
                 <th>Pages</th>
-				<th>&nbsp;</th>
+                <th>&nbsp;</th>
             </tr>
         </thead>
     </table>
@@ -38,7 +38,7 @@
 
                 <div id="wrap-container">
 
-                    
+
                     <!-- Page Content -->
                     <div id="page-content-wrapper">
                         <button type="button" class="close" data-dismiss="modal">&times;</button>

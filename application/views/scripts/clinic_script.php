@@ -1,6 +1,6 @@
 <script>
     global_data.form_sample = $("#sample_form");
-    
+
     //table_clinic_referrals
     $(document).ready(function () {
 

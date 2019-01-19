@@ -1,6 +1,6 @@
 
 <div class="preview-image-container">
-     <img id="hover-img-preview"> 
+    <img id="hover-img-preview"> 
 </div>
 
 <div class="db-content-inside">
@@ -163,7 +163,7 @@
                                                     <option>Other</option>
                                                 </select>
                                             </div>
-                                            
+
                                             <div class="col-lg-12 cl-t-listing wrapper_div">
                                                 <label for="new-patient-ohip">
                                                     <strong>Enter Details/Notes</strong>

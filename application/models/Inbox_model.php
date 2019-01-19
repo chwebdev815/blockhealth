@@ -532,6 +532,8 @@ class Inbox_model extends CI_Model {
                         "ohip" => str_replace(" ", "", str_replace("-", "", $ohip)),
                         "gender" => $data["pat_gender"],
                         "cell_phone" => $data["pat_cell_phone"],
+                        "home_phone" => $data["pat_home_phone"],
+                        "work_phone" => $data["pat_work_phone"],
                         "email_id" => $data["pat_email"],
                         "address" => $data["pat_address"]
                     );

@@ -105,6 +105,8 @@ class Referral_model extends CI_Model {
                         "dob" => $data["dobyear"] . "-" . $data["dobmonth"] . "-" . $data["dobday"],
                         "ohip" => $data["pat_ohip"],
                         "cell_phone" => $data["pat_cell_phone"],
+                        "home_phone" => $data["pat_home_phone"],
+                        "work_phone" => $data["pat_work_phone"],
                         "email_id" => $data["pat_email_id"],
                         "address" => $data["pat_address"],
                     );

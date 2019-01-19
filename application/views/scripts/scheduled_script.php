@@ -13,7 +13,7 @@
 </style>
 
 <script>
-    
+
     function get_workflow_dash_info() {
         url = base + "workflow_dash/get_workflow_dash_info";
         data = $("#sample_form").serialize();
@@ -30,11 +30,11 @@
                     template = template.replace("_dr_id", value.dr_id);
                     $("#workflow_dash_container").append(template);
                 });
-                
+
                 //open first physician by default
-                setTimeout(function() { 
+                setTimeout(function () {
                     root = $("#workflow_dash_container").find("a.collapse-link:not(.done)");
-                    if(root.length == 2) {
+                    if (root.length == 2) {
                         temp = root[1];
                         temp.click();
                         $(temp).addClass("done");
@@ -43,20 +43,21 @@
             }
         });
     }
-    
+
     $(document).ready(function () {
         $("#li_scheduled").addClass("active");
-        
+
         get_workflow_dash_info();
-        
-        $("#workflow_dash_container").on("click", ".collapse-link", function () {            
+
+        $("#workflow_dash_container").on("click", ".collapse-link", function () {
             var a = $(this).closest(".x_panel"), b = $(this).find("i"), c = a.find(".x_content");
             a.attr("style") ? c.slideToggle(200, function () {
 //                a.removeAttr("style");
             }) : (c.slideToggle(200), a.css("height", "auto")), b.toggleClass("fa-chevron-up fa-chevron-down");
-    
-            if(b.hasClass('fa-chevron-down')) return;
-        
+
+            if (b.hasClass('fa-chevron-down'))
+                return;
+
             cur_collapse_link = this;
             dr_id = $(this).closest("li").attr("dr_id");
             form = $("#sample_form");
@@ -70,7 +71,7 @@
                 if (IsJsonString(response)) {
                     data = JSON.parse(response);
                     a = new Date();
-                    cur_date = a.getFullYear()+'-'+(a.getMonth()+1)+'-'+a.getDate();
+                    cur_date = a.getFullYear() + '-' + (a.getMonth() + 1) + '-' + a.getDate();
                     div = $(cur_collapse_link).closest(".x_panel").find(".my_calender");
                     $(div).fullCalendar({
                         header: {

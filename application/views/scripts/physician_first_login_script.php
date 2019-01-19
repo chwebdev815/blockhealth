@@ -1,6 +1,6 @@
 <script>
-	$(document).ready(function() {
-		$("#btn_update_password").on("click", function () {
+    $(document).ready(function () {
+        $("#btn_update_password").on("click", function () {
             form = $("#form_update_password");
             url = base + "login/store_physician_creds";
             data = form.serialize();
@@ -12,7 +12,7 @@
                     data = JSON.parse(response);
                     if (data == true) {
                         success("Password Stored Successfully. You can login now with this credentials");
-                        setTimeout(function() {
+                        setTimeout(function () {
                             location.href = base;
                         }, 1000);
                     } else {
@@ -23,5 +23,5 @@
                 }
             });
         });
-	});
+    });
 </script>

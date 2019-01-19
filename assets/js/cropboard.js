@@ -40,7 +40,7 @@ function set_load_tiff_page(tmp_current) {
 }
 
 function exit() {
-    imageObj.attr("src","");
+    imageObj.attr("src", "");
     tiff_image = null;
 }
 
@@ -141,7 +141,7 @@ function fileUpload(data) {
         $("#overlay_image").attr("src", global_data.overlay_image);
         $("#overlay_image").show("slow");
         global_data.showing_overlay = true;
-        setTimeout(function() {
+        setTimeout(function () {
             global_data.showing_overlay = false;
         }, 2000);
 
@@ -170,12 +170,15 @@ function fileUpload(data) {
                     data_points_captured.dob_month = "";
                     data_points_captured.dob_year = "";
                     data_points_captured.icn = "";
-                    data_points_captured.phone = "";
+                    data_points_captured.phone = {};
+                    data_points_captured.phone.phone = "";
+                    data_points_captured.phone.cell = "";
+                    data_points_captured.phone.work = "";
                     data_points_captured.email = "";
                     data_points_captured.gender = "";
                     data_points_captured.address = "";
                     data_points_captured.success = response.success;
-
+                    debugger
                     if (response.success) {
                         if (response.predictions.name.hasOwnProperty('first_name')) {
                             if (response.predictions.name.first_name != "") {
@@ -229,12 +232,55 @@ function fileUpload(data) {
                                 data_points += 1;
                             }
                         }
+
                         if (response.predictions.hasOwnProperty('phone')) {
-                            if (response.predictions.phone != "") {
-                                root.find("#patient-cell-phone").val(response.predictions.phone);
-                                data_points_captured.phone = response.predictions.phone;
-                                tmp_selector += ', #patient-cell-phone';
-                                data_points += 1;
+//                            if (response.predictions.phone.hasOwnProperty('phone')) {
+//                                if (response.predictions.phone.phone != "") {
+//                                    root.find("#patient-cell-phone").val(response.predictions.phone.phone);
+//                                    data_points_captured.phone.phone = response.predictions.phone.phone;
+//                                    tmp_selector += ', #patient-cell-phone';
+//                                    data_points += 1;
+//                                }
+//                            }
+                            if (response.predictions.phone.hasOwnProperty('phone')) {
+                                if (response.predictions.phone.phone != "") {
+                                    root.find("#patient-cell-phone").val(response.predictions.phone.phone);
+                                    data_points_captured.phone.phone = response.predictions.phone.phone;
+                                    tmp_selector += ', #patient-cell-phone';
+                                    data_points += 1;
+                                }
+                            }
+                            if (response.predictions.phone.hasOwnProperty('cell')) {
+                                if (response.predictions.phone.cell != "") {
+                                    root.find("#patient-cell-phone").val(response.predictions.phone.cell);
+                                    data_points_captured.phone.cell = response.predictions.phone.cell;
+                                    tmp_selector += ', #patient-cell-phone';
+                                    data_points += 1;
+                                }
+                            }
+                            if (response.predictions.phone.hasOwnProperty('home')) {
+                                if (response.predictions.phone.home != "") {
+                                    root.find("#patient-home-phone").val(response.predictions.phone.home);
+                                    data_points_captured.phone.home = response.predictions.phone.home;
+                                    tmp_selector += ', #patient-home-phone';
+                                    data_points += 1;
+                                }
+                            }
+                            if (response.predictions.phone.hasOwnProperty('work')) {
+                                if (response.predictions.phone.work != "") {
+                                    root.find("#patient-work-phone").val(response.predictions.phone.work);
+                                    data_points_captured.phone.work = response.predictions.phone.work;
+                                    tmp_selector += ', #patient-work-phone';
+                                    data_points += 1;
+                                }
+                            }
+                            if (response.predictions.phone.hasOwnProperty('business')) {
+                                if (response.predictions.phone.business != "") {
+                                    root.find("#patient-work-phone").val(response.predictions.phone.business);
+                                    data_points_captured.phone.business = response.predictions.phone.business;
+                                    tmp_selector += ', #patient-work-phone';
+                                    data_points += 1;
+                                }
                             }
                         }
                         if (response.predictions.hasOwnProperty('email')) {
@@ -312,7 +358,7 @@ function file_upload_triage(data) {
             global_data.api_drug_test = "running";
             // $.ajax('http://159.89.127.142/drug', {
             $.ajax('http://165.227.45.30/drug', {
-                
+
                 method: 'POST',
                 data: formData,
                 processData: false,
@@ -322,7 +368,7 @@ function file_upload_triage(data) {
                     tmp_selector = "#anything_fake";
                     root = $("#signupForm");
                     data_points = 0;
-                    
+
                     data_points_captured = {};
                     data_points_captured.disease_words = [];
                     data_points_captured.lab_tests = [];
@@ -330,7 +376,7 @@ function file_upload_triage(data) {
                     data_points_captured.devices_and_procedures = [];
                     data_points_captured.pharmacologic_substance = [];
 
-                                            // debugger
+                    // debugger
                     if (response.success) {
                         if (response.predictions.hasOwnProperty('disease_words')) {
                             tmp = response.predictions.disease_words;
@@ -346,19 +392,18 @@ function file_upload_triage(data) {
                                             data_points += 1;
                                             add_diseases(disease);
                                             elem.concept = my_string(disease);
-                                            if(Array.isArray(tmp[i][disease])) {
+                                            if (Array.isArray(tmp[i][disease])) {
                                                 //save multiple sentences
                                                 sentences = tmp[i][disease];
-                                                for(k = 0; k < sentences.length; k++) {
+                                                for (k = 0; k < sentences.length; k++) {
                                                     elem.sentence = my_string(sentences[k].sentence);
                                                     data_points_captured.disease_words.push(elem);
-                                                }                                                
-                                            }
-                                            else {
+                                                }
+                                            } else {
                                                 elem.sentence = my_string(tmp[i][disease].sentence);
                                                 data_points_captured.disease_words.push(elem);
                                             }
-                                            
+
                                         }
                                     }
                                 }
@@ -378,15 +423,14 @@ function file_upload_triage(data) {
                                             add_tests(test);
                                             data_points += 1;
                                             elem.concept = my_string(test);
-                                            if(Array.isArray(tmp[i][test])) {
+                                            if (Array.isArray(tmp[i][test])) {
                                                 //save multiple sentences
                                                 sentences = tmp[i][test];
-                                                for(k = 0; k < sentences.length; k++) {
+                                                for (k = 0; k < sentences.length; k++) {
                                                     elem.sentence = my_string(sentences[k].sentence);
                                                     data_points_captured.lab_tests.push(elem);
-                                                }                                                
-                                            }
-                                            else {
+                                                }
+                                            } else {
                                                 elem.sentence = my_string(tmp[i][test].sentence);
                                                 data_points_captured.lab_tests.push(elem);
                                             }
@@ -409,15 +453,14 @@ function file_upload_triage(data) {
                                             add_symptoms(sign);
                                             data_points += 1;
                                             elem.concept = my_string(sign);
-                                            if(Array.isArray(tmp[i][sign])) {
+                                            if (Array.isArray(tmp[i][sign])) {
                                                 //save multiple sentences
                                                 sentences = tmp[i][sign];
-                                                for(k = 0; k < sentences.length; k++) {
+                                                for (k = 0; k < sentences.length; k++) {
                                                     elem.sentence = my_string(sentences[k].sentence);
                                                     data_points_captured.sign_and_synd_words.push(elem);
-                                                }                                                
-                                            }
-                                            else {
+                                                }
+                                            } else {
                                                 elem.sentence = my_string(tmp[i][sign].sentence);
                                                 data_points_captured.sign_and_synd_words.push(elem);
                                             }
@@ -440,15 +483,14 @@ function file_upload_triage(data) {
                                             add_devices(device);
                                             data_points += 1;
                                             elem.concept = my_string(device);
-                                            if(Array.isArray(tmp[i][device])) {
+                                            if (Array.isArray(tmp[i][device])) {
                                                 //save multiple sentences
                                                 sentences = tmp[i][device];
-                                                for(k = 0; k < sentences.length; k++) {
+                                                for (k = 0; k < sentences.length; k++) {
                                                     elem.sentence = my_string(sentences[k].sentence);
                                                     data_points_captured.devices_and_procedures.push(elem);
-                                                }                                                
-                                            }
-                                            else {
+                                                }
+                                            } else {
                                                 elem.sentence = my_string(tmp[i][device].sentence);
                                                 data_points_captured.devices_and_procedures.push(elem);
                                             }
@@ -471,15 +513,14 @@ function file_upload_triage(data) {
                                             add_devices(device);
                                             data_points += 1;
                                             elem.concept = my_string(device);
-                                            if(Array.isArray(tmp[i][device])) {
+                                            if (Array.isArray(tmp[i][device])) {
                                                 //save multiple sentences
                                                 sentences = tmp[i][device];
-                                                for(k = 0; k < sentences.length; k++) {
+                                                for (k = 0; k < sentences.length; k++) {
                                                     elem.sentence = my_string(sentences[k].sentence);
                                                     data_points_captured.devices_and_procedures.push(elem);
-                                                }                                                
-                                            }
-                                            else {
+                                                }
+                                            } else {
                                                 elem.sentence = my_string(tmp[i][device].sentence);
                                                 data_points_captured.devices_and_procedures.push(elem);
                                             }
@@ -500,19 +541,18 @@ function file_upload_triage(data) {
                                     //response.predictions.pharmacologic_substance[0].bisphosphonate.text
                                     for (j = 0; j < text.length; j++) {
                                         medic = text[j];
-                                        if(medic != "source" && medic != "source_count") {
+                                        if (medic != "source" && medic != "source_count") {
                                             data_points += 1;
-                                        	add_medications(medic);
+                                            add_medications(medic);
                                             elem.concept = my_string(medic);
-                                            if(Array.isArray(tmp[i][medic])) {
+                                            if (Array.isArray(tmp[i][medic])) {
                                                 //save multiple sentences
                                                 sentences = tmp[i][medic];
-                                                for(k = 0; k < sentences.length; k++) {
+                                                for (k = 0; k < sentences.length; k++) {
                                                     elem.sentence = my_string(sentences[k].sentence);
                                                     data_points_captured.pharmacologic_substance.push(elem);
-                                                }                                                
-                                            }
-                                            else {
+                                                }
+                                            } else {
                                                 elem.sentence = my_string(tmp[i][medic].sentence);
                                                 data_points_captured.pharmacologic_substance.push(elem);
                                             }
@@ -611,10 +651,9 @@ function file_upload_triage(data) {
 }
 
 function my_string(value) {
-    if(typeof(value) === "undefined" || value === null || typeof(value) != "string") {
+    if (typeof (value) === "undefined" || value === null || typeof (value) != "string") {
         return "";
-    }
-    else {
+    } else {
         return value;
     }
 }

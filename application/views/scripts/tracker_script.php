@@ -25,26 +25,27 @@
     signup_done = "<?php echo $this->session->userdata("signup_done"); ?>";
     Dropzone.autoDiscover = false;
 
-        
+
 <?php if ($this->session->userdata("signup_done") == "no") { ?>
-    //if signup remaining display popup 
-            $("#modal_signup").modal("show");
+        //if signup remaining display popup 
+        $("#modal_signup").modal("show");
 
 <?php } ?>
 
-            function operate_messages() {
+    function operate_messages() {
+<?php if ($this->session->flashdata("success") != null) { ?>
+            $("#view_upload").click();
+            $("#success_upload").show();
+            $("#error_upload").hide();
 <?php
-     if($this->session->flashdata("success") != null) { ?>
-        $("#view_upload").click();
-        $("#success_upload").show();
-        $("#error_upload").hide();
-<?php } 
-     if($this->session->flashdata("error") != null) { ?>
-        $("#view_upload").click();
-        $("#success_upload").hide();
-        $("#error_upload").show();
-<?php }  ?>
 }
+if ($this->session->flashdata("error") != null) {
+    ?>
+            $("#view_upload").click();
+            $("#success_upload").hide();
+            $("#error_upload").show();
+<?php } ?>
+    }
 
     $(document).ready(function () {
         load_tracker(global_data.record_id);
@@ -161,19 +162,19 @@
 
     });
 
-    $("#form_signup").find("#btn_show_agreement").on("click", function() {
+    $("#form_signup").find("#btn_show_agreement").on("click", function () {
         $("fieldset.fs_form").hide();
         $("fieldset.fs_agreement").show();
         $(this).closest(".modal-dialog").removeClass("modal-md").addClass("modal-lg");
     });
 
-    $("#form_signup").find("#btn_hide_agreement").on("click", function() {
+    $("#form_signup").find("#btn_hide_agreement").on("click", function () {
         $("fieldset.fs_form").show();
         $("fieldset.fs_agreement").hide();
         $(this).closest(".modal-dialog").removeClass("modal-lg").addClass("modal-md");
     });
 
-    
+
 
     function get_uploaded_items() {
         $("#form_upload_missing_items")[0].reset();
@@ -206,7 +207,7 @@
                         $("#table_missing_items").find("tbody").html("");
                         $("#previously_uploaded_container").hide();
                     }
-                    
+
                 } else {
                     error(data);
                 }
@@ -237,7 +238,7 @@
                 $("#stage4").remove();
             }
             set_clinic("#li_" + data.clinic_id);
-            
+
             $("#modal_signup").find("#clinic_name_span").html(data.clinic_name);
 
             if (data.missing_items != null) {
@@ -251,7 +252,7 @@
                 root.find("#items_listing").html(items_html);
 
 
-                setTimeout(function() {
+                setTimeout(function () {
                     operate_messages();
                 }, 1000);
 

@@ -187,12 +187,12 @@
         <!-- Datatables -->
         <script src="<?php echo tracker_assets(); ?>vendor/datatables/jquery.dataTables.js"></script>
         <script src="<?php echo tracker_assets(); ?>vendor/datatables/dataTables.bootstrap4.js"></script>
-        
-<!--        <link href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet"/>
-        <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>-->
 
-		<link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.1/css/responsive.dataTables.min.css">
-		<script src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
+        <!--        <link href="http://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" rel="stylesheet"/>
+                <script src="http://cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>-->
+
+        <link rel="stylesheet" href="https://cdn.datatables.net/responsive/2.2.1/css/responsive.dataTables.min.css">
+        <script src="https://cdn.datatables.net/responsive/2.2.1/js/dataTables.responsive.min.js"></script>
 
         <script>
             base = "<?php echo base_url(); ?>";

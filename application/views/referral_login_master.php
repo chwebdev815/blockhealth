@@ -119,14 +119,14 @@
             });
 
 
-            $( "#form_verify_referral" ).submit(function( event ) {
+            $("#form_verify_referral").submit(function (event) {
                 event.preventDefault();
                 form_verify_referral_submit();
             });
 
             function form_verify_referral_submit() {
                 //patch for demo
-                if($("#form_verify_referral").find("#referral_code").val() === "000000") {
+                if ($("#form_verify_referral").find("#referral_code").val() === "000000") {
                     location.href = "http://dev.blockhealth.co/adi-dev/demo/rp/dashboard";
                 }
 
@@ -152,5 +152,5 @@
     </body>
     <script>'undefined' === typeof _trfq || (window._trfq = []);
         'undefined' === typeof _trfd && (window._trfd = []), _trfd.push({'tccl.baseHost': 'secureserver.net'}), _trfd.push({'ap': 'cpbh'}, {'server': 'a2plvcpnl32357'}) // Monitoring performance to make your website faster. If you want to opt-out, please contact web hosting support.</script>
-    
+
 </html>

@@ -17,17 +17,17 @@
         <!-- <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/croppie.css"> -->
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/simple-sidebar.css">
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap-datetimepicker.css">
-        
+
         <style>
             .dataTables_length {
                 float: left;
             }
-            
+
             table tr {
                 cursor: pointer;
             }
 
-            
+
             .fc-event-dot {
                 display: inline-block;
                 width: 10px;
@@ -36,7 +36,7 @@
             }
         </style>
 
-        
+
         <script src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
@@ -109,8 +109,8 @@
                 </li>
                 <li id="li_completed_tasks" data-toggle="tooltip" data-placement="right" title="Completed Tasks">
                     <a class="clearfix" href="<?php echo base_url(); ?>completed_tasks"><span>Completed Tasks</span>
-                    	<i class="fa fa-check" aria-hidden="true"></i>
-                    	<!-- <i class="numb-notifies" id="count_completed_tasks">&nbsp;</i> -->
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                        <!-- <i class="numb-notifies" id="count_completed_tasks">&nbsp;</i> -->
                     </a>
                 </li>
                 <li id="li_manage_physician" data-toggle="tooltip" data-placement="right" title="Manage Physicians">
@@ -261,15 +261,15 @@
                 return true;
             }
 
-            
+
             function get_dom_plan() {
                 return '<"wrapper"tlp>';
             }
-            
+
             function get_records_dom_plan() {
                 return '<"wrapper"tp>';
             }
-            
+
             function success(msg, header = "Operation Successfull") {
                 $("#modal_success").find(".alert-success").html(msg);
                 $("#modal_success").find(".modal-title").html(header);
@@ -336,10 +336,10 @@
                         location.href = base + (ui.item.value) + "/referral_details/" + ui.item.id;
                     }
                 });
-                
+
 
                 $("#btn_view_request_missing_items").on("click", function () {
-                     $("#btn_view_request_missing_items").button("loading");
+                    $("#btn_view_request_missing_items").button("loading");
                     form = $("#sample_form");
                     form.find("#id").val(global_data.referral_id);
                     url = base + "referral/missing_items_details";
@@ -378,23 +378,22 @@
                     }).done(function (response) {
                         if (IsJsonString(response)) {
                             data = JSON.parse(response);
-                            if(data === true) {
+                            if (data === true) {
                                 $(".modal").modal("hide");
                                 success("Missing item request has been sent");
-                            }
-                            else {
+                            } else {
                                 $(".modal").modal("hide");
                                 success(response);
                             }
                         } else {
                             error("Unexpected Error Occured");
                         }
-                    }).complete(function() {
+                    }).complete(function () {
                         $("#btn_request_missing_items").button('reset');
                     });
                 });
 
-                
+
             });
 
         </script>
