@@ -663,7 +663,7 @@
                 url: url,
                 data: data
             }).success(function (response) {
-                debugger
+//                debugger
                 if (IsJsonString(response)) {
                     response = JSON.parse(response);
                     if (response.result == "success") {
@@ -1624,7 +1624,7 @@
                     contentType: false,
                     success: function (response) {
                         console.log(response);
-                        debugger
+//                        debugger
                         tmp_selector = "#anything_fake";
                         root = $("#form_patient_save");
                         data_points = 0;

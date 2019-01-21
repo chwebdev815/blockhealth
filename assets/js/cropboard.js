@@ -153,7 +153,7 @@ function fileUpload(data) {
             formData.append('file', blob);
             console.log("building form data");
             // $.ajax('http://159.89.127.142/predict', {
-            $.ajax('http://165.227.45.30/predict', {
+            $.ajax('http://165.227.45.30/predict_form', {
                 method: 'POST',
                 data: formData,
                 processData: false,
@@ -178,7 +178,7 @@ function fileUpload(data) {
                     data_points_captured.gender = "";
                     data_points_captured.address = "";
                     data_points_captured.success = response.success;
-                    debugger
+//                    debugger
                     if (response.success) {
                         if (response.predictions.name.hasOwnProperty('first_name')) {
                             if (response.predictions.name.first_name != "") {
