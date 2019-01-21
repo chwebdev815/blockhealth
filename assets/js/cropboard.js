@@ -292,9 +292,21 @@ function fileUpload(data) {
                             }
                         }
                         if (response.predictions.hasOwnProperty('gender')) {
-                            if (response.predictions.gender != "") {
-                                root.find("#pat_gender").val(response.predictions.gender);
-                                data_points_captured.gender = response.predictions.gender;
+                            gender = response.predictions.gender.toLowerCase();
+                            select = "";
+                            selected = false;
+                            if(gender == "m" || gender == "male") {
+                                select = "male";
+                                selected = true;
+                            }
+                            else if(gender == "f" || gender == "female"){
+                                select = "female";
+                                selected = true;
+                            }
+                            
+                            if (selected) {
+                                root.find("#pat_gender").val(select);
+                                data_points_captured.gender = select;
                                 tmp_selector += ', #pat_gender';
                                 data_points += 1;
                             }
