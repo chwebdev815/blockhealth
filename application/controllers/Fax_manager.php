@@ -200,6 +200,9 @@ class Fax_manager extends CI_Controller {
             log_message("error", "tiff also saved");
             echo "TIFF also saved";
         }
+        if($from == "") {
+            $from = "0";
+        }
         //save record in efax table
         $this->db->insert("efax_info", array(
             "from" => $from,

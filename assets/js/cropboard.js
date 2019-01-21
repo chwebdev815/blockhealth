@@ -369,7 +369,8 @@ function file_upload_triage(data) {
             console.log("building form data");
             global_data.api_drug_test = "running";
             // $.ajax('http://159.89.127.142/drug', {
-            $.ajax('http://165.227.45.30/drug', {
+//            $.ajax('http://165.227.45.30/drug', {
+            $.ajax('http://165.227.45.30:8000/extMedications', {
 
                 method: 'POST',
                 data: formData,
