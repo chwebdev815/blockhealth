@@ -9,6 +9,8 @@ var uploadingFile = false;
 var tiff_image = null;
 var imageObj = $('#cropboard');
 var btn_autofill = null;
+var cropper_activated = false;
+
 function convertFileToDataURLviaFileReader(url) {
     var xhr = new XMLHttpRequest();
     xhr.onload = function () {
@@ -82,6 +84,7 @@ function createCropper() {
             }
         }
     });
+    cropper_activated = true;
 }
 function updatePageButton(index) {
     console.log("method updatePageButton called");
@@ -295,15 +298,14 @@ function fileUpload(data) {
                             gender = response.predictions.gender.toLowerCase();
                             select = "";
                             selected = false;
-                            if(gender == "m" || gender == "male") {
+                            if (gender == "m" || gender == "male") {
                                 select = "male";
                                 selected = true;
-                            }
-                            else if(gender == "f" || gender == "female"){
+                            } else if (gender == "f" || gender == "female") {
                                 select = "female";
                                 selected = true;
                             }
-                            
+
                             if (selected) {
                                 root.find("#pat_gender").val(select);
                                 data_points_captured.gender = select;
@@ -416,7 +418,6 @@ function file_upload_triage(data) {
                                                 elem.sentence = my_string(tmp[i][disease].sentence);
                                                 data_points_captured.disease_words.push(elem);
                                             }
-
                                         }
                                     }
                                 }
@@ -716,6 +717,7 @@ $(document).ready(function () {
             return;
         }
         set_load_tiff_page(current);
+        cropper_activated = false;
     });
     $('#btnNextPage').on('click', function (evt) {
         current++;
@@ -725,10 +727,32 @@ $(document).ready(function () {
             return;
         }
         set_load_tiff_page(current);
+        cropper_activated = false;
     });
     $("[data-target='#eFax-modal']").on('click', function (evt) {
         init();
     });
+    $('.topbar_button').on('click', function (evt) {
+        if (!cropper_activated) {
+            createCropper();
+        }
+        setTimeout(function () {
+            const action = evt.currentTarget.dataset.action;
+            console.log("topbar action:" + action);
+            switch (action) {
+                case 'rotate-left':
+                    cropper.rotate(-90);
+                    break;
+                case 'rotate-right':
+                    if (!cropper)
+                        break;
+                    cropper.rotate(90);
+                    break;
+            }
+        }, 300);
+
+    });
+
     $('.toolbar__button').on('click', function (evt) {
         const action = evt.currentTarget.dataset.action;
         console.log("tool action:" + action);

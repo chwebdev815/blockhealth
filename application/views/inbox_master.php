@@ -208,7 +208,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group row">
                                             <div class="col-lg-12 cl-t-listing wrapper_div">
                                                 <button type="button" id="btn_save_task" class="btn btn-theme">Save</button>
@@ -297,7 +297,7 @@
                                         <div class="form-group row">
                                             <div class="col-lg-12">
                                                 <label for="">
-                                                   Phone
+                                                    Phone
                                                 </label>
                                             </div>
                                             <div class="col-lg-4">
@@ -567,6 +567,8 @@
                                     <label  id ="currentPage" class="pageInf"></label>
                                     <label  id ="clippedData" class="pageInf"></label>
                                     <div class="btn-group" role="group" style="float:right;">
+                                        <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-left" title="Rotate Left"><span class="fa fa-rotate-left"></span></button>
+                                        <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-right" title="Rotate Right"><span class="fa fa-rotate-right"></span></button>
                                         <button id="btnPrevPage" type="button" class="btn btn-secondary" title="Prev Page"><span class="glyphicon glyphicon-menu-left"></span></button>
                                         <button id="btnNextPage" type="button" class="btn btn-secondary" title="Next Page"><span class="glyphicon glyphicon-menu-right"></span></button>
                                     </div>
