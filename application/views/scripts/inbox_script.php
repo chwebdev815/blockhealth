@@ -631,13 +631,10 @@
         });
 
         $("#save-patient-wrapper").find("#btnStartPatientCrop").on("click", function () {
-            if (cropper) {
-                cropper.destroy();
+            if (!cropper_activated) {
+                createCropper();
             }
             $(".toolbar").show();
-            createCropper();
-//            $("#save-patient-container").find("#btn_search_patient").hide("slow");
-//            $("#save-patient-container").find("#btn_extract_patient").show("slow");
         });
 
         $("#save-patient-wrapper").find("#btn_extract_patient").on("click", function () {
@@ -1130,19 +1127,18 @@
         });
 
         $("#btnStartCrop").on("click", function () {
-            if (cropper) {
-                cropper.destroy();
+            console.log("method btnStartCrop click");
+            if (!cropper_activated) {
+                createCropper();
             }
-            createCropper();
             $(".toolbar").show();
         });
 
         $("#btn_labtest_autofill").on("click", function () {
             console.log("method btn_labtest_autofill click");
-            if (cropper) {
-                cropper.destroy();
+            if (!cropper_activated) {
+                createCropper();
             }
-            createCropper();
             setTimeout(execute_file_upload_labtest, 1000);
         });
 
@@ -1157,11 +1153,10 @@
 
 
         $("#btnStartCrop2").on("click", function () {
-            if (cropper) {
-                cropper.destroy();
+            if (!cropper_activated) {
+                createCropper();
             }
             $(".toolbar").show();
-            createCropper();
             $("#btn_find_physician_match").hide("slow");
             $("#btn_extract_physician").show("slow");
         });

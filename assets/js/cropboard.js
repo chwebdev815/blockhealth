@@ -689,10 +689,10 @@ $(document).ready(function () {
 
     $('#btnAutofillTriage').on('click', function () {
         console.log("method btnAutoFill click");
-        if (cropper) {
-            cropper.destroy();
+        if (!cropper_activated) {
+            createCropper();
         }
-        createCropper();
+//        createCropper();
         //start loading
         btn_autofill = $(this);
         btn_autofill.button('loading');
