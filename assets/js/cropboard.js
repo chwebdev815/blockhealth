@@ -726,8 +726,16 @@ $(document).ready(function () {
 
     $('#btnAutofillTriage').on('click', function () {
         console.log("method btnAutoFill click");
-        createCropper();
 
+        if (cropper_activated) {
+//            global_data.crop_data = cropper.getCropBoxData();
+            global_data.crop_rotate = cropper.getData().rotate;
+        }
+        createCropper();
+        setTimeout(function () {
+//          cropper.setCropBoxData(global_data.crop_data);
+            cropper.rotate(global_data.crop_rotate);
+        }, 100);
         //start loading
         btn_autofill = $(this);
         btn_autofill.button('loading');
