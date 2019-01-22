@@ -687,14 +687,26 @@ function my_string(value) {
 
 function check_rotate_cropbox() {
 //    debugger
-//    cropbox = cropper.getCropBoxData();
-//    canvasbox = { 
-//        left: cropper.getCanvasData().left,
-//        top: cropper.getCanvasData().top,
-//        width: cropper.getCanvasData().width,
-//        height: cropper.getCanvasData().height
-//    };
-    
+    return;
+    cropbox = cropper.getCropBoxData();
+    canvasbox = {
+        left: cropper.getCanvasData().left,
+        top: cropper.getCanvasData().top,
+        width: cropper.getCanvasData().width,
+        height: cropper.getCanvasData().height
+    };
+    cropbox = {
+        left: cropper.getCropBoxData().left,
+        top: cropper.getCropBoxData().top,
+        width: cropper.getCropBoxData().width,
+        height: cropper.getCropBoxData().height
+    }
+    if (JSON.stringify(canvasbox) == JSON.stringify(cropbox)) {
+        setTimeout(function() {
+           a = cropper.getCanvasData();
+           cropper.setCropBoxData(a);
+        }, 1000);
+    }
 }
 
 $(document).ready(function () {

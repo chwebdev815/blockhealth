@@ -832,6 +832,13 @@
 
 
         $('.patients-details-form .btn-next').on('click', function () {
+
+
+            if (typeof ("cropper_activated") !== "undefined" && cropper_activated) {
+                global_data.crop_data = cropper.getCropBoxData();
+                global_data.crop_rotate = cropper.getData().rotate;
+            }
+
             var parent_fieldset = $(this).parents('fieldset');
             var next_step = true;
             parent_fieldset.find('.required').each(function () {
@@ -859,8 +866,21 @@
                 });
                 if (cropper) {
                     cropper.destroy();
-                    cropper_activated = false;
+                    createCropper();
+                    setTimeout(function () {
+                        cropper.setCropBoxData(global_data.crop_data);
+                        cropper.rotate(global_data.crop_rotate);
+                    }, 100);
                 }
+
+//                if (cropper_activated) {
+//                    cropper.destroy();
+//                    createCropper();
+//                    setTimeout(function () {
+//                        cropper.setCropBoxData(global_data.crop_data);
+//                        cropper.rotate(global_data.crop_rotate);
+//                    }, 100);
+//                }
             }
         });
 
