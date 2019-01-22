@@ -702,9 +702,9 @@ function check_rotate_cropbox() {
         height: cropper.getCropBoxData().height
     }
     if (JSON.stringify(canvasbox) == JSON.stringify(cropbox)) {
-        setTimeout(function() {
-           a = cropper.getCanvasData();
-           cropper.setCropBoxData(a);
+        setTimeout(function () {
+            a = cropper.getCanvasData();
+            cropper.setCropBoxData(a);
         }, 1000);
     }
 }
@@ -726,10 +726,8 @@ $(document).ready(function () {
 
     $('#btnAutofillTriage').on('click', function () {
         console.log("method btnAutoFill click");
-        if (!cropper_activated) {
-            createCropper();
-        }
-//        createCropper();
+        createCropper();
+
         //start loading
         btn_autofill = $(this);
         btn_autofill.button('loading');
