@@ -317,6 +317,10 @@
         // x_reason = 0;
         // x_documents = 0;
         // x_devices = 0;
+        if (cropper != null) {
+            cropper.destroy();
+            cropper_activated = false;
+        }
 
         if (typeof $("#eFax-modal").find("form")[0] != "undefined") {
             $("#eFax-modal").find("form")[0].reset();
@@ -855,6 +859,7 @@
                 });
                 if (cropper) {
                     cropper.destroy();
+                    cropper_activated = false;
                 }
             }
         });

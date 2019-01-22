@@ -460,14 +460,18 @@ class Inbox_model extends CI_Model {
         $this->form_validation->set_rules('id', 'Efax Id', 'required');
         // $this->form_validation->set_rules('diagnosis', 'Diagnosis', 'required');
         // $this->form_validation->set_rules('referral_reason', 'Reason for Referral', 'required');
+        
+        
         $this->form_validation->set_rules('pat_fname', 'Patient First Name', 'required');
         $this->form_validation->set_rules('pat_lname', 'Patient Last Name', 'required');
-        $this->form_validation->set_rules('pat_dob_day', 'Day - Date of Birth', 'required');
-        $this->form_validation->set_rules('pat_dob_month', 'Month - Date of Birth', 'required');
-        $this->form_validation->set_rules('pat_dob_year', 'Year - Date of Birth', 'required');
+//        $this->form_validation->set_rules('pat_dob_day', 'Day - Date of Birth', 'required');
+//        $this->form_validation->set_rules('pat_dob_month', 'Month - Date of Birth', 'required');
+//        $this->form_validation->set_rules('pat_dob_year', 'Year - Date of Birth', 'required');
         $this->form_validation->set_rules('pat_email', 'Patient Email', 'valid_email');
-        $this->form_validation->set_rules('dr_fname', 'Physician First Name', 'required');
-        $this->form_validation->set_rules('dr_lname', 'Physician Last Name', 'required');
+//        $this->form_validation->set_rules('dr_fname', 'Physician First Name', 'required');
+//        $this->form_validation->set_rules('dr_lname', 'Physician Last Name', 'required');
+        
+        
 //        $this->form_validation->set_rules('priority', 'Priority', 'required');
         // $this->form_validation->set_rules('dr_fax', 'Physician Fax', 'required');
         $this->form_validation->set_rules('dr_email', 'Physician Email', 'valid_email');

@@ -30,8 +30,10 @@ function convertFileToDataURLviaFileReader(url) {
     xhr.send();
 }
 function set_load_tiff_page(tmp_current) {
-    if (cropper)
+
+    if (cropper) {
         cropper.destroy();
+    }
     page_num = tmp_current;
     console.log("method set_load_tiff_page called");
     activeAutoFillButton(false);
@@ -39,6 +41,15 @@ function set_load_tiff_page(tmp_current) {
     tiff_image.setDirectory(page_num);
     var temp_canvas = tiff_image.toCanvas();
     imageObj.attr('src', temp_canvas.toDataURL());
+
+    if (cropper_activated) {
+        cropper.destroy();
+        createCropper();
+        setTimeout(function () {
+            cropper.setCropBoxData(global_data.crop_data);
+            cropper.rotate(global_data.crop_rotate);
+        }, 100);
+    }
 }
 
 function exit() {
@@ -48,8 +59,9 @@ function exit() {
 
 function init(fileURL) {
     console.log("method init called");
-    if (cropper)
+    if (cropper) {
         cropper.destroy();
+    }
     cropper = null;
     fileList = null;
     current = 0;
@@ -65,8 +77,9 @@ function init(fileURL) {
 }
 function createCropper() {
     console.log("method createCropper called");
-    if (cropper)
+    if (cropper) {
         cropper.destroy();
+    }
     // console.log("outside");
     cropper = new Cropper(document.querySelector('#cropboard'), {
         dragMode: 'crop',
@@ -672,6 +685,18 @@ function my_string(value) {
     }
 }
 
+function check_rotate_cropbox() {
+//    debugger
+//    cropbox = cropper.getCropBoxData();
+//    canvasbox = { 
+//        left: cropper.getCanvasData().left,
+//        top: cropper.getCanvasData().top,
+//        width: cropper.getCanvasData().width,
+//        height: cropper.getCanvasData().height
+//    };
+    
+}
+
 $(document).ready(function () {
 
     $('#btnAutoFill').on('click', function () {
@@ -716,8 +741,11 @@ $(document).ready(function () {
             current = 0;
             return;
         }
+        if (cropper_activated) {
+            global_data.crop_data = cropper.getCropBoxData();
+            global_data.crop_rotate = cropper.getData().rotate;
+        }
         set_load_tiff_page(current);
-        cropper_activated = false;
     });
     $('#btnNextPage').on('click', function (evt) {
         current++;
@@ -726,8 +754,11 @@ $(document).ready(function () {
             current = fileList.length - 1;
             return;
         }
+        if (cropper_activated) {
+            global_data.crop_data = cropper.getCropBoxData();
+            global_data.crop_rotate = cropper.getData().rotate;
+        }
         set_load_tiff_page(current);
-        cropper_activated = false;
     });
     $("[data-target='#eFax-modal']").on('click', function (evt) {
         init();
@@ -741,11 +772,13 @@ $(document).ready(function () {
             console.log("topbar action:" + action);
             switch (action) {
                 case 'rotate-left':
+                    check_rotate_cropbox();
                     cropper.rotate(-90);
                     break;
                 case 'rotate-right':
                     if (!cropper)
                         break;
+                    check_rotate_cropbox();
                     cropper.rotate(90);
                     break;
             }

@@ -7,16 +7,12 @@
         -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
         box-shadow: 0 5px 15px rgba(0,0,0,.5);
     }
-
     .popup_wrapper{
-
         top: 10%!important;
     }
-
     .popup_background{
         z-index: 0!important;
     }
-
 </style>
 
 <!-- <button class="popup2_open">Click me 2!</button>
@@ -357,10 +353,10 @@
                                                 <label for="new-patient-name">Full Name *</label>
                                             </div>
                                             <div class="col-sm-6 col-xs-12">
-                                                <input type="text" class="form-control required" name="dr_fname" id="dr_fname" placeholder="First Name">
+                                                <input type="text" class="form-control" name="dr_fname" id="dr_fname" placeholder="First Name">
                                             </div>
                                             <div class="col-sm-6 col-xs-12">
-                                                <input type="text" class="form-control required" name="dr_lname" id="dr_lname" placeholder="Last Name">
+                                                <input type="text" class="form-control" name="dr_lname" id="dr_lname" placeholder="Last Name">
                                             </div>
                                         </div>
                                         <div class="form-group row">
