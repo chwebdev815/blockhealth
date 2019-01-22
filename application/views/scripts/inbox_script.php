@@ -832,8 +832,6 @@
 
 
         $('.patients-details-form .btn-next').on('click', function () {
-
-
             if (typeof ("cropper_activated") !== "undefined" && cropper_activated) {
                 global_data.crop_data = cropper.getCropBoxData();
                 global_data.crop_rotate = cropper.getData().rotate;
@@ -859,7 +857,7 @@
                 }
             });
 
-            if (next_step) {
+            if (next_step || true) {
                 parent_fieldset.fadeOut(400, function () {
                     $(this).next().fadeIn();
                     $(".toolbar").hide();
@@ -868,7 +866,7 @@
                     cropper.destroy();
                     createCropper();
                     setTimeout(function () {
-                        cropper.setCropBoxData(global_data.crop_data);
+//                        cropper.setCropBoxData(global_data.crop_data);
                         cropper.rotate(global_data.crop_rotate);
                     }, 100);
                 }
