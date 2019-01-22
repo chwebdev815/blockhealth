@@ -727,19 +727,23 @@ $(document).ready(function () {
         console.log("method btnAutoFill click");
 
         if (cropper_activated) {
-//            global_data.crop_data = cropper.getCropBoxData();
             global_data.crop_rotate = cropper.getData().rotate;
         }
-        createCropper();
+        else {
+            createCropper();
+        }
+        
+//        createCropper();
         setTimeout(function () {
-            cropper.rotate(global_data.crop_rotate);
+//            cropper.rotate(global_data.crop_rotate);
             cropper.setCropBoxData(cropper.getCanvasData());
+            setTimeout(execute_file_upload, 1000);
         }, 100);
         //start loading
         btn_autofill = $(this);
         btn_autofill.button('loading');
 
-        setTimeout(execute_file_upload, 1000);
+        
     });
 
     function execute_file_upload() {
