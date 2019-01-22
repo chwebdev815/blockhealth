@@ -857,25 +857,16 @@
                 }
             });
 
-            if (next_step || true) {
+            if (next_step) {
                 parent_fieldset.fadeOut(400, function () {
                     $(this).next().fadeIn();
                     $(".toolbar").hide();
                 });
-                if (cropper) {
-                    cropper.destroy();
-                    createCropper();
-                    setTimeout(function () {
-//                        cropper.setCropBoxData(global_data.crop_data);
-                        cropper.rotate(global_data.crop_rotate);
-                    }, 100);
-                }
-
-//                if (cropper_activated) {
+//                if (cropper) {
 //                    cropper.destroy();
 //                    createCropper();
 //                    setTimeout(function () {
-//                        cropper.setCropBoxData(global_data.crop_data);
+////                        cropper.setCropBoxData(global_data.crop_data);
 //                        cropper.rotate(global_data.crop_rotate);
 //                    }, 100);
 //                }
