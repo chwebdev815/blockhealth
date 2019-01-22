@@ -687,25 +687,24 @@ function my_string(value) {
 
 function check_rotate_cropbox() {
 //    debugger
-    return;
     cropbox = cropper.getCropBoxData();
     canvasbox = {
         left: cropper.getCanvasData().left,
-        top: cropper.getCanvasData().top,
+//        top: cropper.getCanvasData().top,
         width: cropper.getCanvasData().width,
-        height: cropper.getCanvasData().height
+//        height: cropper.getCanvasData().height
     };
     cropbox = {
         left: cropper.getCropBoxData().left,
-        top: cropper.getCropBoxData().top,
+//        top: cropper.getCropBoxData().top,
         width: cropper.getCropBoxData().width,
-        height: cropper.getCropBoxData().height
+//        height: cropper.getCropBoxData().height
     }
     if (JSON.stringify(canvasbox) == JSON.stringify(cropbox)) {
         setTimeout(function () {
             a = cropper.getCanvasData();
             cropper.setCropBoxData(a);
-        }, 1000);
+        }, 200);
     }
 }
 
@@ -733,8 +732,8 @@ $(document).ready(function () {
         }
         createCropper();
         setTimeout(function () {
-//          cropper.setCropBoxData(global_data.crop_data);
             cropper.rotate(global_data.crop_rotate);
+            cropper.setCropBoxData(cropper.getCanvasData());
         }, 100);
         //start loading
         btn_autofill = $(this);
