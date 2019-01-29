@@ -962,7 +962,7 @@ class Referral_model extends CI_Model {
                     //send sms
 //                    echo $msg;
 //                    exit();
-//                    $this->send_sms($msg_data->cell_phone, $msg);
+                    $this->send_sms($msg_data->cell_phone, $msg);
                 }
                 $this->db->trans_complete();
                 return true;
