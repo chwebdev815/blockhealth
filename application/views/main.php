@@ -105,7 +105,7 @@
                     <a class="clearfix" href="<?php echo base_url(); ?>analytics"><span>Analytics Dashboard</span><img src="<?php echo base_url(); ?>assets/img/dashboard.png" /></a>
                 </li>
 				<li id="li_schedule_settings" data-toggle="tooltip" data-placement="right" title="" data-original-title="Schedule Settings">
-                    <a class="clearfix" href="<?php echo base_url(); ?>schedule_settings_master"><span>Schedule Settings</span><img src="Inbox_files/dashboard.png"></a>
+                    <a class="clearfix" href="<?php echo base_url(); ?>schedule_settings"><span>Schedule Settings</span><img src="Inbox_files/dashboard.png"></a>
                 </li>				
                 <li id="li_all_patient_records" data-toggle="tooltip" data-placement="right" title="All Patient Records">
                     <a class="clearfix" href="<?php echo base_url(); ?>completed"><span>All Patient Records</span><i class="fa fa-user" aria-hidden="true"></i></a>
