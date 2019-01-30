@@ -13,6 +13,10 @@
     .popup_background{
         z-index: 0!important;
     }
+	
+.clr-lg-padd{
+	padding-right: 0px;
+}	
 </style>
 
 <!-- <button class="popup2_open">Click me 2!</button>
@@ -107,14 +111,14 @@
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="col-md-6 marg-top-10px">
+                <div class="col-md-4 marg-top-10px">
                     <button type="button" class="btn btn-link db-nav-more-trigger back-link" data-toggle="modal" data-target="#add-referral-modal" data-dismiss="modal">
                         <i class="fa fa-angle-left fa-2x"></i>
                     </button>
                     <span id="file_info"></span>
                 </div>
-                <div class="col-md-6">
-                    <span class="eFax-bar-actions col-md-offset-3 marg-top-10px">
+                <div class="col-md-8 text-right">
+                    <span class="eFax-bar-actions marg-top-10px">
                         <a href="javascript:void(0)" id="btn_view_print_referral">Print </a> &nbsp;
                         <a href="javascript:void(0)" id="btn_view_delete_referral">Delete </a> &nbsp;
                         <a href="javascript:void(0)" id="btn_download_referral" download>Download </a>
@@ -299,7 +303,7 @@
                                             <div class="col-lg-4">
                                                 <input type="text" class="form-control" name="pat_home_phone" id="patient-home-phone" placeholder="Home Phone" autocomplete="off">
                                             </div>
-                                            <div class="col-lg-4">
+                                            <div class="col-lg-4" style="padding-left: 0px; padding-right: 0px;">
                                                 <input type="text" class="form-control" name="pat_cell_phone" id="patient-cell-phone" placeholder="Cell Phone" autocomplete="off">
                                             </div>
                                             <div class="col-lg-4">
