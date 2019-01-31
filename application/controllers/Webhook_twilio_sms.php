@@ -31,14 +31,14 @@ class Webhook_twilio_sms extends CI_Controller {
             $this->db->order_by("r_pvr.id", "desc");
             $this->db->limit(1);
             log_message("error", "sql = " . $this->db->last_query());
-            $msg = "Init Message";
-
             $result = $this->db->get()->result();
+//            echo "sql = " . $this->db->last_query();
             //process latest visit only
             if ($result) {
                 log_message("error", "if result");
                 //if visit not expired 
                 $reserved = $result[0];
+                $msg = "";
                 if ($reserved->visit_expire_time > date("Y-m-d H:i:s")) {
                     log_message("error", "alive visit_expire_time");
                     if ($Body === "0") {
@@ -84,18 +84,40 @@ class Webhook_twilio_sms extends CI_Controller {
                         }
                         $this->db->insert("records_patient_visit", $insert_data);
 
+                        $this->db->select("c_usr.address")
+                                ->from("clinic_user_info c_usr, referral_patient_info pat, "
+                                        . "clinic_referrals c_ref, efax_info efax")
+                                ->where("pat.id", $reserved->patient_id);
+                        $this->db->where("pat.referral_id", "c_ref.patient_id", false);
+                        $this->db->where("c_ref.efax_id", "efax.id", false);
+                        $clinic = $this->db->get()->result();
+
+                        if ($clinic) {
+                            $address = $clinic[0]->address;
+                        } else {
+                            $address = "Clinic Address";
+                        }
+
                         log_message("error", "insert = " . $this->db->last_query());
-                        $msg = "Thank you. Your appointment has been scheduled for <date at time>.\n"
+                        $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $reserved->visit_start_time3);
+                        $date = $datetime->format("l M jS");
+                        $time = $datetime->format("g:ia");
+                        $msg = "Thank you. Your appointment has been scheduled for $date at $time.\n"
                                 . "\n"
                                 . "The address is:\n"
                                 . "<address>\n"
                                 . "\n"
                                 . "Please be sure to arrive on time.";
+
+                        $this->db->set("active", "0");
+                        $this->db->where("id", $reserved->id);
+                        $this->db->update("records_patient_visit_reserved");
                     }
                 }
+                echo "<Response><Sms>" . $msg . "</Sms></Response>";
+            } else {
+                exit();
             }
-
-            echo "<Response><Sms>" . $msg . "</Sms></Response>";
         }
     }
 
