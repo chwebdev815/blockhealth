@@ -460,8 +460,8 @@ class Inbox_model extends CI_Model {
         $this->form_validation->set_rules('id', 'Efax Id', 'required');
         // $this->form_validation->set_rules('diagnosis', 'Diagnosis', 'required');
         // $this->form_validation->set_rules('referral_reason', 'Reason for Referral', 'required');
-        
-        
+
+
         $this->form_validation->set_rules('pat_fname', 'Patient First Name', 'required');
         $this->form_validation->set_rules('pat_lname', 'Patient Last Name', 'required');
 //        $this->form_validation->set_rules('pat_dob_day', 'Day - Date of Birth', 'required');
@@ -470,8 +470,6 @@ class Inbox_model extends CI_Model {
         $this->form_validation->set_rules('pat_email', 'Patient Email', 'valid_email');
 //        $this->form_validation->set_rules('dr_fname', 'Physician First Name', 'required');
 //        $this->form_validation->set_rules('dr_lname', 'Physician Last Name', 'required');
-        
-        
 //        $this->form_validation->set_rules('priority', 'Priority', 'required');
         // $this->form_validation->set_rules('dr_fax', 'Physician Fax', 'required');
         $this->form_validation->set_rules('dr_email', 'Physician Email', 'valid_email');
@@ -486,7 +484,6 @@ class Inbox_model extends CI_Model {
             if ($result) {
                 return array(false, "Referral already created for this fax");
             }
-
 
             //check efax authenticity
             $this->db->select("id, file_name");
@@ -508,13 +505,24 @@ class Inbox_model extends CI_Model {
                     // $first_status = "Admin Triage";
                     $first_status = "Physician Triage";
                     $this->db->set("last_updated", "now()", false);
-                    $this->db->insert("clinic_referrals", array(
+
+                    $insert_data = array(
                         "efax_id" => $efax_id,
                         "referral_code" => $referral_code,
                         "referral_reason" => $referral_reason,
                         "status" => $first_status
-                    ));
-
+                    );
+                    //If clinic has only 1 physician account, then assign by default 
+                    $physicians = $this->db->select("id")->from("clinic_physician_info")->where(array(
+                        "clinic_id" => $this->session->userdata("user_id")
+                    ))->get()->result();
+                    if($physicians && sizeof($physicians) === 1) {
+                        $insert_data["assigned_physician"] = $physicians[0]->id;
+                    }
+                    $this->db->insert("clinic_referrals", $insert_data);
+                    //new referral record added
+                    
+                    
                     log_message("error", "update status  = " . $this->db->last_query());
                     $referral_id = $this->db->insert_id();
                     //remove from inbox by status referred true
