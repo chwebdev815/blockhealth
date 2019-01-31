@@ -55,7 +55,7 @@ class Call_view extends CI_Controller {
 
         log_message("error", "Starting " . $call_handle_file . " for $type");
 
-        $url = base_url() . "twiml/$call_handle_file?pname=" . urlencode($pname) . "&patient_lname=" . $patient_lname . "&pvname=" . urlencode($pvname) . "&cname=" . urlencode($cname) . "&aDate=" . urlencode($aDate) . "&aTime=" . urlencode($aTime) . "&address=" . urlencode($address);
+        $url = base_url() . "/call_view/callhandle?pname=" . urlencode($pname) . "&patient_lname=" . $patient_lname . "&pvname=" . urlencode($pvname) . "&cname=" . urlencode($cname) . "&aDate=" . urlencode($aDate) . "&aTime=" . urlencode($aTime) . "&address=" . urlencode($address);
         $uri = 'https://api.twilio.com/2010-04-01/Accounts/' . $sid . '/Calls.json';
         $auth = $sid . ':' . $token;
         $fields = '&Url=' . urlencode($url) .
@@ -161,5 +161,27 @@ class Call_view extends CI_Controller {
             $this->db->trans_complete();
         }
     }
+	
+	public function callhandle(){
+		if(isset($_GET['pname'])){
+		$address = $_GET['address'];
+		$dataarray = http_build_query($_GET);
+		$base_url = "http://35.203.47.37";
+
+		echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+		echo "<Response>
+				<Gather  timeout='3' numDigits='1' action='$base_url/twiml/callhandle.php?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>
+						<Say  voice='Polly.Joanna'> Hello </Say>
+						<Pause length='1'/>
+						<Say voice='Polly.Joanna'> This is an automated appointment call for  " . $_GET['pname'] . "  " . $_GET['patient_lname'] . ".</Say>
+						<Pause length='1'/>
+						<Say voice='Polly.Joanna'> If you are  " . $_GET['pname'] . "  " . $_GET['patient_lname'] . " , please enter 1 to continue. If this is the wrong number, please type 2 to end the call</Say>
+				</Gather>
+					<Pause length='10'/>
+					<Redirect method='GET'>
+					$base_url/twiml/callhandle_new.php?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;Digits=timeout</Redirect>
+		</Response>";
+	   }
+	}
 
 }
