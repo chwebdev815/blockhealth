@@ -170,7 +170,7 @@ class Call_view extends CI_Controller {
 
 		echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 		echo "<Response>
-				<Gather  timeout='3' numDigits='1' action='$base_url/twiml/callhandle.php?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>
+				<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_two?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>
 						<Say  voice='Polly.Joanna'> Hello </Say>
 						<Pause length='1'/>
 						<Say voice='Polly.Joanna'> This is an automated appointment call for  " . $_GET['pname'] . "  " . $_GET['patient_lname'] . ".</Say>
@@ -179,7 +179,7 @@ class Call_view extends CI_Controller {
 				</Gather>
 					<Pause length='10'/>
 					<Redirect method='GET'>
-					$base_url/twiml/callhandle_new.php?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;Digits=timeout</Redirect>
+					$base_url/call_view/callhandle?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;Digits=timeout</Redirect>
 		</Response>";
 	   }
 	}
@@ -206,7 +206,7 @@ class Call_view extends CI_Controller {
 			echo "</Gather>";
 			echo "<Pause length='10'/>";
 			echo "<Redirect method='GET'>
-		$base_url/call_view/step_two?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;Digits=timeout</Redirect>";
+		$base_url/call_view/step_two?Digits=&amp;pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;Digits=timeout</Redirect>";
 			echo "</Response>";
 		} elseif ($_REQUEST['Digits'] == 2) {
 			echo "<Response><Say voice='Polly.Joanna'>Thank you</Say></Response>";
