@@ -74,9 +74,6 @@
                 <li id="li_my_tasks" data-toggle="tooltip" data-placement="right" title="My Tasks">
                     <a class="clearfix" href="<?php echo base_url(); ?>my_tasks"><span>My Tasks</span><i class="numb-notifies" id="count_my_tasks">&nbsp;</i></a>
                 </li>
-                <!-- <li id="li_admin_triage" data-toggle="tooltip" data-placement="right" title="Admin Triage">
-                    <a class="clearfix" href="<?php echo base_url(); ?>admin_triage"><span>Admin Triage</span><i class="numb-notifies" id="count_admin">&nbsp;</i></a>
-                </li> -->
                 <li id="li_physician_triage" data-toggle="tooltip" data-placement="right" title="Physician Triage">
                     <a class="clearfix" href="<?php echo base_url(); ?>physician_triage"><span>Physician Triage</span><i class="numb-notifies" id="count_physician">&nbsp;</i></a>
                 </li>
@@ -86,12 +83,6 @@
                 <li id="li_scheduled" data-toggle="tooltip" data-placement="right" title="Scheduled">
                     <a class="clearfix" href="<?php echo base_url(); ?>scheduled"><span>Scheduled</span><i class="numb-notifies" id="count_scheduled_stopped">&nbsp;</i></a>
                 </li>
-                <!--                <li id="li_confirmed" data-toggle="tooltip" data-placement="right" title="Confirmed">
-                                    <a class="clearfix" href="<?php echo base_url(); ?>confirmed"><span>Confirmed</span><i class="numb-notifies" id="count_confirmed">&nbsp;</i></a>
-                                </li>-->
-                <!--                <li id="li_completed" data-toggle="tooltip" data-placement="right" title="Completed">
-                                    <a class="clearfix" href="<?php echo base_url(); ?>completed"><span>Completed</span><i class="numb-notifies" id="count_completed">&nbsp;</i></a>
-                                </li>-->
             </ul>
             <ul class="db-sidebar-items list-unstyled" id="second_menu_list" style="display:none">
                 <li class="top-items-wrap">
@@ -104,8 +95,8 @@
                 <li id="li_analytics_dashboard" data-toggle="tooltip" data-placement="right" title="Analytics Dashboard">
                     <a class="clearfix" href="<?php echo base_url(); ?>analytics"><span>Analytics Dashboard</span><img src="<?php echo base_url(); ?>assets/img/dashboard.png" /></a>
                 </li>
-				<li id="li_schedule_settings" data-toggle="tooltip" data-placement="right" title="" data-original-title="Schedule Settings">
-                    <a class="clearfix" href="<?php echo base_url(); ?>schedule_settings"><span>Schedule Settings</span><img src="Inbox_files/dashboard.png"></a>
+                <li id="li_schedule_settings" data-toggle="tooltip" data-placement="right" title="" data-original-title="Schedule Settings">
+                    <a class="clearfix" href="<?php echo base_url(); ?>schedule_settings"><span>Schedule Settings</span><img src="<?php echo base_url(); ?>assets/img/dashboard.png"></a>
                 </li>				
                 <li id="li_all_patient_records" data-toggle="tooltip" data-placement="right" title="All Patient Records">
                     <a class="clearfix" href="<?php echo base_url(); ?>completed"><span>All Patient Records</span><i class="fa fa-user" aria-hidden="true"></i></a>

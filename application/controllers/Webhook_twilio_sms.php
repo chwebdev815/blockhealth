@@ -30,17 +30,19 @@ class Webhook_twilio_sms extends CI_Controller {
             $this->db->where("r_pvr.patient_id", "pat.id", false);
             $this->db->order_by("r_pvr.id", "desc");
             $this->db->limit(1);
-
-
+            log_message("error", "sql = " . $this->db->last_query());
             $msg = "Init Message";
 
             $result = $this->db->get()->result();
             //process latest visit only
             if ($result) {
+                log_message("error", "if result");
                 //if visit not expired 
                 $reserved = $result[0];
                 if ($reserved->visit_expire_time > date("Y-m-d H:i:s")) {
+                    log_message("error", "alive visit_expire_time");
                     if ($Body === "0") {
+                        log_message("error", "body 0");
                         $this->db->insert("records_patient_visit", array(
                             "visit_name" => $reserved->visit_name,
                             "patient_id" => $reserved->patient_id,
@@ -54,6 +56,7 @@ class Webhook_twilio_sms extends CI_Controller {
                     }
 
                     if ($Body === "1" || $Body === "2" || $Body === "3") {
+                        log_message("error", "body $Body");
                         $insert_data = array(
                             "visit_name" => $reserved->visit_name,
                             "patient_id" => $reserved->patient_id,
@@ -80,6 +83,8 @@ class Webhook_twilio_sms extends CI_Controller {
                             $insert_data["visit_end_time"] = $reserved->visit_end_time3;
                         }
                         $this->db->insert("records_patient_visit", $insert_data);
+
+                        log_message("error", "insert = " . $this->db->last_query());
                         $msg = "Thank you. Your appointment has been scheduled for <date at time>.\n"
                                 . "\n"
                                 . "The address is:\n"
