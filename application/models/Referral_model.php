@@ -916,6 +916,7 @@ class Referral_model extends CI_Model {
 //                        $week = $weekdays[(int)$date->format("l")];
 //                        echo $week . "<br/>";
                     $visit_datetime = array();
+                    
                     $visit_datetime[] = array(
                         "date" => $start_time1->format("l M jS"),
                         "time" => $start_time1->format("g:ia")

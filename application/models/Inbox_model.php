@@ -461,7 +461,6 @@ class Inbox_model extends CI_Model {
         // $this->form_validation->set_rules('diagnosis', 'Diagnosis', 'required');
         // $this->form_validation->set_rules('referral_reason', 'Reason for Referral', 'required');
 
-
         $this->form_validation->set_rules('pat_fname', 'Patient First Name', 'required');
         $this->form_validation->set_rules('pat_lname', 'Patient Last Name', 'required');
 //        $this->form_validation->set_rules('pat_dob_day', 'Day - Date of Birth', 'required');

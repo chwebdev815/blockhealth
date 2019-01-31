@@ -14,10 +14,9 @@ class Webhook_twilio_sms extends CI_Controller {
         $Body = strtoupper(trim($data["Body"]));
 //
         $From = $data["From"];
-
         //$Body = "1";
         //$From = "6479066970";
-
+        
         if ($Body === "0" || $Body === "1" || $Body === "2" || $Body === "3") {
             //look for relative patient number
             log_message("error", "body is 1 or 2 or 3 => $Body");
