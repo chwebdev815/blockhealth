@@ -16,7 +16,7 @@ class Webhook_twilio_sms extends CI_Controller {
         $From = $data["From"];
         //$Body = "1";
         //$From = "6479066970";
-        
+
         if ($Body === "0" || $Body === "1" || $Body === "2" || $Body === "3") {
             //look for relative patient number
             log_message("error", "body is 1 or 2 or 3 => $Body");
@@ -29,95 +29,68 @@ class Webhook_twilio_sms extends CI_Controller {
             ));
             $this->db->where("r_pvr.patient_id", "pat.id", false);
             $this->db->order_by("r_pvr.id", "desc");
-            $this->db->limit(3);
+            $this->db->limit(1);
 
 
 //                "r_pvr.notify_sms" => 1,
 
             $result = $this->db->get()->result();
             //process latest visit only
-            if ($result && sizeof($result) === 3) {
-                if ($Body === "0") {
-                    $reserved = $result[0];
-                    $this->db->insert("records_patient_visit", array(
-                       "visit_name" => $reserved->visit_name,
-                       "patient_id" => $reserved->patient_id,
-//                       "patient_id" => $reserved->patient_id,
-//                       "patient_id" => $reserved->patient_id,
-                        
-                    ));
-                    $msg = "Thank you. Staff from the clinic will be in touch shortly";
-                }
-//                $latest_visit = $result[sizeof($result) - 1];
-//                if($latest_visit->visit_confirmed === "Awaiting Confirmation") {
-//                    $msg = "Default Message";
-//                    if($Body === "0") {
-//                        $this->db->where(array(
-//                            "id" => $latest_visit->id
-//                        ));
-//                        $this->db->set("visit_confirmed", "Change required");
-//                        $this->db->update("records_patient_visit");
-//                        $msg = "Thank you. Staff from the clinic will be in touch shortly";
-//                    }
-//                    else if($Body === "1" || $Body === "2" || $Body === "3") {
-//                        
-//                    }
-//                    echo "<Response><Sms>" . $msg . "</Sms></Response>";
-//                }
-            }
-
-            $change_status = false;
-
-            $this->db->trans_start();
-            foreach ($result as $row) {
-                log_message("error", "row = " . json_encode($row));
-                log_message("error", "body = " . $Body);
-                if ($Body == "1") {
-                    if ($row->visit_confirmed == "Awaiting Confirmation" || $row->visit_confirmed == "Change required") {
-                        //change status to confirm
-                        $this->db->where(array(
-                            "id" => $row->id
+            if ($result) {
+                //if visit not expired 
+                $reserved = $result[0];
+                if ($reserved->visit_expire_time > date("Y-m-d H:i:s")) {
+                    if ($Body === "0") {
+                        $this->db->insert("records_patient_visit", array(
+                            "visit_name" => $reserved->visit_name,
+                            "patient_id" => $reserved->patient_id,
+                            "notify_voice" => $reserved->notify_voice,
+                            "notify_sms" => $reserved->notify_sms,
+                            "notify_email" => $reserved->notify_email,
+                            "visit_confirmed" => "Change required",
+                            "confirm_visit_key" => $reserved->confirm_visit_key
                         ));
-                        $this->db->set("visit_confirmed", "Confirmed");
-                        $this->db->update("records_patient_visit");
-                        $change_status = true;
-
-                        log_message("error", "confirming status of visit " . $this->db->last_query());
+                        $msg = "Thank you. Staff from the clinic will be in touch shortly";
                     }
-                }
-                if ($Body == "2") {
-                    if ($row->visit_confirmed == "Awaiting Confirmation") {
-                        //change status to Change required
-                        $this->db->where(
-                                array(
-                                    "id" => $row->id
-                                )
+
+                    if ($Body === "1" || $Body === "2" || $Body === "3") {
+                        $insert_data = array(
+                            "visit_name" => $reserved->visit_name,
+                            "patient_id" => $reserved->patient_id,
+                            "notify_voice" => $reserved->notify_voice,
+                            "notify_sms" => $reserved->notify_sms,
+                            "notify_email" => $reserved->notify_email,
+                            "visit_confirmed" => "Confirmed",
+                            "confirm_visit_key" => $reserved->confirm_visit_key
                         );
-                        $this->db->set("visit_confirmed", "Change required");
-                        $this->db->update("records_patient_visit");
-                        $change_status = true;
 
-
-                        log_message("error", "changing status of visit " . $this->db->last_query());
+                        if ($Body === "1") {
+                            $insert_data["visit_date"] = $reserved->visit_date1;
+                            $insert_data["visit_time"] = $reserved->visit_start_time1;
+                            $insert_data["visit_end_time"] = $reserved->visit_end_time1;
+                        }
+                        if ($Body === "2") {
+                            $insert_data["visit_date"] = $reserved->visit_date2;
+                            $insert_data["visit_time"] = $reserved->visit_start_time2;
+                            $insert_data["visit_end_time"] = $reserved->visit_end_time2;
+                        }
+                        if ($Body === "3") {
+                            $insert_data["visit_date"] = $reserved->visit_date3;
+                            $insert_data["visit_time"] = $reserved->visit_start_time3;
+                            $insert_data["visit_end_time"] = $reserved->visit_end_time3;
+                        }
+                        $this->db->insert("records_patient_visit", $insert_data);
+                        $msg = "Thank you. Your appointment has been scheduled for <date at time>.\n"
+                                . "\n"
+                                . "The address is:\n"
+                                . "<address>\n"
+                                . "\n"
+                                . "Please be sure to arrive on time.";
                     }
                 }
             }
-            $this->db->trans_complete();
 
-            if ($change_status) {
-                //status changed successfully
-                log_message("error", "body = $Body");
-                $msg = "Nothing";
-                if ($Body == "1") {
-                    $msg = "Thank you for confirming your appointment! If you need to cancel, please type 2 to alert clinic staff at least 48 hours before your appointment.";
-                } else if ($Body == "2") {
-                    $msg = "Thank you. The clinic has been alerted of your change request, and will be in contact shortly. ";
-                }
-
-                log_message("error", "response = " . "<Response><Sms>" . $msg . "</Sms></Response>");
-                echo "<Response><Sms>" . $msg . "</Sms></Response>";
-            }
-            //"Thank you for confirming your appointment! If you are unable to make your appointment, please type CHANGE to alert clinic staff as soon as possible.";
+            echo "<Response><Sms>" . $msg . "</Sms></Response>";
         }
     }
 
