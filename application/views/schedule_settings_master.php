@@ -34,7 +34,7 @@
 <img id="hover-img-preview" class="imggy-preview">
 </div> 
 -->
-<div class="db-content-inside">
+<div class="db-content-inside clearfix">
 
     <div class="col-md-12">
         <div id="myScheduler">
