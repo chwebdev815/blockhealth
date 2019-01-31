@@ -187,10 +187,8 @@ class Call_view extends CI_Controller {
 	function step_two(){
 		if(isset($_REQUEST["Digits"])){
 		$base_url = "http://35.203.47.37";
-        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-		
 		if ($_REQUEST['Digits'] == 1) {
-
+            echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 			echo "<Response>";
 			echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_three?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
 
@@ -209,6 +207,7 @@ class Call_view extends CI_Controller {
 		$base_url/call_view/step_two?Digits=&amp;pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;Digits=timeout</Redirect>";
 			echo "</Response>";
 		} elseif ($_REQUEST['Digits'] == 2) {
+			 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 			echo "<Response><Say voice='Polly.Joanna'>Thank you</Say></Response>";
 
 
@@ -226,7 +225,7 @@ class Call_view extends CI_Controller {
 				curl_exec($ch);
 				curl_close($ch);
 		} else {
-
+                echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 				echo "<Response><Redirect method='GET'>
 			$base_url/call_view/callhandle?pname=" . urlencode($_GET['pname']) . "&amp;"
 				. "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
@@ -246,13 +245,17 @@ class Call_view extends CI_Controller {
 		if(isset($_REQUEST["Digits"])){
 				$base_url = "http://35.203.47.37";
 				if ($_REQUEST['Digits'] == 1) {
+					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 					echo "<Response><Say voice='Polly.Joanna'> Thank you, your appointment has been confirmed </Say></Response>";
 				} elseif ($_REQUEST['Digits'] == 2) {
+					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 					echo "<Response><Say voice='Polly.Joanna'>Thank you, the clinic has been notified and will be in touch shortly</Say></Response>";
 				} elseif ($_REQUEST['Digits'] == 3) {
+					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 					echo "<Response><Redirect method='GET'>
 				$base_url/call_view/step_two?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "</Redirect></Response>";
 				} else {
+					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 					echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
 				}
 			try {
