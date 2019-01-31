@@ -252,7 +252,7 @@ class Call_view extends CI_Controller {
 				} elseif ($_GET['Digits'] == 3) {
 					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 					echo "<Response><Redirect method='GET'>
-				$base_url/call_view/step_two?Digits=1&pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "</Redirect></Response>";
+				$base_url/call_view/step_two?Digits=1&amp;&pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "</Redirect></Response>";
 				} else {
 					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 					echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
