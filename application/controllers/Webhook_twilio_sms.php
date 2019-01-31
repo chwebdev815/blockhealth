@@ -32,7 +32,7 @@ class Webhook_twilio_sms extends CI_Controller {
             $this->db->limit(1);
 
 
-//                "r_pvr.notify_sms" => 1,
+            $msg = "Init Message";
 
             $result = $this->db->get()->result();
             //process latest visit only
