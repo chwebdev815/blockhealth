@@ -183,5 +183,101 @@ class Call_view extends CI_Controller {
 		</Response>";
 	   }
 	}
+	
+	function step_two(){
+		if(isset($_REQUEST["Digits"])){
+		$base_url = "http://35.203.47.37";
+        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+		
+		if ($_REQUEST['Digits'] == 1) {
+
+			echo "<Response>";
+			echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_three?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
+
+
+			echo "<Say  voice='Polly.Joanna'>Hello " . $_GET['pname'] . " " . $_GET['patient_lname'] . "</Say>";
+			echo "<Pause length='1'/>";
+			echo "<Say voice='Polly.Joanna'>Your appointment with  " . $_GET['cname'] . "  has been booked for  <say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $_GET['aDate'] . "</say-as>     at   <say-as interpret-as='time' format='hms12'> " . $_GET['aTime'] . " </say-as></Say>";
+			echo "<Pause length='1'/>";
+			echo "<Say voice='Polly.Joanna'>The address  is: " . $_GET['address'] . "  </Say>";
+			echo "<Pause length='1'/>";
+			echo "<Say voice='Polly.Joanna'>Please     type   1   to    confirm    this    booking .   If    this    date    does   not work please  type 2   to    alert    the    clinic    staff.</Say>";
+			echo "<Say voice='Polly.Joanna'>Please type 3 to replay this message</Say>";
+			echo "</Gather>";
+			echo "<Pause length='10'/>";
+			echo "<Redirect method='GET'>
+		$base_url/call_view/step_two?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;Digits=timeout</Redirect>";
+			echo "</Response>";
+		} elseif ($_REQUEST['Digits'] == 2) {
+			echo "<Response><Say voice='Polly.Joanna'>Thank you</Say></Response>";
+
+
+				$params = array(
+					'data' => $_REQUEST["Digits"],
+					'to' => $_REQUEST['To']
+				);
+				$defaults = array(
+					CURLOPT_URL => "$base_url/call_view/vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc",
+					CURLOPT_POST => true,
+					CURLOPT_POSTFIELDS => http_build_query($params)
+				);
+				$ch = curl_init("$base_url/call_view/vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc");
+				curl_setopt_array($ch, $defaults);
+				curl_exec($ch);
+				curl_close($ch);
+		} else {
+
+				echo "<Response><Redirect method='GET'>
+			$base_url/call_view/callhandle?pname=" . urlencode($_GET['pname']) . "&amp;"
+				. "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+				. "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+				. "cname=" . urlencode($_GET['cname']) . "&amp;"
+				. "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+				. "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+				. "address=" . urlencode($_GET['address']) . "&amp;"
+				. "Digits=timeout"
+				. "</Redirect>"
+				. "</Response>";
+		}
+		}
+	}
+	
+	function step_three(){
+		if(isset($_REQUEST["Digits"])){
+				$base_url = "http://35.203.47.37";
+				if ($_REQUEST['Digits'] == 1) {
+					echo "<Response><Say voice='Polly.Joanna'> Thank you, your appointment has been confirmed </Say></Response>";
+				} elseif ($_REQUEST['Digits'] == 2) {
+					echo "<Response><Say voice='Polly.Joanna'>Thank you, the clinic has been notified and will be in touch shortly</Say></Response>";
+				} elseif ($_REQUEST['Digits'] == 3) {
+					echo "<Response><Redirect method='GET'>
+				$base_url/call_view/step_two?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "</Redirect></Response>";
+				} else {
+					echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
+				}
+			try {
+
+				$params = array(
+					'data' => $_REQUEST["Digits"],
+					'to' => $_REQUEST['To']
+				);
+
+				$defaults = array(
+					CURLOPT_URL => "$base_url/efax/call_handle",
+					CURLOPT_POST => true,
+					CURLOPT_POSTFIELDS => http_build_query($params)
+				);
+				$ch = curl_init("$base_url/efax/call_handle");
+				curl_setopt_array($ch, $defaults);
+
+				curl_exec($ch);
+				curl_close($ch);
+			} catch (Exception $e) {
+				echo "Error in response file";
+
+			}
+		}
+	}
+	
 
 }
