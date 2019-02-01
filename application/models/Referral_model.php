@@ -1609,7 +1609,7 @@ class Referral_model extends CI_Model {
         return $filtered;
     }
 
-    private function assign_slots($new_visit_duration) {
+    public function assign_slots($new_visit_duration) {
         //$clinic_id = $this->session->userdata("user_id");
         $clinic_id = 1;
         $next_day = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+1 day")));
