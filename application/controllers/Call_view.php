@@ -194,13 +194,13 @@ class Call_view extends CI_Controller {
 	function step_two(){
 		$this->load->model("referral_model");
 		$data = $this->referral_model->assign_slots(30);
-		$date1 = date('F dS',strtotime($data[0]['start_time']));
+		$date1 = date('F d',strtotime($data[0]['start_time']));
 		$day1 = date('l',strtotime($data[0]['start_time']));
 		$time1 = date('g:i a',strtotime($data[0]['start_time']));
-		$date2 = date('F dS',strtotime($data[1]['start_time']));
+		$date2 = date('F d',strtotime($data[1]['start_time']));
 		$day2 = date('l',strtotime($data[1]['start_time']));
 		$time2 = date('g:i a',strtotime($data[1]['start_time']));
-		$date3= date('F dS',strtotime($data[2]['start_time']));
+		$date3= date('F d',strtotime($data[2]['start_time']));
 		$day3 = date('l',strtotime($data[2]['start_time']));
 		$time3 = date('g:i a',strtotime($data[2]['start_time']));
 		if(isset($_GET["Digits"])){
@@ -220,9 +220,9 @@ class Call_view extends CI_Controller {
 		    echo "<Say  voice='Polly.Joanna'>If you would like the clinic to contact you directly - please enter 0</Say>";
 			echo "<Say  voice='Polly.Joanna'>To replay this message, please enter 4 </Say>";
 			echo "</Gather>";
-			echo "<Pause length='10'/>";
+			echo "<Pause length='5'/>";
 			echo "<Redirect method='GET'>
-		            $base_url/call_view/step_two?pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
+		            $base_url/call_view/step_two?Digits=1&amp;pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
 			echo "</Response>";
 		} elseif ($_GET['Digits'] == 2) {
 			 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -362,7 +362,7 @@ class Call_view extends CI_Controller {
 				echo "</Gather>";
 				echo "<Pause length='5'/>";
 				echo "<Redirect method='GET'>
-			$base_url/call_view/step_two?pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
+			$base_url/call_view/step_four?Digits=4&amp;pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
 			echo "</Response>";
 		} elseif ($_GET['Digits'] == 1){
 			echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -387,7 +387,7 @@ class Call_view extends CI_Controller {
 		}
 	}
 	
-	
+
 	
 	
 	
