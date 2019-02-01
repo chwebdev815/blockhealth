@@ -101,7 +101,7 @@ class Webhook_twilio_sms extends CI_Controller {
                         }
 
                         log_message("error", "insert = " . $this->db->last_query());
-                        $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $reserved->visit_start_time3);
+                        $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $insert_data["visit_date"] . " " . $insert_data["visit_time"]);
                         $date = $datetime->format("l M jS");
                         $time = $datetime->format("g:ia");
                         $msg = "Thank you. Your appointment has been scheduled for $date at $time.\n"
