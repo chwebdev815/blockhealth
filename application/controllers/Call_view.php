@@ -218,9 +218,10 @@ class Call_view extends CI_Controller {
 			echo "<Say  voice='Polly.Joanna'>For   <emphasis level='moderate'> ".$day3."<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date3." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time3." </say-as></emphasis> - please enter 3</Say>";
 			echo "<Pause length='1'/>";
 		    echo "<Say  voice='Polly.Joanna'>If you would like the clinic to contact you directly - please enter 0</Say>";
+			echo "<Pause length='1'/>";
 			echo "<Say  voice='Polly.Joanna'>To replay this message, please enter 4 </Say>";
 			echo "</Gather>";
-			echo "<Pause length='1'/>";
+			echo "<Pause length='2'/>";
 			echo "<Redirect method='GET'>
 		            $base_url/call_view/step_two?Digits=1&amp;pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
 			echo "</Response>";
@@ -358,9 +359,10 @@ class Call_view extends CI_Controller {
 					echo "<Say  voice='Polly.Joanna'>For   <emphasis level='moderate'> ".$day3."<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date3." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time3." </say-as></emphasis> - please enter 3</Say>";
 				echo "<Pause length='1'/>";
 				echo "<Say  voice='Polly.Joanna'>If you would like the clinic to contact you directly - please enter 0</Say>";
+				echo "<Pause length='1'/>";
 				echo "<Say  voice='Polly.Joanna'>To replay this message, please enter 4 </Say>";
 				echo "</Gather>";
-				echo "<Pause length='1'/>";
+				echo "<Pause length='2'/>";
 				echo "<Redirect method='GET'>
 			$base_url/call_view/step_four?Digits=4&amp;pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
 			echo "</Response>";
