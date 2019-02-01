@@ -109,7 +109,14 @@ class Call_view extends CI_Controller {
             echo "<pre>";
         }
     }
-
+    public function test() {
+		$this->load->model("referral_model");
+		$data = $this->referral_model->assign_slots(30);
+            echo "<pre>";
+            print_r($data);
+            echo "<pre>";
+        
+    }
     //for wrong number
     public function vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc() {
 
