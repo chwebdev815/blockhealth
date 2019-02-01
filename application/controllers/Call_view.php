@@ -208,11 +208,11 @@ class Call_view extends CI_Controller {
 			echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_three?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
 			echo "<Say  voice='Polly.Joanna'>Hi  " . $_GET['pname'] . ",  Please select one of the following dates and times for your appointment with " . $_GET['cname']."</Say>";
 			echo "<Pause length='1'/>";
-		    echo "<Say  voice='Polly.Joanna'>For    ".$date1." at  ".$time1." - please enter 1</Say>";
+		    echo "<Say  voice='Polly.Joanna'><prosody pitch='-10%' rate='85%' volume='-6dB'>For <emphasis level='moderate'> ".$date1." at  ".$time1." </emphasis> - please enter 1  </prosody></Say>";
 			echo "<Pause length='1'/>";
-		    echo "<Say  voice='Polly.Joanna'>For    ".$date2." at  ".$time2."  - please enter 2</Say>";
+			echo "<Say  voice='Polly.Joanna'><prosody pitch='-10%' rate='85%' volume='-6dB'>For <emphasis level='moderate'>".$date2." at  ".$time2." </emphasis>  - please enter 2  </prosody></Say>";
 			echo "<Pause length='1'/>";
-		    echo "<Say  voice='Polly.Joanna'>For    ".$date3." at  ".$time3." - please enter 3</Say>";
+			echo "<Say  voice='Polly.Joanna'><prosody pitch='-10%' rate='85%' volume='-6dB'>For   <emphasis level='moderate'> ".$date3." at  ".$time3." </emphasis> - please enter 3  </prosody></Say>";
 			echo "<Pause length='1'/>";
 		    echo "<Say  voice='Polly.Joanna'>If you would like the clinic to contact you directly - please enter 0</Say>";
 			echo "</Gather>";
@@ -272,21 +272,21 @@ class Call_view extends CI_Controller {
 					echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 					echo "<Response>";
 						echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_four?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
-						    echo "<Say voice='Polly.Joanna'> You have selected   ".$date1." at  ".$time1."   - if this is correct, enter 1 to confirm. If this is incorrect, enter 2 to enter another date. </Say>";
+						    echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'> ".$date1." at  ".$time1." </emphasis>  - if this is correct, enter 1 to confirm. If this is incorrect, enter 2 to enter another date. </Say>";
 						echo "</Gather>";
 					echo "</Response>";
 				} elseif ($_GET['Digits'] == 2) {
 					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 						echo "<Response>";
 						echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_four?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
-						    echo "<Say voice='Polly.Joanna'> You have selected  ".$date2." at  ".$time2." - if this is correct, enter 1 to confirm. If this is incorrect, enter 2 to enter another date. </Say>";
+						    echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'>".$date2." at  ".$time2." </emphasis>- if this is correct, enter 1 to confirm. If this is incorrect, enter 2 to enter another date. </Say>";
 						echo "</Gather>";
 					echo "</Response>";
 				} elseif ($_GET['Digits'] == 3) {
 					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 			         echo "<Response>";
 						echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_four?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
-						    echo "<Say voice='Polly.Joanna'> You have selected   ".$date3." at  ".$time3."  - if this is correct, enter 1 to confirm. If this is incorrect, enter 2 to enter another date. </Say>";
+						    echo "<Say voice='Polly.Joanna'> You have selected   <emphasis level='moderate'>".$date3." at  ".$time3." </emphasis> - if this is correct, enter 1 to confirm. If this is incorrect, enter 2 to enter another date. </Say>";
 						echo "</Gather>";
 					echo "</Response>";
 				}elseif($_GET['Digits'] == 4){
@@ -336,11 +336,11 @@ class Call_view extends CI_Controller {
 			echo "<Response>";
 				echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_three?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
 				echo "<Say  voice='Polly.Joanna'>Hi  " . $_GET['pname'] . ",  Please select one of the following dates and times for your appointment with " . $_GET['cname']."</Say>";
-				    echo "<Say  voice='Polly.Joanna'>For    ".$date1." at  ".$time1." - please enter 1</Say>";
+				    echo "<Say  voice='Polly.Joanna'><prosody pitch='-10%' rate='85%' volume='-6dB'>For <emphasis level='moderate'> ".$date1." at  ".$time1." </emphasis> - please enter 1  </prosody></Say>";
 					echo "<Pause length='1'/>";
-					echo "<Say  voice='Polly.Joanna'>For    ".$date2." at  ".$time2."  - please enter 2</Say>";
+					echo "<Say  voice='Polly.Joanna'><prosody pitch='-10%' rate='85%' volume='-6dB'>For <emphasis level='moderate'>".$date2." at  ".$time2." </emphasis>  - please enter 2  </prosody></Say>";
 					echo "<Pause length='1'/>";
-					echo "<Say  voice='Polly.Joanna'>For    ".$date3." at  ".$time3." - please enter 3</Say>";
+					echo "<Say  voice='Polly.Joanna'><prosody pitch='-10%' rate='85%' volume='-6dB'>For   <emphasis level='moderate'> ".$date3." at  ".$time3." </emphasis> - please enter 3  </prosody></Say>";
 				echo "<Pause length='1'/>";
 				echo "<Say  voice='Polly.Joanna'>If you would like the clinic to contact you directly - please enter 4</Say>";
 				echo "</Gather>";
