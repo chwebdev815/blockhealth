@@ -194,11 +194,14 @@ class Call_view extends CI_Controller {
 	function step_two(){
 		$this->load->model("referral_model");
 		$data = $this->referral_model->assign_slots(30);
-		$date1 = date('l, F dS',strtotime($data[0]['start_time']));
+		$date1 = date('F dS',strtotime($data[0]['start_time']));
+		$day1 = date('l',strtotime($data[0]['start_time']));
 		$time1 = date('g:i a',strtotime($data[0]['start_time']));
-		$date2 = date('l, F dS',strtotime($data[1]['start_time']));
+		$date2 = date('F dS',strtotime($data[1]['start_time']));
+		$day2 = date('l',strtotime($data[1]['start_time']));
 		$time2 = date('g:i a',strtotime($data[1]['start_time']));
-		$date3= date('l, F dS',strtotime($data[2]['start_time']));
+		$date3= date('F dS',strtotime($data[2]['start_time']));
+		$day3 = date('l',strtotime($data[2]['start_time']));
 		$time3 = date('g:i a',strtotime($data[2]['start_time']));
 		if(isset($_GET["Digits"])){
 		$base_url = "http://35.203.47.37";
@@ -208,17 +211,18 @@ class Call_view extends CI_Controller {
 			echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_three?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
 			echo "<Say  voice='Polly.Joanna'>Hi  " . $_GET['pname'] . ",  Please select one of the following dates and times for your appointment with " . $_GET['cname']."</Say>";
 			echo "<Pause length='1'/>";
-		    echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'> ".$date1." at  ".$time1." </emphasis> - please enter 1  </Say>";
+		    echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>".$day1." <say-as interpret-as='date' format='mmyyyy'  detail='1'>".$date1." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time1." </say-as></emphasis> - please enter 1  </Say>";
 			echo "<Pause length='1'/>";
-			echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>".$date2." at  ".$time2." </emphasis>  - please enter 2  </Say>";
+			echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>".$day2."<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date2." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time2." </say-as></emphasis>  - please enter 2  </Say>";
 			echo "<Pause length='1'/>";
-			echo "<Say  voice='Polly.Joanna'>For   <emphasis level='moderate'> ".$date3." at  ".$time3." </emphasis> - please enter 3</Say>";
+			echo "<Say  voice='Polly.Joanna'>For   <emphasis level='moderate'> ".$day3."<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date3." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time3." </say-as></emphasis> - please enter 3</Say>";
 			echo "<Pause length='1'/>";
 		    echo "<Say  voice='Polly.Joanna'>If you would like the clinic to contact you directly - please enter 0</Say>";
+			echo "<Say  voice='Polly.Joanna'>To replay this message, please enter 4 </Say>";
 			echo "</Gather>";
 			echo "<Pause length='10'/>";
 			echo "<Redirect method='GET'>
-		$base_url/call_view/step_two?pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
+		            $base_url/call_view/step_two?pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
 			echo "</Response>";
 		} elseif ($_GET['Digits'] == 2) {
 			 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -258,11 +262,14 @@ class Call_view extends CI_Controller {
 	function step_three(){
 		$this->load->model("referral_model");
 		$data = $this->referral_model->assign_slots(30);
-		$date1 = date('l, F dS',strtotime($data[0]['start_time']));
+		$date1 = date('F dS',strtotime($data[0]['start_time']));
+		$day1 = date('l',strtotime($data[0]['start_time']));
 		$time1 = date('g:i a',strtotime($data[0]['start_time']));
-		$date2 = date('l, F dS',strtotime($data[1]['start_time']));
+		$date2 = date('F dS',strtotime($data[1]['start_time']));
+		$day2 = date('l',strtotime($data[1]['start_time']));
 		$time2 = date('g:i a',strtotime($data[1]['start_time']));
-		$date3= date('l, F dS',strtotime($data[2]['start_time']));
+		$date3= date('F dS',strtotime($data[2]['start_time']));
+		$day3 = date('l',strtotime($data[2]['start_time']));
 		$time3 = date('g:i a',strtotime($data[2]['start_time']));
 		
 		
@@ -291,6 +298,11 @@ class Call_view extends CI_Controller {
 					echo "</Response>";
 				}elseif($_GET['Digits'] == 0){
 						echo "<Response><Say voice='Polly.Joanna' >Thank-you, the clinic will be in touch shortly'</Say></Response>";
+				}elseif($_GET['Digits'] == 4){
+						echo "<Response>";
+						echo "<Redirect method='GET'>
+		            $base_url/call_view/step_two?pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
+			        echo "</Response>";
 				} else {
 					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 					echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
@@ -323,11 +335,14 @@ class Call_view extends CI_Controller {
 		//echo $_GET["Digits"];
 		$this->load->model("referral_model");
 		$data = $this->referral_model->assign_slots(30);
-		$date1 = date('l, F dS',strtotime($data[0]['start_time']));
+		$date1 = date('F dS',strtotime($data[0]['start_time']));
+		$day1 = date('l',strtotime($data[0]['start_time']));
 		$time1 = date('g:i a',strtotime($data[0]['start_time']));
-		$date2 = date('l, F dS',strtotime($data[1]['start_time']));
+		$date2 = date('F dS',strtotime($data[1]['start_time']));
+		$day2 = date('l',strtotime($data[1]['start_time']));
 		$time2 = date('g:i a',strtotime($data[1]['start_time']));
-		$date3= date('l, F dS',strtotime($data[2]['start_time']));
+		$date3= date('F dS',strtotime($data[2]['start_time']));
+		$day3 = date('l',strtotime($data[2]['start_time']));
 		$time3 = date('g:i a',strtotime($data[2]['start_time']));
 		if(isset($_GET["Digits"])){
 		$base_url = "http://35.203.47.37";
@@ -336,15 +351,16 @@ class Call_view extends CI_Controller {
 			echo "<Response>";
 				echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_three?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
 				echo "<Say  voice='Polly.Joanna'>Hi  " . $_GET['pname'] . ",  Please select one of the following dates and times for your appointment with " . $_GET['cname']."</Say>";
-				echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'> ".$date1." at  ".$time1." </emphasis> - please enter 1  </Say>";
-				echo "<Pause length='1'/>";
-				echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>".$date2." at  ".$time2." </emphasis>  - please enter 2  </Say>";
-				echo "<Pause length='1'/>";
-				echo "<Say  voice='Polly.Joanna'>For   <emphasis level='moderate'> ".$date3." at  ".$time3." </emphasis> - please enter 3</Say>";
+				    echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>".$day1." <say-as interpret-as='date' format='mmyyyy'  detail='1'>".$date1." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time1." </say-as></emphasis> - please enter 1  </Say>";
+					echo "<Pause length='1'/>";
+					echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>".$day2."<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date2." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time2." </say-as></emphasis>  - please enter 2  </Say>";
+					echo "<Pause length='1'/>";
+					echo "<Say  voice='Polly.Joanna'>For   <emphasis level='moderate'> ".$day3."<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date3." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time3." </say-as></emphasis> - please enter 3</Say>";
 				echo "<Pause length='1'/>";
 				echo "<Say  voice='Polly.Joanna'>If you would like the clinic to contact you directly - please enter 0</Say>";
+				echo "<Say  voice='Polly.Joanna'>To replay this message, please enter 4 </Say>";
 				echo "</Gather>";
-				echo "<Pause length='10'/>";
+				echo "<Pause length='5'/>";
 				echo "<Redirect method='GET'>
 			$base_url/call_view/step_two?pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
 			echo "</Response>";
