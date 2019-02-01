@@ -93,7 +93,7 @@ class Webhook_twilio_sms extends CI_Controller {
                         $this->db->where("efax.to", "c_usr.id", false);
                         $clinic = $this->db->get()->result();
                         
-
+                        $address = "";
                         if ($clinic) {
                             $address = $clinic[0]->address;
                         } else {
@@ -107,7 +107,7 @@ class Webhook_twilio_sms extends CI_Controller {
                         $msg = "Thank you. Your appointment has been scheduled for $date at $time.\n"
                                 . "\n"
                                 . "The address is:\n"
-                                . "<address>\n"
+                                . "$address\n"
                                 . "\n"
                                 . "Please be sure to arrive on time.";
 
