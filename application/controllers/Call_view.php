@@ -262,13 +262,13 @@ class Call_view extends CI_Controller {
 	function step_three(){
 		$this->load->model("referral_model");
 		$data = $this->referral_model->assign_slots(30);
-		$date1 = date('F dS',strtotime($data[0]['start_time']));
+		$date1 = date('F d',strtotime($data[0]['start_time']));
 		$day1 = date('l',strtotime($data[0]['start_time']));
 		$time1 = date('g:i a',strtotime($data[0]['start_time']));
-		$date2 = date('F dS',strtotime($data[1]['start_time']));
+		$date2 = date('F d',strtotime($data[1]['start_time']));
 		$day2 = date('l',strtotime($data[1]['start_time']));
 		$time2 = date('g:i a',strtotime($data[1]['start_time']));
-		$date3= date('F dS',strtotime($data[2]['start_time']));
+		$date3= date('F d',strtotime($data[2]['start_time']));
 		$day3 = date('l',strtotime($data[2]['start_time']));
 		$time3 = date('g:i a',strtotime($data[2]['start_time']));
 		
@@ -335,13 +335,13 @@ class Call_view extends CI_Controller {
 		//echo $_GET["Digits"];
 		$this->load->model("referral_model");
 		$data = $this->referral_model->assign_slots(30);
-		$date1 = date('F dS',strtotime($data[0]['start_time']));
+		$date1 = date('F d',strtotime($data[0]['start_time']));
 		$day1 = date('l',strtotime($data[0]['start_time']));
 		$time1 = date('g:i a',strtotime($data[0]['start_time']));
-		$date2 = date('F dS',strtotime($data[1]['start_time']));
+		$date2 = date('F d',strtotime($data[1]['start_time']));
 		$day2 = date('l',strtotime($data[1]['start_time']));
 		$time2 = date('g:i a',strtotime($data[1]['start_time']));
-		$date3= date('F dS',strtotime($data[2]['start_time']));
+		$date3= date('F d',strtotime($data[2]['start_time']));
 		$day3 = date('l',strtotime($data[2]['start_time']));
 		$time3 = date('g:i a',strtotime($data[2]['start_time']));
 		if(isset($_GET["Digits"])){
