@@ -186,6 +186,11 @@ class Call_view extends CI_Controller {
 	
 	function step_two(){
 		//echo $_GET["Digits"];
+		$this->load->model("referral_model");
+		$data = $this->referral_model->assign_slots(30);
+		echo "<pre>";
+		print_r($data);
+		echo "<pre>";
 		if(isset($_GET["Digits"])){
 		$base_url = "http://35.203.47.37";
 		if ($_GET['Digits'] == 1) {
