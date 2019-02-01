@@ -92,6 +92,7 @@ class Webhook_twilio_sms extends CI_Controller {
                         $this->db->where("c_ref.efax_id", "efax.id", false);
                         $this->db->where("efax.to", "c_usr.id", false);
                         $clinic = $this->db->get()->result();
+                        
 
                         if ($clinic) {
                             $address = $clinic[0]->address;
