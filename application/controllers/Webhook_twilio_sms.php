@@ -88,8 +88,9 @@ class Webhook_twilio_sms extends CI_Controller {
                                 ->from("clinic_user_info c_usr, referral_patient_info pat, "
                                         . "clinic_referrals c_ref, efax_info efax")
                                 ->where("pat.id", $reserved->patient_id);
-                        $this->db->where("pat.referral_id", "c_ref.patient_id", false);
+                        $this->db->where("pat.referral_id", "c_ref.id", false);
                         $this->db->where("c_ref.efax_id", "efax.id", false);
+                        $this->db->where("efax.to", "c_usr.id", false);
                         $clinic = $this->db->get()->result();
 
                         if ($clinic) {
