@@ -35,12 +35,6 @@ class Call_view extends CI_Controller {
         $phone_number = $post["phone_number"];
         $address = $post["address"];
         $clinic_id = $post["clinic_id"];
-        $date1 = $post["date1"];
-        $time1 = $post["time1"];
-        $date2 = $post["date2"];
-        $time2 = $post["time2"];
-        $date3 = $post["date3"];
-        $time3 = $post["time3"];
 
         $to_number = $phone_number;
 

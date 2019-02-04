@@ -871,7 +871,7 @@ class Referral_model extends CI_Model {
                         'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
                         "admin.address," .
                         "pat.email_id, pat.cell_phone," .
-                        "pat.fname, admin.clinic_institution_name, admin.call_address");
+                        "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
                 $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
                 $this->db->where(array(
                     "efax.active" => 1,
@@ -983,6 +983,7 @@ class Referral_model extends CI_Model {
                     //make call too, temporary
                     $post_arr = array(
                         'patient_name' => $msg_data->fname,
+                        "patient_lname" => $msg_data->lname,
                         'clinic_name' => $msg_data->clinic_institution_name,
                         'phone_number' => $msg_data->cell_phone,
                         'address' => $msg_data->call_address,
