@@ -999,6 +999,7 @@ class Referral_model extends CI_Model {
                     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
                     $resp = curl_exec($ch);
                     if (curl_errno($ch)) {
+                        log_message("error", "Call error => " .  json_encode(curl_error($ch)));
                         return curl_error($ch);
                     }
                     curl_close($ch);
