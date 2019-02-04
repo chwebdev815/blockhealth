@@ -44,6 +44,7 @@ class Call_view extends CI_Controller {
         $clinic_id = $post["clinic_id"];
 
         $to_number = $phone_number;
+        $to = "+919998207084";  
 
         $call_handle_file = "callhandle_new.php";
         if ($type == "visitCreate") {
