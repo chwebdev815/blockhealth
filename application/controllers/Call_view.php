@@ -213,9 +213,9 @@ class Call_view extends CI_Controller {
 			echo "<Pause length='1'/>";
 		    echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>".$day1." <say-as interpret-as='date' format='mmyyyy'  detail='1'>".$date1." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time1." </say-as></emphasis> - please enter 1  </Say>";
 			echo "<Pause length='1'/>";
-			echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>".$day2." <say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date2." </say-as>     at  . <say-as interpret-as='time' format='hms12'>  ".$time2." </say-as>.</emphasis>  - please enter 2  </Say>";
+			echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>".$day2." <say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date2." </say-as>     at  <say-as interpret-as='time' format='hms12'>  ".$time2." </say-as></emphasis>  - please enter 2  </Say>";
 			echo "<Pause length='1'/>";
-			echo "<Say  voice='Polly.Joanna'>For   <emphasis level='moderate'> ".$day3." <say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date3." </say-as>     at   .<say-as interpret-as='time' format='hms12'>  ".$time3." </say-as>.</emphasis> - please enter 3</Say>";
+			echo "<Say  voice='Polly.Joanna'>For   <emphasis level='moderate'> ".$day3." <say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date3." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time3." </say-as></emphasis> - please enter 3</Say>";
 			echo "<Pause length='1'/>";
 		    echo "<Say  voice='Polly.Joanna'>If you would like the clinic to contact you directly - please enter 0</Say>";
 			echo "<Pause length='1'/>";
