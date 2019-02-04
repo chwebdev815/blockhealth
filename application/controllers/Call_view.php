@@ -280,7 +280,7 @@ class Call_view extends CI_Controller {
 					echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 					echo "<Response>";
 						echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_four?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
-						    echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'>".$day2."<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date2." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time2." </say-as></emphasis>.</Say>";
+						    echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'>".$day2."<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date2." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time2." </say-as></emphasis></Say>";
 							 echo "<Pause length='1'/>";
 							 echo "<Say voice='Polly.Joanna'>if this is correct, enter 1 to confirm.</Say>";
                              echo "<Pause length='1'/>";
@@ -294,7 +294,7 @@ class Call_view extends CI_Controller {
 					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 						echo "<Response>";
 						echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_four?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
-						    echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'>".$day2."<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date2." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time2." </say-as></emphasis>.</Say>";
+						    echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'>".$day2."<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date2." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time2." </say-as></emphasis></Say>";
 							 echo "<Pause length='1'/>";
 							 echo "<Say voice='Polly.Joanna'>if this is correct, enter 1 to confirm.</Say>";
                              echo "<Pause length='1'/>";
@@ -308,7 +308,7 @@ class Call_view extends CI_Controller {
 					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 			         echo "<Response>";
 						echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_four?pname=" . urlencode($_GET['pname']) . "&amp;patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
-						    echo "<Say voice='Polly.Joanna'> You have selected   <emphasis level='moderate'>".$day3."<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date3." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time3." </say-as></emphasis>.</Say>";
+						    echo "<Say voice='Polly.Joanna'> You have selected   <emphasis level='moderate'>".$day3."<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>".$date3." </say-as>     at   <say-as interpret-as='time' format='hms12'>  ".$time3." </say-as></emphasis></Say>";
 							 echo "<Pause length='1'/>";
 							 echo "<Say voice='Polly.Joanna'>if this is correct, enter 1 to confirm.</Say>";
                              echo "<Pause length='1'/>";
