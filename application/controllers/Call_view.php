@@ -54,7 +54,7 @@ class Call_view extends CI_Controller {
 //            $call_handle_file = "reminder_callhandle.php";
 //        }
 
-        log_message("error", "Starting " . $call_handle_file . " for $type");
+//        log_message("error", "Starting " . $call_handle_file . " for $type");
 
         $url = base_url() . "/call_view/callhandle?" .
                 "patient_name=" . urlencode($patient_name) .
