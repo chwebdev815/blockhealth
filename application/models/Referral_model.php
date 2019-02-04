@@ -981,11 +981,23 @@ class Referral_model extends CI_Model {
 //                    $this->send_sms($msg_data->cell_phone, $msg);
 
                     //make call too, temporary
+//                    $post_arr = array(
+//                        'patient_name' => $msg_data->fname,
+//                        "patient_lname" => $msg_data->lname,
+//                        'clinic_name' => $msg_data->clinic_institution_name,
+//                        'phone_number' => $msg_data->cell_phone,
+//                        'address' => $msg_data->call_address,
+//                        'clinic_id' => $msg_data->clinic_id,
+//                        'type' => 'visitCreate'
+//                    ); 
                     $post_arr = array(
-                        'patient_name' => $msg_data->fname,
+                        'defaultContactFormName' => $msg_data->fname,
                         "patient_lname" => $msg_data->lname,
-                        'clinic_name' => $msg_data->clinic_institution_name,
-                        'phone_number' => $msg_data->cell_phone,
+                        "defaultContactFormName2" => $data["visit_name"],
+                        'defaultContactFormName3' => $msg_data->clinic_institution_name,
+                        'defaultContactFormName4' => "ddd",
+                        'defaultContactFormName5' => "ttt",
+                        'defaultContactFormName6' => $msg_data->cell_phone,
                         'address' => $msg_data->call_address,
                         'clinic_id' => $msg_data->clinic_id,
                         'type' => 'visitCreate'
