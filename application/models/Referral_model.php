@@ -978,7 +978,7 @@ class Referral_model extends CI_Model {
                     $msg = str_replace("<time3>", $visit_datetime[2]["time"], $msg);
                     $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
 
-                    $this->send_sms($msg_data->cell_phone, $msg);
+//                    $this->send_sms($msg_data->cell_phone, $msg);
 
                     //make call too, temporary
                     $post_arr = array(

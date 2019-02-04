@@ -15,6 +15,7 @@ class Call_view extends CI_Controller {
     }
 
     public function call() {
+        log_message("error", "data in post = " . $this->input->post());
         $this->call_confirm($this->input->post());
     }
 
@@ -29,6 +30,12 @@ class Call_view extends CI_Controller {
 //            $call_handle_file = "callhandle.php";
 //        }
 
+        if(isset($post["patient_name"])) {
+            log_message("error", "val exist = " . $post["patient_name"]);
+        }
+        if(isset($post->patient_name)) {
+            log_message("error", "val exist = " . $post->patient_name);
+        }
         $patient_name = $post["patient_name"];
         $patient_lname = $post["patient_lname"];
         $clinic_name = $post["clinic_name"];
