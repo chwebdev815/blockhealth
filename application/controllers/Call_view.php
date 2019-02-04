@@ -30,10 +30,10 @@ class Call_view extends CI_Controller {
 //            $call_handle_file = "callhandle.php";
 //        }
 
-        if(isset($post["patient_name"])) {
+        if (isset($post["patient_name"])) {
             log_message("error", "array val exist = " . $post["patient_name"]);
         }
-        if(isset($post->patient_name)) {
+        if (isset($post->patient_name)) {
             log_message("error", "object val exist = " . $post->patient_name);
         }
         $patient_name = $post["patient_name"];
@@ -45,7 +45,7 @@ class Call_view extends CI_Controller {
 
         $to_number = $phone_number;
 //        $to = "+919998207084";  
-        $to_number =  "+917201907712";  
+        $to_number = "+917201907712";
 
 //        $call_handle_file = "callhandle_new.php";
 //        if ($type == "visitCreate") {
@@ -53,7 +53,6 @@ class Call_view extends CI_Controller {
 //        } else if ($type == "24hReminder") {
 //            $call_handle_file = "reminder_callhandle.php";
 //        }
-
 //        log_message("error", "Starting " . $call_handle_file . " for $type");
 
         $url = base_url() . "/call_view/callhandle?" .
@@ -62,6 +61,7 @@ class Call_view extends CI_Controller {
                 "&clinic_name=" . urlencode($clinic_name) .
                 "&clinic_id=" . urlencode($clinic_id) .
                 "&address=" . urlencode($address);
+        echo "hitting callhandle url = " . $url;
         $uri = 'https://api.twilio.com/2010-04-01/Accounts/' . $sid . '/Calls.json';
         $auth = $sid . ':' . $token;
         $fields = '&Url=' . urlencode($url) .
@@ -175,22 +175,21 @@ class Call_view extends CI_Controller {
     }
 
     public function callhandle() {
-        
-        log_message("error", "at callhandle " . json_encode($_REQUEST));
-        
-        if (isset($_REQUEST['patient_name'])) {
-            $address = $_REQUEST['address'];
-            $dataarray = http_build_query($_REQUEST);
-            $base_url = "http://35.203.47.37";
 
-            echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-            echo "<Response>
+        log_message("error", "at callhandle " . json_encode($_REQUEST));
+
+        $address = $_REQUEST['address'];
+//        $dataarray = http_build_query($_REQUEST);
+        $base_url = "http://35.203.47.37";
+
+        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+        echo "<Response>
                     <Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_two?"
-            . "pname=" . urlencode($_REQUEST['patient_name']) . "&amp;"
-            . "patient_lname=" . urlencode($_REQUEST['patient_lname']) . "&amp;"
-            . "clinic_id=" . urlencode($_REQUEST['clinic_id']) . "&amp;"
-            . "cname=" . urlencode($_REQUEST['clinic_name']) . "&amp;"
-            . "address=" . urlencode($_REQUEST['address']) . "' method='GET'>
+        . "pname=" . urlencode($_REQUEST['patient_name']) . "&amp;"
+        . "patient_lname=" . urlencode($_REQUEST['patient_lname']) . "&amp;"
+        . "clinic_id=" . urlencode($_REQUEST['clinic_id']) . "&amp;"
+        . "cname=" . urlencode($_REQUEST['clinic_name']) . "&amp;"
+        . "address=" . urlencode($_REQUEST['address']) . "' method='GET'>
 			<Say  voice='Polly.Joanna'> Hello </Say>
                         <Pause length='1'/>
                         <Say voice='Polly.Joanna'> This is an automated appointment call for  " . $_REQUEST['patient_name'] . "  " . $_REQUEST['patient_lname'] . ".</Say>
@@ -200,15 +199,14 @@ class Call_view extends CI_Controller {
                     <Pause length='10'/>
                     <Redirect method='GET'>
                         $base_url/call_view/callhandle?"
-            . "pname=" . urlencode($_REQUEST['patient_name']) . "&amp;"
-            . "patient_lname=" . urlencode($_REQUEST['patient_lname']) . "&amp;"
-            . "clinic_id=" . urlencode($_REQUEST['clinic_id']) . "&amp;"
-            . "cname=" . urlencode($_REQUEST['clinic_name']) . "&amp;"
-            . "address=" . urlencode($_REQUEST['address']) . "&amp;
+        . "pname=" . urlencode($_REQUEST['patient_name']) . "&amp;"
+        . "patient_lname=" . urlencode($_REQUEST['patient_lname']) . "&amp;"
+        . "clinic_id=" . urlencode($_REQUEST['clinic_id']) . "&amp;"
+        . "cname=" . urlencode($_REQUEST['clinic_name']) . "&amp;"
+        . "address=" . urlencode($_REQUEST['address']) . "&amp;
                         Digits=timeout
                     </Redirect>
 		</Response>";
-        }
     }
 
     function step_two() {
