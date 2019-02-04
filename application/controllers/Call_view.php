@@ -45,7 +45,7 @@ class Call_view extends CI_Controller {
 
         $to_number = $phone_number;
 //        $to = "+919998207084";  
-        $to_number =  "+919998207084";  
+        $to_number =  "+917201907712";  
 
         $call_handle_file = "callhandle_new.php";
         if ($type == "visitCreate") {
