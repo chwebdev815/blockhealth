@@ -285,8 +285,10 @@ class Call_view extends CI_Controller {
 							 echo "<Say voice='Polly.Joanna'>if this is correct, enter 1 to confirm.</Say>";
                              echo "<Pause length='1'/>";
 							 echo "<Say voice='Polly.Joanna'>If this is incorrect, enter 2 to select another date. </Say>";
-							 echo "<Pause length='4'/>";
 						echo "</Gather>";
+						echo "<Pause length='4'/>";
+						echo "<Redirect method='GET'>
+		            $base_url/call_view/step_three?Digits=".$_GET['Digits']."&amp;pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
 					echo "</Response>";
 				} elseif ($_GET['Digits'] == 2) {
 					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -297,8 +299,10 @@ class Call_view extends CI_Controller {
 							 echo "<Say voice='Polly.Joanna'>if this is correct, enter 1 to confirm.</Say>";
                              echo "<Pause length='1'/>";
 							 echo "<Say voice='Polly.Joanna'>If this is incorrect, enter 2 to select another date. </Say>";
-							 echo "<Pause length='4'/>";
 						echo "</Gather>";
+						  echo "<Pause length='4'/>";
+								echo "<Redirect method='GET'>
+		            $base_url/call_view/step_three?Digits=".$_GET['Digits']."&amp;pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
 					echo "</Response>";
 				} elseif ($_GET['Digits'] == 3) {
 					 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -309,8 +313,10 @@ class Call_view extends CI_Controller {
 							 echo "<Say voice='Polly.Joanna'>if this is correct, enter 1 to confirm.</Say>";
                              echo "<Pause length='1'/>";
 							 echo "<Say voice='Polly.Joanna'>If this is incorrect, enter 2 to select another date. </Say>";
-							 echo "<Pause length='4'/>";
 						echo "</Gather>";
+						        echo "<Pause length='4'/>";
+								echo "<Redirect method='GET'>
+		            $base_url/call_view/step_three?Digits=".$_GET['Digits']."&amp;pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
 					echo "</Response>";
 				}elseif($_GET['Digits'] == 0){
 						echo "<Response><Say voice='Polly.Joanna' >Thank-you, the clinic will be in touch shortly'</Say></Response>";
@@ -319,17 +325,14 @@ class Call_view extends CI_Controller {
 						echo "<Redirect method='GET'>
 		            $base_url/call_view/step_two?Digits=1&amp;pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
 			        echo "</Response>";
+			
+					
+					
 				} else {
 					echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
 					echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
 				}
-				
-				    echo "<Pause length='4'/>";
-					echo "<Response>";
-					echo "<Redirect method='GET'>
-		            $base_url/call_view/step_three?Digits=".$_GET['Digits']."&amp;pname=".urlencode($_GET['pname'])."&amp;patient_lname=".urlencode($_GET['patient_lname']) . "&amp;pvname=" . urlencode($_GET['pvname']) . "&amp;cname=" . urlencode($_GET['cname']) . "&amp;aDate=" . urlencode($_GET['aDate']) . "&amp;aTime=" . urlencode($_GET['aTime']) . "&amp;address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
-					echo "</Response>";
-				
+
 				
 				
 			try {
