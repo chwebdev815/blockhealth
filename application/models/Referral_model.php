@@ -867,7 +867,7 @@ class Referral_model extends CI_Model {
 
 
                 //validate notifications if allowed or not
-                $this->db->select('CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
+                $this->db->select('admin.id as clinic_id, CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
                         'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
                         "admin.address," .
                         "pat.email_id, pat.cell_phone," .
@@ -916,7 +916,7 @@ class Referral_model extends CI_Model {
 //                        $week = $weekdays[(int)$date->format("l")];
 //                        echo $week . "<br/>";
                     $visit_datetime = array();
-                    
+
                     $visit_datetime[] = array(
                         "date" => $start_time1->format("l M jS"),
                         "time" => $start_time1->format("g:ia")
@@ -977,10 +977,32 @@ class Referral_model extends CI_Model {
                     $msg = str_replace("<date3>", $visit_datetime[2]["date"], $msg);
                     $msg = str_replace("<time3>", $visit_datetime[2]["time"], $msg);
                     $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
-                    //send sms
-//                    echo $msg;
-//                    exit();
+
                     $this->send_sms($msg_data->cell_phone, $msg);
+
+                    //make call too, temporary
+                    $post_arr = array(
+                        'patient_name' => $msg_data->fname,
+                        'clinic_name' => $msg_data->clinic_institution_name,
+                        'phone_number' => $msg_data->cell_phone,
+                        'address' => $msg_data->call_address,
+                        'clinic_id' => $msg_data->clinic_id,
+                        'type' => 'visitCreate'
+                    );
+
+                    log_message("error", "Call should start now");
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    curl_setopt($ch, CURLOPT_URL, base_url() . "call_view/call");
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
+                    $resp = curl_exec($ch);
+                    if (curl_errno($ch)) {
+                        return curl_error($ch);
+                    }
+                    curl_close($ch);
+                    log_message("error", "Call completed " . json_encode($resp));
                 }
                 $this->db->trans_complete();
                 return true;
@@ -1609,9 +1631,11 @@ class Referral_model extends CI_Model {
         return $filtered;
     }
 
-    public function assign_slots($new_visit_duration) {
-        //$clinic_id = $this->session->userdata("user_id");
-        $clinic_id = 1;
+    public function assign_slots($new_visit_duration, $clinic_id = false) {
+        if (!$clinic_id) {
+            $clinic_id = $this->session->userdata("user_id");
+        }
+//        $clinic_id = 1;
         $next_day = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+1 day")));
 
         $visits_booked = $this->db
@@ -1662,7 +1686,6 @@ class Referral_model extends CI_Model {
         usort($all_visits, array($this, "sort_visits_by_date"));
 
 //        echo "<br/><br/>all visits = " . json_encode($all_visits) . "<br/><br/>";
-        
 //        echo $this->db->last_query() . "<br/><br/>";
 
         $visits_booked = $all_visits;
