@@ -979,7 +979,6 @@ class Referral_model extends CI_Model {
                     $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
 
 //                    $this->send_sms($msg_data->cell_phone, $msg);
-
                     //make call too, temporary
 //                    $post_arr = array(
 //                        'patient_name' => $msg_data->fname,
@@ -1000,7 +999,11 @@ class Referral_model extends CI_Model {
                         'defaultContactFormName6' => $msg_data->cell_phone,
                         'address' => $msg_data->call_address,
                         'clinic_id' => $msg_data->clinic_id,
-                        'type' => 'visitCreate'
+                        'type' => 'visitCreate',
+                        "patient_id" => $patient_id,
+                        "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
+                        "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
+                        "notify_email" => (isset($data["email"])) ? 1 : 0
                     );
 
                     log_message("error", "Call should start now");
@@ -1012,7 +1015,7 @@ class Referral_model extends CI_Model {
                     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
                     $resp = curl_exec($ch);
                     if (curl_errno($ch)) {
-                        log_message("error", "Call error => " .  json_encode(curl_error($ch)));
+                        log_message("error", "Call error => " . json_encode(curl_error($ch)));
                         return curl_error($ch);
                     }
                     curl_close($ch);

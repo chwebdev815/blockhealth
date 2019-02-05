@@ -23,38 +23,30 @@ class Call_view extends CI_Controller {
         $aTime = $this->input->post('defaultContactFormName5');
         $mob = $this->input->post('defaultContactFormName6');
         $clinic_id = $this->input->post('clinic_id');
-        $address = $this->input->post('address'); //"Unit 412 - 3075 Hospital Gate in Oakville, Ontario";
+        $patient_id = $this->input->post('patient_id');
+        $notify_voice = $this->input->post('notify_voice');
+        $notify_sms = $this->input->post('notify_sms');
+        $notify_email = $this->input->post('notify_email');
+        $address = $this->input->post('address');
         $type = $this->input->post("type");
-//        $patient_lname = "Ahmed";
+
         if (!empty($mob)) {
-            $dataNew = $this->call_confirm($clinic_id, $type, $mob, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address);
+            $dataNew = $this->call_confirm($clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $mob, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address);
             echo "<pre>";
             print_r($dataNew);
         }
     }
 
-    public function call_confirm($clinic_id, $type, $to_number, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address) {
+    public function call_confirm($clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $to_number, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address) {
 
         $sid = 'AC2da3b84b65b63ccf4f05c27ac1713060';
         $token = '342a214ee959d16bf97ea87579016762';
         $twilio_number = "+13658000973";
         //$to = "+919876907251";  
-//        $call_handle_file = "callhandle.php";
-//        if($type == "visitCreate") {
-//            $call_handle_file = "callhandle.php";
-//        }
 
-//        $call_handle_file = "callhandle_new.php";
-//        if ($type == "visitCreate") {
-//            $call_handle_file = "callhandle_new.php";
-//        } else if ($type == "24hReminder") {
-//            $call_handle_file = "reminder_callhandle.php";
-//        }
-//
-//        log_message("error", "Starting " . $call_handle_file . " for $type");
-        
         $to_number = "+917201907712";
-        
+
+
         $url = base_url() . "call_view/callhandle?"
                 . "pname=" . urlencode($pname) . "&"
                 . "patient_lname=" . $patient_lname . "&"
@@ -63,7 +55,11 @@ class Call_view extends CI_Controller {
                 . "aDate=" . urlencode($aDate) . "&"
                 . "aTime=" . urlencode($aTime) . "&"
                 . "address=" . urlencode($address) . "&"
-                . "clinic_id=" . urlencode($clinic_id);
+                . "clinic_id=" . urlencode($clinic_id) . "&"
+                . "patient_id=" . urlencode($patient_id) . "&"
+                . "notify_voice=" . urlencode($notify_voice) . "&"
+                . "notify_sms=" . urlencode($notify_sms) . "&"
+                . "notify_email=" . urlencode($notify_email);
         $uri = 'https://api.twilio.com/2010-04-01/Accounts/' . $sid . '/Calls.json';
         $auth = $sid . ':' . $token;
         $fields = '&Url=' . urlencode($url) .
@@ -185,14 +181,18 @@ class Call_view extends CI_Controller {
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         echo "<Response>
             <Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_two?"
-                . "pname=" . urlencode($_GET['pname']) . "&amp;"
-                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                . "address=" . urlencode($_GET['address']) . "&amp;"
-                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "' method='GET'>
+        . "pname=" . urlencode($_GET['pname']) . "&amp;"
+        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+        . "cname=" . urlencode($_GET['cname']) . "&amp;"
+        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+        . "address=" . urlencode($_GET['address']) . "&amp;"
+        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+        . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+        . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+        . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+        . "notify_email=" . urlencode($_GET["notify_email"]) . "' method='GET'>
                 <Say  voice='Polly.Joanna'> Hello </Say>
                 <Pause length='1'/>
                 <Say voice='Polly.Joanna'> This is an automated appointment call for  " . $_GET['pname'] . "  " . $_GET['patient_lname'] . ".</Say>
@@ -202,22 +202,62 @@ class Call_view extends CI_Controller {
             <Pause length='10'/>
             <Redirect method='GET'>
             $base_url/call_view/callhandle?"
-                . "pname=" . urlencode($_GET['pname']) . "&amp;"
-                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                . "address=" . urlencode($_GET['address']) . "&amp;"
-                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;
+        . "pname=" . urlencode($_GET['pname']) . "&amp;"
+        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+        . "cname=" . urlencode($_GET['cname']) . "&amp;"
+        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+        . "address=" . urlencode($_GET['address']) . "&amp;"
+        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+        . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+        . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+        . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+        . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+        . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;
                     Digits=timeout</Redirect>
 		</Response>";
     }
 
     function step_two() {
         $clinic_id = $_GET["clinic_id"];
+        $patient_id = $_GET["patient_id"];
+
         $this->load->model("referral_model");
         $data = $this->referral_model->assign_slots(30, $clinic_id);
+
+        //save datetime as reserved till call ends
+        $allocations = $data;
+        $start_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["start_time"]);
+        $end_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["end_time"]);
+        $start_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["start_time"]);
+        $end_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["end_time"]);
+        $start_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["start_time"]);
+        $end_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["end_time"]);
+
+        $insert_data = array(
+            "patient_id" => $patient_id,
+            "visit_name" => $data["visit_name"],
+            "visit_date1" => $start_time1->format("Y-m-d"),
+            "visit_start_time1" => $start_time1->format("H:i:s"),
+            "visit_end_time1" => $end_time1->format("H:i:s"),
+            "visit_date2" => $start_time2->format("Y-m-d"),
+            "visit_start_time2" => $start_time2->format("H:i:s"),
+            "visit_end_time2" => $end_time2->format("H:i:s"),
+            "visit_date3" => $start_time3->format("Y-m-d"),
+            "visit_start_time3" => $start_time3->format("H:i:s"),
+            "visit_end_time3" => $end_time3->format("H:i:s"),
+            "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
+            "notify_voice" => $_GET["notify_voice"],
+            "notify_sms" => $_GET["notify_sms"],
+            "notify_email" => $_GET["notify_email"],
+            "visit_confirmed" => "Awaiting Confirmation"
+        );
+
+        $this->db->insert("records_patient_visit_reserved", $insert_data);
+        $insert_id = $this->db->insert_id();
+
+        //data reserved for 10 mins
 
         $date1 = date('F jS', strtotime($data[0]['start_time']));
         $day1 = date('l', strtotime($data[0]['start_time']));
@@ -234,14 +274,23 @@ class Call_view extends CI_Controller {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
                 echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_three?"
-                        . "pname=" . urlencode($_GET['pname']) . "&amp;"
-                        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                        . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
-                        . "address=" . urlencode($_GET['address']) . "' method='GET'>";
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "' method='GET'>";
                 echo "<Say  voice='Polly.Joanna'>Hi  " . $_GET['pname'] . ",  Please select one of the following dates and times for your appointment with " . $_GET['cname'] . "</Say>";
                 echo "<Pause length='1'/>";
                 echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>" . $day1 . " <say-as interpret-as='date' format='mmyyyy'  detail='1'>" . $date1 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time1 . " </say-as></emphasis> - please enter 1  </Say>";
@@ -257,15 +306,24 @@ class Call_view extends CI_Controller {
                 echo "<Pause length='2'/>";
                 echo "<Redirect method='GET'>
 		            $base_url/call_view/step_two?"
-                        . "Digits=1&amp;pname=" . urlencode($_GET['pname']) . "&amp;"
-                        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                        . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
-                        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                        . "address=" . urlencode($_GET['address']) . "&amp;"
-                        . "</Redirect>";
+                . "Digits=1&amp;pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3)
+                . "</Redirect>";
                 echo "</Response>";
             } elseif ($_GET['Digits'] == 2) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -296,6 +354,15 @@ class Call_view extends CI_Controller {
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
                 . "Digits=timeout"
                 . "</Redirect>"
                 . "</Response>";
@@ -305,18 +372,17 @@ class Call_view extends CI_Controller {
 
     function step_three() {
         $clinic_id = $_GET["clinic_id"];
-        $this->load->model("referral_model");
-        $data = $this->referral_model->assign_slots(30, $clinic_id);
+        $date1 = $_GET["date1"];
+        $day1 = $_GET["day1"];
+        $time1 = $_GET["time1"];
 
-        $date1 = date('F jS', strtotime($data[0]['start_time']));
-        $day1 = date('l', strtotime($data[0]['start_time']));
-        $time1 = date('g:i a', strtotime($data[0]['start_time']));
-        $date2 = date('F jS', strtotime($data[1]['start_time']));
-        $day2 = date('l', strtotime($data[1]['start_time']));
-        $time2 = date('g:i a', strtotime($data[1]['start_time']));
-        $date3 = date('F jS', strtotime($data[2]['start_time']));
-        $day3 = date('l', strtotime($data[2]['start_time']));
-        $time3 = date('g:i a', strtotime($data[2]['start_time']));
+        $date2 = $_GET["date2"];
+        $day2 = $_GET["day2"];
+        $time2 = $_GET["time2"];
+
+        $date3 = $_GET["day3"];
+        $day3 = $_GET["date3"];
+        $time3 = $_GET["time3"];
 
 
         if (isset($_GET["Digits"])) {
@@ -325,14 +391,24 @@ class Call_view extends CI_Controller {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
                 echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_four?"
-                        . "pname=" . urlencode($_GET['pname']) . "&amp;"
-                        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                        . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;address=" . urlencode($_GET['address']) . "' method='GET'>";
-                echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'>" . $day2 . "<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date2 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time2 . " </say-as></emphasis></Say>";
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "' method='GET'>";
+                echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'>" . $day1 . "<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date1 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time1 . " </say-as></emphasis></Say>";
                 echo "<Pause length='1'/>";
                 echo "<Say voice='Polly.Joanna'>if this is correct, enter 1 to confirm.</Say>";
                 echo "<Pause length='1'/>";
@@ -341,29 +417,47 @@ class Call_view extends CI_Controller {
                 echo "<Pause length='4'/>";
                 echo "<Redirect method='GET'>
 		            $base_url/call_view/step_three?"
-                        . "Digits=" . $_GET['Digits'] . "&amp;"
-                        . "pname=" . urlencode($_GET['pname']) . "&amp;"
-                        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                        . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
-                        . "address=" . urlencode($_GET['address']) . "&amp;"
-                        . "</Redirect>";
+                . "Digits=" . $_GET['Digits'] . "&amp;"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;"
+                . "</Redirect>";
                 echo "</Response>";
             } elseif ($_GET['Digits'] == 2) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
                 echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_four?"
-                        . "pname=" . urlencode($_GET['pname']) . "&amp;"
-                        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                        . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
-                        . "address=" . urlencode($_GET['address']) . "' method='GET'>";
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "' method='GET'>";
                 echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'>" . $day2 . "<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date2 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time2 . " </say-as></emphasis></Say>";
                 echo "<Pause length='1'/>";
                 echo "<Say voice='Polly.Joanna'>if this is correct, enter 1 to confirm.</Say>";
@@ -373,28 +467,46 @@ class Call_view extends CI_Controller {
                 echo "<Pause length='4'/>";
                 echo "<Redirect method='GET'>
 		            $base_url/call_view/step_three?"
-                        . "Digits=" . $_GET['Digits'] . "&amp;"
-                        . "pname=" . urlencode($_GET['pname']) . "&amp;"
-                        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                        . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
-                        . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
+                . "Digits=" . $_GET['Digits'] . "&amp;"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
                 echo "</Response>";
             } elseif ($_GET['Digits'] == 3) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
                 echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_four?"
-                        . "pname=" . urlencode($_GET['pname']) . "&amp;"
-                        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                        . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
-                        . "address=" . urlencode($_GET['address']) . "' method='GET'>";
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "' method='GET'>";
                 echo "<Say voice='Polly.Joanna'> You have selected   <emphasis level='moderate'>" . $day3 . "<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date3 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time3 . " </say-as></emphasis></Say>";
                 echo "<Pause length='1'/>";
                 echo "<Say voice='Polly.Joanna'>if this is correct, enter 1 to confirm.</Say>";
@@ -404,15 +516,24 @@ class Call_view extends CI_Controller {
                 echo "<Pause length='4'/>";
                 echo "<Redirect method='GET'>
 		            $base_url/call_view/step_three?"
-                        . "Digits=" . $_GET['Digits'] . "&amp;"
-                        . "pname=" . urlencode($_GET['pname']) . "&amp;"
-                        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                        . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
-                        . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
+                . "Digits=" . $_GET['Digits'] . "&amp;"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
                 echo "</Response>";
             } elseif ($_GET['Digits'] == 0) {
                 echo "<Response><Say voice='Polly.Joanna' >Thank-you, the clinic will be in touch shortly'</Say></Response>";
@@ -420,15 +541,24 @@ class Call_view extends CI_Controller {
                 echo "<Response>";
                 echo "<Redirect method='GET'>
 		            $base_url/call_view/step_two?"
-                        . "Digits=1&amp;"
-                        . "pname=" . urlencode($_GET['pname']) . "&amp;"
-                        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                        . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
-                        . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
+                . "Digits=1&amp;"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
                 echo "</Response>";
             } else {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -462,32 +592,42 @@ class Call_view extends CI_Controller {
 
     function step_four() {
         $clinic_id = $_GET["clinic_id"];
-        $this->load->model("referral_model");
-        $data = $this->referral_model->assign_slots(30, $clinic_id);
 
-        $date1 = date('F jS', strtotime($data[0]['start_time']));
-        $day1 = date('l', strtotime($data[0]['start_time']));
-        $time1 = date('g:i a', strtotime($data[0]['start_time']));
-        $date2 = date('F jS', strtotime($data[1]['start_time']));
-        $day2 = date('l', strtotime($data[1]['start_time']));
-        $time2 = date('g:i a', strtotime($data[1]['start_time']));
-        $date3 = date('F jS', strtotime($data[2]['start_time']));
-        $day3 = date('l', strtotime($data[2]['start_time']));
-        $time3 = date('g:i a', strtotime($data[2]['start_time']));
+        $date1 = $_GET["date1"];
+        $day1 = $_GET["day1"];
+        $time1 = $_GET["time1"];
+
+        $date2 = $_GET["date2"];
+        $day2 = $_GET["day2"];
+        $time2 = $_GET["time2"];
+
+        $date3 = $_GET["day3"];
+        $day3 = $_GET["date3"];
+        $time3 = $_GET["time3"];
+
         if (isset($_GET["Digits"])) {
             $base_url = base_url();
             if ($_GET['Digits'] == 2) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
                 echo "<Gather  timeout='3' numDigits='1' action='$base_url/call_view/step_three?"
-                        . "pname=" . urlencode($_GET['pname']) . "&amp;"
-                        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                        . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
-                        . "address=" . urlencode($_GET['address']) . "' method='GET'>";
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "' method='GET'>";
                 echo "<Say  voice='Polly.Joanna'>Hi  " . $_GET['pname'] . ",  Please select one of the following dates and times for your appointment with " . $_GET['cname'] . "</Say>";
                 echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>" . $day1 . " <say-as interpret-as='date' format='mmyyyy'  detail='1'>" . $date1 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time1 . " </say-as></emphasis> - please enter 1  </Say>";
                 echo "<Pause length='1'/>";
@@ -502,15 +642,24 @@ class Call_view extends CI_Controller {
                 echo "<Pause length='2'/>";
                 echo "<Redirect method='GET'>
 			$base_url/call_view/step_four?"
-                        . "Digits=4&amp;"
-                        . "pname=" . urlencode($_GET['pname']) . "&amp;"
-                        . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-                        . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-                        . "cname=" . urlencode($_GET['cname']) . "&amp;"
-                        . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-                        . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-                        . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
-                        . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
+                . "Digits=4&amp;"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
                 echo "</Response>";
             } elseif ($_GET['Digits'] == 1) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -529,6 +678,15 @@ class Call_view extends CI_Controller {
                 . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
                 . "Digits=timeout"
                 . "</Redirect>"
                 . "</Response>";
