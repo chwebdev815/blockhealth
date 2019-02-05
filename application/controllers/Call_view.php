@@ -44,7 +44,7 @@ class Call_view extends CI_Controller {
         $twilio_number = "+13658000973";
         //$to = "+919876907251";  
 
-        $to_number = "+917201907712";
+//        $to_number = "+917201907712";
 
 
         $url = base_url() . "call_view/callhandle?"
