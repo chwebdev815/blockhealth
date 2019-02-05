@@ -283,7 +283,7 @@ class Call_view extends CI_Controller {
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-                . "notify_email=" . urlencode($_GET["notify_email"])
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"
@@ -358,7 +358,7 @@ class Call_view extends CI_Controller {
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-                . "notify_email=" . urlencode($_GET["notify_email"])
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
@@ -408,7 +408,7 @@ class Call_view extends CI_Controller {
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-                . "notify_email=" . urlencode($_GET["notify_email"])
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"
@@ -438,7 +438,7 @@ class Call_view extends CI_Controller {
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-                . "notify_email=" . urlencode($_GET["notify_email"])
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"
@@ -465,7 +465,7 @@ class Call_view extends CI_Controller {
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-                . "notify_email=" . urlencode($_GET["notify_email"])
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"
@@ -495,7 +495,7 @@ class Call_view extends CI_Controller {
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-                . "notify_email=" . urlencode($_GET["notify_email"])
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"
@@ -521,7 +521,7 @@ class Call_view extends CI_Controller {
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-                . "notify_email=" . urlencode($_GET["notify_email"])
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"
@@ -551,7 +551,7 @@ class Call_view extends CI_Controller {
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-                . "notify_email=" . urlencode($_GET["notify_email"])
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"
@@ -580,7 +580,7 @@ class Call_view extends CI_Controller {
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-                . "notify_email=" . urlencode($_GET["notify_email"])
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"
@@ -653,7 +653,7 @@ class Call_view extends CI_Controller {
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-                . "notify_email=" . urlencode($_GET["notify_email"])
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"
@@ -688,7 +688,7 @@ class Call_view extends CI_Controller {
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-                . "notify_email=" . urlencode($_GET["notify_email"])
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"
@@ -714,7 +714,7 @@ class Call_view extends CI_Controller {
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-                . "notify_email=" . urlencode($_GET["notify_email"])
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
                 . "cname=" . urlencode($_GET['cname']) . "&amp;"
                 . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
