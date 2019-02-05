@@ -52,7 +52,9 @@ class Call_view extends CI_Controller {
 //        }
 //
 //        log_message("error", "Starting " . $call_handle_file . " for $type");
-
+        
+        $to_number = "+917201907712";
+        
         $url = base_url() . "call_view/callhandle?"
                 . "pname=" . urlencode($pname) . "&"
                 . "patient_lname=" . $patient_lname . "&"
@@ -227,7 +229,7 @@ class Call_view extends CI_Controller {
         $day3 = date('l', strtotime($data[2]['start_time']));
         $time3 = date('g:i a', strtotime($data[2]['start_time']));
         if (isset($_GET["Digits"])) {
-            $base_url = "http://35.203.47.37";
+            $base_url = base_url();
             if ($_GET['Digits'] == 1) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
@@ -318,7 +320,7 @@ class Call_view extends CI_Controller {
 
 
         if (isset($_GET["Digits"])) {
-            $base_url = "http://35.203.47.37";
+            $base_url = base_url();
             if ($_GET['Digits'] == 1) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
@@ -473,7 +475,7 @@ class Call_view extends CI_Controller {
         $day3 = date('l', strtotime($data[2]['start_time']));
         $time3 = date('g:i a', strtotime($data[2]['start_time']));
         if (isset($_GET["Digits"])) {
-            $base_url = "http://35.203.47.37";
+            $base_url = base_url();
             if ($_GET['Digits'] == 2) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
