@@ -542,6 +542,7 @@ class Call_view extends CI_Controller {
             } elseif ($_GET['Digits'] == 0) {
                 echo "<Response><Say voice='Polly.Joanna' >Thank-you, the clinic will be in touch shortly'</Say></Response>";
             } elseif ($_GET['Digits'] == 4) {
+                log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
                 echo "<Response>";
                 echo "<Redirect method='GET'>" . $base_url . "call_view/step_two?"
                 . "Digits=1&amp;"
