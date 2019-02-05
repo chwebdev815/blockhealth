@@ -201,7 +201,7 @@ class Call_view extends CI_Controller {
 				</Gather>
             <Pause length='10'/>
             <Redirect method='GET'>
-            $base_url/call_view/callhandle?"
+            ".$base_url."call_view/callhandle?"
         . "pname=" . urlencode($_GET['pname']) . "&amp;"
         . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
         . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
@@ -237,7 +237,7 @@ class Call_view extends CI_Controller {
 
         $insert_data = array(
             "patient_id" => $patient_id,
-            "visit_name" => $data["visit_name"],
+            "visit_name" => $_GET["pvname"],
             "visit_date1" => $start_time1->format("Y-m-d"),
             "visit_start_time1" => $start_time1->format("H:i:s"),
             "visit_end_time1" => $end_time1->format("H:i:s"),
