@@ -45,8 +45,10 @@ class Call_view extends CI_Controller {
 
     public function call_start() {
         $data = $this->input->post();
-        log_message("error", "at call_start");
-        log_message("error", "data = " . json_encode($data));
+        
+        echo "\n\nat call_start";
+        echo "data = " . json_encode($data);
+        
         $sid = 'AC2da3b84b65b63ccf4f05c27ac1713060';
         $token = '342a214ee959d16bf97ea87579016762';
         $twilio_number = "+13658000973";
@@ -103,8 +105,8 @@ class Call_view extends CI_Controller {
         $data = $this->input->get();
         $base_url = base_url();
         
-        log_message("error", "at confirm_call");
-        log_message("error", "data = " . json_encode($data));
+        echo "\n\nat confirm_call";
+        echo "data = " . json_encode($data);
 
         $params = "first_name=" . urlencode($data["first_name"]) . "&amp;"
                 . "last_name=" . urlencode($data["last_name"]) . "&amp;"
@@ -150,9 +152,9 @@ class Call_view extends CI_Controller {
     public function step_two() {
         $data = $this->input->get();
         $base_url = base_url();
-        
-        log_message("error", "at step_two");
-        log_message("error", "data = " . json_encode($data));
+
+        echo "\n\nat step_two";
+        echo "data = " . json_encode($data);
 
         $params = "first_name=" . urlencode($data["first_name"]) . "&amp;"
                 . "last_name=" . urlencode($data["last_name"]) . "&amp;"
@@ -230,8 +232,8 @@ class Call_view extends CI_Controller {
         $data = $this->input->get();
         $base_url = base_url();
 
-        log_message("error", "at step_three");
-        log_message("error", "data = " . json_encode($data));
+        echo "\n\nat step_three";
+        echo "data = " . json_encode($data);
         
 
         $params = "first_name=" . urlencode($data["first_name"]) . "&amp;"
@@ -346,8 +348,8 @@ class Call_view extends CI_Controller {
         $data = $this->input->get();
         $base_url = base_url();
         
-        log_message("error", "at step_four");
-        log_message("error", "data = " . json_encode($data));
+        echo "\n\nat step_four";
+        echo "data = " . json_encode($data);
 
         $params = "first_name=" . urlencode($data["first_name"]) . "&amp;"
                 . "last_name=" . urlencode($data["last_name"]) . "&amp;"
