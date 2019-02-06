@@ -44,11 +44,11 @@ class Call_view extends CI_Controller {
     }
 
     public function call_start() {
-        $data = $_REQUEST;
-        
+        //$data = $_REQUEST;
+        $data = '{"first_name":"Lisa","last_name":"Roy","visit_name":"rose wood","clinic_name":"Test Clinic","address":"1 0 1 0 EASY ST, OTTAWA, ONTARIO, K1A 0B1","reservation_id":"0","date1":"2019-02-07","time1":"10:00:00","date2":"2019-02-08","time2":"10:00:00","date3":"2019-02-11","time3":"10:00:00","speak_date1":"February 7th","speak_day1":"Thursday","speak_time1":"10:00 am","speak_date2":"February 8th","speak_day2":"Friday","speak_time2":"10:00 am","speak_date3":"February 11th","speak_day3":"Monday","speak_time3":"10:00 am"}';
         echo "\n\nat call_start";
         echo "data = " . json_encode($data);
-        
+       
         $sid = 'AC2da3b84b65b63ccf4f05c27ac1713060';
         $token = '342a214ee959d16bf97ea87579016762';
         $twilio_number = "+13658000973";
@@ -103,9 +103,9 @@ class Call_view extends CI_Controller {
     }
 
     public function confirm_call() {
-        $data = $this->input->get();
+      //  $data = $this->input->get();
         $base_url = base_url();
-        
+                $data = '{"first_name":"Lisa","last_name":"Roy","visit_name":"rose wood","clinic_name":"Test Clinic","address":"1 0 1 0 EASY ST, OTTAWA, ONTARIO, K1A 0B1","reservation_id":"0","date1":"2019-02-07","time1":"10:00:00","date2":"2019-02-08","time2":"10:00:00","date3":"2019-02-11","time3":"10:00:00","speak_date1":"February 7th","speak_day1":"Thursday","speak_time1":"10:00 am","speak_date2":"February 8th","speak_day2":"Friday","speak_time2":"10:00 am","speak_date3":"February 11th","speak_day3":"Monday","speak_time3":"10:00 am"}';
         echo "\n\nat confirm_call";
         echo "data = " . json_encode($data);
 
@@ -151,9 +151,9 @@ class Call_view extends CI_Controller {
     }
 
     public function step_two() {
-        $data = $this->input->get();
+        //$data = $this->input->get();
         $base_url = base_url();
-
+                $data = '{"first_name":"Lisa","last_name":"Roy","visit_name":"rose wood","clinic_name":"Test Clinic","address":"1 0 1 0 EASY ST, OTTAWA, ONTARIO, K1A 0B1","reservation_id":"0","date1":"2019-02-07","time1":"10:00:00","date2":"2019-02-08","time2":"10:00:00","date3":"2019-02-11","time3":"10:00:00","speak_date1":"February 7th","speak_day1":"Thursday","speak_time1":"10:00 am","speak_date2":"February 8th","speak_day2":"Friday","speak_time2":"10:00 am","speak_date3":"February 11th","speak_day3":"Monday","speak_time3":"10:00 am"}';
         echo "\n\nat step_two";
         echo "data = " . json_encode($data);
 
@@ -230,9 +230,9 @@ class Call_view extends CI_Controller {
     }
 
     function step_three() {
-        $data = $this->input->get();
+        //$data = $this->input->get();
         $base_url = base_url();
-
+                $data = '{"first_name":"Lisa","last_name":"Roy","visit_name":"rose wood","clinic_name":"Test Clinic","address":"1 0 1 0 EASY ST, OTTAWA, ONTARIO, K1A 0B1","reservation_id":"0","date1":"2019-02-07","time1":"10:00:00","date2":"2019-02-08","time2":"10:00:00","date3":"2019-02-11","time3":"10:00:00","speak_date1":"February 7th","speak_day1":"Thursday","speak_time1":"10:00 am","speak_date2":"February 8th","speak_day2":"Friday","speak_time2":"10:00 am","speak_date3":"February 11th","speak_day3":"Monday","speak_time3":"10:00 am"}';
         echo "\n\nat step_three";
         echo "data = " . json_encode($data);
         
@@ -346,9 +346,9 @@ class Call_view extends CI_Controller {
 
     function step_four() {
 
-        $data = $this->input->get();
+       // $data = $this->input->get();
         $base_url = base_url();
-        
+                        $data = '{"first_name":"Lisa","last_name":"Roy","visit_name":"rose wood","clinic_name":"Test Clinic","address":"1 0 1 0 EASY ST, OTTAWA, ONTARIO, K1A 0B1","reservation_id":"0","date1":"2019-02-07","time1":"10:00:00","date2":"2019-02-08","time2":"10:00:00","date3":"2019-02-11","time3":"10:00:00","speak_date1":"February 7th","speak_day1":"Thursday","speak_time1":"10:00 am","speak_date2":"February 8th","speak_day2":"Friday","speak_time2":"10:00 am","speak_date3":"February 11th","speak_day3":"Monday","speak_time3":"10:00 am"}';
         echo "\n\nat step_four";
         echo "data = " . json_encode($data);
 
