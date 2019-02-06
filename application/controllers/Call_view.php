@@ -44,7 +44,7 @@ class Call_view extends CI_Controller {
     }
 
     public function call_start() {
-        $data = $this->input->post();
+        $data = $_REQUEST;
         
         echo "\n\nat call_start";
         echo "data = " . json_encode($data);
@@ -57,26 +57,26 @@ class Call_view extends CI_Controller {
         $to_number = "+917201907712";
 
         $url = base_url() . "call_view/confirm_call?"
-                . "first_name=" . urlencode($data["first_name"]) . "&amp;"
-                . "last_name=" . urlencode($data["last_name"]) . "&amp;"
-                . "visit_name=" . urlencode($data["visit_name"]) . "&amp;"
-                . "clinic_name=" . urlencode($data["clinic_name"]) . "&amp;"
-                . "address=" . urlencode($data["address"]) . "&amp;"
-                . "reservation_id=" . urlencode($data["reservation_id"]) . "&amp;"
-                . "date1=" . urlencode($data['date1']) . "&amp;"
-                . "time1=" . urlencode($data['time1']) . "&amp;"
-                . "date2=" . urlencode($data['date2']) . "&amp;"
-                . "time2=" . urlencode($data['time2']) . "&amp;"
-                . "date3=" . urlencode($data['date3']) . "&amp;"
-                . "time3=" . urlencode($data['time3']) . "&amp;"
-                . "speak_date1=" . urlencode($data['speak_date1']) . "&amp;"
-                . "speak_day1=" . urlencode($data['speak_day1']) . "&amp;"
-                . "speak_time1=" . urlencode($data['speak_time1']) . "&amp;"
-                . "speak_date2=" . urlencode($data['speak_date2']) . "&amp;"
-                . "speak_day2=" . urlencode($data['speak_day2']) . "&amp;"
-                . "speak_time2=" . urlencode($data['speak_time2']) . "&amp;"
-                . "speak_date3=" . urlencode($data['speak_date3']) . "&amp;"
-                . "speak_day3=" . urlencode($data['speak_day3']) . "&amp;"
+                . "first_name=" . urlencode($data["first_name"]) . "&"
+                . "last_name=" . urlencode($data["last_name"]) . "&"
+                . "visit_name=" . urlencode($data["visit_name"]) . "&"
+                . "clinic_name=" . urlencode($data["clinic_name"]) . "&"
+                . "address=" . urlencode($data["address"]) . "&"
+                . "reservation_id=" . urlencode($data["reservation_id"]) . "&"
+                . "date1=" . urlencode($data['date1']) . "&"
+                . "time1=" . urlencode($data['time1']) . "&"
+                . "date2=" . urlencode($data['date2']) . "&"
+                . "time2=" . urlencode($data['time2']) . "&"
+                . "date3=" . urlencode($data['date3']) . "&"
+                . "time3=" . urlencode($data['time3']) . "&"
+                . "speak_date1=" . urlencode($data['speak_date1']) . "&"
+                . "speak_day1=" . urlencode($data['speak_day1']) . "&"
+                . "speak_time1=" . urlencode($data['speak_time1']) . "&"
+                . "speak_date2=" . urlencode($data['speak_date2']) . "&"
+                . "speak_day2=" . urlencode($data['speak_day2']) . "&"
+                . "speak_time2=" . urlencode($data['speak_time2']) . "&"
+                . "speak_date3=" . urlencode($data['speak_date3']) . "&"
+                . "speak_day3=" . urlencode($data['speak_day3']) . "&"
                 . "speak_time3=" . urlencode($data['speak_time3']);
 
         $uri = 'https://api.twilio.com/2010-04-01/Accounts/' . $sid . '/Calls.json';
@@ -94,6 +94,7 @@ class Call_view extends CI_Controller {
 
         if (curl_errno($res)) {
             log_message("error", " Error – " . curl_error($res));
+            echo curl_error($res);
             return false;
         } else {
             log_message("error", "Calling");
@@ -108,26 +109,26 @@ class Call_view extends CI_Controller {
         echo "\n\nat confirm_call";
         echo "data = " . json_encode($data);
 
-        $params = "first_name=" . urlencode($data["first_name"]) . "&amp;"
-                . "last_name=" . urlencode($data["last_name"]) . "&amp;"
-                . "visit_name=" . urlencode($data["visit_name"]) . "&amp;"
-                . "clinic_name=" . urlencode($data["clinic_name"]) . "&amp;"
-                . "address=" . urlencode($data["address"]) . "&amp;"
-                . "reservation_id=" . urlencode($data["reservation_id"]) . "&amp;"
-                . "date1=" . urlencode($data['date1']) . "&amp;"
-                . "time1=" . urlencode($data['time1']) . "&amp;"
-                . "date2=" . urlencode($data['date2']) . "&amp;"
-                . "time2=" . urlencode($data['time2']) . "&amp;"
-                . "date3=" . urlencode($data['date3']) . "&amp;"
-                . "time3=" . urlencode($data['time3']) . "&amp;"
-                . "speak_date1=" . urlencode($data['speak_date1']) . "&amp;"
-                . "speak_day1=" . urlencode($data['speak_day1']) . "&amp;"
-                . "speak_time1=" . urlencode($data['speak_time1']) . "&amp;"
-                . "speak_date2=" . urlencode($data['speak_date2']) . "&amp;"
-                . "speak_day2=" . urlencode($data['speak_day2']) . "&amp;"
-                . "speak_time2=" . urlencode($data['speak_time2']) . "&amp;"
-                . "speak_date3=" . urlencode($data['speak_date3']) . "&amp;"
-                . "speak_day3=" . urlencode($data['speak_day3']) . "&amp;"
+        $params = "first_name=" . urlencode($data["first_name"]) . "&"
+                . "last_name=" . urlencode($data["last_name"]) . "&"
+                . "visit_name=" . urlencode($data["visit_name"]) . "&"
+                . "clinic_name=" . urlencode($data["clinic_name"]) . "&"
+                . "address=" . urlencode($data["address"]) . "&"
+                . "reservation_id=" . urlencode($data["reservation_id"]) . "&"
+                . "date1=" . urlencode($data['date1']) . "&"
+                . "time1=" . urlencode($data['time1']) . "&"
+                . "date2=" . urlencode($data['date2']) . "&"
+                . "time2=" . urlencode($data['time2']) . "&"
+                . "date3=" . urlencode($data['date3']) . "&"
+                . "time3=" . urlencode($data['time3']) . "&"
+                . "speak_date1=" . urlencode($data['speak_date1']) . "&"
+                . "speak_day1=" . urlencode($data['speak_day1']) . "&"
+                . "speak_time1=" . urlencode($data['speak_time1']) . "&"
+                . "speak_date2=" . urlencode($data['speak_date2']) . "&"
+                . "speak_day2=" . urlencode($data['speak_day2']) . "&"
+                . "speak_time2=" . urlencode($data['speak_time2']) . "&"
+                . "speak_date3=" . urlencode($data['speak_date3']) . "&"
+                . "speak_day3=" . urlencode($data['speak_day3']) . "&"
                 . "speak_time3=" . urlencode($data['speak_time3']);
 
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
@@ -143,7 +144,7 @@ class Call_view extends CI_Controller {
             <Pause length='10'/>
             <Redirect method='GET'>
             " . $base_url . "call_view/confirm_call?"
-        . $params . "&amp;"
+        . $params . "&"
         . "Digits=timeout"
         . "</Redirect>"
         . "</Response>";
@@ -156,26 +157,26 @@ class Call_view extends CI_Controller {
         echo "\n\nat step_two";
         echo "data = " . json_encode($data);
 
-        $params = "first_name=" . urlencode($data["first_name"]) . "&amp;"
-                . "last_name=" . urlencode($data["last_name"]) . "&amp;"
-                . "visit_name=" . urlencode($data["visit_name"]) . "&amp;"
-                . "clinic_name=" . urlencode($data["clinic_name"]) . "&amp;"
-                . "address=" . urlencode($data["address"]) . "&amp;"
-                . "reservation_id=" . urlencode($data["reservation_id"]) . "&amp;"
-                . "date1=" . urlencode($data['date1']) . "&amp;"
-                . "time1=" . urlencode($data['time1']) . "&amp;"
-                . "date2=" . urlencode($data['date2']) . "&amp;"
-                . "time2=" . urlencode($data['time2']) . "&amp;"
-                . "date3=" . urlencode($data['date3']) . "&amp;"
-                . "time3=" . urlencode($data['time3']) . "&amp;"
-                . "speak_date1=" . urlencode($data['speak_date1']) . "&amp;"
-                . "speak_day1=" . urlencode($data['speak_day1']) . "&amp;"
-                . "speak_time1=" . urlencode($data['speak_time1']) . "&amp;"
-                . "speak_date2=" . urlencode($data['speak_date2']) . "&amp;"
-                . "speak_day2=" . urlencode($data['speak_day2']) . "&amp;"
-                . "speak_time2=" . urlencode($data['speak_time2']) . "&amp;"
-                . "speak_date3=" . urlencode($data['speak_date3']) . "&amp;"
-                . "speak_day3=" . urlencode($data['speak_day3']) . "&amp;"
+        $params = "first_name=" . urlencode($data["first_name"]) . "&"
+                . "last_name=" . urlencode($data["last_name"]) . "&"
+                . "visit_name=" . urlencode($data["visit_name"]) . "&"
+                . "clinic_name=" . urlencode($data["clinic_name"]) . "&"
+                . "address=" . urlencode($data["address"]) . "&"
+                . "reservation_id=" . urlencode($data["reservation_id"]) . "&"
+                . "date1=" . urlencode($data['date1']) . "&"
+                . "time1=" . urlencode($data['time1']) . "&"
+                . "date2=" . urlencode($data['date2']) . "&"
+                . "time2=" . urlencode($data['time2']) . "&"
+                . "date3=" . urlencode($data['date3']) . "&"
+                . "time3=" . urlencode($data['time3']) . "&"
+                . "speak_date1=" . urlencode($data['speak_date1']) . "&"
+                . "speak_day1=" . urlencode($data['speak_day1']) . "&"
+                . "speak_time1=" . urlencode($data['speak_time1']) . "&"
+                . "speak_date2=" . urlencode($data['speak_date2']) . "&"
+                . "speak_day2=" . urlencode($data['speak_day2']) . "&"
+                . "speak_time2=" . urlencode($data['speak_time2']) . "&"
+                . "speak_date3=" . urlencode($data['speak_date3']) . "&"
+                . "speak_day3=" . urlencode($data['speak_day3']) . "&"
                 . "speak_time3=" . urlencode($data['speak_time3']);
 
         if ($data['Digits'] == 1) {
@@ -197,7 +198,7 @@ class Call_view extends CI_Controller {
             echo "</Gather>";
             echo "<Pause length='2'/>";
             echo "<Redirect method='GET'>" . $base_url . "call_view/step_two?"
-            . "Digits=1&amp;"
+            . "Digits=1&"
             . $params
             . "</Redirect>";
             echo "</Response>";
@@ -221,7 +222,7 @@ class Call_view extends CI_Controller {
             curl_close($ch);
         } else {
             echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-            echo "<Response><Redirect method='GET'>" . $base_url . "call_view/confirm_call?$params" . "&amp;"
+            echo "<Response><Redirect method='GET'>" . $base_url . "call_view/confirm_call?$params" . "&"
             . "Digits=timeout"
             . "</Redirect>"
             . "</Response>";
@@ -236,26 +237,26 @@ class Call_view extends CI_Controller {
         echo "data = " . json_encode($data);
         
 
-        $params = "first_name=" . urlencode($data["first_name"]) . "&amp;"
-                . "last_name=" . urlencode($data["last_name"]) . "&amp;"
-                . "visit_name=" . urlencode($data["visit_name"]) . "&amp;"
-                . "clinic_name=" . urlencode($data["clinic_name"]) . "&amp;"
-                . "address=" . urlencode($data["address"]) . "&amp;"
-                . "reservation_id=" . urlencode($data["reservation_id"]) . "&amp;"
-                . "date1=" . urlencode($data['date1']) . "&amp;"
-                . "time1=" . urlencode($data['time1']) . "&amp;"
-                . "date2=" . urlencode($data['date2']) . "&amp;"
-                . "time2=" . urlencode($data['time2']) . "&amp;"
-                . "date3=" . urlencode($data['date3']) . "&amp;"
-                . "time3=" . urlencode($data['time3']) . "&amp;"
-                . "speak_date1=" . urlencode($data['speak_date1']) . "&amp;"
-                . "speak_day1=" . urlencode($data['speak_day1']) . "&amp;"
-                . "speak_time1=" . urlencode($data['speak_time1']) . "&amp;"
-                . "speak_date2=" . urlencode($data['speak_date2']) . "&amp;"
-                . "speak_day2=" . urlencode($data['speak_day2']) . "&amp;"
-                . "speak_time2=" . urlencode($data['speak_time2']) . "&amp;"
-                . "speak_date3=" . urlencode($data['speak_date3']) . "&amp;"
-                . "speak_day3=" . urlencode($data['speak_day3']) . "&amp;"
+        $params = "first_name=" . urlencode($data["first_name"]) . "&"
+                . "last_name=" . urlencode($data["last_name"]) . "&"
+                . "visit_name=" . urlencode($data["visit_name"]) . "&"
+                . "clinic_name=" . urlencode($data["clinic_name"]) . "&"
+                . "address=" . urlencode($data["address"]) . "&"
+                . "reservation_id=" . urlencode($data["reservation_id"]) . "&"
+                . "date1=" . urlencode($data['date1']) . "&"
+                . "time1=" . urlencode($data['time1']) . "&"
+                . "date2=" . urlencode($data['date2']) . "&"
+                . "time2=" . urlencode($data['time2']) . "&"
+                . "date3=" . urlencode($data['date3']) . "&"
+                . "time3=" . urlencode($data['time3']) . "&"
+                . "speak_date1=" . urlencode($data['speak_date1']) . "&"
+                . "speak_day1=" . urlencode($data['speak_day1']) . "&"
+                . "speak_time1=" . urlencode($data['speak_time1']) . "&"
+                . "speak_date2=" . urlencode($data['speak_date2']) . "&"
+                . "speak_day2=" . urlencode($data['speak_day2']) . "&"
+                . "speak_time2=" . urlencode($data['speak_time2']) . "&"
+                . "speak_date3=" . urlencode($data['speak_date3']) . "&"
+                . "speak_day3=" . urlencode($data['speak_day3']) . "&"
                 . "speak_time3=" . urlencode($data['speak_time3']);
 
         if ($data["Digits"] == 1) {
@@ -271,7 +272,7 @@ class Call_view extends CI_Controller {
             echo "</Gather>";
             echo "<Pause length='4'/>";
             echo "<Redirect method='GET'>" . $base_url . "call_view/step_three?"
-            . "Digits=" . $data["Digits"] . "&amp;"
+            . "Digits=" . $data["Digits"] . "&"
             . $params
             . "</Redirect>";
             echo "</Response>";
@@ -288,7 +289,7 @@ class Call_view extends CI_Controller {
             echo "</Gather>";
             echo "<Pause length='4'/>";
             echo "<Redirect method='GET'>" . $base_url . "call_view/step_three?"
-            . "Digits=" . $data["Digits"] . "&amp;"
+            . "Digits=" . $data["Digits"] . "&"
             . $params . "</Redirect>";
             echo "</Response>";
         } elseif ($data["Digits"] == 3) {
@@ -303,7 +304,7 @@ class Call_view extends CI_Controller {
             echo "</Gather>";
             echo "<Pause length='4'/>";
             echo "<Redirect method='GET'>" . $base_url . "call_view/step_three?"
-            . "Digits=" . $data["Digits"] . "&amp;"
+            . "Digits=" . $data["Digits"] . "&"
             . $params . "</Redirect>";
             echo "</Response>";
         } elseif ($data["Digits"] == 0) {
@@ -311,7 +312,7 @@ class Call_view extends CI_Controller {
         } elseif ($data["Digits"] == 4) {
             echo "<Response>";
             echo "<Redirect method='GET'>" . $base_url . "call_view/step_two?"
-            . "Digits=1&amp;"
+            . "Digits=1&"
             . $params . "</Redirect>";
             echo "</Response>";
         } else {
@@ -351,26 +352,26 @@ class Call_view extends CI_Controller {
         echo "\n\nat step_four";
         echo "data = " . json_encode($data);
 
-        $params = "first_name=" . urlencode($data["first_name"]) . "&amp;"
-                . "last_name=" . urlencode($data["last_name"]) . "&amp;"
-                . "visit_name=" . urlencode($data["visit_name"]) . "&amp;"
-                . "clinic_name=" . urlencode($data["clinic_name"]) . "&amp;"
-                . "address=" . urlencode($data["address"]) . "&amp;"
-                . "reservation_id=" . urlencode($data["reservation_id"]) . "&amp;"
-                . "date1=" . urlencode($data['date1']) . "&amp;"
-                . "time1=" . urlencode($data['time1']) . "&amp;"
-                . "date2=" . urlencode($data['date2']) . "&amp;"
-                . "time2=" . urlencode($data['time2']) . "&amp;"
-                . "date3=" . urlencode($data['date3']) . "&amp;"
-                . "time3=" . urlencode($data['time3']) . "&amp;"
-                . "speak_date1=" . urlencode($data['speak_date1']) . "&amp;"
-                . "speak_day1=" . urlencode($data['speak_day1']) . "&amp;"
-                . "speak_time1=" . urlencode($data['speak_time1']) . "&amp;"
-                . "speak_date2=" . urlencode($data['speak_date2']) . "&amp;"
-                . "speak_day2=" . urlencode($data['speak_day2']) . "&amp;"
-                . "speak_time2=" . urlencode($data['speak_time2']) . "&amp;"
-                . "speak_date3=" . urlencode($data['speak_date3']) . "&amp;"
-                . "speak_day3=" . urlencode($data['speak_day3']) . "&amp;"
+        $params = "first_name=" . urlencode($data["first_name"]) . "&"
+                . "last_name=" . urlencode($data["last_name"]) . "&"
+                . "visit_name=" . urlencode($data["visit_name"]) . "&"
+                . "clinic_name=" . urlencode($data["clinic_name"]) . "&"
+                . "address=" . urlencode($data["address"]) . "&"
+                . "reservation_id=" . urlencode($data["reservation_id"]) . "&"
+                . "date1=" . urlencode($data['date1']) . "&"
+                . "time1=" . urlencode($data['time1']) . "&"
+                . "date2=" . urlencode($data['date2']) . "&"
+                . "time2=" . urlencode($data['time2']) . "&"
+                . "date3=" . urlencode($data['date3']) . "&"
+                . "time3=" . urlencode($data['time3']) . "&"
+                . "speak_date1=" . urlencode($data['speak_date1']) . "&"
+                . "speak_day1=" . urlencode($data['speak_day1']) . "&"
+                . "speak_time1=" . urlencode($data['speak_time1']) . "&"
+                . "speak_date2=" . urlencode($data['speak_date2']) . "&"
+                . "speak_day2=" . urlencode($data['speak_day2']) . "&"
+                . "speak_time2=" . urlencode($data['speak_time2']) . "&"
+                . "speak_date3=" . urlencode($data['speak_date3']) . "&"
+                . "speak_day3=" . urlencode($data['speak_day3']) . "&"
                 . "speak_time3=" . urlencode($data['speak_time3']);
 
         if (isset($data["Digits"])) {
@@ -393,7 +394,7 @@ class Call_view extends CI_Controller {
                 echo "</Gather>";
                 echo "<Pause length='2'/>";
                 echo "<Redirect method='GET'>" . $base_url . "call_view/step_four?"
-                . "Digits=4&amp;"
+                . "Digits=4&"
                 . $params . "</Redirect>";
                 echo "</Response>";
             } elseif ($data["Digits"] == 1) {
@@ -405,7 +406,7 @@ class Call_view extends CI_Controller {
             } else {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response><Redirect method='GET'>" . $base_url . "call_view/confirm_call?"
-                . $params . "&amp;"
+                . $params . "&"
                 . "Digits=timeout"
                 . "</Redirect>"
                 . "</Response>";
