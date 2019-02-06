@@ -870,7 +870,7 @@ class Referral_model extends CI_Model {
                 $this->db->select('admin.id as clinic_id, CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
                         'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
                         "admin.address," .
-                        "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
+                        "pat.email_id, pat.cell_phone," .
                         "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
                 $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
                 $this->db->where(array(
@@ -901,176 +901,84 @@ class Referral_model extends CI_Model {
 
 
                     $msg_data = $result[0];
-
-
-
                     $confirm_visit_key = generate_random_string(120);
 //                    $weekdays = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
                     $allocations = $this->assign_slots($new_visit_duration);
-
+//                    echo "<br/> ****************** <br/>"
+//                    . "slots assigned = " . json_encode($allocations) . "<br/><br/>";
+//                    exit();
                     $start_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["start_time"]);
                     $end_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["end_time"]);
                     $start_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["start_time"]);
                     $end_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["end_time"]);
                     $start_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["start_time"]);
                     $end_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["end_time"]);
-
-                    $call_immediately = false;
-                    $contact_number = $msg_data->cell_phone;
-                    if ($msg_data->home_phone != "") {
-                        //home number
-                        $contact_number = $msg_data->home_phone;
-                        $call_immediately = true;
-                    } else if ($msg_data->work_phone != "") {
-                        //work number
-                        $contact_number = $msg_data->work_phone;
-                        $call_immediately = true;
-                    }
-
-
-                    if ($call_immediately) {
-
-                        //insert data into reserved slots
-                        $insert_data = array(
-                            "patient_id" => $patient_id,
-                            "visit_name" => $data["visit_name"],
-                            "visit_date1" => $start_time1->format("Y-m-d"),
-                            "visit_start_time1" => $start_time1->format("H:i:s"),
-                            "visit_end_time1" => $end_time1->format("H:i:s"),
-                            "visit_date2" => $start_time2->format("Y-m-d"),
-                            "visit_start_time2" => $start_time2->format("H:i:s"),
-                            "visit_end_time2" => $end_time2->format("H:i:s"),
-                            "visit_date3" => $start_time3->format("Y-m-d"),
-                            "visit_start_time3" => $start_time3->format("H:i:s"),
-                            "visit_end_time3" => $end_time3->format("H:i:s"),
-                            "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
-                            "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
-                            "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
-                            "notify_email" => (isset($data["email"])) ? 1 : 0,
-                            "visit_confirmed" => "Awaiting Confirmation",
-                            "confirm_visit_key" => $confirm_visit_key,
-                            "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P1D"))->format("Y-m-d H:i:s"),
-                            "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P2D"))->format("Y-m-d H:i:s"),
-                            "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P3D"))->format("Y-m-d H:i:s")
-                        );
-
-                        $this->db->insert("records_patient_visit_reserved", $insert_data);
-                        $reservation_id = $this->db->insert_id();
-
-                        $post_arr = array(
-                            "first_name" => $msg_data->fname,
-                            "last_name" => $msg_data->lname,
-                            "visit_name" => $data["visit_name"],
-                            "clinic_name" => $msg_data->clinic_institution_name,
-                            "contact_number" => $contact_number,
-                            "address" => $msg_data->call_address,
-                            "type" => 'visitCreate',
-                            
-                            "reservation_id" => $reservation_id,
-                            
-                            "date1" => $start_time1->format("Y-m-d"),
-                            "time1" => $start_time1->format("H:i:s"),
-                            "date2" => $start_time2->format("Y-m-d"),
-                            "time2" => $start_time2->format("H:i:s"),
-                            "date3" => $start_time3->format("Y-m-d"),
-                            "time3" => $start_time3->format("H:i:s"),
-                            
-                            "speak_date1" => $start_time1->format("F jS"),
-                            "speak_day1" => $start_time1->format("l"),
-                            "speak_time1" => $start_time1->format("g:i a"),
-                            "speak_date2" => $start_time2->format("F jS"),
-                            "speak_day2" => $start_time2->format("l"),
-                            "speak_time2" => $start_time2->format("g:i a"),
-                            "speak_date3" => $start_time3->format("F jS"),
-                            "speak_day3" => $start_time3->format("l"),
-                            "speak_time3" => $start_time3->format("g:i a"),
-                        );
-
-                        log_message("error", "Call should start now");
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                        curl_setopt($ch, CURLOPT_URL, base_url() . "call_view/call_start");
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        curl_setopt($ch, CURLOPT_POST, 1);
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
-                        $resp = curl_exec($ch);
-                        if (curl_errno($ch)) {
-                            log_message("error", "Call error => " . json_encode(curl_error($ch)));
-                            return curl_error($ch);
-                        }
-                        curl_close($ch);
-                        log_message("error", "Call completed " . json_encode($resp));
-                    } else {
 //                        $week = $weekdays[(int)$date->format("l")];
 //                        echo $week . "<br/>";
-                        $visit_datetime = array();
+                    $visit_datetime = array();
 
-                        $visit_datetime[] = array(
-                            "date" => $start_time1->format("l M jS"),
-                            "time" => $start_time1->format("g:ia")
-                        );
-                        $visit_datetime[] = array(
-                            "date" => $start_time2->format("l M jS"),
-                            "time" => $start_time2->format("g:ia")
-                        );
-                        $visit_datetime[] = array(
-                            "date" => $start_time3->format("l M jS"),
-                            "time" => $start_time3->format("g:ia")
-                        );
-                        //insert for temp storage for 60 min sms response
-                        $insert_data = array(
-                            "patient_id" => $patient_id,
-                            "visit_name" => $data["visit_name"],
-                            "visit_date1" => $start_time1->format("Y-m-d"),
-                            "visit_start_time1" => $start_time1->format("H:i:s"),
-                            "visit_end_time1" => $end_time1->format("H:i:s"),
-                            "visit_date2" => $start_time2->format("Y-m-d"),
-                            "visit_start_time2" => $start_time2->format("H:i:s"),
-                            "visit_end_time2" => $end_time2->format("H:i:s"),
-                            "visit_date3" => $start_time3->format("Y-m-d"),
-                            "visit_start_time3" => $start_time3->format("H:i:s"),
-                            "visit_end_time3" => $end_time3->format("H:i:s"),
-                            "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT60M"))->format("Y-m-d H:i:s"),
-                            "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
-                            "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
-                            "notify_email" => (isset($data["email"])) ? 1 : 0,
-                            "visit_confirmed" => (isset($data["cell_phone"]) || isset($data["email"]) || isset($data["cell_phone_voice"])) ? "Awaiting Confirmation" : "N/A",
-                            "confirm_visit_key" => $confirm_visit_key
-                        );
+                    $visit_datetime[] = array(
+                        "date" => $start_time1->format("l M jS"),
+                        "time" => $start_time1->format("g:ia")
+                    );
+                    $visit_datetime[] = array(
+                        "date" => $start_time2->format("l M jS"),
+                        "time" => $start_time2->format("g:ia")
+                    );
+                    $visit_datetime[] = array(
+                        "date" => $start_time3->format("l M jS"),
+                        "time" => $start_time3->format("g:ia")
+                    );
+                    //insert for temp storage for 60 min sms response
+                    $insert_data = array(
+                        "patient_id" => $patient_id,
+                        "visit_name" => $data["visit_name"],
+                        "visit_date1" => $start_time1->format("Y-m-d"),
+                        "visit_start_time1" => $start_time1->format("H:i:s"),
+                        "visit_end_time1" => $end_time1->format("H:i:s"),
+                        "visit_date2" => $start_time2->format("Y-m-d"),
+                        "visit_start_time2" => $start_time2->format("H:i:s"),
+                        "visit_end_time2" => $end_time2->format("H:i:s"),
+                        "visit_date3" => $start_time3->format("Y-m-d"),
+                        "visit_start_time3" => $start_time3->format("H:i:s"),
+                        "visit_end_time3" => $end_time3->format("H:i:s"),
+                        "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT60M"))->format("Y-m-d H:i:s"),
+                        "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
+                        "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
+                        "notify_email" => (isset($data["email"])) ? 1 : 0,
+                        "visit_confirmed" => (isset($data["cell_phone"]) || isset($data["email"]) || isset($data["cell_phone_voice"])) ? "Awaiting Confirmation" : "N/A",
+                        "confirm_visit_key" => $confirm_visit_key
+                    );
 
-                        $this->db->insert("records_patient_visit_reserved", $insert_data);
+                    $this->db->insert("records_patient_visit_reserved", $insert_data);
 //                    echo $this->db->last_query();
 //                    exit();
-                        //#change starts
-                        $msg = "Hello <patient name>,\n"
-                                . "\n"
-                                . "This is an automated appointment booking message from <clinic name>. "
-                                . "Please select one of the following dates:\n"
-                                . "\n"
-                                . "<date1> at <time1> - reply with '1'\n"
-                                . "\n"
-                                . "<date2> at <time2> - reply with '2'\n"
-                                . "\n"
-                                . "<date3> at <time3> - reply with '3'\n"
-                                . "\n"
-                                . "If you would like the clinic to contact you directly, please reply with '0'.\n"
-                                . "\n"
-                                . "Thank-you.";
+                    //#change starts
+                    $msg = "Hello <patient name>,\n"
+                            . "\n"
+                            . "This is an automated appointment booking message from <clinic name>. "
+                            . "Please select one of the following dates:\n"
+                            . "\n"
+                            . "<date1> at <time1> - reply with '1'\n"
+                            . "\n"
+                            . "<date2> at <time2> - reply with '2'\n"
+                            . "\n"
+                            . "<date3> at <time3> - reply with '3'\n"
+                            . "\n"
+                            . "If you would like the clinic to contact you directly, please reply with '0'.\n"
+                            . "\n"
+                            . "Thank-you.";
 
-                        $msg = str_replace("<patient name>", $msg_data->fname, $msg);
-                        $msg = str_replace("<date1>", $visit_datetime[0]["date"], $msg);
-                        $msg = str_replace("<time1>", $visit_datetime[0]["time"], $msg);
-                        $msg = str_replace("<date2>", $visit_datetime[1]["date"], $msg);
-                        $msg = str_replace("<time2>", $visit_datetime[1]["time"], $msg);
-                        $msg = str_replace("<date3>", $visit_datetime[2]["date"], $msg);
-                        $msg = str_replace("<time3>", $visit_datetime[2]["time"], $msg);
-                        $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
+                    $msg = str_replace("<patient name>", $msg_data->fname, $msg);
+                    $msg = str_replace("<date1>", $visit_datetime[0]["date"], $msg);
+                    $msg = str_replace("<time1>", $visit_datetime[0]["time"], $msg);
+                    $msg = str_replace("<date2>", $visit_datetime[1]["date"], $msg);
+                    $msg = str_replace("<time2>", $visit_datetime[1]["time"], $msg);
+                    $msg = str_replace("<date3>", $visit_datetime[2]["date"], $msg);
+                    $msg = str_replace("<time3>", $visit_datetime[2]["time"], $msg);
+                    $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
 
-                        $this->send_sms($msg_data->cell_phone, $msg);
-                    }
-//                    echo "<br/> ****************** <br/>"
-//                    . "slots assigned = " . json_encode($allocations) . "<br/><br/>";
-//                    exit();
+//                    $this->send_sms($msg_data->cell_phone, $msg);
                     //make call too, temporary
 //                    $post_arr = array(
 //                        'patient_name' => $msg_data->fname,
@@ -1081,6 +989,37 @@ class Referral_model extends CI_Model {
 //                        'clinic_id' => $msg_data->clinic_id,
 //                        'type' => 'visitCreate'
 //                    ); 
+                    $post_arr = array(
+                        'defaultContactFormName' => $msg_data->fname,
+                        "patient_lname" => $msg_data->lname,
+                        "defaultContactFormName2" => $data["visit_name"],
+                        'defaultContactFormName3' => $msg_data->clinic_institution_name,
+                        'defaultContactFormName4' => "ddd",
+                        'defaultContactFormName5' => "ttt",
+                        'defaultContactFormName6' => $msg_data->cell_phone,
+                        'address' => $msg_data->call_address,
+                        'clinic_id' => $msg_data->clinic_id,
+                        'type' => 'visitCreate',
+                        "patient_id" => $patient_id,
+                        "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
+                        "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
+                        "notify_email" => (isset($data["email"])) ? 1 : 0
+                    );
+
+                    log_message("error", "Call should start now");
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    curl_setopt($ch, CURLOPT_URL, base_url() . "call_view/call");
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
+                    $resp = curl_exec($ch);
+                    if (curl_errno($ch)) {
+                        log_message("error", "Call error => " . json_encode(curl_error($ch)));
+                        return curl_error($ch);
+                    }
+                    curl_close($ch);
+                    log_message("error", "Call completed " . json_encode($resp));
                 }
                 $this->db->trans_complete();
                 return true;
