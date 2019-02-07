@@ -1687,6 +1687,11 @@ class Referral_model extends CI_Model {
                         ->where("pat.referral_id", "c_ref.id", false)
                         ->where("c_ref.efax_id", "efax.id", false)
                         ->order_by("1")->get()->result();
+        
+        echo "visits booked = " . json_encode($visits_booked);
+        echo "visits booked = " . $this->db->last_query();
+        log_message("error", "visits booked = " . json_encode($visits_booked));
+        log_message("error", "visits booked = " . $this->db->last_query());
 
         $visits_reserved = $this->db
                         ->select(
@@ -1710,6 +1715,12 @@ class Referral_model extends CI_Model {
                         ->where("pat.referral_id", "c_ref.id", false)
                         ->where("c_ref.efax_id", "efax.id", false)
                         ->order_by("1")->get()->result();
+        
+        
+        echo "visits reserved = " . json_encode($visits_reserved);
+        echo "visits reserved = " . $this->db->last_query();
+        log_message("error", "visits reserved = " . json_encode($visits_reserved));
+        log_message("error", "visits reserved = " . $this->db->last_query());
 
         $visits_reserved = $this->filter_reserved($visits_reserved, $next_day->format('Y-m-d'));
 //        echo "visits booked = " . json_encode($visits_booked) . "<br/>";
