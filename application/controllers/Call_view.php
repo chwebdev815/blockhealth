@@ -136,26 +136,34 @@ class Call_view extends CI_Controller {
     }
 
     public function step_two() {
+
+
+        //[{"id":"0","patient_id":"2","visit_name":"visit check","visit_date1":"2019-02-08","visit_start_time1":"09:00:00","visit_end_time1":"09:30:00","visit_date2":"2019-02-11","visit_start_time2":"09:00:00","visit_end_time2":"09:30:00","visit_date3":"2019-02-12","visit_start_time3":"09:00:00","visit_end_time3":"09:30:00","visit_expire_time":"2019-02-07 11:21:53","reminder_1h":null,"reminder_24h":"2019-02-08 10:21:53","reminder_48h":"2019-02-09 10:21:53","reminder_72h":"2019-02-10 10:21:53","confirm_key":"1","notify_type":"call","notify_voice":"1","notify_sms":"1","notify_email":"1","confirm_visit_key":"1549552913_SphROVHWj3RuNDJpfkv0GkMy4N7Q5tJYT_PGUvBdyrHl3qLjKgjqA5YES5tYzbWrbK65eIiN9_8dpTw98PzJUxmMCQKb1FCcoJiDqAqzzyNZri7A6Gi0cFNP","visit_confirmed":"Awaiting Confirmation","create_datetime":"2019-02-07 15:21:53","active":"1"}]
+
+
         $clinic_id = $_GET["clinic_id"];
         $patient_id = $_GET["patient_id"];
         $reserved_id = $_GET["reserved_id"];
-        
+
         $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
-            "id" => $reserved_id
-        ))->get()->result();
-        echo json_encode($reserved_data);
-        exit();
+                    "id" => $reserved_id
+                ))->get()->result()[0];
+
+
         //data reserved for 10 mins
 
-        $date1 = date('F jS', strtotime($data[0]['start_time']));
-        $day1 = date('l', strtotime($data[0]['start_time']));
-        $time1 = date('g:i a', strtotime($data[0]['start_time']));
-        $date2 = date('F jS', strtotime($data[1]['start_time']));
-        $day2 = date('l', strtotime($data[1]['start_time']));
-        $time2 = date('g:i a', strtotime($data[1]['start_time']));
-        $date3 = date('F jS', strtotime($data[2]['start_time']));
-        $day3 = date('l', strtotime($data[2]['start_time']));
-        $time3 = date('g:i a', strtotime($data[2]['start_time']));
+
+
+        $date1 = date('F jS', strtotime($reserved_data->visit_date1 . " " . $reserved_data->visit_start_time1));
+        $day1 = date('l', strtotime($reserved_data->visit_date1 . " " . $reserved_data->visit_start_time1));
+        $time1 = date('g:i a', strtotime($reserved_data->visit_date1 . " " . $reserved_data->visit_start_time1));
+        $date2 = date('F jS', strtotime($reserved_data->visit_date2 . " " . $reserved_data->visit_start_time2));
+        $day2 = date('l', strtotime($reserved_data->visit_date2 . " " . $reserved_data->visit_start_time2));
+        $time2 = date('g:i a', strtotime($reserved_data->visit_date2 . " " . $reserved_data->visit_start_time2));
+        $date3 = date('F jS', strtotime($reserved_data->visit_date3 . " " . $reserved_data->visit_start_time3));
+        $day3 = date('l', strtotime($reserved_data->visit_date3 . " " . $reserved_data->visit_start_time3));
+        $time3 = date('g:i a', strtotime($reserved_data->visit_date3 . " " . $reserved_data->visit_start_time3));
+
         if (isset($_GET["Digits"])) {
             $base_url = "http://35.203.47.37/";
             if ($_GET['Digits'] == 1) {
@@ -170,6 +178,7 @@ class Call_view extends CI_Controller {
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
@@ -204,6 +213,7 @@ class Call_view extends CI_Controller {
                 . "cname=" . urlencode($_GET['cname']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "&amp;"
@@ -245,6 +255,7 @@ class Call_view extends CI_Controller {
                 . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
@@ -295,6 +306,7 @@ class Call_view extends CI_Controller {
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
@@ -325,6 +337,7 @@ class Call_view extends CI_Controller {
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
@@ -352,6 +365,7 @@ class Call_view extends CI_Controller {
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
@@ -382,6 +396,7 @@ class Call_view extends CI_Controller {
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
@@ -408,6 +423,7 @@ class Call_view extends CI_Controller {
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
@@ -438,6 +454,7 @@ class Call_view extends CI_Controller {
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
@@ -467,6 +484,7 @@ class Call_view extends CI_Controller {
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
@@ -484,6 +502,36 @@ class Call_view extends CI_Controller {
             } else {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
+            }
+
+            if ($_GET['Digits'] == 1 || $_GET['Digits'] == 2 || $_GET['Digits'] == 3) {
+                $num = $_GET['Digits'];
+                $reserved_id = $_GET["reserved_id"];
+                $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
+                    "id" => $reserved_id
+                ))->get()->result_array()[0];
+                
+                
+        //[{"id":"0","patient_id":"2","visit_name":"visit check","visit_date1":"2019-02-08","visit_start_time1":"09:00:00","visit_end_time1":"09:30:00","visit_date2":"2019-02-11","visit_start_time2":"09:00:00","visit_end_time2":"09:30:00","visit_date3":"2019-02-12","visit_start_time3":"09:00:00","visit_end_time3":"09:30:00","visit_expire_time":"2019-02-07 11:21:53","reminder_1h":null,"reminder_24h":"2019-02-08 10:21:53","reminder_48h":"2019-02-09 10:21:53","reminder_72h":"2019-02-10 10:21:53","confirm_key":"1","notify_type":"call","notify_voice":"1","notify_sms":"1","notify_email":"1","confirm_visit_key":"1549552913_SphROVHWj3RuNDJpfkv0GkMy4N7Q5tJYT_PGUvBdyrHl3qLjKgjqA5YES5tYzbWrbK65eIiN9_8dpTw98PzJUxmMCQKb1FCcoJiDqAqzzyNZri7A6Gi0cFNP","visit_confirmed":"Awaiting Confirmation","create_datetime":"2019-02-07 15:21:53","active":"1"}]
+                
+                $visit_date = $reserved_data["visit_date".$num];
+                $visit_time = $reserved_data["visit_start_time".$num];
+                $visit_end_time = $reserved_data["visit_end_time".$num];
+                
+                $get = $_GET;
+                
+                $insert_data = array(
+                    "patient_id" => $get["patient_id"],
+                    "visit_name" => $get["pvname"],
+                    "visit_date" => $visit_date,
+                    "visit_time" => $visit_time,
+                    "visit_end_time" => $visit_end_time,
+                    "notify_voice" => $reserved_data["notify_voice"],
+                    "notify_sms" => $reserved_data["notify_sms"],
+                    "notify_email" => $reserved_data["notify_email"]
+                );
+                //insert in scheduled visit
+                $this->db->insert("records_patient_visit", $insert_data);
             }
 
 
@@ -540,6 +588,7 @@ class Call_view extends CI_Controller {
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
@@ -575,6 +624,7 @@ class Call_view extends CI_Controller {
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
@@ -601,6 +651,7 @@ class Call_view extends CI_Controller {
                 . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
                 . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
                 . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
                 . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
                 . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
