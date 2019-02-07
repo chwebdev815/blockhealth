@@ -29,27 +29,28 @@ class Call_view extends CI_Controller {
         $notify_email = $this->input->post('notify_email');
         $address = $this->input->post('address');
         $type = $this->input->post("type");
+        $reserved_id = $this->input->post("reserved_id");
 
         if (!empty($mob)) {
-            $dataNew = $this->call_confirm($clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $mob, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address);
+            $dataNew = $this->call_confirm($reserved_id, $clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $mob, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address);
             echo "<pre>";
             print_r($dataNew);
         }
     }
 
-    public function call_confirm($clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $to_number, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address) {
+    public function call_confirm($reserved_id, $clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $to_number, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address) {
 
         $sid = 'AC2da3b84b65b63ccf4f05c27ac1713060';
         $token = '342a214ee959d16bf97ea87579016762';
         $twilio_number = "+13658000973";
         //$to = "+919876907251";  
 
-//        $to_number = "+917201907712";
+        $to_number = "+917201907712";
 
 
-        $url = base_url() . "call_view/callhandle?"
+        $url = "http://35.203.47.37/" . "call_view/callhandle?"
                 . "pname=" . urlencode($pname) . "&"
-                . "patient_lname=" . $patient_lname . "&"
+                . "patient_lname=" . urlencode($patient_lname) . "&"
                 . "pvname=" . urlencode($pvname) . "&"
                 . "cname=" . urlencode($cname) . "&"
                 . "aDate=" . urlencode($aDate) . "&"
@@ -57,6 +58,7 @@ class Call_view extends CI_Controller {
                 . "address=" . urlencode($address) . "&"
                 . "clinic_id=" . urlencode($clinic_id) . "&"
                 . "patient_id=" . urlencode($patient_id) . "&"
+                . "reserved_id=" . urlencode($reserved_id) . "&"
                 . "notify_voice=" . urlencode($notify_voice) . "&"
                 . "notify_sms=" . urlencode($notify_sms) . "&"
                 . "notify_email=" . urlencode($notify_email);
@@ -85,98 +87,11 @@ class Call_view extends CI_Controller {
         }
     }
 
-    public function call_resp() {
-        //if(isset($_GET['pname'])){
-        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-        echo "<Response>";
-        echo "<Gather  NumDigits='1' action='" . base_url() . "call_view/call_resp_handle/' method='GET'>";
-        echo "<Say>";
-        echo "Hello         " . $_GET['pname'] . "
-                Your      appointment   " . $_GET['pvname'] . "    with    " . $_GET['cname'] . "    has been booked for " . $_GET['aDate'] . "    at    " . $_GET['aDate'] . "    .The    address    is:    " . $_GET['address'] . "    Please     type    1    to    confirm    this    booking.    If    this    date    does   not     work,    please   type   2    to    alert    the    clinic    staff";
-        echo "</Say>";
-        echo "</Gather>";
-
-        echo "</Response>";
-        //}
-    }
-
-    public function call_resp_handle() {
-        if (isset($_REQUEST['Digits'])) {
-            /*    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-              if($_REQUEST['Digits'] == 1){
-              echo "<Response><Say>You entered  " . $_REQUEST['Digits'] . " , Thank you </Say></Response>";
-              }else{
-              echo "<Response><Say>You entered wrong digit</Say></Response>";
-              } */
-            echo "<pre>";
-            print_r($_REQUEST);
-            echo "<pre>";
-        }
-    }
-
-    public function test() {
-        $this->load->model("referral_model");
-        $data = $this->referral_model->assign_slots(30);
-        echo "<pre>";
-        print_r($data);
-        echo "<pre>";
-    }
-
-    //for wrong number
-    public function vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc() {
-
-        if (isset($_REQUEST['data']) && isset($_REQUEST['to'])) {
-
-            $data = $this->input->post();
-            $From = $data["to"];
-            // $Body = $data["data"];
-            //remove + sign
-            $From = substr($From, 2);
-
-            // log_message("error", "body is 1 or 2 is => " . $Body);
-            $this->db->select("DISTINCT(r_pv.id), r_pv.visit_confirmed, r_pv.notify_email");
-            $this->db->from("referral_patient_info pat, records_patient_visit r_pv");
-            $this->db->where(array(
-                "pat.active" => 1,
-                "r_pv.active" => 1,
-                "pat.cell_phone" => $From
-            ));
-            $this->db->where("r_pv.patient_id", "pat.id", false);
-            $result = $this->db->get()->result();
-
-            log_message("error", "webhook sql = " . $this->db->last_query());
-
-            $change_status = false;
-
-            $this->db->trans_start();
-            foreach ($result as $row) {
-                //change status to confirm
-                $this->db->where(array(
-                    "id" => $row->id
-                ));
-                // if()//Confirmed by email (wrong number)
-                // if($row->notify_email === "1") {
-                //     $this->db->set("visit_confirmed", "Confirmed by email (wrong number)");
-                // } else {
-                $this->db->set("visit_confirmed", "Wrong Number");
-                // }
-
-                $this->db->set("notify_voice", "0");
-                $this->db->set("notify_sms", "0");
-
-                $this->db->update("records_patient_visit");
-                $change_status = true;
-                log_message("error", "change (1) " . $this->db->last_query());
-            }
-            $this->db->trans_complete();
-        }
-    }
-
     public function callhandle() {
 
         $address = $_GET['address'];
         $dataarray = http_build_query($_GET);
-        $base_url = base_url();
+        $base_url = "http://35.203.47.37/";
 
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         echo "<Response>
@@ -190,6 +105,7 @@ class Call_view extends CI_Controller {
         . "address=" . urlencode($_GET['address']) . "&amp;"
         . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
         . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+        . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
         . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
         . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
         . "notify_email=" . urlencode($_GET["notify_email"]) . "' method='GET'>
@@ -211,6 +127,7 @@ class Call_view extends CI_Controller {
         . "address=" . urlencode($_GET['address']) . "&amp;"
         . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
         . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+        . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
         . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
         . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
         . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;
@@ -221,41 +138,13 @@ class Call_view extends CI_Controller {
     public function step_two() {
         $clinic_id = $_GET["clinic_id"];
         $patient_id = $_GET["patient_id"];
-
-        $this->load->model("referral_model");
-        $data = $this->referral_model->assign_slots(30, $clinic_id);
-
-        //save datetime as reserved till call ends
-        $allocations = $data;
-        $start_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["start_time"]);
-        $end_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["end_time"]);
-        $start_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["start_time"]);
-        $end_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["end_time"]);
-        $start_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["start_time"]);
-        $end_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["end_time"]);
-
-        $insert_data = array(
-            "patient_id" => $patient_id,
-            "visit_name" => $_GET["pvname"],
-            "visit_date1" => $start_time1->format("Y-m-d"),
-            "visit_start_time1" => $start_time1->format("H:i:s"),
-            "visit_end_time1" => $end_time1->format("H:i:s"),
-            "visit_date2" => $start_time2->format("Y-m-d"),
-            "visit_start_time2" => $start_time2->format("H:i:s"),
-            "visit_end_time2" => $end_time2->format("H:i:s"),
-            "visit_date3" => $start_time3->format("Y-m-d"),
-            "visit_start_time3" => $start_time3->format("H:i:s"),
-            "visit_end_time3" => $end_time3->format("H:i:s"),
-            "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
-            "notify_voice" => $_GET["notify_voice"],
-            "notify_sms" => $_GET["notify_sms"],
-            "notify_email" => $_GET["notify_email"],
-            "visit_confirmed" => "Awaiting Confirmation"
-        );
-
-        $this->db->insert("records_patient_visit_reserved", $insert_data);
-        $insert_id = $this->db->insert_id();
-
+        $reserved_id = $_GET["reserved_id"];
+        
+        $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
+            "id" => $reserved_id
+        ))->get()->result();
+        echo json_encode($reserved_data);
+        exit();
         //data reserved for 10 mins
 
         $date1 = date('F jS', strtotime($data[0]['start_time']));
@@ -268,7 +157,7 @@ class Call_view extends CI_Controller {
         $day3 = date('l', strtotime($data[2]['start_time']));
         $time3 = date('g:i a', strtotime($data[2]['start_time']));
         if (isset($_GET["Digits"])) {
-            $base_url = base_url();
+            $base_url = "http://35.203.47.37/";
             if ($_GET['Digits'] == 1) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
@@ -393,7 +282,7 @@ class Call_view extends CI_Controller {
 
 
         if (isset($_GET["Digits"])) {
-            $base_url = base_url();
+            $base_url = "http://35.203.47.37/";
             if ($_GET['Digits'] == 1) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
@@ -638,7 +527,7 @@ class Call_view extends CI_Controller {
         $time3 = $_GET["time3"];
 
         if (isset($_GET["Digits"])) {
-            $base_url = base_url();
+            $base_url = "http://35.203.47.37/";
             if ($_GET['Digits'] == 2) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
@@ -733,6 +622,93 @@ class Call_view extends CI_Controller {
                 . "</Redirect>"
                 . "</Response>";
             }
+        }
+    }
+
+    public function call_resp() {
+        //if(isset($_GET['pname'])){
+        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+        echo "<Response>";
+        echo "<Gather  NumDigits='1' action='" . "http://35.203.47.37/" . "call_view/call_resp_handle/' method='GET'>";
+        echo "<Say>";
+        echo "Hello         " . $_GET['pname'] . "
+                Your      appointment   " . $_GET['pvname'] . "    with    " . $_GET['cname'] . "    has been booked for " . $_GET['aDate'] . "    at    " . $_GET['aDate'] . "    .The    address    is:    " . $_GET['address'] . "    Please     type    1    to    confirm    this    booking.    If    this    date    does   not     work,    please   type   2    to    alert    the    clinic    staff";
+        echo "</Say>";
+        echo "</Gather>";
+
+        echo "</Response>";
+        //}
+    }
+
+    public function call_resp_handle() {
+        if (isset($_REQUEST['Digits'])) {
+            /*    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+              if($_REQUEST['Digits'] == 1){
+              echo "<Response><Say>You entered  " . $_REQUEST['Digits'] . " , Thank you </Say></Response>";
+              }else{
+              echo "<Response><Say>You entered wrong digit</Say></Response>";
+              } */
+            echo "<pre>";
+            print_r($_REQUEST);
+            echo "<pre>";
+        }
+    }
+
+    public function test() {
+        $this->load->model("referral_model");
+        $data = $this->referral_model->assign_slots(30);
+        echo "<pre>";
+        print_r($data);
+        echo "<pre>";
+    }
+
+    //for wrong number
+    public function vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc() {
+
+        if (isset($_REQUEST['data']) && isset($_REQUEST['to'])) {
+
+            $data = $this->input->post();
+            $From = $data["to"];
+            // $Body = $data["data"];
+            //remove + sign
+            $From = substr($From, 2);
+
+            // log_message("error", "body is 1 or 2 is => " . $Body);
+            $this->db->select("DISTINCT(r_pv.id), r_pv.visit_confirmed, r_pv.notify_email");
+            $this->db->from("referral_patient_info pat, records_patient_visit r_pv");
+            $this->db->where(array(
+                "pat.active" => 1,
+                "r_pv.active" => 1,
+                "pat.cell_phone" => $From
+            ));
+            $this->db->where("r_pv.patient_id", "pat.id", false);
+            $result = $this->db->get()->result();
+
+            log_message("error", "webhook sql = " . $this->db->last_query());
+
+            $change_status = false;
+
+            $this->db->trans_start();
+            foreach ($result as $row) {
+                //change status to confirm
+                $this->db->where(array(
+                    "id" => $row->id
+                ));
+                // if()//Confirmed by email (wrong number)
+                // if($row->notify_email === "1") {
+                //     $this->db->set("visit_confirmed", "Confirmed by email (wrong number)");
+                // } else {
+                $this->db->set("visit_confirmed", "Wrong Number");
+                // }
+
+                $this->db->set("notify_voice", "0");
+                $this->db->set("notify_sms", "0");
+
+                $this->db->update("records_patient_visit");
+                $change_status = true;
+                log_message("error", "change (1) " . $this->db->last_query());
+            }
+            $this->db->trans_complete();
         }
     }
 
