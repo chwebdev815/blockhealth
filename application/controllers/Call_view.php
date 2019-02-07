@@ -79,11 +79,9 @@ class Call_view extends CI_Controller {
                 . "speak_day3=" . urlencode($data['speak_day3']) . '&amp;'
                 . "speak_time3=" . urlencode($data['speak_time3']);
 
-        echo $url;
-        exit();
         $uri = 'https://api.twilio.com/2010-04-01/Accounts/' . $sid . '/Calls.json';
         $auth = $sid . ':' . $token;
-        $fields = '&Url=' . urlencode($url) .
+        $fields = '&Url=' . $url .
                 '&To=' . urlencode($to_number) .
                 '&From=' . urlencode($twilio_number);
         $res = curl_init();
@@ -92,14 +90,16 @@ class Call_view extends CI_Controller {
         curl_setopt($res, CURLOPT_POSTFIELDS, $fields);
         curl_setopt($res, CURLOPT_USERPWD, $auth);
         curl_setopt($res, CURLOPT_RETURNTRANSFER, true);
-        curl_exec($res);
+        $response = curl_exec($res);
 
         if (curl_errno($res)) {
             log_message("error", " Error – " . curl_error($res));
             echo curl_error($res);
             return false;
         } else {
+            echo "Url = " . $url . "<br/>";
             log_message("error", "Calling");
+            echo "<br/> response from start call = > " . json_encode($response);
             return true;
         }
     }

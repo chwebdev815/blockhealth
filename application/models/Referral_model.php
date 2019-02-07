@@ -999,6 +999,7 @@ class Referral_model extends CI_Model {
                             return curl_error($ch);
                         }
                         curl_close($ch);
+                        echo $resp;
                         log_message("error", "Call completed " . json_encode($resp));
                     } else {
 //                        $week = $weekdays[(int)$date->format("l")];
