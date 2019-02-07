@@ -1731,8 +1731,8 @@ class Referral_model extends CI_Model {
         $all_visits = json_decode(json_encode($all_visits));
         usort($all_visits, array($this, "sort_visits_by_date"));
 
-//        echo "<br/><br/>all visits = " . json_encode($all_visits) . "<br/><br/>";
-//        echo $this->db->last_query() . "<br/><br/>";
+        echo "<br/><br/>all visits = " . json_encode($all_visits) . "<br/><br/>";
+        echo $this->db->last_query() . "<br/><br/>";
 
         $visits_booked = $all_visits;
         $available_visit_slots = array();
@@ -1847,9 +1847,9 @@ class Referral_model extends CI_Model {
     }
 
     private function time_slot_available($time1, $time2, $new_visit_duration) {
-        //echo "### called time_slot_available" . "<br/>";
-        //echo json_encode($time1) . "<br/>";
-        //echo json_encode($time2) . "<br/>";
+        echo "### called time_slot_available" . "<br/>";
+        echo json_encode($time1) . "<br/>";
+        echo json_encode($time2) . "<br/>";
 
         $datetime1 = DateTime::createFromFormat('Y-m-d H:i:s', $time1);
         $datetime2 = DateTime::createFromFormat('Y-m-d H:i:s', $time2);
@@ -1870,6 +1870,7 @@ class Referral_model extends CI_Model {
                 "available" => false
             );
         }
+        echo "available = " . $response . "<br/>";
         return $response;
     }
 
