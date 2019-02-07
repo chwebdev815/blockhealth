@@ -1688,8 +1688,6 @@ class Referral_model extends CI_Model {
                         ->where("c_ref.efax_id", "efax.id", false)
                         ->order_by("1")->get()->result();
         
-        echo "visits booked = " . json_encode($visits_booked);
-        echo "visits booked = " . $this->db->last_query();
         log_message("error", "visits booked = " . json_encode($visits_booked));
         log_message("error", "visits booked = " . $this->db->last_query());
 
@@ -1717,10 +1715,8 @@ class Referral_model extends CI_Model {
                         ->order_by("1")->get()->result();
         
         
-        echo "visits reserved = " . json_encode($visits_reserved);
-        echo "visits reserved = " . $this->db->last_query();
-        log_message("error", "visits reserved = " . json_encode($visits_reserved));
-        log_message("error", "visits reserved = " . $this->db->last_query());
+        log_message("error", "visits booked = " . json_encode($visits_reserved));
+        log_message("error", "visits booked = " . $this->db->last_query());
 
         $visits_reserved = $this->filter_reserved($visits_reserved, $next_day->format('Y-m-d'));
 //        echo "visits booked = " . json_encode($visits_booked) . "<br/>";
@@ -1731,8 +1727,8 @@ class Referral_model extends CI_Model {
         $all_visits = json_decode(json_encode($all_visits));
         usort($all_visits, array($this, "sort_visits_by_date"));
 
-        echo "<br/><br/>all visits = " . json_encode($all_visits) . "<br/><br/>";
-        echo $this->db->last_query() . "<br/><br/>";
+//        echo "<br/><br/>all visits = " . json_encode($all_visits) . "<br/><br/>";
+//        echo $this->db->last_query() . "<br/><br/>";
 
         $visits_booked = $all_visits;
         $available_visit_slots = array();
@@ -1847,9 +1843,9 @@ class Referral_model extends CI_Model {
     }
 
     private function time_slot_available($time1, $time2, $new_visit_duration) {
-        echo "### called time_slot_available" . "<br/>";
-        echo json_encode($time1) . "<br/>";
-        echo json_encode($time2) . "<br/>";
+        //echo "### called time_slot_available" . "<br/>";
+        //echo json_encode($time1) . "<br/>";
+        //echo json_encode($time2) . "<br/>";
 
         $datetime1 = DateTime::createFromFormat('Y-m-d H:i:s', $time1);
         $datetime2 = DateTime::createFromFormat('Y-m-d H:i:s', $time2);
@@ -1870,8 +1866,7 @@ class Referral_model extends CI_Model {
                 "available" => false
             );
         }
-        echo "available = " . $response . "<br/>";
-        return $response["available"];
+        return $response;
     }
 
     private function day_of($visit) {
