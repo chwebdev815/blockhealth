@@ -46,8 +46,8 @@ class Call_view extends CI_Controller {
     public function call_start() {
         $data = $_REQUEST;
         
-        echo "\n\nat call_start";
-        echo "data = " . json_encode($data);
+//        echo "\n\nat call_start";
+//        echo "data = " . json_encode($data);
         
         $sid = 'AC2da3b84b65b63ccf4f05c27ac1713060';
         $token = '342a214ee959d16bf97ea87579016762';
@@ -97,9 +97,9 @@ class Call_view extends CI_Controller {
             echo curl_error($res);
             return false;
         } else {
-            echo "Url = " . $url . "<br/>";
+//            echo "Url = " . $url . "<br/>";
             log_message("error", "Calling");
-            echo "<br/> response from start call = > " . json_encode($response);
+//            echo "<br/> response from start call = > " . json_encode($response);
             return true;
         }
     }
@@ -108,8 +108,8 @@ class Call_view extends CI_Controller {
         $data = $this->input->get();
         $base_url = base_url();
         
-        echo "\n\nat confirm_call";
-        echo "data = " . json_encode($data);
+//        echo "\n\nat confirm_call";
+//        echo "data = " . json_encode($data);
 
         $params = "first_name=" . urlencode($data["first_name"]) . '&amp;'
                 . "last_name=" . urlencode($data["last_name"]) . '&amp;'
@@ -156,8 +156,8 @@ class Call_view extends CI_Controller {
         $data = $this->input->get();
         $base_url = base_url();
 
-        echo "\n\nat step_two";
-        echo "data = " . json_encode($data);
+//        echo "\n\nat step_two";
+//        echo "data = " . json_encode($data);
 
         $params = "first_name=" . urlencode($data["first_name"]) . '&amp;'
                 . "last_name=" . urlencode($data["last_name"]) . '&amp;'
