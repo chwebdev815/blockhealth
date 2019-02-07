@@ -235,8 +235,8 @@ class Call_view extends CI_Controller {
         $data = $this->input->get();
         $base_url = base_url();
 
-        echo "\n\nat step_three";
-        echo "data = " . json_encode($data);
+//        echo "\n\nat step_three";
+//        echo "data = " . json_encode($data);
         
 
         $params = "first_name=" . urlencode($data["first_name"]) . '&amp;'
@@ -351,8 +351,8 @@ class Call_view extends CI_Controller {
         $data = $this->input->get();
         $base_url = base_url();
         
-        echo "\n\nat step_four";
-        echo "data = " . json_encode($data);
+//        echo "\n\nat step_four";
+//        echo "data = " . json_encode($data);
 
         $params = "first_name=" . urlencode($data["first_name"]) . '&amp;'
                 . "last_name=" . urlencode($data["last_name"]) . '&amp;'
