@@ -1871,7 +1871,7 @@ class Referral_model extends CI_Model {
             );
         }
         echo "available = " . $response . "<br/>";
-        return $response;
+        return $response["available"];
     }
 
     private function day_of($visit) {
