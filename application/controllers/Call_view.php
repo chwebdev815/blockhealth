@@ -45,7 +45,7 @@ class Call_view extends CI_Controller {
         $twilio_number = "+13658000973";
         //$to = "+919876907251";  
 
-        $to_number = "+917201907712";
+//        $to_number = "+917201907712";
 
 
         $url = "http://35.203.47.37/" . "call_view/callhandle?"
@@ -647,6 +647,14 @@ class Call_view extends CI_Controller {
                     );
                     //insert in scheduled visit
                     $this->db->insert("records_patient_visit", $insert_data);
+                    
+                    $this->db->where(array(
+                        "id" => $reserved_id
+                    ));
+                    $this->db->update("records_patient_visit_reserved", array(
+                        "active" => 0,
+                        "visit_confirmed" => "Booked"
+                    ));
                 }
             } else {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";

@@ -1868,6 +1868,7 @@ class Referral_model extends CI_Model {
         }
         return $response;
     }
+    
 
     private function day_of($visit) {
         $date = DateTime::createFromFormat('Y-m-d H:i:s', $visit->visit_start_time)->format("Y-m-d");
