@@ -30,7 +30,7 @@ class Cron_appointment_reminder extends CI_Controller {
 //                    "visit_confirmed" => "Confirmed",
 //                ))->get()->result();
         $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
-                    "id" => 1
+                    "id" => 47
                 ))->get()->result();
 
         echo $this->db->last_query() . "<br/><br/>";
