@@ -953,6 +953,7 @@ class Referral_model extends CI_Model {
                         "visit_start_time3" => $start_time3->format("H:i:s"),
                         "visit_end_time3" => $end_time3->format("H:i:s"),
                         "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT60M"))->format("Y-m-d H:i:s"),
+                        "notify_type" => ($call_immediately)?"call":"sms",
                         "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
                         "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
                         "notify_email" => (isset($data["email"])) ? 1 : 0,
