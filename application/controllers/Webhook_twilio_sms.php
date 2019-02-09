@@ -41,6 +41,7 @@ class Webhook_twilio_sms extends CI_Controller {
                 $msg = "";
                 if ($reserved->visit_expire_time > date("Y-m-d H:i:s")) {
                     log_message("error", "alive visit_expire_time");
+                    
                     if ($Body === "0") {
                         log_message("error", "body 0");
                         $this->db->insert("records_patient_visit", array(
@@ -114,6 +115,14 @@ class Webhook_twilio_sms extends CI_Controller {
                         $this->db->set("active", "0");
                         $this->db->where("id", $reserved->id);
                         $this->db->update("records_patient_visit_reserved");
+                    }
+                    if ($Body === "1" || $Body === "2" || $Body === "3") {
+                        $this->db->where(array(
+                            "id" => $reserved->id
+                        ))->update("records_patient_visit_reserved", array(
+                            "active" => 0,
+                            "visit_confirmed" => "Booked"
+                        ));
                     }
                 }
                 echo "<Response><Sms>" . $msg . "</Sms></Response>";
