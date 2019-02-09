@@ -474,6 +474,42 @@ class Call_view extends CI_Controller {
                 echo "</Response>";
             } elseif ($_GET['Digits'] == 0) {
                 echo "<Response><Say voice='Polly.Joanna' >Thank-you, the clinic will be in touch shortly'</Say></Response>";
+                $num = $_GET['selected_slot'];
+                if ($num == 1 || $num == 2 || $num == 3) {
+                    $reserved_id = $_GET["reserved_id"];
+                    $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
+                                "id" => $reserved_id
+                            ))->get()->result_array()[0];
+
+                    $visit_date = $reserved_data["visit_date" . $num];
+                    $visit_time = $reserved_data["visit_start_time" . $num];
+                    $visit_end_time = $reserved_data["visit_end_time" . $num];
+
+                    $get = $_GET;
+
+                    $insert_data = array(
+                        "patient_id" => $get["patient_id"],
+                        "visit_name" => $get["pvname"],
+                        "visit_date" => $visit_date,
+                        "visit_time" => $visit_time,
+                        "visit_end_time" => $visit_end_time,
+                        "notify_voice" => $reserved_data["notify_voice"],
+                        "notify_sms" => $reserved_data["notify_sms"],
+                        "notify_email" => $reserved_data["notify_email"],
+                        "visit_confirmed" => "Change required"
+                    );
+                    //insert in scheduled visit
+                    $this->db->insert("records_patient_visit", $insert_data);
+                    
+                    $this->db->where(array(
+                        "id" => $reserved_id
+                    ));
+                    $this->db->update("records_patient_visit_reserved", array(
+                        "active" => 0,
+                        "visit_confirmed" => "Booked"
+                    ));
+                }
+                
             } elseif ($_GET['Digits'] == 4) {
                 log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
                 echo "<Response>";
