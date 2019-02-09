@@ -250,22 +250,22 @@ class Cron_appointment_reminder extends CI_Controller {
         $reserved_id = $_GET["reserved_id"];
 
 
-        $base_url = "http://35.203.47.37";
+        $base_url = "http://35.203.47.37/";
 
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         if ($_GET['Digits'] == 1) {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, your appointment has been confirmed </Say></Response>";
         } elseif ($_GET['Digits'] == 2) {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, the clinic has been notified and will be in touch shortly</Say></Response>";
-            $this->db->where(array(
-                "id" => $reserved_id
-            ))->update("records_patient_visit", array(
-                "visit_confirmed" => "Change required"
-            ));
+//            $this->db->where(array(
+//                "id" => $reserved_id
+//            ))->update("records_patient_visit", array(
+//                "visit_confirmed" => "Change required"
+//            ));
         } elseif ($_GET['Digits'] == 3) {
             echo "<Response>";
-            echo "<Redirect method='GET'>
-            " . $base_url . "cron_appointment_reminder/callhandle?"
+            echo "<Redirect method='GET'>" . 
+            $base_url . "cron_appointment_reminder/callhandle?"
             . "pname=" . urlencode($_GET['pname']) . "&amp;"
             . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
             . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
