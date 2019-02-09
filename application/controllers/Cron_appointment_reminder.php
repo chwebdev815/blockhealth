@@ -123,8 +123,8 @@ class Cron_appointment_reminder extends CI_Controller {
         $cname = $this->input->post('defaultContactFormName3');
         $aDate = $this->input->post('defaultContactFormName4');
         $aTime = $this->input->post('defaultContactFormName5');
-//        $mob = $this->input->post('defaultContactFormName6');
-        $mob = "+917201907712";
+        $mob = $this->input->post('defaultContactFormName6');
+//        $mob = "+917201907712";
         $clinic_id = $this->input->post('clinic_id');
         $patient_id = $this->input->post('patient_id');
         $notify_voice = $this->input->post('notify_voice');
@@ -257,14 +257,13 @@ class Cron_appointment_reminder extends CI_Controller {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, your appointment has been confirmed </Say></Response>";
         } elseif ($_GET['Digits'] == 2) {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, the clinic has been notified and will be in touch shortly</Say></Response>";
-//            $this->db->where(array(
-//                "id" => $reserved_id
-//            ))->update("records_patient_visit", array(
-//                "visit_confirmed" => "Change required"
-//            ));
+            $this->db->where(array(
+                "id" => $reserved_id
+            ))->update("records_patient_visit", array(
+                "visit_confirmed" => "Change required"
+            ));
         } elseif ($_GET['Digits'] == 3) {
-            echo "<Response>";
-            echo "<Redirect method='GET'>" . 
+            echo "<Response><Redirect method='GET'>" . 
             $base_url . "cron_appointment_reminder/callhandle?"
             . "pname=" . urlencode($_GET['pname']) . "&amp;"
             . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
@@ -278,9 +277,7 @@ class Cron_appointment_reminder extends CI_Controller {
             . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
             . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
             . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-            . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;
-                    Digits=timeout</Redirect>
-		</Response>";
+            . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;Digits=timeout</Redirect></Response>";
         } else {
             echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
         }
