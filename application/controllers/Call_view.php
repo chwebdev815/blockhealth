@@ -474,8 +474,6 @@ class Call_view extends CI_Controller {
                 echo "</Response>";
             } elseif ($_GET['Digits'] == 0) {
                 echo "<Response><Say voice='Polly.Joanna' >Thank-you, the clinic will be in touch shortly'</Say></Response>";
-                $num = $_GET['selected_slot'];
-                if ($num == 1 || $num == 2 || $num == 3) {
                     $reserved_id = $_GET["reserved_id"];
                     $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
                                 "id" => $reserved_id
@@ -506,7 +504,6 @@ class Call_view extends CI_Controller {
                         "active" => 0,
                         "visit_confirmed" => "Booked"
                     ));
-                }
                 
             } elseif ($_GET['Digits'] == 4) {
                 log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
