@@ -486,21 +486,19 @@ class Call_view extends CI_Controller {
                     $visit_end_time = $reserved_data["visit_end_time" . $num];
 
                     $get = $_GET;
-
+                    //insert in scheduled visit
                     $insert_data = array(
                         "patient_id" => $get["patient_id"],
                         "visit_name" => $get["pvname"],
-                        "visit_date" => $visit_date,
-                        "visit_time" => $visit_time,
-                        "visit_end_time" => $visit_end_time,
+                        "notify_type" => $reserved_data["notify_type"],
                         "notify_voice" => $reserved_data["notify_voice"],
                         "notify_sms" => $reserved_data["notify_sms"],
                         "notify_email" => $reserved_data["notify_email"],
                         "visit_confirmed" => "Change required"
                     );
-                    //insert in scheduled visit
                     $this->db->insert("records_patient_visit", $insert_data);
                     
+                    //disable from reserved table
                     $this->db->where(array(
                         "id" => $reserved_id
                     ));
@@ -676,6 +674,7 @@ class Call_view extends CI_Controller {
                         "visit_date" => $visit_date,
                         "visit_time" => $visit_time,
                         "visit_end_time" => $visit_end_time,
+                        "notify_type" => $reserved_data["notify_type"],
                         "notify_voice" => $reserved_data["notify_voice"],
                         "notify_sms" => $reserved_data["notify_sms"],
                         "notify_email" => $reserved_data["notify_email"],
