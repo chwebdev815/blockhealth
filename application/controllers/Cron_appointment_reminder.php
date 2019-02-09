@@ -257,11 +257,11 @@ class Cron_appointment_reminder extends CI_Controller {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, your appointment has been confirmed </Say></Response>";
         } elseif ($_GET['Digits'] == 2) {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, the clinic has been notified and will be in touch shortly</Say></Response>";
-            $this->db->where(array(
-                "id" => $reserved_id
-            ))->update("records_patient_visit", array(
-                "visit_confirmed" => "Change required"
-            ));
+//            $this->db->where(array(
+//                "id" => $reserved_id
+//            ))->update("records_patient_visit", array(
+//                "visit_confirmed" => "Change required"
+//            ));
         } elseif ($_GET['Digits'] == 3) {
             echo "<Response>";
             echo "<Redirect method='GET'>
@@ -287,62 +287,62 @@ class Cron_appointment_reminder extends CI_Controller {
 
 
 
-        try {
-
-            $params = array(
-                'data' => $_GET["Digits"],
-                'to' => $_GET['To']
-            );
-
-            $defaults = array(
-                CURLOPT_URL => "$base_url/efax/call_handle",
-                CURLOPT_POST => true,
-                CURLOPT_POSTFIELDS => http_build_query($params)
-            );
-            $ch = curl_init("$base_url/efax/call_handle");
-            curl_setopt_array($ch, $defaults);
-
-            curl_exec($ch);
-            curl_close($ch);
-
-//	$myFile = "testFile.txt";
-//	$fh = fopen($myFile, 'a') or die("can't open file");
-//	$stringData = "Data saving from response ===> " . json_encode($_REQUEST);
-//	fwrite($fh, $stringData);
-//	fclose($fh);
-        } catch (Exception $e) {
-            echo "Error in response file";
-//	$myFile = "testFile.txt";
-//	$fh = fopen($myFile, 'a') or die("can't open file");
-//	$stringData = "Error in call handle" . $e->getMessage();
-//	fwrite($fh, $stringData);
-//	fclose($fh);
-        }
-
-        if ($Body == "1") {
-            if ($row->visit_confirmed == "Awaiting Confirmation" || $row->visit_confirmed == "Change required") {
-                //change status to confirm
-                $this->db->where(array(
-                    "id" => $row->id
-                ));
-                $this->db->set("visit_confirmed", "Confirmed");
-                $this->db->update("records_patient_visit");
-                $change_status = true;
-                log_message("error", "change (1) " . $this->db->last_query());
-            }
-        }
-        if ($Body == "2") {
-            if ($row->visit_confirmed == "Awaiting Confirmation") {
-                //change status to Change required
-                $this->db->where(array(
-                    "id" => $row->id
-                ));
-                $this->db->set("visit_confirmed", "Change required");
-                $this->db->update("records_patient_visit");
-                $change_status = true;
-                log_message("error", "change (2) " . $this->db->last_query());
-            }
-        }
+//        try {
+//
+//            $params = array(
+//                'data' => $_GET["Digits"],
+//                'to' => $_GET['To']
+//            );
+//
+//            $defaults = array(
+//                CURLOPT_URL => "$base_url/efax/call_handle",
+//                CURLOPT_POST => true,
+//                CURLOPT_POSTFIELDS => http_build_query($params)
+//            );
+//            $ch = curl_init("$base_url/efax/call_handle");
+//            curl_setopt_array($ch, $defaults);
+//
+//            curl_exec($ch);
+//            curl_close($ch);
+//
+////	$myFile = "testFile.txt";
+////	$fh = fopen($myFile, 'a') or die("can't open file");
+////	$stringData = "Data saving from response ===> " . json_encode($_REQUEST);
+////	fwrite($fh, $stringData);
+////	fclose($fh);
+//        } catch (Exception $e) {
+//            echo "Error in response file";
+////	$myFile = "testFile.txt";
+////	$fh = fopen($myFile, 'a') or die("can't open file");
+////	$stringData = "Error in call handle" . $e->getMessage();
+////	fwrite($fh, $stringData);
+////	fclose($fh);
+//        }
+//
+//        if ($Body == "1") {
+//            if ($row->visit_confirmed == "Awaiting Confirmation" || $row->visit_confirmed == "Change required") {
+//                //change status to confirm
+//                $this->db->where(array(
+//                    "id" => $row->id
+//                ));
+//                $this->db->set("visit_confirmed", "Confirmed");
+//                $this->db->update("records_patient_visit");
+//                $change_status = true;
+//                log_message("error", "change (1) " . $this->db->last_query());
+//            }
+//        }
+//        if ($Body == "2") {
+//            if ($row->visit_confirmed == "Awaiting Confirmation") {
+//                //change status to Change required
+//                $this->db->where(array(
+//                    "id" => $row->id
+//                ));
+//                $this->db->set("visit_confirmed", "Change required");
+//                $this->db->update("records_patient_visit");
+//                $change_status = true;
+//                log_message("error", "change (2) " . $this->db->last_query());
+//            }
+//        }
     }
 
 }
