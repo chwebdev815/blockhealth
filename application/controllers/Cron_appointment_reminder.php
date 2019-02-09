@@ -30,7 +30,7 @@ class Cron_appointment_reminder extends CI_Controller {
 //                    "visit_confirmed" => "Confirmed",
 //                ))->get()->result();
         $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
-                    "id" => 47
+                    "id" => 1
                 ))->get()->result();
 
         echo $this->db->last_query() . "<br/><br/>";
@@ -148,9 +148,10 @@ class Cron_appointment_reminder extends CI_Controller {
         $twilio_number = "+13658000973";
         //$to = "+919876907251";  
 //        $to_number = "+917201907712";
+        
+        $base = base_url();
 
-
-        $url = "http://35.203.47.37/" . "cron_appointment_reminder/callhandle?"
+        $url = $base . "cron_appointment_reminder/callhandle?"
                 . "pname=" . urlencode($pname) . "&"
                 . "patient_lname=" . urlencode($patient_lname) . "&"
                 . "pvname=" . urlencode($pvname) . "&"
@@ -193,7 +194,8 @@ class Cron_appointment_reminder extends CI_Controller {
 
         $address = $_GET['address'];
         $dataarray = http_build_query($_GET);
-        $base_url = "http://35.203.47.37/";
+//        $base_url = "http://35.203.47.37/";
+        $base_url = base_url();
 
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         echo "<Response>
@@ -224,8 +226,7 @@ class Cron_appointment_reminder extends CI_Controller {
         echo "</Gather>";
         echo "<Pause length='10'/>";
 
-        echo "<Redirect method='GET'>
-            " . $base_url . "cron_appointment_reminder/callhandle?"
+        echo "<Redirect method='GET'>" . $base_url . "cron_appointment_reminder/callhandle?"
         . "pname=" . urlencode($_GET['pname']) . "&amp;"
         . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
         . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
