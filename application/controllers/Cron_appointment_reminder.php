@@ -253,16 +253,16 @@ class Cron_appointment_reminder extends CI_Controller {
         $base_url = "http://35.203.47.37";
 
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-        if ($_REQUEST['Digits'] == 1) {
+        if ($_GET['Digits'] == 1) {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, your appointment has been confirmed </Say></Response>";
-        } elseif ($_REQUEST['Digits'] == 2) {
+        } elseif ($_GET['Digits'] == 2) {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, the clinic has been notified and will be in touch shortly</Say></Response>";
             $this->db->where(array(
                 "id" => $reserved_id
             ))->update("records_patient_visit", array(
                 "visit_confirmed" => "Change required"
             ));
-        } elseif ($_REQUEST['Digits'] == 3) {
+        } elseif ($_GET['Digits'] == 3) {
             echo "<Response>";
             echo "<Redirect method='GET'>
             " . $base_url . "cron_appointment_reminder/callhandle?"
@@ -290,8 +290,8 @@ class Cron_appointment_reminder extends CI_Controller {
         try {
 
             $params = array(
-                'data' => $_REQUEST["Digits"],
-                'to' => $_REQUEST['To']
+                'data' => $_GET["Digits"],
+                'to' => $_GET['To']
             );
 
             $defaults = array(
