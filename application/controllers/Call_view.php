@@ -479,10 +479,6 @@ class Call_view extends CI_Controller {
                                 "id" => $reserved_id
                             ))->get()->result_array()[0];
 
-                    $visit_date = $reserved_data["visit_date" . $num];
-                    $visit_time = $reserved_data["visit_start_time" . $num];
-                    $visit_end_time = $reserved_data["visit_end_time" . $num];
-
                     $get = $_GET;
                     //insert in scheduled visit
                     $insert_data = array(
