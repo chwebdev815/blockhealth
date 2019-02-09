@@ -4,18 +4,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Cron_appointment_reminder extends CI_Controller {
 
-//    public function index() {
-//        if (isset($argv)) {
-//            if (!empty($argv[1])) {
-//                switch ($argv[1]) {
-//                    case "ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE":
-//                        $this->ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE();
-//                        log_message("error", "Called function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE");
-//                        break;
-//                }
-//            }
-//        }
-//    }
+    public function index() {
+        if (isset($argv)) {
+            if (!empty($argv[1])) {
+                switch ($argv[1]) {
+                    case "ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE":
+                        $this->ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE();
+                        log_message("error", "Called function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE");
+                        break;
+                }
+            }
+        }
+    }
 
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
 
@@ -30,7 +30,7 @@ class Cron_appointment_reminder extends CI_Controller {
 //                    "visit_confirmed" => "Confirmed",
 //                ))->get()->result();
         $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
-                    "id" => 1
+                    "id" => 47
                 ))->get()->result();
 
         echo $this->db->last_query() . "<br/><br/>";
@@ -38,70 +38,77 @@ class Cron_appointment_reminder extends CI_Controller {
 
         $this->load->model("referral_model");
         foreach ($remindable as $key => $value) {
+
             $visit = $value;
-            //get clinic id for patient
-            $this->db->select('admin.id as clinic_id, '
-                    . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
-                    'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
-                    "admin.address," .
-                    "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
-                    "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
-            $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
-            $this->db->where(array(
-                "efax.active" => 1,
-                "admin.active" => 1,
-                "c_ref.active" => 1,
-                "pat.active" => 1,
-                "pat.id" => $visit->patient_id
-            ));
-            $this->db->where("pat.referral_id", "c_ref.id", false);
-            $this->db->where("efax.to", "admin.id", false);
-            $this->db->where("c_ref.efax_id", "efax.id", false);
-            $call_data = $this->db->get()->result();
 
-            if ($call_data) {
-                $call_data = $call_data[0];
-                $new_visit_duration = 30;
-                //find asignable slots
-                $allocations = $this->referral_model->assign_slots($new_visit_duration, $call_data->clinic_id);
-                //make call with proper data
-                //check if call or sms or both -  REMAINING
-                
-                echo "checkig for clinic " . $call_data->clinic_id . "<br/>";
+            if ($visit->notify_type == "call") {
+
+                //get clinic id for patient
+                $this->db->select('admin.id as clinic_id, '
+                        . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
+                        'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
+                        "admin.address," .
+                        "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
+                        "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
+                $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
+                $this->db->where(array(
+                    "efax.active" => 1,
+                    "admin.active" => 1,
+                    "c_ref.active" => 1,
+                    "pat.active" => 1,
+                    "pat.id" => $visit->patient_id
+                ));
+                $this->db->where("pat.referral_id", "c_ref.id", false);
+                $this->db->where("efax.to", "admin.id", false);
+                $this->db->where("c_ref.efax_id", "efax.id", false);
+                $call_data = $this->db->get()->result();
+
+                if ($call_data) {
+                    $call_data = $call_data[0];
+                    $new_visit_duration = 30;
+                    //find asignable slots
+                    $allocations = $this->referral_model->assign_slots($new_visit_duration, $call_data->clinic_id);
+                    //make call with proper data
+                    //check if call or sms or both -  REMAINING
+
+                    echo "checkig for clinic " . $call_data->clinic_id . "<br/>";
 
 
-                $post_arr = array(
-                    'defaultContactFormName' => $call_data->fname,
-                    "patient_lname" => $call_data->lname,
-                    "defaultContactFormName2" => $visit->visit_name,
-                    'defaultContactFormName3' => $call_data->clinic_institution_name,
-                    'defaultContactFormName4' => $visit->visit_date,
-                    'defaultContactFormName5' => $visit->visit_time,
-                    'defaultContactFormName6' => $call_data->cell_phone,
-                    'address' => $call_data->call_address,
-                    'clinic_id' => $call_data->clinic_id,
-                    'type' => 'Call reminder before 72 hour',
-                    "patient_id" => $visit->patient_id,
-                    "notify_voice" => $visit->notify_voice,
-                    "notify_sms" => $visit->notify_sms,
-                    "notify_email" => $visit->notify_email,
-                    "reserved_id" => $visit->id
-                );
+                    $post_arr = array(
+                        'defaultContactFormName' => $call_data->fname,
+                        "patient_lname" => $call_data->lname,
+                        "defaultContactFormName2" => $visit->visit_name,
+                        'defaultContactFormName3' => $call_data->clinic_institution_name,
+                        'defaultContactFormName4' => $visit->visit_date,
+                        'defaultContactFormName5' => $visit->visit_time,
+                        'defaultContactFormName6' => $call_data->cell_phone,
+                        'address' => $call_data->call_address,
+                        'clinic_id' => $call_data->clinic_id,
+                        'type' => 'Call reminder before 72 hour',
+                        "patient_id" => $visit->patient_id,
+                        "notify_voice" => $visit->notify_voice,
+                        "notify_sms" => $visit->notify_sms,
+                        "notify_email" => $visit->notify_email,
+                        "reserved_id" => $visit->id
+                    );
 
-                log_message("error", "Call should start now");
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                curl_setopt($ch, CURLOPT_URL, base_url() . "cron_appointment_reminder/call");
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                curl_setopt($ch, CURLOPT_POST, 1);
-                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
-                $resp = curl_exec($ch);
-                if (curl_errno($ch)) {
-                    log_message("error", "Call error => " . json_encode(curl_error($ch)));
-                    return curl_error($ch);
+                    log_message("error", "Call should start now");
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    curl_setopt($ch, CURLOPT_URL, base_url() . "cron_appointment_reminder/call");
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
+                    $resp = curl_exec($ch);
+                    if (curl_errno($ch)) {
+                        log_message("error", "Call error => " . json_encode(curl_error($ch)));
+                        return curl_error($ch);
+                    }
+                    curl_close($ch);
+                    log_message("error", "Call completed " . json_encode($resp));
                 }
-                curl_close($ch);
-                log_message("error", "Call completed " . json_encode($resp));
+            } else if ($visit->notify_type == "sms") {
+                echo "make sms";
             }
         }
     }
@@ -203,15 +210,21 @@ class Cron_appointment_reminder extends CI_Controller {
         . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
         . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
         . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-        . "notify_email=" . urlencode($_GET["notify_email"]) . "' method='GET'>
-                <Say  voice='Polly.Joanna'> Hello </Say>
-                <Pause length='1'/>
-                <Say voice='Polly.Joanna'> This is an automated appointment call for  " . $_GET['pname'] . "  " . $_GET['patient_lname'] . ".</Say>
-                <Pause length='1'/>
-                <Say voice='Polly.Joanna'> If you are  " . $_GET['pname'] . "  " . $_GET['patient_lname'] . " , please enter 1 to continue. If this is the wrong number, please type 2 to end the call</Say>
-				</Gather>
-            <Pause length='10'/>
-            <Redirect method='GET'>
+        . "notify_email=" . urlencode($_GET["notify_email"]) . "' method='GET'>";
+
+
+        echo "<Say  voice='Polly.Joanna'>Hello " . $_GET['pname'] . " " . $_GET['patient_lname'] . "</Say>";
+        echo "<Pause length='1'/>";
+        echo "<Say voice='Polly.Joanna'>Your appointment with  " . $_GET['cname'] . "  has been booked for  <say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $_GET['aDate'] . "</say-as>     at   <say-as interpret-as='time' format='hms12'> " . $_GET['aTime'] . " </say-as></Say>";
+        echo "<Pause length='1'/>";
+        echo "<Say voice='Polly.Joanna'>The address  is: " . $_GET['address'] . "  </Say>";
+        echo "<Pause length='1'/>";
+        echo "<Say voice='Polly.Joanna'>Please     type   1   to    confirm    this    booking .   If    this    date    does   not work please  type 2   to    alert    the    clinic    staff.</Say>";
+        echo "<Say voice='Polly.Joanna'>Please type 3 to replay this message</Say>";
+        echo "</Gather>";
+        echo "<Pause length='10'/>";
+
+        echo "<Redirect method='GET'>
             " . $base_url . "cron_appointment_reminder/callhandle?"
         . "pname=" . urlencode($_GET['pname']) . "&amp;"
         . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
@@ -228,6 +241,108 @@ class Cron_appointment_reminder extends CI_Controller {
         . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;
                     Digits=timeout</Redirect>
 		</Response>";
+    }
+
+    public function step_two() {
+
+        $clinic_id = $_GET["clinic_id"];
+        $patient_id = $_GET["patient_id"];
+        $reserved_id = $_GET["reserved_id"];
+
+
+        $base_url = "http://35.203.47.37";
+
+        echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+        if ($_REQUEST['Digits'] == 1) {
+            echo "<Response><Say voice='Polly.Joanna'>Thank you, your appointment has been confirmed </Say></Response>";
+        } elseif ($_REQUEST['Digits'] == 2) {
+            echo "<Response><Say voice='Polly.Joanna'>Thank you, the clinic has been notified and will be in touch shortly</Say></Response>";
+            $this->db->where(array(
+                "id" => $reserved_id
+            ))->update("records_patient_visit", array(
+                "visit_confirmed" => "Change required"
+            ));
+        } elseif ($_REQUEST['Digits'] == 3) {
+            echo "<Response>";
+            echo "<Redirect method='GET'>
+            " . $base_url . "cron_appointment_reminder/callhandle?"
+            . "pname=" . urlencode($_GET['pname']) . "&amp;"
+            . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+            . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+            . "cname=" . urlencode($_GET['cname']) . "&amp;"
+            . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+            . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+            . "address=" . urlencode($_GET['address']) . "&amp;"
+            . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+            . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+            . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+            . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+            . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+            . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;
+                    Digits=timeout</Redirect>
+		</Response>";
+        } else {
+            echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
+        }
+
+
+
+        try {
+
+            $params = array(
+                'data' => $_REQUEST["Digits"],
+                'to' => $_REQUEST['To']
+            );
+
+            $defaults = array(
+                CURLOPT_URL => "$base_url/efax/call_handle",
+                CURLOPT_POST => true,
+                CURLOPT_POSTFIELDS => http_build_query($params)
+            );
+            $ch = curl_init("$base_url/efax/call_handle");
+            curl_setopt_array($ch, $defaults);
+
+            curl_exec($ch);
+            curl_close($ch);
+
+//	$myFile = "testFile.txt";
+//	$fh = fopen($myFile, 'a') or die("can't open file");
+//	$stringData = "Data saving from response ===> " . json_encode($_REQUEST);
+//	fwrite($fh, $stringData);
+//	fclose($fh);
+        } catch (Exception $e) {
+            echo "Error in response file";
+//	$myFile = "testFile.txt";
+//	$fh = fopen($myFile, 'a') or die("can't open file");
+//	$stringData = "Error in call handle" . $e->getMessage();
+//	fwrite($fh, $stringData);
+//	fclose($fh);
+        }
+
+        if ($Body == "1") {
+            if ($row->visit_confirmed == "Awaiting Confirmation" || $row->visit_confirmed == "Change required") {
+                //change status to confirm
+                $this->db->where(array(
+                    "id" => $row->id
+                ));
+                $this->db->set("visit_confirmed", "Confirmed");
+                $this->db->update("records_patient_visit");
+                $change_status = true;
+                log_message("error", "change (1) " . $this->db->last_query());
+            }
+        }
+        if ($Body == "2") {
+            if ($row->visit_confirmed == "Awaiting Confirmation") {
+                //change status to Change required
+                $this->db->where(array(
+                    "id" => $row->id
+                ));
+                $this->db->set("visit_confirmed", "Change required");
+                $this->db->update("records_patient_visit");
+                $change_status = true;
+                log_message("error", "change (2) " . $this->db->last_query());
+            }
+        }
     }
 
 }
