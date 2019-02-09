@@ -148,10 +148,9 @@ class Cron_appointment_reminder extends CI_Controller {
         $twilio_number = "+13658000973";
         //$to = "+919876907251";  
 //        $to_number = "+917201907712";
-        
-        $base = base_url();
 
-        $url = $base . "cron_appointment_reminder/callhandle?"
+
+        $url = "http://35.203.47.37/" . "cron_appointment_reminder/callhandle?"
                 . "pname=" . urlencode($pname) . "&"
                 . "patient_lname=" . urlencode($patient_lname) . "&"
                 . "pvname=" . urlencode($pvname) . "&"
@@ -194,8 +193,7 @@ class Cron_appointment_reminder extends CI_Controller {
 
         $address = $_GET['address'];
         $dataarray = http_build_query($_GET);
-//        $base_url = "http://35.203.47.37/";
-        $base_url = base_url();
+        $base_url = "http://35.203.47.37/";
 
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         echo "<Response>
@@ -226,7 +224,8 @@ class Cron_appointment_reminder extends CI_Controller {
         echo "</Gather>";
         echo "<Pause length='10'/>";
 
-        echo "<Redirect method='GET'>" . $base_url . "cron_appointment_reminder/callhandle?"
+        echo "<Redirect method='GET'>
+            " . $base_url . "cron_appointment_reminder/callhandle?"
         . "pname=" . urlencode($_GET['pname']) . "&amp;"
         . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
         . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
@@ -258,11 +257,11 @@ class Cron_appointment_reminder extends CI_Controller {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, your appointment has been confirmed </Say></Response>";
         } elseif ($_GET['Digits'] == 2) {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, the clinic has been notified and will be in touch shortly</Say></Response>";
-//            $this->db->where(array(
-//                "id" => $reserved_id
-//            ))->update("records_patient_visit", array(
-//                "visit_confirmed" => "Change required"
-//            ));
+            $this->db->where(array(
+                "id" => $reserved_id
+            ))->update("records_patient_visit", array(
+                "visit_confirmed" => "Change required"
+            ));
         } elseif ($_GET['Digits'] == 3) {
             echo "<Response>";
             echo "<Redirect method='GET'>
@@ -291,8 +290,8 @@ class Cron_appointment_reminder extends CI_Controller {
 //        try {
 //
 //            $params = array(
-//                'data' => $_GET["Digits"],
-//                'to' => $_GET['To']
+//                'data' => $_REQUEST["Digits"],
+//                'to' => $_REQUEST['To']
 //            );
 //
 //            $defaults = array(
