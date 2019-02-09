@@ -66,6 +66,8 @@ class Cron_appointment_reminder extends CI_Controller {
                 $allocations = $this->referral_model->assign_slots($new_visit_duration, $call_data->clinic_id);
                 //make call with proper data
                 //check if call or sms or both -  REMAINING
+                
+                echo "checkig for clinic " . $call_data->clinic_id . "<br/>";
 
 
                 $post_arr = array(

@@ -1690,6 +1690,8 @@ class Referral_model extends CI_Model {
 
         log_message("error", "visits booked = " . json_encode($visits_booked));
         log_message("error", "visits booked = " . $this->db->last_query());
+        echo "visits booked = " . json_encode($visits_booked) . "<br/>";
+        echo "visits booked = " . $this->db->last_query() . "<br/>";
 
         $visits_reserved = $this->db
                         ->select(
@@ -1738,7 +1740,7 @@ class Referral_model extends CI_Model {
             //for each day
 //            echo "*** day = " . json_encode($day) . "<br/>";
             $scheduling_day = $this->check_day_availability($day);
-            echo "checking availablility for day for pv to be created = " . json_encode($day) . "<br/>";
+            echo " [][][][][][] => checking availablility for day for pv to be created = " . json_encode($day->format("Y-m-d")) . "<br/>";
             $day_assigned = false;
 
             if ($scheduling_day["available"]) {
@@ -1773,10 +1775,9 @@ class Referral_model extends CI_Model {
 
                         $time2 = $visit_start_time;
 
+                        echo "################ check between " . $time1 . " to " . $time2 . " <br/>";
                         $slot_response = $this->time_slot_available($time1, $time2, $new_visit_duration);
-                        echo "response from slot = " . json_encode($slot_response) . "<br/>";
-                        echo "time1 slot = " . json_encode($time1) . "<br/>";
-                        echo "time2 slot = " . json_encode($time2) . "<br/>";
+                        echo "1. response from slot = " . json_encode($slot_response) . "<br/>";
                         if ($slot_response["available"]) {
                             $new_visit = array(
                                 "start_time" => $slot_response["start_time"],
@@ -1798,14 +1799,14 @@ class Referral_model extends CI_Model {
 //                        echo "at end of day <br/>";
                         echo "################ check between " . $time1 . " to " . $time2 . " <br/>";
                         $slot_response = $this->time_slot_available($time1, $time2, $new_visit_duration);
-                        echo "response from slot = " . json_encode($slot_response) . "<br/>";
+                        echo "2. response from slot = " . json_encode($slot_response) . "<br/>";
                         if ($slot_response["available"]) {
                             $new_visit = array(
                                 "start_time" => $slot_response["start_time"],
                                 "end_time" => $slot_response["end_time"]
                             );
                             $available_visit_slots[] = $new_visit;
-//                            echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
+                            echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
                             $day_assigned = true;
                         }
                     }
@@ -1818,16 +1819,14 @@ class Referral_model extends CI_Model {
 
                     $slot_response = $this->time_slot_available($time1, $time2, $new_visit_duration);
 //                    echo "response from slot = " . json_encode($slot_response) . "<br/>";
-                    echo "response from slot = " . json_encode($slot_response) . "<br/>";
-                    echo "time1 slot = " . json_encode($time1) . "<br/>";
-                    echo "time2 slot = " . json_encode($time2) . "<br/>";
+                    echo "2. response from slot = " . json_encode($slot_response) . "<br/>";
                     if ($slot_response["available"]) {
                         $new_visit = array(
                             "start_time" => $slot_response["start_time"],
                             "end_time" => $slot_response["end_time"]
                         );
                         $available_visit_slots[] = $new_visit;
-//                        echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
+                        echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
                         $day_assigned = true;
                     }
                 }

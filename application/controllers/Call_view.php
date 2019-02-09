@@ -718,7 +718,7 @@ class Call_view extends CI_Controller {
 
     public function test() {
         $this->load->model("referral_model");
-        $data = $this->referral_model->assign_slots(30);
+        $data = $this->referral_model->assign_slots(30, 1);
         echo "<pre>";
         print_r($data);
         echo "<pre>";
