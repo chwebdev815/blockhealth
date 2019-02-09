@@ -4,18 +4,18 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Cron_appointment_reminder extends CI_Controller {
 
-    public function index() {
-        if (isset($argv)) {
-            if (!empty($argv[1])) {
-                switch ($argv[1]) {
-                    case "ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE":
-                        $this->ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE();
-                        log_message("error", "Called function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE");
-                        break;
-                }
-            }
-        }
-    }
+//    public function index() {
+//        if (isset($argv)) {
+//            if (!empty($argv[1])) {
+//                switch ($argv[1]) {
+//                    case "ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE":
+//                        $this->ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE();
+//                        log_message("error", "Called function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE");
+//                        break;
+//                }
+//            }
+//        }
+//    }
 
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
 
