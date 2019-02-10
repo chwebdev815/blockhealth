@@ -55,6 +55,7 @@ class Call_view extends CI_Controller {
                 . "aDate=" . urlencode($aDate) . "&"
                 . "aTime=" . urlencode($aTime) . "&"
                 . "address=" . urlencode($address) . "&"
+                . "type=" . urlencode($type) . "&"
                 . "clinic_id=" . urlencode($clinic_id) . "&"
                 . "patient_id=" . urlencode($patient_id) . "&"
                 . "reserved_id=" . urlencode($reserved_id) . "&"
@@ -102,6 +103,7 @@ class Call_view extends CI_Controller {
         . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
         . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
         . "address=" . urlencode($_GET['address']) . "&amp;"
+        . "type=" . urlencode($_GET['type']) . "&amp;"
         . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
         . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
         . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
@@ -124,6 +126,7 @@ class Call_view extends CI_Controller {
         . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
         . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
         . "address=" . urlencode($_GET['address']) . "&amp;"
+        . "type=" . urlencode($_GET['type']) . "&amp;"
         . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
         . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
         . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
@@ -190,6 +193,7 @@ class Call_view extends CI_Controller {
                 . "date3=" . urlencode($date3) . "&amp;"
                 . "day3=" . urlencode($day3) . "&amp;"
                 . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "' method='GET'>";
                 echo "<Say  voice='Polly.Joanna'>Hi  " . $_GET['pname'] . ",  Please select one of the following dates and times for your appointment with " . $_GET['cname'] . "</Say>";
                 echo "<Pause length='1'/>";
@@ -216,6 +220,7 @@ class Call_view extends CI_Controller {
                 . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"
@@ -260,6 +265,7 @@ class Call_view extends CI_Controller {
                 . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"
@@ -319,6 +325,7 @@ class Call_view extends CI_Controller {
                 . "date3=" . urlencode($date3) . "&amp;"
                 . "day3=" . urlencode($day3) . "&amp;"
                 . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "' method='GET'>";
                 echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'>" . $day1 . "<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date1 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time1 . " </say-as></emphasis></Say>";
                 echo "<Pause length='1'/>";
@@ -350,6 +357,7 @@ class Call_view extends CI_Controller {
                 . "date3=" . urlencode($date3) . "&amp;"
                 . "day3=" . urlencode($day3) . "&amp;"
                 . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "&amp;"
                 . "</Redirect>";
                 echo "</Response>";
@@ -379,6 +387,7 @@ class Call_view extends CI_Controller {
                 . "date3=" . urlencode($date3) . "&amp;"
                 . "day3=" . urlencode($day3) . "&amp;"
                 . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "' method='GET'>";
                 echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'>" . $day2 . "<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date2 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time2 . " </say-as></emphasis></Say>";
                 echo "<Pause length='1'/>";
@@ -410,6 +419,7 @@ class Call_view extends CI_Controller {
                 . "date3=" . urlencode($date3) . "&amp;"
                 . "day3=" . urlencode($day3) . "&amp;"
                 . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
                 echo "</Response>";
             } elseif ($_GET['Digits'] == 3) {
@@ -438,6 +448,7 @@ class Call_view extends CI_Controller {
                 . "date3=" . urlencode($date3) . "&amp;"
                 . "day3=" . urlencode($day3) . "&amp;"
                 . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "' method='GET'>";
                 echo "<Say voice='Polly.Joanna'> You have selected   <emphasis level='moderate'>" . $day3 . "<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date3 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time3 . " </say-as></emphasis></Say>";
                 echo "<Pause length='1'/>";
@@ -469,6 +480,7 @@ class Call_view extends CI_Controller {
                 . "date3=" . urlencode($date3) . "&amp;"
                 . "day3=" . urlencode($day3) . "&amp;"
                 . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
                 echo "</Response>";
             } elseif ($_GET['Digits'] == 0) {
@@ -499,6 +511,18 @@ class Call_view extends CI_Controller {
                     "active" => 0,
                     "visit_confirmed" => "Booked"
                 ));
+
+                //set status in accepted_status
+                $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
+                            "pat.id" => $get["patient_id"]
+                        ))->get()->result()[0]->id;
+
+                $this->db->where(array(
+                    "id" => $referral_id
+                ))->update("clinic_referrals", array(
+                    "accepted_status" => "Contact directly",
+                    "accepted_status_icon" => "yellow"
+                ));
             } elseif ($_GET['Digits'] == 4) {
                 log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
                 echo "<Response>";
@@ -525,6 +549,7 @@ class Call_view extends CI_Controller {
                 . "date3=" . urlencode($date3) . "&amp;"
                 . "day3=" . urlencode($day3) . "&amp;"
                 . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
                 echo "</Response>";
             } else {
@@ -598,6 +623,7 @@ class Call_view extends CI_Controller {
                 . "date3=" . urlencode($date3) . "&amp;"
                 . "day3=" . urlencode($day3) . "&amp;"
                 . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "' method='GET'>";
                 echo "<Say  voice='Polly.Joanna'>Hi  " . $_GET['pname'] . ",  Please select one of the following dates and times for your appointment with " . $_GET['cname'] . "</Say>";
                 echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>" . $day1 . " <say-as interpret-as='date' format='mmyyyy'  detail='1'>" . $date1 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time1 . " </say-as></emphasis> - please enter 1  </Say>";
@@ -634,6 +660,7 @@ class Call_view extends CI_Controller {
                 . "date3=" . urlencode($date3) . "&amp;"
                 . "day3=" . urlencode($day3) . "&amp;"
                 . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
                 echo "</Response>";
             } elseif ($_GET['Digits'] == 1) {
@@ -683,6 +710,18 @@ class Call_view extends CI_Controller {
                     ));
 
 
+                    //set status in accepted_status
+                    $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
+                                "pat.id" => $get["patient_id"]
+                            ))->get()->result()[0]->id;
+
+                    $this->db->where(array(
+                        "id" => $referral_id
+                    ))->update("clinic_referrals", array(
+                        "accepted_status" => "Confirmed",
+                        "accepted_status_icon" => "green"
+                    ));
+
                     $this->load->model("referral_model");
                     $this->referral_model->move_from_accepted_to_scheduled($get["patient_id"], $clinic_id);
                 }
@@ -701,6 +740,7 @@ class Call_view extends CI_Controller {
                 . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
                 . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
                 . "address=" . urlencode($_GET['address']) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
                 . "date1=" . urlencode($date1) . "&amp;"
                 . "day1=" . urlencode($day1) . "&amp;"
                 . "time1=" . urlencode($time1) . "&amp;"

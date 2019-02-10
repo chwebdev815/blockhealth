@@ -41,7 +41,7 @@ class Webhook_twilio_sms extends CI_Controller {
                 $msg = "";
                 if ($reserved->visit_expire_time > date("Y-m-d H:i:s")) {
                     log_message("error", "alive visit_expire_time");
-                    
+
                     if ($Body === "0") {
                         log_message("error", "body 0");
                         $this->db->insert("records_patient_visit", array(
@@ -54,6 +54,19 @@ class Webhook_twilio_sms extends CI_Controller {
                             "confirm_visit_key" => $reserved->confirm_visit_key
                         ));
                         $msg = "Thank you. Staff from the clinic will be in touch shortly";
+
+
+                        //set status in accepted_status
+                        $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
+                                    "pat.id" => $reserved->patient_id
+                                ))->get()->result()[0]->id;
+
+                        $this->db->where(array(
+                            "id" => $referral_id
+                        ))->update("clinic_referrals", array(
+                            "accepted_status" => "Contact directly",
+                            "accepted_status_icon" => "yellow"
+                        ));
                     }
 
                     if ($Body === "1" || $Body === "2" || $Body === "3") {
@@ -93,7 +106,7 @@ class Webhook_twilio_sms extends CI_Controller {
                         $this->db->where("c_ref.efax_id", "efax.id", false);
                         $this->db->where("efax.to", "c_usr.id", false);
                         $clinic = $this->db->get()->result();
-                        
+
                         $address = "";
                         if ($clinic) {
                             $address = $clinic[0]->address;
@@ -112,15 +125,29 @@ class Webhook_twilio_sms extends CI_Controller {
                                 . "\n"
                                 . "Please be sure to arrive on time.";
 
-                        $this->db->set("active", "0");
-                        $this->db->where("id", $reserved->id);
-                        $this->db->update("records_patient_visit_reserved");
-                        
+//                        //make reserved entry inactive
+//                        $this->db->set("active", "0");
+//                        $this->db->where("id", $reserved->id);
+//                        $this->db->update("records_patient_visit_reserved");
+
+
+                        //set status in accepted_status
+                        $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
+                                    "pat.id" => $reserved->patient_id
+                                ))->get()->result()[0]->id;
+
+                        $this->db->where(array(
+                            "id" => $referral_id
+                        ))->update("clinic_referrals", array(
+                            "accepted_status" => "Confirmed",
+                            "accepted_status_icon" => "green"
+                        ));
+
+
                         $this->load->model("referral_model");
                         $this->referral_model->move_from_accepted_to_scheduled($reserved->patient_id, $clinic[0]->id);
-                        
                     }
-                    if ($Body === "1" || $Body === "2" || $Body === "3") {
+                    if ($Body === "1" || $Body === "2" || $Body === "3" || $Body === "0") {
                         $this->db->where(array(
                             "id" => $reserved->id
                         ))->update("records_patient_visit_reserved", array(
@@ -128,9 +155,8 @@ class Webhook_twilio_sms extends CI_Controller {
                             "visit_confirmed" => "Booked"
                         ));
                     }
-                }
-                else {
-                    $msg = "Visit response time is expired" . "\n" . "id = " . $reserved->id;
+                } else {
+                    $msg = "Visit response time is expired";
                 }
                 echo "<Response><Sms>" . $msg . "</Sms></Response>";
             } else {
@@ -138,6 +164,5 @@ class Webhook_twilio_sms extends CI_Controller {
             }
         }
     }
- 
-}
 
+}

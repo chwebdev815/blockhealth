@@ -868,7 +868,7 @@ class Referral_model extends CI_Model {
 
 
                 //validate notifications if allowed or not
-                $this->db->select('admin.id as clinic_id, '
+                $this->db->select('admin.id as clinic_id, c_ref.id as referral_id,'
                         . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
                         'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
                         "admin.address," .
@@ -886,7 +886,7 @@ class Referral_model extends CI_Model {
                 $this->db->where("efax.to", "admin.id", false);
                 $this->db->where("c_ref.efax_id", "efax.id", false);
                 $result = $this->db->get()->result();
-                echo $this->db->last_query();
+//                echo $this->db->last_query();
                 if ($result) {
 
                     $allow_sms = $result[0]->allow_sms;
@@ -923,9 +923,6 @@ class Referral_model extends CI_Model {
                         $contact_number = $msg_data->work_phone;
                         $call_immediately = true;
                     }
-//                    echo $msg_data->cell_phone . ",". $contact_number . "," . $call_immediately;
-//                    exit();
-
 
                     $visit_datetime = array();
 
@@ -966,7 +963,7 @@ class Referral_model extends CI_Model {
                         "confirm_visit_key" => $confirm_visit_key,
                         "visit_confirmed" => (isset($data["cell_phone"]) || isset($data["email"]) || isset($data["cell_phone_voice"])) ? "Awaiting Confirmation" : "N/A"
                     );
-                    
+
                     echo "call/sms => " . (($call_immediately) ? "call" : "sms");
 
                     echo "date reserved = " . json_encode($insert_data) . "<br/>";
@@ -986,17 +983,27 @@ class Referral_model extends CI_Model {
                             'defaultContactFormName6' => $msg_data->cell_phone,
                             'address' => $msg_data->call_address,
                             'clinic_id' => $msg_data->clinic_id,
-                            'type' => 'visitCreate',
+                            'type' => 'first_call',
                             "patient_id" => $patient_id,
                             "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
                             "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
                             "notify_email" => (isset($data["email"])) ? 1 : 0,
                             "reserved_id" => $insert_id
                         );
+                        
+                        
+                        //change accepted status to "SMS"
+                        $this->db->where(array(
+                            "id" => $msg_data->referral_id
+                        ))->update("clinic_referrals", array(
+                            "accepted_status" => "Call1",
+                            "accepted_status_icon" => "green"
+                        ));
+                        
 
-                        echo "data for start call = " . json_encode($post_arr);
+//                        echo "data for start call = " . json_encode($post_arr);
 
-                        log_message("error", "Call should start now");
+//                        log_message("error", "Call should start now");
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                         curl_setopt($ch, CURLOPT_URL, base_url() . "call_view/call");
@@ -1036,6 +1043,14 @@ class Referral_model extends CI_Model {
                         $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
 
                         $this->send_sms($msg_data->cell_phone, $msg);
+
+                        //change accepted status to "SMS"
+                        $this->db->where(array(
+                            "id" => $msg_data->referral_id
+                        ))->update("clinic_referrals", array(
+                            "accepted_status" => "SMS",
+                            "accepted_status_icon" => "green"
+                        ));
                     }
                     //make call too, temporary
 //                    $post_arr = array(
@@ -1597,7 +1612,7 @@ class Referral_model extends CI_Model {
     }
 
     private function send_fax($fax_num, $fax_text_content, $file, $reason, $clinic_id = "") {
-        if($clinic_id == "") {
+        if ($clinic_id == "") {
             $clinic_id = $this->session->userdata("user_id");
         }
         if (strlen($fax_num) == 10) {
@@ -1616,7 +1631,7 @@ class Referral_model extends CI_Model {
             "id" => $clinic_id
         ));
         $clinic = $this->db->get()->result()[0];
-        if($clinic) {
+        if ($clinic) {
 
             $clinic_id = $clinic->id;
             $access_id = $clinic->srfax_account_num;
@@ -1637,7 +1652,7 @@ class Referral_model extends CI_Model {
                 'sCPComments' => $cpcomments,
                 'sFileName_1' => "demo.pdf",
                 'sFileContent_1' => base64_encode(file_get_contents($file))
-    //            'sFileContent_1' => base64_encode(file_get_contents("uploads/demo.pdf"))
+                    //            'sFileContent_1' => base64_encode(file_get_contents("uploads/demo.pdf"))
             );
 
             $curlDefaults = array(
@@ -1649,7 +1664,7 @@ class Referral_model extends CI_Model {
                 CURLOPT_FORBID_REUSE => 1,
                 CURLOPT_TIMEOUT => 60,
                 CURLOPT_SSL_VERIFYPEER => TRUE,
-    //            CURLOPT_SSL_VEFIFYHOST => 2,
+                //            CURLOPT_SSL_VEFIFYHOST => 2,
                 CURLOPT_POSTFIELDS => http_build_query($postdata)
             );
             $ch = curl_init();
@@ -1663,10 +1678,8 @@ class Referral_model extends CI_Model {
                 add_fax_count($faxnumber, $clinic->srfax_number, $clinic->id, $reason, "Admin");
                 return true;
             }
-        }
-        else {
+        } else {
             echo "clinic id = " . $clinic_id;
-            
         }
     }
 
