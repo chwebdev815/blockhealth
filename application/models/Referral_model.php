@@ -965,6 +965,8 @@ class Referral_model extends CI_Model {
                         "confirm_visit_key" => $confirm_visit_key,
                         "visit_confirmed" => (isset($data["cell_phone"]) || isset($data["email"]) || isset($data["cell_phone_voice"])) ? "Awaiting Confirmation" : "N/A"
                     );
+                    
+                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
 
                     echo "date reserved = " . json_encode($insert_data) . "<br/>";
 
