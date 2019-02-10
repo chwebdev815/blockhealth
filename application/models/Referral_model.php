@@ -505,7 +505,7 @@ class Referral_model extends CI_Model {
         }
     }
 
-    public function send_status_fax($file_name, $checklist, $replace_stack, $fax_number, $reason, $additional_replace = array(), $timeout = 60) {
+    public function send_status_fax($file_name, $checklist, $replace_stack, $fax_number, $reason, $additional_replace = array(), $timeout = 60, $clinic_id = "") {
 //        send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", $clinic_id)
         log_message("error", "$file_name, $fax_number");
 
@@ -558,7 +558,7 @@ class Referral_model extends CI_Model {
 
 
         $fax_content = "Blockhealth Notification Fax";
-        $fax_success = $this->send_fax($fax_number, $fax_content, $dest_file, $reason);
+        $fax_success = $this->send_fax($fax_number, $fax_content, $dest_file, $reason, array(), 60, $clinic_id);
         log_message("error", "fax code completed" . $fax_success);
         unlink($dest_file);
         return true;
