@@ -506,6 +506,7 @@ class Referral_model extends CI_Model {
     }
 
     public function send_status_fax($file_name, $checklist, $replace_stack, $fax_number, $reason, $additional_replace = array(), $timeout = 60) {
+//        send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", $clinic_id)
         log_message("error", "$file_name, $fax_number");
 
         $item_template = '<h3 style="margin-bottom: 0em; margin-top: 0em;  font-size: 16px;"> ###item_name###<br>';
@@ -1100,7 +1101,7 @@ class Referral_model extends CI_Model {
         $fax_number = $result->fax;
         log_message("error", "sending fax");
         $this->load->model("referral_model");
-        $response = $this->referral_model->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", $clinic_id);
+        $response = $this->referral_model->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", array(), 60, $clinic_id);
 
         log_message("error", "Last query = " . $this->db->last_query());
     }
