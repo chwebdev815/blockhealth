@@ -129,6 +129,9 @@ class Webhook_twilio_sms extends CI_Controller {
                         ));
                     }
                 }
+                else {
+                    $msg = "Visit response time is expired";
+                }
                 echo "<Response><Sms>" . $msg . "</Sms></Response>";
             } else {
                 exit();
