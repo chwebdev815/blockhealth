@@ -100,13 +100,16 @@ function get_pdf_page_count($filepath) {
     return $max;
 }
 
-function add_fax_count($sender, $receiver, $clinic_id, $fax_type) {
+function add_fax_count($sender, $receiver, $clinic_id, $fax_type, $login_role = "") {
     $CI = & get_instance();
+    if($login_role == "") {
+        $login_role = $CI->session->userdata("login_role");
+    }
     $CI->db->insert("count_sent_fax", array(
         "sender" => $sender,
         "receiver" => $receiver,
         "login_user_id" => $clinic_id,
-        "login_role" => $CI->session->userdata("login_role"),
+        "login_role" => $login_role,
         "fax_type" => $fax_type
     ));
 }

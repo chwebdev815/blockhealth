@@ -1660,7 +1660,7 @@ class Referral_model extends CI_Model {
                 return false;
             } else {
                 log_message("error", "Fax Result:" . json_encode($result));
-                add_fax_count($faxnumber, $clinic->srfax_number, $clinic->id, $reason);
+                add_fax_count($faxnumber, $clinic->srfax_number, $clinic->id, $reason, "Admin");
                 return true;
             }
         }
