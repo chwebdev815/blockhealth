@@ -558,7 +558,7 @@ class Referral_model extends CI_Model {
 
 
         $fax_content = "Blockhealth Notification Fax";
-        $fax_success = $this->send_fax($fax_number, $fax_content, $dest_file, $reason, array(), 60, $clinic_id);
+        $fax_success = $this->send_fax($fax_number, $fax_content, $dest_file, $reason, $clinic_id);
         log_message("error", "fax code completed" . $fax_success);
         unlink($dest_file);
         return true;
