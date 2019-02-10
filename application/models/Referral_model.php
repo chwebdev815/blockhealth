@@ -922,6 +922,8 @@ class Referral_model extends CI_Model {
                         $contact_number = $msg_data->work_phone;
                         $call_immediately = true;
                     }
+                    echo $msg_data->cell_phone . ",". $contact_number . "," . $call_immediately;
+                    exit();
 
 
                     $visit_datetime = array();
