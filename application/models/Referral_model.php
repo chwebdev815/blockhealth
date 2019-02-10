@@ -1593,7 +1593,10 @@ class Referral_model extends CI_Model {
         return true;
     }
 
-    private function send_fax($fax_num, $fax_text_content, $file, $reason) {
+    private function send_fax($fax_num, $fax_text_content, $file, $reason, $clinic_id = "") {
+        if($clinic_id == "") {
+            $clinic_id = $this->session->userdata("user_id");
+        }
         if (strlen($fax_num) == 10) {
             $fax_num = "1" . $fax_num;
         }
@@ -1607,7 +1610,7 @@ class Referral_model extends CI_Model {
         $this->db->from("clinic_user_info");
         $this->db->where(array(
             "active" => 1,
-            "id" => $this->session->userdata("user_id")
+            "id" => $clinic_id
         ));
         $clinic = $this->db->get()->result()[0];
 
