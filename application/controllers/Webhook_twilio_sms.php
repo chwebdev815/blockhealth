@@ -130,7 +130,7 @@ class Webhook_twilio_sms extends CI_Controller {
                     }
                 }
                 else {
-                    $msg = "Visit response time is expired";
+                    $msg = "Visit response time is expired" . "\n" . "id = " . $reserved->id;
                 }
                 echo "<Response><Sms>" . $msg . "</Sms></Response>";
             } else {
