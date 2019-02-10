@@ -24,66 +24,72 @@ class Cron_appointment_reminder extends CI_Controller {
         $string_plus_72_hour = $plus_72_hour->format("Y-m-d H:i:s");
         $plus_72_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+3 day 5 minute")));
         $string_plus_72_hour_5_min = $plus_72_hour_5_min->format("Y-m-d H:i:s");
-        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
-                    "concat(visit_date, ' ', visit_time) > " => $string_plus_72_hour,
-                    "concat(visit_date, ' ', visit_time) < " => $string_plus_72_hour_5_min,
-                    "visit_confirmed" => "Confirmed",
-                ))->get()->result();
 //        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
-//                    "id" => 47
+//                    "concat(visit_date, ' ', visit_time) > " => $string_plus_72_hour,
+//                    "concat(visit_date, ' ', visit_time) < " => $string_plus_72_hour_5_min,
+//                    "visit_confirmed" => "Confirmed",
 //                ))->get()->result();
+        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
+                    "id" => 47
+                ))->get()->result();
 
         echo $this->db->last_query() . "<br/><br/>";
         echo json_encode($remindable) . "<br/><br/>";
 
         $this->load->model("referral_model");
         foreach ($remindable as $key => $value) {
-
             $visit = $value;
 
-            if ($visit->notify_type == "call") {
+            //get clinic id for patient
+            $this->db->select('admin.id as clinic_id, '
+                    . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
+                    'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
+                    "admin.address," .
+                    "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
+                    "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
+            $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
+            $this->db->where(array(
+                "efax.active" => 1,
+                "admin.active" => 1,
+                "c_ref.active" => 1,
+                "pat.active" => 1,
+                "pat.id" => $visit->patient_id
+            ));
+            $this->db->where("pat.referral_id", "c_ref.id", false);
+            $this->db->where("efax.to", "admin.id", false);
+            $this->db->where("c_ref.efax_id", "efax.id", false);
+            $patient_data = $this->db->get()->result();
 
-                //get clinic id for patient
-                $this->db->select('admin.id as clinic_id, '
-                        . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
-                        'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
-                        "admin.address," .
-                        "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
-                        "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
-                $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
-                $this->db->where(array(
-                    "efax.active" => 1,
-                    "admin.active" => 1,
-                    "c_ref.active" => 1,
-                    "pat.active" => 1,
-                    "pat.id" => $visit->patient_id
-                ));
-                $this->db->where("pat.referral_id", "c_ref.id", false);
-                $this->db->where("efax.to", "admin.id", false);
-                $this->db->where("c_ref.efax_id", "efax.id", false);
-                $call_data = $this->db->get()->result();
+            if ($patient_data) {
+                $patient_data = $patient_data[0];
+                if ($visit->notify_type == "call") {
 
-                if ($call_data) {
-                    $call_data = $call_data[0];
+
+                    echo "checkig for clinic " . $patient_data->clinic_id . "<br/>";
+                    $contact_number = $patient_data->cell_phone;
+                    if ($patient_data->home_phone != "") {
+                        //home number
+                        $contact_number = $patient_data->home_phone;
+                    } else if ($patient_data->work_phone != "") {
+                        //work number
+                        $contact_number = $patient_data->work_phone;
+                    }
                     $new_visit_duration = 30;
                     //find asignable slots
-                    $allocations = $this->referral_model->assign_slots($new_visit_duration, $call_data->clinic_id);
+                    $allocations = $this->referral_model->assign_slots($new_visit_duration, $patient_data->clinic_id);
                     //make call with proper data
-                    //check if call or sms or both -  REMAINING
-
-                    echo "checkig for clinic " . $call_data->clinic_id . "<br/>";
 
 
                     $post_arr = array(
-                        'defaultContactFormName' => $call_data->fname,
-                        "patient_lname" => $call_data->lname,
+                        'defaultContactFormName' => $patient_data->fname,
+                        "patient_lname" => $patient_data->lname,
                         "defaultContactFormName2" => $visit->visit_name,
-                        'defaultContactFormName3' => $call_data->clinic_institution_name,
+                        'defaultContactFormName3' => $patient_data->clinic_institution_name,
                         'defaultContactFormName4' => $visit->visit_date,
                         'defaultContactFormName5' => $visit->visit_time,
-                        'defaultContactFormName6' => $call_data->cell_phone,
-                        'address' => $call_data->call_address,
-                        'clinic_id' => $call_data->clinic_id,
+                        'defaultContactFormName6' => $contact_number,
+                        'address' => $patient_data->call_address,
+                        'clinic_id' => $patient_data->clinic_id,
                         'type' => 'Call reminder before 72 hour',
                         "patient_id" => $visit->patient_id,
                         "notify_voice" => $visit->notify_voice,
@@ -106,9 +112,25 @@ class Cron_appointment_reminder extends CI_Controller {
                     }
                     curl_close($ch);
                     log_message("error", "Call completed " . json_encode($resp));
+                } else if ($visit->notify_type == "sms") {
+                    $msg = "Hello <patient name>,\n" .
+                            "\n" .
+                            "Your appointment<patient visit name> with <clinic name> has been booked for <date> at <time>.\n" .
+                            "\n" .
+                            "The address is:\n" .
+                            "<Address>\n" .
+                            "\n" .
+                            "Please type 1 to confirm this booking. "
+                            . "If this date does not work, please type 2 to alert the clinic staff.\n";
+                    $msg = str_replace("<patient name>", $patient_data->fname, $msg);
+                    $msg = str_replace("<date>", $visit->visit_date, $msg);
+                    $msg = str_replace("<time>", $visit->visit_time, $msg);
+                    $msg = str_replace("<patient visit name>", $visit_name, $msg);
+                    $msg = str_replace("<clinic name>", $patient_data->clinic_institution_name, $msg);
+                    $msg = str_replace("<Address>", $patient_data->address, $msg);
+
+                    $this->referral_model->send_sms($patient_data->cell_phone, $msg);
                 }
-            } else if ($visit->notify_type == "sms") {
-                echo "make sms";
             }
         }
     }
@@ -263,7 +285,7 @@ class Cron_appointment_reminder extends CI_Controller {
                 "visit_confirmed" => "Change required"
             ));
         } elseif ($_GET['Digits'] == 3) {
-            echo "<Response><Redirect method='GET'>" . 
+            echo "<Response><Redirect method='GET'>" .
             $base_url . "cron_appointment_reminder/callhandle?"
             . "pname=" . urlencode($_GET['pname']) . "&amp;"
             . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
