@@ -1055,7 +1055,7 @@ class Referral_model extends CI_Model {
         }
     }
 
-    public function move_from_accepted_to_scheduled($patient_id) {
+    public function move_from_accepted_to_scheduled($patient_id, $clinic_id = "") {
         //change patient referral status to scheduled
         $this->db->select("referral_id");
         $this->db->from("referral_patient_info");
@@ -1098,7 +1098,7 @@ class Referral_model extends CI_Model {
         $fax_number = $result->fax;
         log_message("error", "sending fax");
         $this->load->model("referral_model");
-        $response = $this->referral_model->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral");
+        $response = $this->referral_model->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", $clinic_id);
 
         log_message("error", "Last query = " . $this->db->last_query());
     }

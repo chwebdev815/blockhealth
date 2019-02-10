@@ -684,7 +684,7 @@ class Call_view extends CI_Controller {
 
 
                     $this->load->model("referral_model");
-                    $this->referral_model->move_from_accepted_to_scheduled($get["patient_id"]);
+                    $this->referral_model->move_from_accepted_to_scheduled($get["patient_id"], $clinic_id);
                 }
             } else {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";

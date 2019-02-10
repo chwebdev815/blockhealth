@@ -85,7 +85,7 @@ class Webhook_twilio_sms extends CI_Controller {
                         }
                         $this->db->insert("records_patient_visit", $insert_data);
 
-                        $this->db->select("c_usr.address")
+                        $this->db->select("c_usr.address, c_usr.id")
                                 ->from("clinic_user_info c_usr, referral_patient_info pat, "
                                         . "clinic_referrals c_ref, efax_info efax")
                                 ->where("pat.id", $reserved->patient_id);
@@ -117,7 +117,7 @@ class Webhook_twilio_sms extends CI_Controller {
                         $this->db->update("records_patient_visit_reserved");
                         
                         $this->load->model("referral_model");
-                        $this->referral_model->move_from_accepted_to_scheduled($reserved->patient_id);
+                        $this->referral_model->move_from_accepted_to_scheduled($reserved->patient_id, $clinic[0]->id);
                         
                     }
                     if ($Body === "1" || $Body === "2" || $Body === "3") {
