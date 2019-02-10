@@ -1616,51 +1616,57 @@ class Referral_model extends CI_Model {
             "id" => $clinic_id
         ));
         $clinic = $this->db->get()->result()[0];
+        if($clinic) {
 
-        $clinic_id = $clinic->id;
-        $access_id = $clinic->srfax_account_num;
-        $access_pwd = $clinic->srfax_pass;
-        $caller_id = $clinic->srfax_number;
-        $sender_mail = $clinic->srfax_email;
+            $clinic_id = $clinic->id;
+            $access_id = $clinic->srfax_account_num;
+            $access_pwd = $clinic->srfax_pass;
+            $caller_id = $clinic->srfax_number;
+            $sender_mail = $clinic->srfax_email;
 
-        $postdata = array(
-            'action' => 'Queue_Fax',
-            'access_id' => $access_id,
-            'access_pwd' => $access_pwd,
-            'sCallerID' => $caller_id,
-            'sSenderEmail' => $sender_mail,
-            'sFaxType' => 'SINGLE',
-            'sToFaxNumber' => $faxnumber,
-            'sCoverPage' => 'Basic',
-            'sCPSubject' => $cpsubject,
-            'sCPComments' => $cpcomments,
-            'sFileName_1' => "demo.pdf",
-            'sFileContent_1' => base64_encode(file_get_contents($file))
-//            'sFileContent_1' => base64_encode(file_get_contents("uploads/demo.pdf"))
-        );
+            $postdata = array(
+                'action' => 'Queue_Fax',
+                'access_id' => $access_id,
+                'access_pwd' => $access_pwd,
+                'sCallerID' => $caller_id,
+                'sSenderEmail' => $sender_mail,
+                'sFaxType' => 'SINGLE',
+                'sToFaxNumber' => $faxnumber,
+                'sCoverPage' => 'Basic',
+                'sCPSubject' => $cpsubject,
+                'sCPComments' => $cpcomments,
+                'sFileName_1' => "demo.pdf",
+                'sFileContent_1' => base64_encode(file_get_contents($file))
+    //            'sFileContent_1' => base64_encode(file_get_contents("uploads/demo.pdf"))
+            );
 
-        $curlDefaults = array(
-            CURLOPT_POST => 1,
-            CURLOPT_HEADER => 0,
-            CURLOPT_URL => 'https://www.srfax.com/SRF_SecWebSvc.php',
-            CURLOPT_FRESH_CONNECT => 1,
-            CURLOPT_RETURNTRANSFER => 1,
-            CURLOPT_FORBID_REUSE => 1,
-            CURLOPT_TIMEOUT => 60,
-            CURLOPT_SSL_VERIFYPEER => TRUE,
-//            CURLOPT_SSL_VEFIFYHOST => 2,
-            CURLOPT_POSTFIELDS => http_build_query($postdata)
-        );
-        $ch = curl_init();
-        curl_setopt_array($ch, $curlDefaults);
-        $result = curl_exec($ch);
-        if (curl_errno($ch)) {
-            log_message("error", "Fax Error – " . curl_error($ch));
-            return false;
-        } else {
-            log_message("error", "Fax Result:" . json_encode($result));
-            add_fax_count($faxnumber, $clinic->srfax_number, $clinic->id, $reason);
-            return true;
+            $curlDefaults = array(
+                CURLOPT_POST => 1,
+                CURLOPT_HEADER => 0,
+                CURLOPT_URL => 'https://www.srfax.com/SRF_SecWebSvc.php',
+                CURLOPT_FRESH_CONNECT => 1,
+                CURLOPT_RETURNTRANSFER => 1,
+                CURLOPT_FORBID_REUSE => 1,
+                CURLOPT_TIMEOUT => 60,
+                CURLOPT_SSL_VERIFYPEER => TRUE,
+    //            CURLOPT_SSL_VEFIFYHOST => 2,
+                CURLOPT_POSTFIELDS => http_build_query($postdata)
+            );
+            $ch = curl_init();
+            curl_setopt_array($ch, $curlDefaults);
+            $result = curl_exec($ch);
+            if (curl_errno($ch)) {
+                log_message("error", "Fax Error – " . curl_error($ch));
+                return false;
+            } else {
+                log_message("error", "Fax Result:" . json_encode($result));
+                add_fax_count($faxnumber, $clinic->srfax_number, $clinic->id, $reason);
+                return true;
+            }
+        }
+        else {
+            echo "clinic id = " . $clinic_id;
+            
         }
     }
 
