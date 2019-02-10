@@ -952,7 +952,7 @@ class Referral_model extends CI_Model {
                         "visit_start_time3" => $start_time3->format("H:i:s"),
                         "visit_end_time3" => $end_time3->format("H:i:s"),
                         "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT60M"))->format("Y-m-d H:i:s"),
-                        "notify_type" => ($call_immediately)?"call":"sms",
+                        "notify_type" => ($call_immediately) ? "call" : "sms",
                         "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
                         "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
                         "notify_email" => (isset($data["email"])) ? 1 : 0,
@@ -963,7 +963,7 @@ class Referral_model extends CI_Model {
                         "confirm_visit_key" => $confirm_visit_key,
                         "visit_confirmed" => (isset($data["cell_phone"]) || isset($data["email"]) || isset($data["cell_phone_voice"])) ? "Awaiting Confirmation" : "N/A"
                     );
-                    
+
 //                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
 
                     $this->db->insert("records_patient_visit_reserved", $insert_data);
@@ -988,7 +988,7 @@ class Referral_model extends CI_Model {
                             "notify_email" => (isset($data["email"])) ? 1 : 0,
                             "reserved_id" => $insert_id
                         );
-                        
+
 //                        echo "data for start call = " . json_encode($post_arr);
 
                         log_message("error", "Call should start now");
@@ -1051,6 +1051,54 @@ class Referral_model extends CI_Model {
         } else {
             return validation_errors();
         }
+    }
+
+    public function move_from_accepted_to_scheduled($patient_id) {
+        //change patient referral status to scheduled
+        $this->db->select("referral_id");
+        $this->db->from("referral_patient_info");
+        $this->db->where(array("active" => 1, "id" => $patient_id));
+        $result = $this->db->get()->result();
+        $referral_id = $result[0]->referral_id;
+        $this->db->where(array(
+            "id" => $referral_id,
+            "active" => 1
+        ));
+        $this->db->update("clinic_referrals", array(
+            "status" => "Scheduled",
+            "scheduled_datetime" => date("Y-m-d H:i:s")
+        ));
+
+        //send status fax
+        $this->db->select("c_usr.clinic_institution_name, date_format(c_ref.create_datetime, '%M %D') as referral_received, dr.fax, c_ref.referral_code");
+        $this->db->from("clinic_user_info c_usr, efax_info efax, clinic_referrals c_ref, referral_patient_info pat, referral_physician_info dr");
+        $this->db->where(array(
+            "pat.id" => $patient_id,
+            "efax.active" => 1,
+            "c_usr.active" => 1,
+            "c_ref.active" => 1,
+            "pat.active" => 1,
+            "dr.active" => 1,
+            "dr.patient_id" => $patient_id
+        ));
+        $this->db->where("efax.to", "c_usr.id", false);
+        $this->db->where("efax.id", "c_ref.efax_id", false);
+        $this->db->where("pat.referral_id", "c_ref.id", false);
+        $result = $this->db->get()->result()[0];
+
+        $file_name = "referral_scheduled.html";
+        $replace_stack = array(
+            "###clinic_name###" => $result->clinic_institution_name,
+            "###referral_code###" => $result->referral_code,
+            "###time1###" => $result->referral_received,
+            "###time2###" => date("F jS")
+        );
+        $fax_number = $result->fax;
+        log_message("error", "sending fax");
+        $this->load->model("referral_model");
+        $response = $this->referral_model->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral");
+
+        log_message("error", "Last query = " . $this->db->last_query());
     }
 
     public function confirm_visit_key_model() {

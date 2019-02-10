@@ -44,7 +44,6 @@ class Call_view extends CI_Controller {
         $token = '342a214ee959d16bf97ea87579016762';
         $twilio_number = "+13658000973";
         //$to = "+919876907251";  
-
 //        $to_number = "+917201907712";
 
 
@@ -474,33 +473,32 @@ class Call_view extends CI_Controller {
                 echo "</Response>";
             } elseif ($_GET['Digits'] == 0) {
                 echo "<Response><Say voice='Polly.Joanna' >Thank-you, the clinic will be in touch shortly'</Say></Response>";
-                    $reserved_id = $_GET["reserved_id"];
-                    $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
-                                "id" => $reserved_id
-                            ))->get()->result_array()[0];
+                $reserved_id = $_GET["reserved_id"];
+                $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
+                            "id" => $reserved_id
+                        ))->get()->result_array()[0];
 
-                    $get = $_GET;
-                    //insert in scheduled visit
-                    $insert_data = array(
-                        "patient_id" => $get["patient_id"],
-                        "visit_name" => $get["pvname"],
-                        "notify_type" => $reserved_data["notify_type"],
-                        "notify_voice" => $reserved_data["notify_voice"],
-                        "notify_sms" => $reserved_data["notify_sms"],
-                        "notify_email" => $reserved_data["notify_email"],
-                        "visit_confirmed" => "Change required"
-                    );
-                    $this->db->insert("records_patient_visit", $insert_data);
-                    
-                    //disable from reserved table
-                    $this->db->where(array(
-                        "id" => $reserved_id
-                    ));
-                    $this->db->update("records_patient_visit_reserved", array(
-                        "active" => 0,
-                        "visit_confirmed" => "Booked"
-                    ));
-                
+                $get = $_GET;
+                //insert in scheduled visit
+                $insert_data = array(
+                    "patient_id" => $get["patient_id"],
+                    "visit_name" => $get["pvname"],
+                    "notify_type" => $reserved_data["notify_type"],
+                    "notify_voice" => $reserved_data["notify_voice"],
+                    "notify_sms" => $reserved_data["notify_sms"],
+                    "notify_email" => $reserved_data["notify_email"],
+                    "visit_confirmed" => "Change required"
+                );
+                $this->db->insert("records_patient_visit", $insert_data);
+
+                //disable from reserved table
+                $this->db->where(array(
+                    "id" => $reserved_id
+                ));
+                $this->db->update("records_patient_visit_reserved", array(
+                    "active" => 0,
+                    "visit_confirmed" => "Booked"
+                ));
             } elseif ($_GET['Digits'] == 4) {
                 log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
                 echo "<Response>";
@@ -675,7 +673,7 @@ class Call_view extends CI_Controller {
                     );
                     //insert in scheduled visit
                     $this->db->insert("records_patient_visit", $insert_data);
-                    
+
                     $this->db->where(array(
                         "id" => $reserved_id
                     ));
@@ -683,6 +681,10 @@ class Call_view extends CI_Controller {
                         "active" => 0,
                         "visit_confirmed" => "Booked"
                     ));
+
+
+                    $this->load->model("referral_model");
+                    $this->referral_model->move_from_accepted_to_scheduled($get["patient_id"]);
                 }
             } else {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";

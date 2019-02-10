@@ -115,6 +115,10 @@ class Webhook_twilio_sms extends CI_Controller {
                         $this->db->set("active", "0");
                         $this->db->where("id", $reserved->id);
                         $this->db->update("records_patient_visit_reserved");
+                        
+                        $this->load->model("referral_model");
+                        $this->referral_model->move_from_accepted_to_scheduled($reserved->patient_id);
+                        
                     }
                     if ($Body === "1" || $Body === "2" || $Body === "3") {
                         $this->db->where(array(
