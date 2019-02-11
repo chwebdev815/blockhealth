@@ -968,8 +968,8 @@ class Referral_model extends CI_Model {
                         "visit_confirmed" => (isset($data["cell_phone"]) || isset($data["email"]) || isset($data["cell_phone_voice"])) ? "Awaiting Confirmation" : "N/A"
                     );
 
-//                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
-//                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
+                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
+                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
 
                     $this->db->insert("records_patient_visit_reserved", $insert_data);
 
@@ -1004,7 +1004,7 @@ class Referral_model extends CI_Model {
                         ));
 
 
-//                        echo "data for start call = " . json_encode($post_arr);
+                        echo "data for start call = " . json_encode($post_arr);
 //                        log_message("error", "Call should start now");
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -1054,16 +1054,6 @@ class Referral_model extends CI_Model {
                             "accepted_status_icon" => "green"
                         ));
                     }
-                    //make call too, temporary
-//                    $post_arr = array(
-//                        'patient_name' => $msg_data->fname,
-//                        "patient_lname" => $msg_data->lname,
-//                        'clinic_name' => $msg_data->clinic_institution_name,
-//                        'phone_number' => $msg_data->cell_phone,
-//                        'address' => $msg_data->call_address,
-//                        'clinic_id' => $msg_data->clinic_id,
-//                        'type' => 'visitCreate'
-//                    ); 
                     $response = true;
                 } else {
                     $response = false;
