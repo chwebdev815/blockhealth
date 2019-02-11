@@ -869,7 +869,11 @@ class Referral_model extends CI_Model {
 
                 //validate notifications if allowed or not
                 $this->db->select('admin.id as clinic_id, c_ref.id as referral_id,'
-                        . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
+                        . 'CASE WHEN ('
+                        . '(pat.cell_phone = NULL OR pat.cell_phone = "")'
+                        . '(pat.work_phone = NULL OR pat.work_phone = "")'
+                        . '(pat.home_phone = NULL OR pat.home_phone = "")'
+                        . ') THEN "false" ELSE "true" END AS allow_sms,' .
                         'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
                         "admin.address," .
                         "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
@@ -891,7 +895,7 @@ class Referral_model extends CI_Model {
 
                     $allow_sms = $result[0]->allow_sms;
                     $allow_email = $result[0]->allow_email;
-                    if ((isset($data["cell_phone"]) || isset($data["cell_phone_voice"])) && $allow_sms == "false") {
+                    if (!(isset($data["cell_phone"]) || isset($data["cell_phone_voice"])) && $allow_sms == "false") {
                         return "Please add phone number for patient first.";
                     }
                     if (isset($data["email"]) && $allow_email == "false") {
@@ -965,7 +969,6 @@ class Referral_model extends CI_Model {
                     );
 
 //                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
-
 //                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
 
                     $this->db->insert("records_patient_visit_reserved", $insert_data);
@@ -990,8 +993,8 @@ class Referral_model extends CI_Model {
                             "notify_email" => (isset($data["email"])) ? 1 : 0,
                             "reserved_id" => $insert_id
                         );
-                        
-                        
+
+
                         //change accepted status to "SMS"
                         $this->db->where(array(
                             "id" => $msg_data->referral_id
@@ -999,10 +1002,9 @@ class Referral_model extends CI_Model {
                             "accepted_status" => "Call1",
                             "accepted_status_icon" => "green"
                         ));
-                        
+
 
 //                        echo "data for start call = " . json_encode($post_arr);
-
 //                        log_message("error", "Call should start now");
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -1063,8 +1065,7 @@ class Referral_model extends CI_Model {
 //                        'type' => 'visitCreate'
 //                    ); 
                     $response = true;
-                }
-                else {
+                } else {
                     $response = false;
                 }
                 $this->db->trans_complete();
@@ -1154,26 +1155,21 @@ class Referral_model extends CI_Model {
                 //authenticate patient visit with referral
                 $this->db->select("pat.cell_phone, pat.email_id, r_cv.notify_sms, r_cv.notify_email");
                 $this->db->from("records_patient_visit r_cv, clinic_referrals c_ref, `referral_patient_info` `pat`");
-                $this->db->where(
-                        array(
-                            "c_ref.active" => 1,
-                            "r_cv.active" => 1,
-                            "pat.active" => 1,
-                            "r_cv.id" => $patient_visit_id
-                        )
-                );
+                $this->db->where(array(
+                    "c_ref.active" => 1,
+                    "r_cv.active" => 1,
+                    "pat.active" => 1,
+                    "r_cv.id" => $patient_visit_id
+                ));
                 $this->db->where("r_cv.patient_id", "pat.id", false);
                 $result = $this->db->get()->result();
                 if ($result) {
-                    $this->db->where(
-                            array(
-                                "id" => $patient_visit_id
-                            )
-                    );
+                    $this->db->where(array(
+                        "id" => $patient_visit_id
+                    ));
                     $this->db->update("records_patient_visit", array(
                         "active" => 0
-                            )
-                    );
+                    ));
                     //notify them with sms and email
                     // if ($result[0]->notify_sms == "1") {
                     //     $msg = "Your visit with physician has been cancelled.";
