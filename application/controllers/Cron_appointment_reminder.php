@@ -146,7 +146,7 @@ class Cron_appointment_reminder extends CI_Controller {
         $aDate = $this->input->post('defaultContactFormName4');
         $aTime = $this->input->post('defaultContactFormName5');
         $mob = $this->input->post('defaultContactFormName6');
-        $mob = "+917201907712";
+//        $mob = "+917201907712";
         $clinic_id = $this->input->post('clinic_id');
         $patient_id = $this->input->post('patient_id');
         $notify_voice = $this->input->post('notify_voice');
