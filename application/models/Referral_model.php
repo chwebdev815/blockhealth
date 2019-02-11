@@ -903,7 +903,7 @@ class Referral_model extends CI_Model {
                     $confirm_visit_key = generate_random_string(120);
 //                    $weekdays = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
                     $allocations = $this->assign_slots($new_visit_duration);
-                    echo "<br/> ****************** <br/>" . "slots assigned = " . json_encode($allocations) . "<br/><br/>";
+//                    echo "<br/> ****************** <br/>" . "slots assigned = " . json_encode($allocations) . "<br/><br/>";
 //                    exit();
                     $start_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["start_time"]);
                     $end_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["end_time"]);
@@ -964,9 +964,9 @@ class Referral_model extends CI_Model {
                         "visit_confirmed" => (isset($data["cell_phone"]) || isset($data["email"]) || isset($data["cell_phone_voice"])) ? "Awaiting Confirmation" : "N/A"
                     );
 
-                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
+//                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
 
-                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
+//                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
 
                     $this->db->insert("records_patient_visit_reserved", $insert_data);
 
