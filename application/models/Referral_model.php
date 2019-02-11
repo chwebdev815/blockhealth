@@ -870,8 +870,8 @@ class Referral_model extends CI_Model {
                 //validate notifications if allowed or not
                 $this->db->select('admin.id as clinic_id, c_ref.id as referral_id,'
                         . 'CASE WHEN ('
-                        . '(pat.cell_phone = NULL OR pat.cell_phone = "")'
-                        . '(pat.work_phone = NULL OR pat.work_phone = "")'
+                        . '(pat.cell_phone = NULL OR pat.cell_phone = "") OR '
+                        . '(pat.work_phone = NULL OR pat.work_phone = "") OR '
                         . '(pat.home_phone = NULL OR pat.home_phone = "")'
                         . ') THEN "false" ELSE "true" END AS allow_sms,' .
                         'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
