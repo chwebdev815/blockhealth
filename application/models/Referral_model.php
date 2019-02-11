@@ -886,7 +886,7 @@ class Referral_model extends CI_Model {
                 $this->db->where("efax.to", "admin.id", false);
                 $this->db->where("c_ref.efax_id", "efax.id", false);
                 $result = $this->db->get()->result();
-//                echo $this->db->last_query();
+                echo $this->db->last_query();
                 if ($result) {
 
                     $allow_sms = $result[0]->allow_sms;
@@ -964,9 +964,9 @@ class Referral_model extends CI_Model {
                         "visit_confirmed" => (isset($data["cell_phone"]) || isset($data["email"]) || isset($data["cell_phone_voice"])) ? "Awaiting Confirmation" : "N/A"
                     );
 
-//                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
+                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
 
-//                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
+                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
 
                     $this->db->insert("records_patient_visit_reserved", $insert_data);
 
@@ -1062,9 +1062,13 @@ class Referral_model extends CI_Model {
 //                        'clinic_id' => $msg_data->clinic_id,
 //                        'type' => 'visitCreate'
 //                    ); 
+                    $response = true;
+                }
+                else {
+                    $response = false;
                 }
                 $this->db->trans_complete();
-                return true;
+                return $response;
             } else {
                 return "You are not authorized for such Operation";
             }
