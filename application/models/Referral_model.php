@@ -983,7 +983,7 @@ class Referral_model extends CI_Model {
                             'defaultContactFormName3' => $msg_data->clinic_institution_name,
                             'defaultContactFormName4' => "ddd",
                             'defaultContactFormName5' => "ttt",
-                            'defaultContactFormName6' => $msg_data->cell_phone,
+                            'defaultContactFormName6' => $contact_number,
                             'address' => $msg_data->call_address,
                             'clinic_id' => $msg_data->clinic_id,
                             'type' => 'first_call',

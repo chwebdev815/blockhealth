@@ -33,8 +33,8 @@ class Call_view extends CI_Controller {
 
         if (!empty($mob)) {
             $dataNew = $this->call_confirm($reserved_id, $clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $mob, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address);
-            echo "<pre>";
-            print_r($dataNew);
+//            echo "<pre>";
+//            print_r($dataNew);
         }
     }
 
