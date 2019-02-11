@@ -1018,6 +1018,7 @@ class Referral_model extends CI_Model {
                             return curl_error($ch);
                         }
                         curl_close($ch);
+                        echo "<br/> call response = " . $resp . "<br/>";
                         log_message("error", "Call completed " . json_encode($resp));
                     } else {
                         $msg = "Hello <patient name>,\n"
