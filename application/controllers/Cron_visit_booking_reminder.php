@@ -39,6 +39,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //                    "visit_confirmed" => "Confirmed",
 //                ))->get()->result();
         $remindable = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
+//                    "id" => 10
                     "id" => 80
                 ))->get()->result();
 
@@ -92,8 +93,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     //find asignable slots
                     $allocations = $this->referral_model->assign_slots($new_visit_duration, $patient_data->clinic_id);
                     //make call with proper data
-                    
-                    $new_data = array(
+
+                    $insert_data = array(
                         "visit_date1" => substr($allocations[0]["start_time"], 0, 10),
                         "visit_start_time1" => substr($allocations[0]["start_time"], 10),
                         "visit_end_time1" => substr($allocations[0]["end_time"], 10),
@@ -103,20 +104,21 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         "visit_date3" => substr($allocations[2]["start_time"], 0, 10),
                         "visit_start_time3" => substr($allocations[2]["start_time"], 10),
                         "visit_end_time3" => substr($allocations[2]["end_time"], 10),
+                        "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s")
                     );
+                    $this->db->where(array(
+                        "id" => $visit->id
+                    ))->update("records_patient_visit_reserved", $insert_data);
                     
-                    echo "data to insert = > " . json_encode($new_data) . "<br/>";
-                    exit();
-//                    $this->db->update("records_patient_visit_reserved", );
-
+                    $contact_number = "+917201907712";
 
                     $post_arr = array(
                         'defaultContactFormName' => $patient_data->fname,
                         "patient_lname" => $patient_data->lname,
                         "defaultContactFormName2" => $visit->visit_name,
                         'defaultContactFormName3' => $patient_data->clinic_institution_name,
-                        'defaultContactFormName4' => $visit->visit_date,
-                        'defaultContactFormName5' => $visit->visit_time,
+                        'defaultContactFormName4' => "aaa",
+                        'defaultContactFormName5' => "bbb",
                         'defaultContactFormName6' => $contact_number,
                         'address' => $patient_data->call_address,
                         'clinic_id' => $patient_data->clinic_id,
@@ -127,7 +129,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         "notify_email" => $visit->notify_email,
                         "reserved_id" => $visit->id
                     );
-
+                    
+                    echo "post array = " . json_encode($post_arr) . "<br/>";
                     log_message("error", "Call should start now");
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
