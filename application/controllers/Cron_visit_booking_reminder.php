@@ -33,21 +33,33 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //        $string_plus_72_hour = $plus_72_hour->format("Y-m-d H:i:s");
 //        $plus_72_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+3 day 5 minute")));
 //        $string_plus_72_hour_5_min = $plus_72_hour_5_min->format("Y-m-d H:i:s");
-//        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
-//                    "concat(visit_date, ' ', visit_time) > " => $string_plus_72_hour,
-//                    "concat(visit_date, ' ', visit_time) < " => $string_plus_72_hour_5_min,
-//                    "visit_confirmed" => "Confirmed",
+        $remindable = $this->db->select("*")->from("records_patient_visit_reserved")
+                        ->group_start()
+                        ->where(array(
+                            "create_datetime > " => $before_1_hour->format("Y-m-d H:i:s"),
+                            "create_datetime < " => $before_1_hour_5_min->format("Y-m-d H:i:s")
+                        ))->or_group_start()->where(array(
+                            "create_datetime > " => $before_24_hour->format("Y-m-d H:i:s"),
+                            "create_datetime < " => $before_24_hour_5_min->format("Y-m-d H:i:s")
+                        ))->group_end()
+                        ->or_group_start()->where(array(
+                            "create_datetime > " => $before_48_hour->format("Y-m-d H:i:s"),
+                            "create_datetime < " => $before_48_hour_5_min->format("Y-m-d H:i:s")
+                        ))->group_end()
+                        ->group_end()
+                        ->where(array(
+                            "visit_confirmed" => "N/A",
+                        ))->get()->result();
+//        $remindable = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
+////                    "id" => 10
+//                    "id" => 80
 //                ))->get()->result();
-        $remindable = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
-//                    "id" => 10
-                    "id" => 80
-                ))->get()->result();
 
 
 
         echo $this->db->last_query() . "<br/><br/>";
         echo json_encode($remindable) . "<br/><br/>";
-
+        exit();
         $this->load->model("referral_model");
         foreach ($remindable as $key => $value) {
             $visit = $value;
@@ -290,7 +302,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
         . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
         . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
         . "notify_email=" . urlencode($_GET["notify_email"]) .
-                    "Digits=timeout</Redirect>
+        "Digits=timeout</Redirect>
 		</Response>";
     }
 

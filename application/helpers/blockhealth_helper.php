@@ -116,7 +116,6 @@ function add_fax_count($sender, $receiver, $clinic_id, $fax_type, $login_role = 
 
 function send_mail($from, $from_name, $to, $to_name, $subject, $content, $attachment = "", $file_name = "attachment.pdf") {
     log_message("error", "SENDGRID - sending mail to $to");
-    
     if($from == "") {
         $from = "alerts@blockhealth.co";
     }
