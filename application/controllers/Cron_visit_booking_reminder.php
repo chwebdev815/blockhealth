@@ -17,8 +17,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
         }
     }
 
-    
-    
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
 
         //get all to schedule a call
@@ -28,7 +26,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
         $before_24_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 day 5 minute")));
         $before_48_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-2 day")));
         $before_48_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-2 day 5 minute")));
-        
+
         echo "1 hour = " . $before_1_hour->format("Y-m-d H:i:s") . " to " . $before_1_hour_5_min->format("Y-m-d H:i:s") . "<br/>";
         echo "24 hour = " . $before_24_hour->format("Y-m-d H:i:s") . " to " . $before_24_hour_5_min->format("Y-m-d H:i:s") . "<br/>";
         echo "48 hour = " . $before_48_hour->format("Y-m-d H:i:s") . " to " . $before_48_hour_5_min->format("Y-m-d H:i:s") . "<br/>";
@@ -40,9 +38,11 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //                    "concat(visit_date, ' ', visit_time) < " => $string_plus_72_hour_5_min,
 //                    "visit_confirmed" => "Confirmed",
 //                ))->get()->result();
-        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
-                    "id" => 67
+        $remindable = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
+                    "id" => 80
                 ))->get()->result();
+
+
 
         echo $this->db->last_query() . "<br/><br/>";
         echo json_encode($remindable) . "<br/><br/>";
@@ -86,9 +86,28 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         $contact_number = $patient_data->work_phone;
                     }
                     $new_visit_duration = 30;
+                    //          | id | patient_id | visit_name | visit_date1 | visit_start_time1 | visit_end_time1 | visit_date2 | visit_start_time2 | visit_end_time2 | visit_date3 | visit_start_time3 | visit_end_time3 | visit_expire_time   | reminder_1h | reminder_24h        | reminder_48h        | reminder_72h        | confirm_key | notify_type | notify_voice | notify_sms | notify_email | confirm_visit_key                                                                                                                   | visit_confirmed | create_datetime     | active |
+//          | 80 |         42 |            | 2019-02-13  | 10:00:00          | 10:30:00        | 2019-02-14  | 09:00:00          | 09:30:00        | 2019-02-15  | 09:00:00          | 09:30:00        | 2019-02-12 11:20:42 | NULL        | 2019-02-13 10:20:42 | 2019-02-14 10:20:42 | 2019-02-15 10:20:42 | 1           | call        |            1 |          1 |            1 | 1549984842_8KGCkYmSij3x_ARUNATX_NbKm6XRbyIkhnWClitECxaB70vUBnRAa1jx8fojO5D5tzHOR9rsHC3OCyIcWyN6A6DIl0096EezcWm34OwMpzz17ge3O19n7N4t | Booked          | 2019-02-12 15:20:42 |      0 |
+//          
                     //find asignable slots
                     $allocations = $this->referral_model->assign_slots($new_visit_duration, $patient_data->clinic_id);
                     //make call with proper data
+                    
+                    $new_data = array(
+                        "visit_date1" => substr($allocations[0]["start_time"], 0, 10),
+                        "visit_start_time1" => substr($allocations[0]["start_time"], 10),
+                        "visit_end_time1" => substr($allocations[0]["end_time"], 10),
+                        "visit_date2" => substr($allocations[1]["start_time"], 0, 10),
+                        "visit_start_time2" => substr($allocations[1]["start_time"], 10),
+                        "visit_end_time2" => substr($allocations[1]["end_time"], 10),
+                        "visit_date3" => substr($allocations[2]["start_time"], 0, 10),
+                        "visit_start_time3" => substr($allocations[2]["start_time"], 10),
+                        "visit_end_time3" => substr($allocations[2]["end_time"], 10),
+                    );
+                    
+                    echo "data to insert = > " . json_encode($new_data) . "<br/>";
+                    exit();
+//                    $this->db->update("records_patient_visit_reserved", );
 
 
                     $post_arr = array(
@@ -147,7 +166,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
     }
 
     //call scripts
-    
+
     public function call_confirm($reserved_id, $clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $to_number, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address) {
 
         $sid = 'AC2da3b84b65b63ccf4f05c27ac1713060';
