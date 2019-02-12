@@ -310,6 +310,20 @@
                 });
             }
 
+
+            function set_visit_status(status, dot) {
+                if (dot == "red") {
+                    return '<span class="fc-event-dot" style="background-color:#f74444"></span>  ' + status;
+                } else if (dot == "green") {
+                    return '<span class="fc-event-dot" style="background-color:#88b794"></span>  ' + status;
+                } else if (dot == "yellow") {
+                    return '<span class="fc-event-dot" style="background-color:#9da1c3"></span>  ' + status;
+                } else {
+                    return status;
+                }
+            }
+
+
             Dropzone.autoDiscover = false;
 
             $(document).ready(function () {

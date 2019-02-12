@@ -1352,9 +1352,10 @@ class Referral_model extends CI_Model {
         $columns = array(
             array('db' => 'visit_name', 'dt' => 0),
             array('db' => 'create_datetime', 'dt' => 1),
-            array('db' => 'notification', 'dt' => 2),
+            array('db' => 'accepted_status', 'dt' => 2),
             array('db' => 'visit_confirmed', 'dt' => 3),
-            array('db' => 'id', 'dt' => 4)
+            array('db' => 'accepted_status_icon', 'dt' => 4),
+            array('db' => 'id', 'dt' => 5)
         );
         $sql_details = array(
             'user' => $this->db->username,
