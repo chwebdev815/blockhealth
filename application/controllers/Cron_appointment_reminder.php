@@ -113,19 +113,24 @@ class Cron_appointment_reminder extends CI_Controller {
                     curl_close($ch);
                     log_message("error", "Call completed " . json_encode($resp));
                 } else if ($visit->notify_type == "sms") {
-                    $msg = "Hello <patient name>,\n" .
-                            "\n" .
-                            "Your appointment<patient visit name> with <clinic name> has been booked for <date> at <time>.\n" .
-                            "\n" .
-                            "The address is:\n" .
-                            "<Address>\n" .
-                            "\n" .
-                            "Please type 1 to confirm this booking. "
-                            . "If this date does not work, please type 2 to alert the clinic staff.\n";
+                    if($visit->visit_name && $visit->visit_name!="") {
+                        $visit->visit_name = "'".$visit->visit_name."'";
+                    }
+                    $msg = "Hello <patient name>,\n"
+                            . "\n"
+                            . "Your appointment<patient visit name> with <clinic name> has been booked for <date> at <time>.\n"
+                            . "\n"
+                            . "The address is:\n"
+                            . "<Address>\n"
+                            . "\n"
+                            . "Please type 1 to confirm this booking. "
+                            . "If this date does not work, please type 2 to alert the clinic staff.\n"
+                            . "Please note - these dates will be reserved for the next 60 minutes\n"
+                            . "Thank-you.";
                     $msg = str_replace("<patient name>", $patient_data->fname, $msg);
                     $msg = str_replace("<date>", $visit->visit_date, $msg);
                     $msg = str_replace("<time>", $visit->visit_time, $msg);
-                    $msg = str_replace("<patient visit name>", $visit_name, $msg);
+                    $msg = str_replace("<patient visit name>",  $visit->visit_name, $msg);
                     $msg = str_replace("<clinic name>", $patient_data->clinic_institution_name, $msg);
                     $msg = str_replace("<Address>", $patient_data->address, $msg);
 

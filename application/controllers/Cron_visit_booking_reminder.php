@@ -36,6 +36,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
         $remindable = $this->db->select("*")->from("records_patient_visit_reserved")
                         ->group_start()
                         ->where(array(
+                            "notify_type" => "sms", 
                             "create_datetime > " => $before_1_hour->format("Y-m-d H:i:s"),
                             "create_datetime < " => $before_1_hour_5_min->format("Y-m-d H:i:s")
                         ))->or_group_start()->where(array(
@@ -59,7 +60,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
         echo $this->db->last_query() . "<br/><br/>";
         echo json_encode($remindable) . "<br/><br/>";
-        exit();
+        
         $this->load->model("referral_model");
         foreach ($remindable as $key => $value) {
             $visit = $value;
@@ -122,7 +123,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         "id" => $visit->id
                     ))->update("records_patient_visit_reserved", $insert_data);
 
-                    $contact_number = "+917201907712";
+//                    $contact_number = "+917201907712";
 
                     $post_arr = array(
                         'defaultContactFormName' => $patient_data->fname,
@@ -158,19 +159,25 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     curl_close($ch);
                     log_message("error", "Call completed " . json_encode($resp));
                 } else if ($visit->notify_type == "sms") {
-                    $msg = "Hello <patient name>,\n" .
-                            "\n" .
-                            "Your appointment<patient visit name> with <clinic name> has been booked for <date> at <time>.\n" .
-                            "\n" .
-                            "The address is:\n" .
-                            "<Address>\n" .
-                            "\n" .
-                            "Please type 1 to confirm this booking. "
-                            . "If this date does not work, please type 2 to alert the clinic staff.\n";
+                    
+                    if($visit->visit_name && $visit->visit_name!="") {
+                        $visit->visit_name = "'".$visit->visit_name."'";
+                    }
+                    $msg = "Hello <patient name>,\n"
+                            . "\n"
+                            . "Your appointment<patient visit name> with <clinic name> has been booked for <date> at <time>.\n"
+                            . "\n"
+                            . "The address is:\n"
+                            . "<Address>\n"
+                            . "\n"
+                            . "Please type 1 to confirm this booking. "
+                            . "If this date does not work, please type 2 to alert the clinic staff.\n"
+                            . "Please note - these dates will be reserved for the next 60 minutes\n"
+                            . "Thank-you.";
                     $msg = str_replace("<patient name>", $patient_data->fname, $msg);
                     $msg = str_replace("<date>", $visit->visit_date, $msg);
                     $msg = str_replace("<time>", $visit->visit_time, $msg);
-                    $msg = str_replace("<patient visit name>", $visit_name, $msg);
+                    $msg = str_replace("<patient visit name>", $visit->visit_name, $msg);
                     $msg = str_replace("<clinic name>", $patient_data->clinic_institution_name, $msg);
                     $msg = str_replace("<Address>", $patient_data->address, $msg);
 
