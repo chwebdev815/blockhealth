@@ -109,7 +109,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     $this->db->where(array(
                         "id" => $visit->id
                     ))->update("records_patient_visit_reserved", $insert_data);
-                    
+
                     $contact_number = "+917201907712";
 
                     $post_arr = array(
@@ -129,7 +129,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         "notify_email" => $visit->notify_email,
                         "reserved_id" => $visit->id
                     );
-                    
+
                     echo "post array = " . json_encode($post_arr) . "<br/>";
                     log_message("error", "Call should start now");
                     $ch = curl_init();
@@ -169,6 +169,31 @@ class Cron_visit_booking_reminder extends CI_Controller {
     }
 
     //call scripts
+
+
+    public function call() {
+        $pname = $this->input->post('defaultContactFormName');
+        $patient_lname = $this->input->post('patient_lname');
+        $pvname = $this->input->post('defaultContactFormName2');
+        $cname = $this->input->post('defaultContactFormName3');
+        $aDate = $this->input->post('defaultContactFormName4');
+        $aTime = $this->input->post('defaultContactFormName5');
+        $mob = $this->input->post('defaultContactFormName6');
+        $clinic_id = $this->input->post('clinic_id');
+        $patient_id = $this->input->post('patient_id');
+        $notify_voice = $this->input->post('notify_voice');
+        $notify_sms = $this->input->post('notify_sms');
+        $notify_email = $this->input->post('notify_email');
+        $address = $this->input->post('address');
+        $type = $this->input->post("type");
+        $reserved_id = $this->input->post("reserved_id");
+
+        if (!empty($mob)) {
+            $dataNew = $this->call_confirm($reserved_id, $clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $mob, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address);
+//            echo "<pre>";
+//            print_r($dataNew);
+        }
+    }
 
     public function call_confirm($reserved_id, $clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $to_number, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address) {
 
