@@ -23,10 +23,20 @@ class Webhook_twilio_sms extends CI_Controller {
             $this->db->select("r_pvr.*");
             $this->db->from("referral_patient_info pat, records_patient_visit_reserved r_pvr");
             $this->db->where(array(
-                "pat.active" => 1,
-                "r_pvr.active" => 1,
-                "concat('+1',pat.cell_phone)" => $From
-            ));
+                        "pat.active" => 1,
+                        "r_pvr.active" => 1
+                    ))->group_start()
+                    ->or_group_start()->where(array(
+                        "concat('+1',pat.cell_phone)" => $From
+                    ))->group_end()
+                    ->or_group_start()->where(array(
+                        "concat('+1',pat.cell_phone)" => $From
+                    ))->group_end()
+                    ->or_group_start()->where(array(
+                        "concat('+1',pat.cell_phone)" => $From
+                    ))->group_end()
+                    ->group_end();
+
             $this->db->where("r_pvr.patient_id", "pat.id", false);
             $this->db->order_by("r_pvr.id", "desc");
             $this->db->limit(1);
@@ -77,7 +87,7 @@ class Webhook_twilio_sms extends CI_Controller {
                             "notify_voice" => $reserved->notify_voice,
                             "notify_sms" => $reserved->notify_sms,
                             "notify_email" => $reserved->notify_email,
-                            "visit_confirmed" => "Confirmed",
+                            "visit_confirmed" => "Awaiting confirmation",
                             "confirm_visit_key" => $reserved->confirm_visit_key
                         );
 
@@ -129,8 +139,6 @@ class Webhook_twilio_sms extends CI_Controller {
 //                        $this->db->set("active", "0");
 //                        $this->db->where("id", $reserved->id);
 //                        $this->db->update("records_patient_visit_reserved");
-
-
                         //set status in accepted_status
                         $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
                                     "pat.id" => $reserved->patient_id

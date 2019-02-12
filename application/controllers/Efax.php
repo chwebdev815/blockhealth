@@ -6,8 +6,8 @@ if (!defined('BASEPATH'))
 class Efax extends CI_Controller {
 
     public function index() {
-      $From = "+123456";
-      echo substr($From, 1);
+        $From = "+123456";
+        echo substr($From, 1);
     }
 
     public function send_referral_efax() {
@@ -40,10 +40,19 @@ class Efax extends CI_Controller {
         $this->db->select("DISTINCT(r_pv.id), r_pv.visit_confirmed");
         $this->db->from("referral_patient_info pat, records_patient_visit r_pv");
         $this->db->where(array(
-            "pat.active" => 1,
-            "r_pv.active" => 1,
-            "pat.cell_phone" => $From
-        ));
+                    "pat.active" => 1,
+                    "r_pv.active" => 1
+                ))->group_start()
+                ->or_group_start()->where(array(
+                    "pat.cell_phone" => $From
+                ))->group_end()
+                ->or_group_start()->where(array(
+                    "pat.work_phone" => $From
+                ))->group_end()
+                ->or_group_start()->where(array(
+                    "pat.home_phone" => $From
+                ))->group_end()
+                ->group_end();
         $this->db->where("r_pv.patient_id", "pat.id", false);
         $result = $this->db->get()->result();
 
@@ -55,28 +64,24 @@ class Efax extends CI_Controller {
         foreach ($result as $row) {
             log_message("error", "row = " . json_encode($row) . "with body = " . $Body . ", status = " . $row->visit_confirmed);
             if ($Body == "1") {
-                if ($row->visit_confirmed == "Awaiting Confirmation" || $row->visit_confirmed == "Change required") {
-                    //change status to confirm
-                    $this->db->where(array(
-                        "id" => $row->id
-                    ));
-                    $this->db->set("visit_confirmed", "Confirmed");
-                    $this->db->update("records_patient_visit");
-                    $change_status = true;
-                    log_message("error", "change (1) " . $this->db->last_query());
-                }
+                //change status to confirm
+                $this->db->where(array(
+                    "id" => $row->id
+                ));
+                $this->db->set("visit_confirmed", "Awaiting Confirmation");
+                $this->db->update("records_patient_visit");
+                $change_status = true;
+                log_message("error", "change (1) " . $this->db->last_query());
             }
             if ($Body == "2") {
-                if ($row->visit_confirmed == "Awaiting Confirmation") {
-                    //change status to Change required
-                    $this->db->where(array(
-                      "id" => $row->id
-                    ));
-                    $this->db->set("visit_confirmed", "Change required");
-                    $this->db->update("records_patient_visit");
-                    $change_status = true;
-                    log_message("error", "change (2) " . $this->db->last_query());
-                }
+                //change status to Change required
+                $this->db->where(array(
+                    "id" => $row->id
+                ));
+                $this->db->set("visit_confirmed", "Change required");
+                $this->db->update("records_patient_visit");
+                $change_status = true;
+                log_message("error", "change (2) " . $this->db->last_query());
             }
         }
         $this->db->trans_complete();

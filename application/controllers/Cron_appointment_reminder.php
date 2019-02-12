@@ -24,14 +24,14 @@ class Cron_appointment_reminder extends CI_Controller {
         $string_plus_72_hour = $plus_72_hour->format("Y-m-d H:i:s");
         $plus_72_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+3 day 5 minute")));
         $string_plus_72_hour_5_min = $plus_72_hour_5_min->format("Y-m-d H:i:s");
-//        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
-//                    "concat(visit_date, ' ', visit_time) > " => $string_plus_72_hour,
-//                    "concat(visit_date, ' ', visit_time) < " => $string_plus_72_hour_5_min,
-//                    "visit_confirmed" => "Confirmed",
-//                ))->get()->result();
         $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
-                    "id" => 47
+                    "concat(visit_date, ' ', visit_time) > " => $string_plus_72_hour,
+                    "concat(visit_date, ' ', visit_time) < " => $string_plus_72_hour_5_min,
+                    "visit_confirmed" => "Awaiting confirmation",
                 ))->get()->result();
+//        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
+//                    "id" => 47
+//                ))->get()->result();
 
         echo $this->db->last_query() . "<br/><br/>";
         echo json_encode($remindable) . "<br/><br/>";

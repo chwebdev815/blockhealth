@@ -865,7 +865,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         "notify_voice" => $reserved_data["notify_voice"],
                         "notify_sms" => $reserved_data["notify_sms"],
                         "notify_email" => $reserved_data["notify_email"],
-                        "visit_confirmed" => "Confirmed"
+                        "visit_confirmed" => "Awaiting Confirmation"
                     );
                     //insert in scheduled visit
                     $this->db->insert("records_patient_visit", $insert_data);
@@ -979,9 +979,14 @@ class Cron_visit_booking_reminder extends CI_Controller {
             $this->db->from("referral_patient_info pat, records_patient_visit r_pv");
             $this->db->where(array(
                 "pat.active" => 1,
-                "r_pv.active" => 1,
+                "r_pv.active" => 1
+            ))->group_start()->where(array(
                 "pat.cell_phone" => $From
-            ));
+            ))->or_where(array(
+                "pat.home_phone" => $From
+            ))->or_where(array(
+                "pat.work_phone" => $From
+            ))->group_end();
             $this->db->where("r_pv.patient_id", "pat.id", false);
             $result = $this->db->get()->result();
 

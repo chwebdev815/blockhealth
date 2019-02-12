@@ -971,7 +971,7 @@ class Referral_model extends CI_Model {
                         "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P2D"))->format("Y-m-d H:i:s"),
                         "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P3D"))->format("Y-m-d H:i:s"),
                         "confirm_visit_key" => $confirm_visit_key,
-                        "visit_confirmed" => (isset($data["cell_phone"]) || isset($data["email"]) || isset($data["cell_phone_voice"])) ? "Awaiting Confirmation" : "N/A"
+                        "visit_confirmed" => "N/A"
                     );
 
 //                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
@@ -1219,7 +1219,7 @@ class Referral_model extends CI_Model {
                     "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
                     "notify_email" => (isset($data["email"])) ? 1 : 0,
                     "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
-                    "visit_confirmed" => (!isset($data["cell_phone"]) && !isset($data["email"]) && !isset($data["cell_phone_voice"])) ? "N/A" : "Awaiting Confirmation"
+                    "visit_confirmed" => "N/A"
                 ));
                 $this->db->select("c_pv.visit_name, c_pv.confirm_visit_key, date_format(`c_pv`.`visit_date`,'%M %D, %Y') as visit_date, " .
                         "date_format(`c_pv`.`visit_time`, '%I:%i %p') as visit_time, c_pv.notify_sms, c_pv.notify_email, admin.address," .

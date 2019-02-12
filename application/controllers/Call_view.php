@@ -812,21 +812,15 @@ class Call_view extends CI_Controller {
                         "pat.active" => 1,
                         "r_pv.active" => 1
                     ))->group_start()
-                    ->or_group_start()
-                    ->where(array(
+                    ->or_group_start()->where(array(
                         "pat.cell_phone" => $From
-                    ))
-                    ->group_end()
-                    ->or_group_start()
-                    ->where(array(
+                    ))->group_end()
+                    ->or_group_start()->where(array(
                         "pat.work_phone" => $From
-                    ))
-                    ->group_end()
-                    ->or_group_start()
-                    ->where(array(
+                    ))->group_end()
+                    ->or_group_start()->where(array(
                         "pat.home_phone" => $From
-                    ))
-                    ->group_end()
+                    ))->group_end()
                     ->group_end();
             $this->db->where("r_pv.patient_id", "pat.id", false);
             $result = $this->db->get()->result();

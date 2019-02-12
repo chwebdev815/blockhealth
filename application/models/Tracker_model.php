@@ -142,7 +142,7 @@ class Tracker_model extends CI_Model {
                         $this->db->select("if(c_ref.status='Scheduled',if(r_pv.id, 'Visit has been confirmed', 'Waiting for patient confirmation'), '') as stage4");
                         $this->db->from("clinic_referrals c_ref");
                         $this->db->join("referral_patient_info pat", "pat.referral_id = c_ref.id");
-                        $this->db->join("records_patient_visit r_pv", "r_pv.patient_id = pat.id and r_pv.visit_confirmed = 'Confirmed' and r_pv.active = 1", "left");
+                        $this->db->join("records_patient_visit r_pv", "r_pv.patient_id = pat.id and r_pv.visit_confirmed = 'Awaiting Confirmation' and r_pv.active = 1", "left");
                         $this->db->where(array(
                             "c_ref.referral_code" => $ref_code,
                             "c_ref.active" => 1,
