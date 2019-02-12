@@ -32,7 +32,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
         echo "1 hour = " . $before_1_hour->format("Y-m-d H:i:s") . " to " . $before_1_hour_5_min->format("Y-m-d H:i:s") . "<br/>";
         echo "24 hour = " . $before_24_hour->format("Y-m-d H:i:s") . " to " . $before_24_hour_5_min->format("Y-m-d H:i:s") . "<br/>";
         echo "48 hour = " . $before_48_hour->format("Y-m-d H:i:s") . " to " . $before_48_hour_5_min->format("Y-m-d H:i:s") . "<br/>";
-        exit();
 //        $string_plus_72_hour = $plus_72_hour->format("Y-m-d H:i:s");
 //        $plus_72_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+3 day 5 minute")));
 //        $string_plus_72_hour_5_min = $plus_72_hour_5_min->format("Y-m-d H:i:s");
@@ -42,7 +41,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //                    "visit_confirmed" => "Confirmed",
 //                ))->get()->result();
         $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
-                    "id" => 47
+                    "id" => 67
                 ))->get()->result();
 
         echo $this->db->last_query() . "<br/><br/>";
@@ -102,7 +101,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         'defaultContactFormName6' => $contact_number,
                         'address' => $patient_data->call_address,
                         'clinic_id' => $patient_data->clinic_id,
-                        'type' => 'Call reminder before 72 hour',
+                        'type' => 'booking_reminder',
                         "patient_id" => $visit->patient_id,
                         "notify_voice" => $visit->notify_voice,
                         "notify_sms" => $visit->notify_sms,
@@ -113,7 +112,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     log_message("error", "Call should start now");
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                    curl_setopt($ch, CURLOPT_URL, base_url() . "cron_appointment_reminder/call");
+                    curl_setopt($ch, CURLOPT_URL, base_url() . "cron_visit_booking_reminder/call");
                     curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
                     curl_setopt($ch, CURLOPT_POST, 1);
                     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
@@ -148,33 +147,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
     }
 
     //call scripts
-
-
-    public function call() {
-        $pname = $this->input->post('defaultContactFormName');
-        $patient_lname = $this->input->post('patient_lname');
-        $pvname = $this->input->post('defaultContactFormName2');
-        $cname = $this->input->post('defaultContactFormName3');
-        $aDate = $this->input->post('defaultContactFormName4');
-        $aTime = $this->input->post('defaultContactFormName5');
-        $mob = $this->input->post('defaultContactFormName6');
-//        $mob = "+917201907712";
-        $clinic_id = $this->input->post('clinic_id');
-        $patient_id = $this->input->post('patient_id');
-        $notify_voice = $this->input->post('notify_voice');
-        $notify_sms = $this->input->post('notify_sms');
-        $notify_email = $this->input->post('notify_email');
-        $address = $this->input->post('address');
-        $type = $this->input->post("type");
-        $reserved_id = $this->input->post("reserved_id");
-
-        if (!empty($mob)) {
-            $dataNew = $this->call_confirm($reserved_id, $clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $mob, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address);
-            echo "<pre>";
-            print_r($dataNew);
-        }
-    }
-
+    
     public function call_confirm($reserved_id, $clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $to_number, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address) {
 
         $sid = 'AC2da3b84b65b63ccf4f05c27ac1713060';
@@ -184,7 +157,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //        $to_number = "+917201907712";
 
 
-        $url = "http://35.203.47.37/" . "cron_appointment_reminder/callhandle?"
+        $url = "http://35.203.47.37/" . "cron_visit_booking_reminder/callhandle?"
                 . "pname=" . urlencode($pname) . "&"
                 . "patient_lname=" . urlencode($patient_lname) . "&"
                 . "pvname=" . urlencode($pvname) . "&"
@@ -192,6 +165,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 . "aDate=" . urlencode($aDate) . "&"
                 . "aTime=" . urlencode($aTime) . "&"
                 . "address=" . urlencode($address) . "&"
+                . "type=" . urlencode($type) . "&"
                 . "clinic_id=" . urlencode($clinic_id) . "&"
                 . "patient_id=" . urlencode($patient_id) . "&"
                 . "reserved_id=" . urlencode($reserved_id) . "&"
@@ -231,7 +205,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         echo "<Response>
-            <Gather  timeout='3' numDigits='1' action='" . $base_url . "cron_appointment_reminder/step_two?"
+            <Gather  timeout='3' numDigits='1' action='" . $base_url . "cron_visit_booking_reminder/step_two?"
         . "pname=" . urlencode($_GET['pname']) . "&amp;"
         . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
         . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
@@ -239,27 +213,22 @@ class Cron_visit_booking_reminder extends CI_Controller {
         . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
         . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
         . "address=" . urlencode($_GET['address']) . "&amp;"
+        . "type=" . urlencode($_GET['type']) . "&amp;"
         . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
         . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
         . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
         . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
         . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-        . "notify_email=" . urlencode($_GET["notify_email"]) . "' method='GET'>";
-
-
-        echo "<Say  voice='Polly.Joanna'>Hello " . $_GET['pname'] . " " . $_GET['patient_lname'] . "</Say>";
-        echo "<Pause length='1'/>";
-        echo "<Say voice='Polly.Joanna'>Your appointment with  " . $_GET['cname'] . "  has been booked for  <say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $_GET['aDate'] . "</say-as>     at   <say-as interpret-as='time' format='hms12'> " . $_GET['aTime'] . " </say-as></Say>";
-        echo "<Pause length='1'/>";
-        echo "<Say voice='Polly.Joanna'>The address  is: " . $_GET['address'] . "  </Say>";
-        echo "<Pause length='1'/>";
-        echo "<Say voice='Polly.Joanna'>Please     type   1   to    confirm    this    booking .   If    this    date    does   not work please  type 2   to    alert    the    clinic    staff.</Say>";
-        echo "<Say voice='Polly.Joanna'>Please type 3 to replay this message</Say>";
-        echo "</Gather>";
-        echo "<Pause length='10'/>";
-
-        echo "<Redirect method='GET'>
-            " . $base_url . "cron_appointment_reminder/callhandle?"
+        . "notify_email=" . urlencode($_GET["notify_email"]) . "' method='GET'>
+                <Say  voice='Polly.Joanna'> Hello </Say>
+                <Pause length='1'/>
+                <Say voice='Polly.Joanna'> This is an automated appointment call for  " . $_GET['pname'] . "  " . $_GET['patient_lname'] . ".</Say>
+                <Pause length='1'/>
+                <Say voice='Polly.Joanna'> If you are  " . $_GET['pname'] . "  " . $_GET['patient_lname'] . " , please enter 1 to continue. If this is the wrong number, please type 2 to end the call</Say>
+				</Gather>
+            <Pause length='10'/>
+            <Redirect method='GET'>
+            " . $base_url . "cron_visit_booking_reminder/callhandle?"
         . "pname=" . urlencode($_GET['pname']) . "&amp;"
         . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
         . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
@@ -267,6 +236,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
         . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
         . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
         . "address=" . urlencode($_GET['address']) . "&amp;"
+        . "type=" . urlencode($_GET['type']) . "&amp;"
         . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
         . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
         . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
@@ -279,41 +249,708 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
     public function step_two() {
 
+
+        //[{"id":"0","patient_id":"2","visit_name":"visit check","visit_date1":"2019-02-08","visit_start_time1":"09:00:00","visit_end_time1":"09:30:00","visit_date2":"2019-02-11","visit_start_time2":"09:00:00","visit_end_time2":"09:30:00","visit_date3":"2019-02-12","visit_start_time3":"09:00:00","visit_end_time3":"09:30:00","visit_expire_time":"2019-02-07 11:21:53","reminder_1h":null,"reminder_24h":"2019-02-08 10:21:53","reminder_48h":"2019-02-09 10:21:53","reminder_72h":"2019-02-10 10:21:53","confirm_key":"1","notify_type":"call","notify_voice":"1","notify_sms":"1","notify_email":"1","confirm_visit_key":"1549552913_SphROVHWj3RuNDJpfkv0GkMy4N7Q5tJYT_PGUvBdyrHl3qLjKgjqA5YES5tYzbWrbK65eIiN9_8dpTw98PzJUxmMCQKb1FCcoJiDqAqzzyNZri7A6Gi0cFNP","visit_confirmed":"Awaiting Confirmation","create_datetime":"2019-02-07 15:21:53","active":"1"}]
+
+
         $clinic_id = $_GET["clinic_id"];
         $patient_id = $_GET["patient_id"];
         $reserved_id = $_GET["reserved_id"];
 
+        $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
+                    "id" => $reserved_id
+                ))->get()->result()[0];
 
-        $base_url = "http://35.203.47.37/";
 
+        //data reserved for 10 mins
+
+
+
+        $date1 = date('F jS', strtotime($reserved_data->visit_date1 . " " . $reserved_data->visit_start_time1));
+        $day1 = date('l', strtotime($reserved_data->visit_date1 . " " . $reserved_data->visit_start_time1));
+        $time1 = date('g:i a', strtotime($reserved_data->visit_date1 . " " . $reserved_data->visit_start_time1));
+        $date2 = date('F jS', strtotime($reserved_data->visit_date2 . " " . $reserved_data->visit_start_time2));
+        $day2 = date('l', strtotime($reserved_data->visit_date2 . " " . $reserved_data->visit_start_time2));
+        $time2 = date('g:i a', strtotime($reserved_data->visit_date2 . " " . $reserved_data->visit_start_time2));
+        $date3 = date('F jS', strtotime($reserved_data->visit_date3 . " " . $reserved_data->visit_start_time3));
+        $day3 = date('l', strtotime($reserved_data->visit_date3 . " " . $reserved_data->visit_start_time3));
+        $time3 = date('g:i a', strtotime($reserved_data->visit_date3 . " " . $reserved_data->visit_start_time3));
+
+        if (isset($_GET["Digits"])) {
+            $base_url = "http://35.203.47.37/";
+            if ($_GET['Digits'] == 1) {
+                echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+                echo "<Response>";
+                echo "<Gather  timeout='3' numDigits='1' action='" . $base_url . "cron_visit_booking_reminder/step_three?"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+                . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "' method='GET'>";
+                echo "<Say  voice='Polly.Joanna'>Hi  " . $_GET['pname'] . ",  Please select one of the following dates and times for your appointment with " . $_GET['cname'] . "</Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>" . $day1 . " <say-as interpret-as='date' format='mmyyyy'  detail='1'>" . $date1 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time1 . " </say-as></emphasis> - please enter 1  </Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>" . $day2 . " <say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date2 . " </say-as>     at  <say-as interpret-as='time' format='hms12'>  " . $time2 . " </say-as></emphasis>  - please enter 2  </Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say  voice='Polly.Joanna'>For   <emphasis level='moderate'> " . $day3 . " <say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date3 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time3 . " </say-as></emphasis> - please enter 3</Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say  voice='Polly.Joanna'>If you would like the clinic to contact you directly - please enter 0</Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say  voice='Polly.Joanna'>To replay this message, please enter 4 </Say>";
+                echo "</Gather>";
+                echo "<Pause length='2'/>";
+                echo "<Redirect method='GET'>" . $base_url . "cron_visit_booking_reminder/step_two?"
+                . "Digits=1&amp;"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3)
+                . "</Redirect>";
+                echo "</Response>";
+            } elseif ($_GET['Digits'] == 2) {
+                echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+                echo "<Response><Say voice='Polly.Joanna'>Thank you</Say></Response>";
+
+
+                $params = array(
+                    'data' => $_GET["Digits"],
+                    'to' => $_GET['To']
+                );
+                $defaults = array(
+                    CURLOPT_URL => $base_url . "cron_visit_booking_reminder/vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc",
+                    CURLOPT_POST => true,
+                    CURLOPT_POSTFIELDS => http_build_query($params)
+                );
+                $ch = curl_init($base_url . "cron_visit_booking_reminder/vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc");
+                curl_setopt_array($ch, $defaults);
+                curl_exec($ch);
+                curl_close($ch);
+            } else {
+                echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+                echo "<Response><Redirect method='GET'>" . $base_url . "cron_visit_booking_reminder/callhandle?pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+                . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "Digits=timeout"
+                . "</Redirect>"
+                . "</Response>";
+            }
+        }
+    }
+
+    function step_three() {
+        $clinic_id = $_GET["clinic_id"];
+        $date1 = $_GET["date1"];
+        $day1 = $_GET["day1"];
+        $time1 = $_GET["time1"];
+
+        $date2 = $_GET["date2"];
+        $day2 = $_GET["day2"];
+        $time2 = $_GET["time2"];
+
+        $date3 = $_GET["day3"];
+        $day3 = $_GET["date3"];
+        $time3 = $_GET["time3"];
+
+
+        if (isset($_GET["Digits"])) {
+            $base_url = "http://35.203.47.37/";
+            if ($_GET['Digits'] == 1) {
+                echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+                echo "<Response>";
+                echo "<Gather  timeout='3' numDigits='1' action='" . $base_url . "cron_visit_booking_reminder/step_four?"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+                . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
+                . "selected_slot=" . 1 . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "' method='GET'>";
+                echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'>" . $day1 . "<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date1 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time1 . " </say-as></emphasis></Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say voice='Polly.Joanna'>if this is correct, enter 1 to confirm.</Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say voice='Polly.Joanna'>If this is incorrect, enter 2 to select another date. </Say>";
+                echo "</Gather>";
+                echo "<Pause length='4'/>";
+                echo "<Redirect method='GET'>" . $base_url . "cron_visit_booking_reminder/step_three?"
+                . "Digits=" . $_GET['Digits'] . "&amp;"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+                . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;"
+                . "</Redirect>";
+                echo "</Response>";
+            } elseif ($_GET['Digits'] == 2) {
+                echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+                echo "<Response>";
+                echo "<Gather  timeout='3' numDigits='1' action='" . $base_url . "cron_visit_booking_reminder/step_four?"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "selected_slot=" . 2 . "&amp;"
+                . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+                . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "' method='GET'>";
+                echo "<Say voice='Polly.Joanna'> You have selected  <emphasis level='moderate'>" . $day2 . "<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date2 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time2 . " </say-as></emphasis></Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say voice='Polly.Joanna'>if this is correct, enter 1 to confirm.</Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say voice='Polly.Joanna'>If this is incorrect, enter 2 to select another date. </Say>";
+                echo "</Gather>";
+                echo "<Pause length='4'/>";
+                echo "<Redirect method='GET'>" . $base_url . "cron_visit_booking_reminder/step_three?"
+                . "Digits=" . $_GET['Digits'] . "&amp;"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+                . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
+                echo "</Response>";
+            } elseif ($_GET['Digits'] == 3) {
+                echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+                echo "<Response>";
+                echo "<Gather  timeout='3' numDigits='1' action='" . $base_url . "cron_visit_booking_reminder/step_four?"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "selected_slot=" . 3 . "&amp;"
+                . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+                . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "' method='GET'>";
+                echo "<Say voice='Polly.Joanna'> You have selected   <emphasis level='moderate'>" . $day3 . "<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date3 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time3 . " </say-as></emphasis></Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say voice='Polly.Joanna'>if this is correct, enter 1 to confirm.</Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say voice='Polly.Joanna'>If this is incorrect, enter 2 to select another date. </Say>";
+                echo "</Gather>";
+                echo "<Pause length='4'/>";
+                echo "<Redirect method='GET'>" . $base_url . "cron_visit_booking_reminder/step_three?"
+                . "Digits=" . $_GET['Digits'] . "&amp;"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+                . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
+                echo "</Response>";
+            } elseif ($_GET['Digits'] == 0) {
+                echo "<Response><Say voice='Polly.Joanna' >Thank-you, the clinic will be in touch shortly'</Say></Response>";
+                $reserved_id = $_GET["reserved_id"];
+                $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
+                            "id" => $reserved_id
+                        ))->get()->result_array()[0];
+
+                $get = $_GET;
+                //insert in scheduled visit
+                $insert_data = array(
+                    "patient_id" => $get["patient_id"],
+                    "visit_name" => $get["pvname"],
+                    "notify_type" => $reserved_data["notify_type"],
+                    "notify_voice" => $reserved_data["notify_voice"],
+                    "notify_sms" => $reserved_data["notify_sms"],
+                    "notify_email" => $reserved_data["notify_email"],
+                    "visit_confirmed" => "Change required"
+                );
+                $this->db->insert("records_patient_visit", $insert_data);
+
+                //disable from reserved table
+                $this->db->where(array(
+                    "id" => $reserved_id
+                ));
+                $this->db->update("records_patient_visit_reserved", array(
+                    "active" => 0,
+                    "visit_confirmed" => "Booked"
+                ));
+
+                //set status in accepted_status
+                $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
+                            "pat.id" => $get["patient_id"]
+                        ))->get()->result()[0]->id;
+
+                $this->db->where(array(
+                    "id" => $referral_id
+                ))->update("clinic_referrals", array(
+                    "accepted_status" => "Contact directly",
+                    "accepted_status_icon" => "yellow"
+                ));
+            } elseif ($_GET['Digits'] == 4) {
+                log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
+                echo "<Response>";
+                echo "<Redirect method='GET'>" . $base_url . "cron_visit_booking_reminder/step_two?"
+                . "Digits=1&amp;"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+                . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
+                echo "</Response>";
+            } else {
+                echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+                echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
+            }
+
+
+            try {
+
+                $params = array(
+                    'data' => $_GET["Digits"],
+                    'to' => $_GET['To']
+                );
+
+                $defaults = array(
+                    CURLOPT_URL => $base_url . "efax/call_handle",
+                    CURLOPT_POST => true,
+                    CURLOPT_POSTFIELDS => http_build_query($params)
+                );
+                $ch = curl_init($base_url . "efax/call_handle");
+                curl_setopt_array($ch, $defaults);
+
+                curl_exec($ch);
+                curl_close($ch);
+            } catch (Exception $e) {
+                echo "Error in response file";
+            }
+        }
+    }
+
+    function step_four() {
+        $clinic_id = $_GET["clinic_id"];
+
+        $date1 = $_GET["date1"];
+        $day1 = $_GET["day1"];
+        $time1 = $_GET["time1"];
+
+        $date2 = $_GET["date2"];
+        $day2 = $_GET["day2"];
+        $time2 = $_GET["time2"];
+
+        $date3 = $_GET["day3"];
+        $day3 = $_GET["date3"];
+        $time3 = $_GET["time3"];
+
+        if (isset($_GET["Digits"])) {
+            $base_url = "http://35.203.47.37/";
+            if ($_GET['Digits'] == 2) {
+                echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+                echo "<Response>";
+                echo "<Gather  timeout='3' numDigits='1' action='" . $base_url . "cron_visit_booking_reminder/step_three?"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+                . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "' method='GET'>";
+                echo "<Say  voice='Polly.Joanna'>Hi  " . $_GET['pname'] . ",  Please select one of the following dates and times for your appointment with " . $_GET['cname'] . "</Say>";
+                echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>" . $day1 . " <say-as interpret-as='date' format='mmyyyy'  detail='1'>" . $date1 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time1 . " </say-as></emphasis> - please enter 1  </Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say  voice='Polly.Joanna'>For <emphasis level='moderate'>" . $day2 . "<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date2 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time2 . " </say-as></emphasis>  - please enter 2  </Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say  voice='Polly.Joanna'>For   <emphasis level='moderate'> " . $day3 . "<say-as interpret-as='date' format='ddmmyyyy'  detail='1'>" . $date3 . " </say-as>     at   <say-as interpret-as='time' format='hms12'>  " . $time3 . " </say-as></emphasis> - please enter 3</Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say  voice='Polly.Joanna'>If you would like the clinic to contact you directly - please enter 0</Say>";
+                echo "<Pause length='1'/>";
+                echo "<Say  voice='Polly.Joanna'>To replay this message, please enter 4 </Say>";
+                echo "</Gather>";
+                echo "<Pause length='2'/>";
+                echo "<Redirect method='GET'>" . $base_url . "cron_visit_booking_reminder/step_four?"
+                . "Digits=4&amp;"
+                . "pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+                . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;</Redirect>";
+                echo "</Response>";
+            } elseif ($_GET['Digits'] == 1) {
+                echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+                echo "<Response>";
+                echo "<Say  voice='Polly.Joanna'>Thank you</Say>";
+                echo "<Hangup/>";
+                echo "</Response>";
+
+                $num = $_GET['selected_slot'];
+                if ($num == 1 || $num == 2 || $num == 3) {
+                    $reserved_id = $_GET["reserved_id"];
+                    $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
+                                "id" => $reserved_id
+                            ))->get()->result_array()[0];
+
+
+                    //[{"id":"0","patient_id":"2","visit_name":"visit check","visit_date1":"2019-02-08","visit_start_time1":"09:00:00","visit_end_time1":"09:30:00","visit_date2":"2019-02-11","visit_start_time2":"09:00:00","visit_end_time2":"09:30:00","visit_date3":"2019-02-12","visit_start_time3":"09:00:00","visit_end_time3":"09:30:00","visit_expire_time":"2019-02-07 11:21:53","reminder_1h":null,"reminder_24h":"2019-02-08 10:21:53","reminder_48h":"2019-02-09 10:21:53","reminder_72h":"2019-02-10 10:21:53","confirm_key":"1","notify_type":"call","notify_voice":"1","notify_sms":"1","notify_email":"1","confirm_visit_key":"1549552913_SphROVHWj3RuNDJpfkv0GkMy4N7Q5tJYT_PGUvBdyrHl3qLjKgjqA5YES5tYzbWrbK65eIiN9_8dpTw98PzJUxmMCQKb1FCcoJiDqAqzzyNZri7A6Gi0cFNP","visit_confirmed":"Awaiting Confirmation","create_datetime":"2019-02-07 15:21:53","active":"1"}]
+
+                    $visit_date = $reserved_data["visit_date" . $num];
+                    $visit_time = $reserved_data["visit_start_time" . $num];
+                    $visit_end_time = $reserved_data["visit_end_time" . $num];
+
+                    $get = $_GET;
+
+                    $insert_data = array(
+                        "patient_id" => $get["patient_id"],
+                        "visit_name" => $get["pvname"],
+                        "visit_date" => $visit_date,
+                        "visit_time" => $visit_time,
+                        "visit_end_time" => $visit_end_time,
+                        "notify_type" => $reserved_data["notify_type"],
+                        "notify_voice" => $reserved_data["notify_voice"],
+                        "notify_sms" => $reserved_data["notify_sms"],
+                        "notify_email" => $reserved_data["notify_email"],
+                        "visit_confirmed" => "Confirmed"
+                    );
+                    //insert in scheduled visit
+                    $this->db->insert("records_patient_visit", $insert_data);
+
+                    $this->db->where(array(
+                        "id" => $reserved_id
+                    ));
+                    $this->db->update("records_patient_visit_reserved", array(
+                        "active" => 0,
+                        "visit_confirmed" => "Booked"
+                    ));
+
+
+                    //set status in accepted_status
+                    $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
+                                "pat.id" => $get["patient_id"]
+                            ))->get()->result()[0]->id;
+
+                    $this->db->where(array(
+                        "id" => $referral_id
+                    ))->update("clinic_referrals", array(
+                        "accepted_status" => "Confirmed",
+                        "accepted_status_icon" => "green"
+                    ));
+
+                    $this->load->model("referral_model");
+                    $this->referral_model->move_from_accepted_to_scheduled($get["patient_id"], $clinic_id);
+                }
+            } else {
+                echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+                echo "<Response><Redirect method='GET'>" . $base_url . "cron_visit_booking_reminder/callhandle?pname=" . urlencode($_GET['pname']) . "&amp;"
+                . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
+                . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
+                . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
+                . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
+                . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
+                . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
+                . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;"
+                . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
+                . "cname=" . urlencode($_GET['cname']) . "&amp;"
+                . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
+                . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
+                . "address=" . urlencode($_GET['address']) . "&amp;"
+                . "type=" . urlencode($_GET['type']) . "&amp;"
+                . "date1=" . urlencode($date1) . "&amp;"
+                . "day1=" . urlencode($day1) . "&amp;"
+                . "time1=" . urlencode($time1) . "&amp;"
+                . "date2=" . urlencode($date2) . "&amp;"
+                . "day2=" . urlencode($day2) . "&amp;"
+                . "time2=" . urlencode($time2) . "&amp;"
+                . "date3=" . urlencode($date3) . "&amp;"
+                . "day3=" . urlencode($day3) . "&amp;"
+                . "time3=" . urlencode($time3) . "&amp;"
+                . "Digits=timeout"
+                . "</Redirect>"
+                . "</Response>";
+            }
+        }
+    }
+
+    public function call_resp() {
+        //if(isset($_GET['pname'])){
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
-        if ($_GET['Digits'] == 1) {
-            echo "<Response><Say voice='Polly.Joanna'>Thank you, your appointment has been confirmed </Say></Response>";
-        } elseif ($_GET['Digits'] == 2) {
-            echo "<Response><Say voice='Polly.Joanna'>Thank you, the clinic has been notified and will be in touch shortly</Say></Response>";
+        echo "<Response>";
+        echo "<Gather  NumDigits='1' action='" . "http://35.203.47.37/" . "cron_visit_booking_reminder/call_resp_handle/' method='GET'>";
+        echo "<Say>";
+        echo "Hello         " . $_GET['pname'] . "
+                Your      appointment   " . $_GET['pvname'] . "    with    " . $_GET['cname'] . "    has been booked for " . $_GET['aDate'] . "    at    " . $_GET['aDate'] . "    .The    address    is:    " . $_GET['address'] . "    Please     type    1    to    confirm    this    booking.    If    this    date    does   not     work,    please   type   2    to    alert    the    clinic    staff";
+        echo "</Say>";
+        echo "</Gather>";
+
+        echo "</Response>";
+        //}
+    }
+
+    public function call_resp_handle() {
+        if (isset($_REQUEST['Digits'])) {
+            /*    echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
+              if($_REQUEST['Digits'] == 1){
+              echo "<Response><Say>You entered  " . $_REQUEST['Digits'] . " , Thank you </Say></Response>";
+              }else{
+              echo "<Response><Say>You entered wrong digit</Say></Response>";
+              } */
+            echo "<pre>";
+            print_r($_REQUEST);
+            echo "<pre>";
+        }
+    }
+
+    public function test() {
+        $this->load->model("referral_model");
+        $data = $this->referral_model->assign_slots(30, 1);
+        echo "<pre>";
+        print_r($data);
+        echo "<pre>";
+    }
+
+    //for wrong number
+    public function vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc() {
+
+        if (isset($_REQUEST['data']) && isset($_REQUEST['to'])) {
+
+            $data = $this->input->post();
+            $From = $data["to"];
+            // $Body = $data["data"];
+            //remove + sign
+            $From = substr($From, 2);
+
+            // log_message("error", "body is 1 or 2 is => " . $Body);
+            $this->db->select("DISTINCT(r_pv.id), r_pv.visit_confirmed, r_pv.notify_email");
+            $this->db->from("referral_patient_info pat, records_patient_visit r_pv");
             $this->db->where(array(
-                "id" => $reserved_id
-            ))->update("records_patient_visit", array(
-                "visit_confirmed" => "Change required"
+                "pat.active" => 1,
+                "r_pv.active" => 1,
+                "pat.cell_phone" => $From
             ));
-        } elseif ($_GET['Digits'] == 3) {
-            echo "<Response><Redirect method='GET'>" .
-            $base_url . "cron_appointment_reminder/callhandle?"
-            . "pname=" . urlencode($_GET['pname']) . "&amp;"
-            . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
-            . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
-            . "cname=" . urlencode($_GET['cname']) . "&amp;"
-            . "aDate=" . urlencode($_GET['aDate']) . "&amp;"
-            . "aTime=" . urlencode($_GET['aTime']) . "&amp;"
-            . "address=" . urlencode($_GET['address']) . "&amp;"
-            . "clinic_id=" . urlencode($_GET["clinic_id"]) . "&amp;"
-            . "patient_id=" . urlencode($_GET["patient_id"]) . "&amp;"
-            . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
-            . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
-            . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-            . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;Digits=timeout</Redirect></Response>";
-        } else {
-            echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
+            $this->db->where("r_pv.patient_id", "pat.id", false);
+            $result = $this->db->get()->result();
+
+            log_message("error", "webhook sql = " . $this->db->last_query());
+
+            $change_status = false;
+
+            $this->db->trans_start();
+            foreach ($result as $row) {
+                //change status to confirm
+                $this->db->where(array(
+                    "id" => $row->id
+                ));
+                // if()//Confirmed by email (wrong number)
+                // if($row->notify_email === "1") {
+                //     $this->db->set("visit_confirmed", "Confirmed by email (wrong number)");
+                // } else {
+                $this->db->set("visit_confirmed", "Wrong Number");
+                // }
+
+                $this->db->set("notify_voice", "0");
+                $this->db->set("notify_sms", "0");
+
+                $this->db->update("records_patient_visit");
+                $change_status = true;
+                log_message("error", "change (1) " . $this->db->last_query());
+            }
+            $this->db->trans_complete();
         }
     }
 
