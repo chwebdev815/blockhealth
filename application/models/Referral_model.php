@@ -873,11 +873,10 @@ class Referral_model extends CI_Model {
                         . '(pat.cell_phone = NULL OR pat.cell_phone = "") OR '
                         . '(pat.work_phone = NULL OR pat.work_phone = "") OR '
                         . '(pat.home_phone = NULL OR pat.home_phone = "")'
-                        . ') THEN "false" ELSE "true" END AS allow_sms,' .
-                        'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
-                        "admin.address," .
-                        "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
-                        "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
+                        . ') THEN "false" ELSE "true" END AS allow_sms,'
+                        . 'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, '
+                        . "admin.address, pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, "
+                        . "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
                 $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
                 $this->db->where(array(
                     "efax.active" => 1,
@@ -968,8 +967,8 @@ class Referral_model extends CI_Model {
                         "visit_confirmed" => (isset($data["cell_phone"]) || isset($data["email"]) || isset($data["cell_phone_voice"])) ? "Awaiting Confirmation" : "N/A"
                     );
 
-                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
-                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
+//                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
+//                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
 
                     $this->db->insert("records_patient_visit_reserved", $insert_data);
 
