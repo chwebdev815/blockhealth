@@ -17,6 +17,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
         }
     }
 
+    
+    
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
 
         //get all to schedule a call
