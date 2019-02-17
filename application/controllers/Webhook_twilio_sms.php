@@ -143,7 +143,6 @@ class Webhook_twilio_sms extends CI_Controller {
                         $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
                                     "pat.id" => $reserved->patient_id
                                 ))->get()->result()[0]->id;
-                        log_message("error", "referral id  = " . $referral_id . " , ". $this->db->last_query());
 
                         $this->db->where(array(
                             "id" => $referral_id
@@ -151,8 +150,6 @@ class Webhook_twilio_sms extends CI_Controller {
                             "accepted_status" => "Confirmed",
                             "accepted_status_icon" => "green"
                         ));
-                        
-                        log_message("error", "referral id  = " . $referral_id . " , ". $this->db->last_query());
 
 
                         $this->load->model("referral_model");
