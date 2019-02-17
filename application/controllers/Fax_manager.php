@@ -78,8 +78,11 @@ class Fax_manager extends CI_Controller {
             $ch = curl_init();
             curl_setopt_array($ch, $curlDefaults);
             $result = json_decode(curl_exec($ch));
-
-            $faxes = $result->Result;
+            $faxes = null;
+            if($result && isset($result->Result) && $result->Result) {
+                $faxes = $result->Result;
+            }
+            
             if ($faxes != null) {
                 log_message("error", "faxes = " . json_encode($faxes));
                 foreach ($faxes as $fax) {
