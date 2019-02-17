@@ -30,10 +30,10 @@ class Webhook_twilio_sms extends CI_Controller {
                         "concat('+1',pat.cell_phone)" => $From
                     ))->group_end()
                     ->or_group_start()->where(array(
-                        "concat('+1',pat.cell_phone)" => $From
+                        "concat('+1',pat.home_phone)" => $From
                     ))->group_end()
                     ->or_group_start()->where(array(
-                        "concat('+1',pat.cell_phone)" => $From
+                        "concat('+1',pat.work_phone)" => $From
                     ))->group_end()
                     ->group_end();
 
