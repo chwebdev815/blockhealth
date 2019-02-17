@@ -24,6 +24,7 @@ class Cron_involvedMed_inbox extends CI_Controller {
         log_message("error", "Cron_involvedMed_inbox called");
         
         log_message("error", "======== GMAIL =======");
+        exit();
         $hostname = '{imap.gmail.com:993/imap/ssl}INBOX';
         $username = 'involved@blockhealth.co';
         $password = 'Blockhealth18';

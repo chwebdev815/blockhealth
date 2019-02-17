@@ -1014,7 +1014,7 @@ class Referral_model extends CI_Model {
                         ));
 
 
-                        echo "data for start call = " . json_encode($post_arr);
+                        log_message("error", "data for start call = " . json_encode($post_arr));
 //                        log_message("error", "Call should start now");
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
@@ -1028,7 +1028,7 @@ class Referral_model extends CI_Model {
                             return curl_error($ch);
                         }
                         curl_close($ch);
-                        echo "<br/> call response = " . $resp . "<br/>";
+                        log_message("error", "<br/> call response = " . $resp . "<br/>");
                         log_message("error", "Call completed " . json_encode($resp));
                     } else {
                         $msg = "Hello <patient name>,\n"

@@ -15,6 +15,7 @@ class Call_view extends CI_Controller {
     }
 
     public function call() {
+        log_message("error", "at call start from call_view");
         $pname = $this->input->post('defaultContactFormName');
         $patient_lname = $this->input->post('patient_lname');
         $pvname = $this->input->post('defaultContactFormName2');
@@ -39,6 +40,7 @@ class Call_view extends CI_Controller {
     }
 
     public function call_confirm($reserved_id, $clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $to_number, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address) {
+        log_message("error", "at call_confirm from call_view");
 
         $sid = 'AC2da3b84b65b63ccf4f05c27ac1713060';
         $token = '342a214ee959d16bf97ea87579016762';
@@ -46,7 +48,7 @@ class Call_view extends CI_Controller {
         //$to = "+919876907251";  
 //        $to_number = "+917201907712";
 
-
+        
         $url = "http://35.203.47.37/" . "call_view/callhandle?"
                 . "pname=" . urlencode($pname) . "&"
                 . "patient_lname=" . urlencode($patient_lname) . "&"
@@ -76,19 +78,23 @@ class Call_view extends CI_Controller {
         $result = curl_exec($res);
         $resp = json_decode($result);
         $status = curl_getinfo($res, CURLINFO_HTTP_CODE);
+        
+        
+        log_message("error", "at call_confirm from " . $url);
 //        echo "<pre>";
 //        print_r($resp);
         if (curl_errno($res)) {
             log_message("error", " Error – " . curl_error($res));
             return false;
         } else {
-            log_message("error", "Calling");
+            log_message("error", "Calling" . "response = " . json_encode($resp));
             return true;
         }
     }
 
     public function callhandle() {
 
+        log_message("error", "at callhandle from call_view");
         $address = $_GET['address'];
         $dataarray = http_build_query($_GET);
         $base_url = "http://35.203.47.37/";
