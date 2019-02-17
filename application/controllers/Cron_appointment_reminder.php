@@ -18,6 +18,8 @@ class Cron_appointment_reminder extends CI_Controller {
     }
 
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
+        
+        log_message("error", "Cron_appointment_reminder called");
 
         //get all to schedule a call
         $plus_72_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+3 day")));

@@ -1,0 +1,31 @@
+cron:
+- description: "Incoming Faxes - other than involvedmed mail"
+  url: /fax_manager
+  schedule: every 5 mins
+  retry_parameters:
+    min_backoff_seconds: 2.5
+    max_doublings: 5
+#- description: "Scheduled appointment reminder"
+#  url: /schedule_appointment_reminder
+#  schedule: every 5 mins
+#  retry_parameters:
+#    min_backoff_seconds: 2.5
+#    max_doublings: 5
+- description: "before 72 hour appointment comfirmation"
+  url: /cron_appointment_reminder
+  schedule: every 5 mins
+  retry_parameters:
+    min_backoff_seconds: 2.5
+    max_doublings: 5
+- description: "1 Hr, 24 Hr, 48 Hr reminder for booking"
+  url: /cron_visit_booking_reminder
+  schedule: every 5 mins
+  retry_parameters:
+    min_backoff_seconds: 2.5
+    max_doublings: 5
+- description: "Fetch mails for involvedmed"
+  url: /cron_involvedMed_inbox
+  schedule: every 5 mins
+  retry_parameters:
+    min_backoff_seconds: 2.5
+    max_doublings: 5

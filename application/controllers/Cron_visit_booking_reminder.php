@@ -18,6 +18,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
     }
 
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
+        log_message("error", "Cron_visit_booking_reminder called");
 
         //get all to schedule a call
         $before_1_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 hour")));

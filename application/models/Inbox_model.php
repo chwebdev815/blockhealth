@@ -502,7 +502,7 @@ class Inbox_model extends CI_Model {
                     $efax_file = $result[0]->file_name;
                     $referral_reason = (isset($data["reasons"])) ? $data["reasons"][0] : "";
                     // $first_status = "Admin Triage";
-                    $first_status = "Physician Triage";
+                    $first_status = "Accepted";
                     $this->db->set("last_updated", "now()", false);
 
                     $insert_data = array(
@@ -772,7 +772,7 @@ class Inbox_model extends CI_Model {
                     $this->db->trans_complete();
 
                     // return array(true, base_url() . "admin_triage/referral_details/" . md5($referral_id));
-                    return array(true, base_url() . "physician_triage/referral_details/" . md5($referral_id));
+                    return array(true, base_url() . "accepted/referral_details/" . md5($referral_id));
                 } catch (Exception $exception) {
                     return array(false, "SQL Exception occured");
                 }
