@@ -28,9 +28,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
         $before_48_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-2 day")));
         $before_48_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-2 day 5 minute")));
 
-        echo "1 hour = " . $before_1_hour->format("Y-m-d H:i:s") . " to " . $before_1_hour_5_min->format("Y-m-d H:i:s") . "<br/>";
-        echo "24 hour = " . $before_24_hour->format("Y-m-d H:i:s") . " to " . $before_24_hour_5_min->format("Y-m-d H:i:s") . "<br/>";
-        echo "48 hour = " . $before_48_hour->format("Y-m-d H:i:s") . " to " . $before_48_hour_5_min->format("Y-m-d H:i:s") . "<br/>";
+        log_message("error", "1 hour = " . $before_1_hour->format("Y-m-d H:i:s") . " to " . $before_1_hour_5_min->format("Y-m-d H:i:s") . "<br/>");
+        log_message("error", "24 hour = " . $before_24_hour->format("Y-m-d H:i:s") . " to " . $before_24_hour_5_min->format("Y-m-d H:i:s") . "<br/>");
+        log_message("error", "48 hour = " . $before_48_hour->format("Y-m-d H:i:s") . " to " . $before_48_hour_5_min->format("Y-m-d H:i:s") . "<br/>");
 //        $string_plus_72_hour = $plus_72_hour->format("Y-m-d H:i:s");
 //        $plus_72_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+3 day 5 minute")));
 //        $string_plus_72_hour_5_min = $plus_72_hour_5_min->format("Y-m-d H:i:s");
@@ -59,8 +59,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
 
 
-        echo $this->db->last_query() . "<br/><br/>";
-        echo json_encode($remindable) . "<br/><br/>";
+        log_message("error", $this->db->last_query() . "<br/><br/>");
+        log_message("error", json_encode($remindable) . "<br/><br/>");
         
         $this->load->model("referral_model");
         foreach ($remindable as $key => $value) {
