@@ -124,6 +124,17 @@
                 </button>
                 <h1 id="page_header">
                     <?php echo $page_title; ?> <!-- ===========page title here=========== -->
+                    <?php
+                    if ($this->uri->segment(1) === "accepted" && $this->uri->segment(2) !== "referral_details") {
+                        ?>
+                        &nbsp; &nbsp; 
+                        <button id="btn_view_add_new_patient" type="button" class="btn btn-theme pull-right bttn-circle btn-theme btn-alt-theme">
+                            <i class="fa fa-plus-circle"></i>&nbsp;&nbsp;
+                            <span>New Patient</span>
+                        </button>
+                        <?php
+                    }
+                    ?>
                     <small class="nav-patient-name" id="sub_header"></small>
                 </h1>
             </div>

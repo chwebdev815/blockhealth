@@ -1082,6 +1082,8 @@
                     $(value).show();
             });
         });
+
+        
         $.dobPicker({
             daySelector: '#signupForm #pat_dob_day', /* Required */
             monthSelector: '#signupForm #pat_dob_month', /* Required */
@@ -1092,6 +1094,7 @@
             minimumAge: 0, /* Optional */
             maximumAge: 120 /* Optional */
         });
+        
         $.dobPicker({
             daySelector: '#form_patient_save #pat_dob_day', /* Required */
             monthSelector: '#form_patient_save #pat_dob_month', /* Required */
@@ -1102,6 +1105,7 @@
             minimumAge: 0, /* Optional */
             maximumAge: 120 /* Optional */
         });
+        
         $('#new_referral_form').on('click', '.btn-next', function () {
             var parent_fieldset = $(this).parents('fieldset');
             var next_step = true;
