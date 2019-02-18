@@ -970,10 +970,10 @@ class Referral_model extends CI_Model {
 //                        "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P1D"))->format("Y-m-d H:i:s"),
 //                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P2D"))->format("Y-m-d H:i:s"),
 //                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P3D"))->format("Y-m-d H:i:s"),
-                        "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT3M"))->format("Y-m-d H:i:s"),
-                        "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT6M"))->format("Y-m-d H:i:s"),
-                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT9M"))->format("Y-m-d H:i:s"),
-                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT12M"))->format("Y-m-d H:i:s"),
+                        "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
+                        "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT20M"))->format("Y-m-d H:i:s"),
+                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT30M"))->format("Y-m-d H:i:s"),
+                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT40M"))->format("Y-m-d H:i:s"),
                         "confirm_visit_key" => $confirm_visit_key,
                         "visit_confirmed" => "N/A"
                     );
