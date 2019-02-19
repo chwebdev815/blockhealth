@@ -18,7 +18,7 @@
     }
 
 </style>
-  <script src="https://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>	
+<script src="https://cdn.alloyui.com/3.0.1/aui/aui-min.js"></script>	
 <!-- <button class="popup2_open">Click me 2!</button>
     
     <button class="popup3_open">Click me 2!</button> -->
@@ -40,9 +40,12 @@
         <div id="myScheduler">
 
             <div class="x_title" style="padding-left: 0px;">
-                <h2>
-                    Dr. James Camroon 
-                    <small>1 Scheduled patients</small></h2>
+                <h2 id="clinic_physician_container">
+                    <?php echo form_open("", array('class' => 'email', 'id' => 'form_physician_timing')) ?>
+                    <select id="physicians" placeholder="Clinic Physician" name="physicians" class="form-control">
+                    </select> 
+                    <small id="scheduled_patients">1 Scheduled patients</small>
+                </h2>
                 <div class="clearfix"></div>
             </div>
 

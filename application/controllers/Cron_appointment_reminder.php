@@ -18,7 +18,7 @@ class Cron_appointment_reminder extends CI_Controller {
     }
 
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
-        
+
         log_message("error", "Cron_appointment_reminder called");
 
         //get all to schedule a call
@@ -44,8 +44,10 @@ class Cron_appointment_reminder extends CI_Controller {
 
             //get clinic id for patient
             $this->db->select('admin.id as clinic_id, '
-                    . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
-                    'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
+                    . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") '
+                    . 'THEN "false" ELSE "true" END AS allow_sms, '
+                    . 'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") '
+                    . 'THEN "false" ELSE "true" END AS allow_email, ' .
                     "admin.address," .
                     "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
                     "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
@@ -78,45 +80,51 @@ class Cron_appointment_reminder extends CI_Controller {
                     }
                     $new_visit_duration = 30;
                     //find asignable slots
-                    $allocations = $this->referral_model->assign_slots($new_visit_duration, $patient_data->clinic_id);
+                    $allocations = null;
                     //make call with proper data
 
+                    $response = $this->referral_model->assign_slots($new_visit_duration, $visit->patient_id);
+                    if ($response["result"] === "error") {
+                        continue;
+                    } else if ($response["result"] === "success") {
+                        $allocations = $response["data"];
 
-                    $post_arr = array(
-                        'defaultContactFormName' => $patient_data->fname,
-                        "patient_lname" => $patient_data->lname,
-                        "defaultContactFormName2" => $visit->visit_name,
-                        'defaultContactFormName3' => $patient_data->clinic_institution_name,
-                        'defaultContactFormName4' => $visit->visit_date,
-                        'defaultContactFormName5' => $visit->visit_time,
-                        'defaultContactFormName6' => $contact_number,
-                        'address' => $patient_data->call_address,
-                        'clinic_id' => $patient_data->clinic_id,
-                        'type' => 'Call reminder before 72 hour',
-                        "patient_id" => $visit->patient_id,
-                        "notify_voice" => $visit->notify_voice,
-                        "notify_sms" => $visit->notify_sms,
-                        "notify_email" => $visit->notify_email,
-                        "reserved_id" => $visit->id
-                    );
+                        $post_arr = array(
+                            'defaultContactFormName' => $patient_data->fname,
+                            "patient_lname" => $patient_data->lname,
+                            "defaultContactFormName2" => $visit->visit_name,
+                            'defaultContactFormName3' => $patient_data->clinic_institution_name,
+                            'defaultContactFormName4' => $visit->visit_date,
+                            'defaultContactFormName5' => $visit->visit_time,
+                            'defaultContactFormName6' => $contact_number,
+                            'address' => $patient_data->call_address,
+                            'clinic_id' => $patient_data->clinic_id,
+                            'type' => 'Call reminder before 72 hour',
+                            "patient_id" => $visit->patient_id,
+                            "notify_voice" => $visit->notify_voice,
+                            "notify_sms" => $visit->notify_sms,
+                            "notify_email" => $visit->notify_email,
+                            "reserved_id" => $visit->id
+                        );
 
-                    log_message("error", "Call should start now");
-                    $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                    curl_setopt($ch, CURLOPT_URL, base_url() . "cron_appointment_reminder/call");
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
-                    $resp = curl_exec($ch);
-                    if (curl_errno($ch)) {
-                        log_message("error", "Call error => " . json_encode(curl_error($ch)));
-                        return curl_error($ch);
+                        log_message("error", "Call should start now");
+                        $ch = curl_init();
+                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                        curl_setopt($ch, CURLOPT_URL, base_url() . "cron_appointment_reminder/call");
+                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                        curl_setopt($ch, CURLOPT_POST, 1);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
+                        $resp = curl_exec($ch);
+                        if (curl_errno($ch)) {
+                            log_message("error", "Call error => " . json_encode(curl_error($ch)));
+                            return curl_error($ch);
+                        }
+                        curl_close($ch);
+                        log_message("error", "Call completed " . json_encode($resp));
                     }
-                    curl_close($ch);
-                    log_message("error", "Call completed " . json_encode($resp));
                 } else if ($visit->notify_type == "sms") {
-                    if($visit->visit_name && $visit->visit_name!="") {
-                        $visit->visit_name = "'".$visit->visit_name."'";
+                    if ($visit->visit_name && $visit->visit_name != "") {
+                        $visit->visit_name = "'" . $visit->visit_name . "'";
                     }
                     $msg = "Hello <patient name>,\n"
                             . "\n"
@@ -132,7 +140,7 @@ class Cron_appointment_reminder extends CI_Controller {
                     $msg = str_replace("<patient name>", $patient_data->fname, $msg);
                     $msg = str_replace("<date>", $visit->visit_date, $msg);
                     $msg = str_replace("<time>", $visit->visit_time, $msg);
-                    $msg = str_replace("<patient visit name>",  $visit->visit_name, $msg);
+                    $msg = str_replace("<patient visit name>", $visit->visit_name, $msg);
                     $msg = str_replace("<clinic name>", $patient_data->clinic_institution_name, $msg);
                     $msg = str_replace("<Address>", $patient_data->address, $msg);
 

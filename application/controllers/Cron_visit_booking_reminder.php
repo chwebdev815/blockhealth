@@ -37,7 +37,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
         $remindable = $this->db->select("*")->from("records_patient_visit_reserved")
                         ->group_start()
                         ->where(array(
-                            "notify_type" => "sms", 
+                            "notify_type" => "sms",
                             "create_datetime > " => $before_1_hour->format("Y-m-d H:i:s"),
                             "create_datetime < " => $before_1_hour_5_min->format("Y-m-d H:i:s")
                         ))->or_group_start()->where(array(
@@ -61,7 +61,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
         log_message("error", $this->db->last_query() . "<br/><br/>");
         log_message("error", json_encode($remindable) . "<br/><br/>");
-        
+
         $this->load->model("referral_model");
         foreach ($remindable as $key => $value) {
             $visit = $value;
@@ -105,7 +105,13 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //          | 80 |         42 |            | 2019-02-13  | 10:00:00          | 10:30:00        | 2019-02-14  | 09:00:00          | 09:30:00        | 2019-02-15  | 09:00:00          | 09:30:00        | 2019-02-12 11:20:42 | NULL        | 2019-02-13 10:20:42 | 2019-02-14 10:20:42 | 2019-02-15 10:20:42 | 1           | call        |            1 |          1 |            1 | 1549984842_8KGCkYmSij3x_ARUNATX_NbKm6XRbyIkhnWClitECxaB70vUBnRAa1jx8fojO5D5tzHOR9rsHC3OCyIcWyN6A6DIl0096EezcWm34OwMpzz17ge3O19n7N4t | Booked          | 2019-02-12 15:20:42 |      0 |
 //          
                     //find asignable slots
-                    $allocations = $this->referral_model->assign_slots($new_visit_duration, $patient_data->clinic_id);
+                    $response = $this->referral_model->assign_slots($new_visit_duration, $visit->patient_id);
+                    if($response["result"] === "error") {
+                        continue;
+                    }
+                    else if($response["result"] === "success") {
+                        $allocations = $response["data"];
+                    }
                     //make call with proper data
 
                     $insert_data = array(
@@ -160,9 +166,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     curl_close($ch);
                     log_message("error", "Call completed " . json_encode($resp));
                 } else if ($visit->notify_type == "sms") {
-                    
-                    if($visit->visit_name && $visit->visit_name!="") {
-                        $visit->visit_name = "'".$visit->visit_name."'";
+
+                    if ($visit->visit_name && $visit->visit_name != "") {
+                        $visit->visit_name = "'" . $visit->visit_name . "'";
                     }
                     $msg = "Hello <patient name>,\n"
                             . "\n"

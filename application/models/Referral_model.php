@@ -905,167 +905,171 @@ class Referral_model extends CI_Model {
                     $msg_data = $result[0];
                     $confirm_visit_key = generate_random_string(120);
 //                    $weekdays = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-                    $allocations = $this->assign_slots($new_visit_duration);
+                    $response = $this->assign_slots($new_visit_duration, $patient_id);
+                    if ($response["result"] === "error") {
+                        $response = false;
+                    } else if ($response["result"] === "success") {
+                        $allocations = $response["data"];
 //                    echo "<br/> ****************** <br/>" . "slots assigned = " . json_encode($allocations) . "<br/><br/>";
 //                    exit();
-                    $start_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["start_time"]);
-                    $end_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["end_time"]);
-                    $start_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["start_time"]);
-                    $end_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["end_time"]);
-                    $start_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["start_time"]);
-                    $end_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["end_time"]);
+                        $start_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["start_time"]);
+                        $end_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["end_time"]);
+                        $start_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["start_time"]);
+                        $end_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["end_time"]);
+                        $start_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["start_time"]);
+                        $end_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["end_time"]);
 
-                    $call_immediately = false;
-                    $contact_number = $msg_data->cell_phone;
-                    if ($msg_data->home_phone != "") {
-                        //home number
-                        $contact_number = $msg_data->home_phone;
-                        $call_immediately = true;
-                    } else if ($msg_data->work_phone != "") {
-                        //work number
-                        $contact_number = $msg_data->work_phone;
-                        $call_immediately = true;
-                    }
+                        $call_immediately = false;
+                        $contact_number = $msg_data->cell_phone;
+                        if ($msg_data->home_phone != "") {
+                            //home number
+                            $contact_number = $msg_data->home_phone;
+                            $call_immediately = true;
+                        } else if ($msg_data->work_phone != "") {
+                            //work number
+                            $contact_number = $msg_data->work_phone;
+                            $call_immediately = true;
+                        }
 
-                    $visit_datetime = array();
-                    
-                    if($call_immediately) {
-                        $expire_minutes = "10";
-                    }
-                    else {
-                        $expire_minutes = "60";
-                    }
+                        $visit_datetime = array();
 
-                    $visit_datetime[] = array(
-                        "date" => $start_time1->format("l M jS"),
-                        "time" => $start_time1->format("g:ia")
-                    );
-                    $visit_datetime[] = array(
-                        "date" => $start_time2->format("l M jS"),
-                        "time" => $start_time2->format("g:ia")
-                    );
-                    $visit_datetime[] = array(
-                        "date" => $start_time3->format("l M jS"),
-                        "time" => $start_time3->format("g:ia")
-                    );
-                    //insert for temp storage for 60 min sms response
-                    $insert_data = array(
-                        "patient_id" => $patient_id,
-                        "visit_name" => $data["visit_name"],
-                        "visit_date1" => $start_time1->format("Y-m-d"),
-                        "visit_start_time1" => $start_time1->format("H:i:s"),
-                        "visit_end_time1" => $end_time1->format("H:i:s"),
-                        "visit_date2" => $start_time2->format("Y-m-d"),
-                        "visit_start_time2" => $start_time2->format("H:i:s"),
-                        "visit_end_time2" => $end_time2->format("H:i:s"),
-                        "visit_date3" => $start_time3->format("Y-m-d"),
-                        "visit_start_time3" => $start_time3->format("H:i:s"),
-                        "visit_end_time3" => $end_time3->format("H:i:s"),
-                        "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT".$expire_minutes."M"))->format("Y-m-d H:i:s"),
-                        "notify_type" => ($call_immediately) ? "call" : "sms",
-                        "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
-                        "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
-                        "notify_email" => (isset($data["email"])) ? 1 : 0,
-//                        "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT1H"))->format("Y-m-d H:i:s"),
-//                        "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P1D"))->format("Y-m-d H:i:s"),
-//                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P2D"))->format("Y-m-d H:i:s"),
-//                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P3D"))->format("Y-m-d H:i:s"),
-                        "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
-                        "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT20M"))->format("Y-m-d H:i:s"),
-                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT30M"))->format("Y-m-d H:i:s"),
-                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT40M"))->format("Y-m-d H:i:s"),
-                        "confirm_visit_key" => $confirm_visit_key,
-                        "visit_confirmed" => "N/A"
-                    );
+                        if ($call_immediately) {
+                            $expire_minutes = "10";
+                        } else {
+                            $expire_minutes = "60";
+                        }
 
-//                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
-//                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
-
-                    $this->db->insert("records_patient_visit_reserved", $insert_data);
-
-                    $insert_id = $this->db->insert_id();
-
-                    if ($call_immediately) {
-                        $post_arr = array(
-                            'defaultContactFormName' => $msg_data->fname,
-                            "patient_lname" => $msg_data->lname,
-                            "defaultContactFormName2" => $data["visit_name"],
-                            'defaultContactFormName3' => $msg_data->clinic_institution_name,
-                            'defaultContactFormName4' => "ddd",
-                            'defaultContactFormName5' => "ttt",
-                            'defaultContactFormName6' => $contact_number,
-                            'address' => $msg_data->call_address,
-                            'clinic_id' => $msg_data->clinic_id,
-                            'type' => 'first_call',
+                        $visit_datetime[] = array(
+                            "date" => $start_time1->format("l M jS"),
+                            "time" => $start_time1->format("g:ia")
+                        );
+                        $visit_datetime[] = array(
+                            "date" => $start_time2->format("l M jS"),
+                            "time" => $start_time2->format("g:ia")
+                        );
+                        $visit_datetime[] = array(
+                            "date" => $start_time3->format("l M jS"),
+                            "time" => $start_time3->format("g:ia")
+                        );
+                        //insert for temp storage for 60 min sms response
+                        $insert_data = array(
                             "patient_id" => $patient_id,
+                            "visit_name" => $data["visit_name"],
+                            "visit_date1" => $start_time1->format("Y-m-d"),
+                            "visit_start_time1" => $start_time1->format("H:i:s"),
+                            "visit_end_time1" => $end_time1->format("H:i:s"),
+                            "visit_date2" => $start_time2->format("Y-m-d"),
+                            "visit_start_time2" => $start_time2->format("H:i:s"),
+                            "visit_end_time2" => $end_time2->format("H:i:s"),
+                            "visit_date3" => $start_time3->format("Y-m-d"),
+                            "visit_start_time3" => $start_time3->format("H:i:s"),
+                            "visit_end_time3" => $end_time3->format("H:i:s"),
+                            "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s"),
+                            "notify_type" => ($call_immediately) ? "call" : "sms",
                             "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
                             "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
                             "notify_email" => (isset($data["email"])) ? 1 : 0,
-                            "reserved_id" => $insert_id
+    //                        "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT1H"))->format("Y-m-d H:i:s"),
+    //                        "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P1D"))->format("Y-m-d H:i:s"),
+    //                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P2D"))->format("Y-m-d H:i:s"),
+    //                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P3D"))->format("Y-m-d H:i:s"),
+                            "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
+                            "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT20M"))->format("Y-m-d H:i:s"),
+                            "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT30M"))->format("Y-m-d H:i:s"),
+                            "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT40M"))->format("Y-m-d H:i:s"),
+                            "confirm_visit_key" => $confirm_visit_key,
+                            "visit_confirmed" => "N/A"
                         );
 
+    //                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
+    //                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
 
-                        //change accepted status to "SMS"
-                        $this->db->where(array(
-                            "id" => $msg_data->referral_id
-                        ))->update("clinic_referrals", array(
-                            "accepted_status" => "Call1",
-                            "accepted_status_icon" => "green"
-                        ));
+                        $this->db->insert("records_patient_visit_reserved", $insert_data);
+
+                        $insert_id = $this->db->insert_id();
+
+                        if ($call_immediately) {
+                            $post_arr = array(
+                                'defaultContactFormName' => $msg_data->fname,
+                                "patient_lname" => $msg_data->lname,
+                                "defaultContactFormName2" => $data["visit_name"],
+                                'defaultContactFormName3' => $msg_data->clinic_institution_name,
+                                'defaultContactFormName4' => "ddd",
+                                'defaultContactFormName5' => "ttt",
+                                'defaultContactFormName6' => $contact_number,
+                                'address' => $msg_data->call_address,
+                                'clinic_id' => $msg_data->clinic_id,
+                                'type' => 'first_call',
+                                "patient_id" => $patient_id,
+                                "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
+                                "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
+                                "notify_email" => (isset($data["email"])) ? 1 : 0,
+                                "reserved_id" => $insert_id
+                            );
 
 
-                        log_message("error", "data for start call = " . json_encode($post_arr));
-//                        log_message("error", "Call should start now");
-                        $ch = curl_init();
-                        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                        curl_setopt($ch, CURLOPT_URL, base_url() . "call_view/call");
-                        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                        curl_setopt($ch, CURLOPT_POST, 1);
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
-                        $resp = curl_exec($ch);
-                        if (curl_errno($ch)) {
-                            log_message("error", "Call error => " . json_encode(curl_error($ch)));
-                            return curl_error($ch);
+                            //change accepted status to "SMS"
+                            $this->db->where(array(
+                                "id" => $msg_data->referral_id
+                            ))->update("clinic_referrals", array(
+                                "accepted_status" => "Call1",
+                                "accepted_status_icon" => "green"
+                            ));
+
+
+                            log_message("error", "data for start call = " . json_encode($post_arr));
+    //                        log_message("error", "Call should start now");
+                            $ch = curl_init();
+                            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                            curl_setopt($ch, CURLOPT_URL, base_url() . "call_view/call");
+                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                            curl_setopt($ch, CURLOPT_POST, 1);
+                            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
+                            $resp = curl_exec($ch);
+                            if (curl_errno($ch)) {
+                                log_message("error", "Call error => " . json_encode(curl_error($ch)));
+                                return curl_error($ch);
+                            }
+                            curl_close($ch);
+                            log_message("error", "<br/> call response = " . $resp . "<br/>");
+                            log_message("error", "Call completed " . json_encode($resp));
+                        } else {
+                            $msg = "Hello <patient name>,\n"
+                                    . "\n"
+                                    . "This is an automated appointment booking message from <clinic name>. "
+                                    . "Please select one of the following dates:\n"
+                                    . "\n"
+                                    . "<date1> at <time1> - reply with '1'\n"
+                                    . "\n"
+                                    . "<date2> at <time2> - reply with '2'\n"
+                                    . "\n"
+                                    . "<date3> at <time3> - reply with '3'\n"
+                                    . "\n"
+                                    . "If you would like the clinic to contact you directly, please reply with '0'.\n"
+                                    . "\n"
+                                    . "Thank-you.";
+
+                            $msg = str_replace("<patient name>", $msg_data->fname, $msg);
+                            $msg = str_replace("<date1>", $visit_datetime[0]["date"], $msg);
+                            $msg = str_replace("<time1>", $visit_datetime[0]["time"], $msg);
+                            $msg = str_replace("<date2>", $visit_datetime[1]["date"], $msg);
+                            $msg = str_replace("<time2>", $visit_datetime[1]["time"], $msg);
+                            $msg = str_replace("<date3>", $visit_datetime[2]["date"], $msg);
+                            $msg = str_replace("<time3>", $visit_datetime[2]["time"], $msg);
+                            $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
+
+                            $this->send_sms($msg_data->cell_phone, $msg);
+
+                            //change accepted status to "SMS"
+                            $this->db->where(array(
+                                "id" => $msg_data->referral_id
+                            ))->update("clinic_referrals", array(
+                                "accepted_status" => "SMS",
+                                "accepted_status_icon" => "green"
+                            ));
                         }
-                        curl_close($ch);
-                        log_message("error", "<br/> call response = " . $resp . "<br/>");
-                        log_message("error", "Call completed " . json_encode($resp));
-                    } else {
-                        $msg = "Hello <patient name>,\n"
-                                . "\n"
-                                . "This is an automated appointment booking message from <clinic name>. "
-                                . "Please select one of the following dates:\n"
-                                . "\n"
-                                . "<date1> at <time1> - reply with '1'\n"
-                                . "\n"
-                                . "<date2> at <time2> - reply with '2'\n"
-                                . "\n"
-                                . "<date3> at <time3> - reply with '3'\n"
-                                . "\n"
-                                . "If you would like the clinic to contact you directly, please reply with '0'.\n"
-                                . "\n"
-                                . "Thank-you.";
-
-                        $msg = str_replace("<patient name>", $msg_data->fname, $msg);
-                        $msg = str_replace("<date1>", $visit_datetime[0]["date"], $msg);
-                        $msg = str_replace("<time1>", $visit_datetime[0]["time"], $msg);
-                        $msg = str_replace("<date2>", $visit_datetime[1]["date"], $msg);
-                        $msg = str_replace("<time2>", $visit_datetime[1]["time"], $msg);
-                        $msg = str_replace("<date3>", $visit_datetime[2]["date"], $msg);
-                        $msg = str_replace("<time3>", $visit_datetime[2]["time"], $msg);
-                        $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
-
-                        $this->send_sms($msg_data->cell_phone, $msg);
-
-                        //change accepted status to "SMS"
-                        $this->db->where(array(
-                            "id" => $msg_data->referral_id
-                        ))->update("clinic_referrals", array(
-                            "accepted_status" => "SMS",
-                            "accepted_status_icon" => "green"
-                        ));
+                        $response = true;
                     }
-                    $response = true;
                 } else {
                     $response = false;
                 }
@@ -1747,180 +1751,205 @@ class Referral_model extends CI_Model {
         return $filtered;
     }
 
-    public function assign_slots($new_visit_duration, $clinic_id = false) {
-        if (!$clinic_id) {
-            $clinic_id = $this->session->userdata("user_id");
-        }
-//        $clinic_id = 1;
-        $next_day = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+1 day")));
+    public function assign_slots($new_visit_duration, $patient_id) {
 
-        $visits_booked = $this->db
-                        ->select(
-                                "concat(r_pv.visit_date, ' ', r_pv.visit_time) as visit_start_time, "
-                                . "concat(r_pv.visit_date, ' ', r_pv.visit_end_time) as visit_end_time")
-                        ->from("records_patient_visit r_pv, referral_patient_info pat, clinic_referrals c_ref, efax_info efax")
+        //get physician assigned to patient
+        $assigned = $this->db->select("c_ref.assigned_physician")
+                        ->from("referral_patient_info pat, clinic_referrals c_ref")
                         ->where(array(
-                            "r_pv.active" => 1,
-                            "r_pv.visit_date >= " => $next_day->format('Y-m-d'),
-                            "efax.to" => $clinic_id
+                            "pat.active" => 1,
+                            "c_ref.active" => 1,
+                            "pat.id" => $patient_id
                         ))
-                        ->where("r_pv.patient_id", "pat.id", false)
                         ->where("pat.referral_id", "c_ref.id", false)
-                        ->where("c_ref.efax_id", "efax.id", false)
-                        ->order_by("1")->get()->result();
+                        ->get()->result();
 
-        log_message("error", "visits booked = " . json_encode($visits_booked));
-        log_message("error", "visits booked = " . $this->db->last_query());
+        if ($assigned) {
+            $assigned_physician = $assigned[0]->assigned_physician;
+
+            $next_day = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+1 day")));
+
+            $visits_booked = $this->db
+                            ->select(
+                                    "concat(r_pv.visit_date, ' ', r_pv.visit_time) as visit_start_time, "
+                                    . "concat(r_pv.visit_date, ' ', r_pv.visit_end_time) as visit_end_time")
+                            ->from("records_patient_visit r_pv, referral_patient_info pat, "
+                                    . "clinic_referrals c_ref")
+                            ->where(array(
+                                "r_pv.active" => 1,
+                                "pat.active" => 1,
+                                "c_ref.active" => 1,
+                                "r_pv.visit_date >= " => $next_day->format('Y-m-d'),
+                                "c_ref.assigned_physician" => $assigned_physician
+                            ))
+                            ->where("r_pv.patient_id", "pat.id", false)
+                            ->where("pat.referral_id", "c_ref.id", false)
+                            ->order_by("1")->get()->result();
+
+            log_message("error", "visits booked = " . json_encode($visits_booked));
+            log_message("error", "visits booked = " . $this->db->last_query());
 //        echo "visits booked = " . json_encode($visits_booked) . "<br/>";
 //        echo "visits booked = " . $this->db->last_query() . "<br/>";
 
-        $visits_reserved = $this->db
-                        ->select(
-                                "concat(r_pvr.visit_date1, ' ', r_pvr.visit_start_time1) as visit_start_time1, "
-                                . "concat(r_pvr.visit_date1, ' ', r_pvr.visit_end_time1) as visit_end_time1,"
-                                . "concat(r_pvr.visit_date2, ' ', r_pvr.visit_start_time2) as visit_start_time2, "
-                                . "concat(r_pvr.visit_date2, ' ', r_pvr.visit_end_time2) as visit_end_time2,"
-                                . "concat(r_pvr.visit_date3, ' ', r_pvr.visit_start_time3) as visit_start_time3, "
-                                . "concat(r_pvr.visit_date3, ' ', r_pvr.visit_end_time3) as visit_end_time3")
-                        ->from("records_patient_visit_reserved r_pvr, referral_patient_info pat, clinic_referrals c_ref, efax_info efax")
-                        ->where(array(
-                            "r_pvr.active" => 1,
-                            "efax.to" => $clinic_id,
-                            "r_pvr.`visit_expire_time` > " => date("Y-m-d H:i:s")
-                        ))->group_start()
-                        ->where("r_pvr.visit_date1 >= ", $next_day->format('Y-m-d'))
-                        ->or_where("r_pvr.visit_date2 >= ", $next_day->format('Y-m-d'))
-                        ->or_where("r_pvr.visit_date3 >= ", $next_day->format('Y-m-d'))
-                        ->group_end()
-                        ->where("r_pvr.patient_id", "pat.id", false)
-                        ->where("pat.referral_id", "c_ref.id", false)
-                        ->where("c_ref.efax_id", "efax.id", false)
-                        ->order_by("1")->get()->result();
+            $visits_reserved = $this->db
+                            ->select(
+                                    "concat(r_pvr.visit_date1, ' ', r_pvr.visit_start_time1) as visit_start_time1, "
+                                    . "concat(r_pvr.visit_date1, ' ', r_pvr.visit_end_time1) as visit_end_time1,"
+                                    . "concat(r_pvr.visit_date2, ' ', r_pvr.visit_start_time2) as visit_start_time2, "
+                                    . "concat(r_pvr.visit_date2, ' ', r_pvr.visit_end_time2) as visit_end_time2,"
+                                    . "concat(r_pvr.visit_date3, ' ', r_pvr.visit_start_time3) as visit_start_time3, "
+                                    . "concat(r_pvr.visit_date3, ' ', r_pvr.visit_end_time3) as visit_end_time3")
+                            ->from("records_patient_visit_reserved r_pvr, referral_patient_info pat, "
+                                    . "clinic_referrals c_ref")
+                            ->where(array(
+                                "r_pv.active" => 1,
+                                "pat.active" => 1,
+                                "c_ref.active" => 1,
+                                "c_ref.assigned_physician" => $assigned_physician,
+                                "r_pvr.`visit_expire_time` > " => date("Y-m-d H:i:s")
+                            ))->group_start()
+                            ->where("r_pvr.visit_date1 >= ", $next_day->format('Y-m-d'))
+                            ->or_where("r_pvr.visit_date2 >= ", $next_day->format('Y-m-d'))
+                            ->or_where("r_pvr.visit_date3 >= ", $next_day->format('Y-m-d'))
+                            ->group_end()
+                            ->where("r_pvr.patient_id", "pat.id", false)
+                            ->where("pat.referral_id", "c_ref.id", false)
+                            ->order_by("1")->get()->result();
 
 
-        log_message("error", "visits booked = " . json_encode($visits_reserved));
-        log_message("error", "visits booked = " . $this->db->last_query());
+            log_message("error", "visits booked = " . json_encode($visits_reserved));
+            log_message("error", "visits booked = " . $this->db->last_query());
 
-        $visits_reserved = $this->filter_reserved($visits_reserved, $next_day->format('Y-m-d'));
+            $visits_reserved = $this->filter_reserved($visits_reserved, $next_day->format('Y-m-d'));
 //        echo "visits booked = " . json_encode($visits_booked) . "<br/>";
 //        echo "visits reserved = " . json_encode($visits_reserved) . "<br/>";
 
-        $all_visits = array_merge($visits_booked, $visits_reserved);
-        //sort by date
-        $all_visits = json_decode(json_encode($all_visits));
-        usort($all_visits, array($this, "sort_visits_by_date"));
+            $all_visits = array_merge($visits_booked, $visits_reserved);
+            //sort by date
+            $all_visits = json_decode(json_encode($all_visits));
+            usort($all_visits, array($this, "sort_visits_by_date"));
 
 //        echo "<br/><br/>all visits = " . json_encode($all_visits) . "<br/><br/>";
 //        echo $this->db->last_query() . "<br/><br/>";
 
-        $visits_booked = $all_visits;
-        $available_visit_slots = array();
+            $visits_booked = $all_visits;
+            $available_visit_slots = array();
 
-        $day = $next_day;
-        do {
-            //for each day
+            $day = $next_day;
+            do {
+                //for each day
 //            echo "*** day = " . json_encode($day) . "<br/>";
-            $scheduling_day = $this->check_day_availability($day);
+                $scheduling_day = $this->check_day_availability($day);
 //            echo " [][][][][][] => checking availablility for day for pv to be created = " . json_encode($day->format("Y-m-d")) . "<br/>";
-            $day_assigned = false;
+                $day_assigned = false;
 
-            if ($scheduling_day["available"]) {
+                if ($scheduling_day["available"]) {
 //                echo "is available <br/>";
-                $day_start_time = $scheduling_day["day_start_time"];
-                $day_end_time = $scheduling_day["day_end_time"];
+                    $day_start_time = $scheduling_day["day_start_time"];
+                    $day_end_time = $scheduling_day["day_end_time"];
 
 //                echo "day times = $day_start_time and $day_end_time <br/>";
 
-                $processed_keys = 0;
-                $time1 = $scheduling_day["day"] . " " . $day_start_time;
+                    $processed_keys = 0;
+                    $time1 = $scheduling_day["day"] . " " . $day_start_time;
 
-                $visits_booked_for_day = $this->get_visit_booked_for_day($day, $visits_booked);
+                    $visits_booked_for_day = $this->get_visit_booked_for_day($day, $visits_booked);
 //                echo "visits_booked_for_day = " . json_encode($visits_booked_for_day) . "<br/>";
-                if (sizeof($visits_booked_for_day) != 0) {
+                    if (sizeof($visits_booked_for_day) != 0) {
 //                    echo "visits_booked_for_day has visits <br/>";
 
-                    for ($key = 0; $key < sizeof($visits_booked_for_day) && !$day_assigned; $key++) {
+                        for ($key = 0; $key < sizeof($visits_booked_for_day) && !$day_assigned; $key++) {
 //                        echo "inside for loop <br/>";
-                        $processed_keys = $key;
-                        $visit_start_time = null;
-                        $visit_end_time = null;
-                        if (isset($visits_booked_for_day[$key]->visit_start_time)) {
-                            $visit_start_time = $visits_booked_for_day[$key]->visit_start_time;
-                            $visit_end_time = $visits_booked_for_day[$key]->visit_start_time;
-                            $last_visit_end_time = $visits_booked_for_day[sizeof($visits_booked_for_day) - 1]->visit_end_time;
-                        } else {
-                            $visit_start_time = $visits_booked_for_day[$key]["visit_start_time"];
-                            $visit_end_time = $visits_booked_for_day[$key]["visit_end_time"];
-                            $last_visit_end_time = $visits_booked_for_day[sizeof($visits_booked_for_day) - 1]["visit_end_time"];
-                        }
+                            $processed_keys = $key;
+                            $visit_start_time = null;
+                            $visit_end_time = null;
+                            if (isset($visits_booked_for_day[$key]->visit_start_time)) {
+                                $visit_start_time = $visits_booked_for_day[$key]->visit_start_time;
+                                $visit_end_time = $visits_booked_for_day[$key]->visit_start_time;
+                                $last_visit_end_time = $visits_booked_for_day[sizeof($visits_booked_for_day) - 1]->visit_end_time;
+                            } else {
+                                $visit_start_time = $visits_booked_for_day[$key]["visit_start_time"];
+                                $visit_end_time = $visits_booked_for_day[$key]["visit_end_time"];
+                                $last_visit_end_time = $visits_booked_for_day[sizeof($visits_booked_for_day) - 1]["visit_end_time"];
+                            }
 
-                        $time2 = $visit_start_time;
+                            $time2 = $visit_start_time;
 
 //                        echo "################ check between " . $time1 . " to " . $time2 . " <br/>";
-                        $slot_response = $this->time_slot_available($time1, $time2, $new_visit_duration);
+                            $slot_response = $this->time_slot_available($time1, $time2, $new_visit_duration);
 //                        echo "1. response from slot = " . json_encode($slot_response) . "<br/>";
-                        if ($slot_response["available"]) {
-                            $new_visit = array(
-                                "start_time" => $slot_response["start_time"],
-                                "end_time" => $slot_response["end_time"]
-                            );
-                            $available_visit_slots[] = $new_visit;
+                            if ($slot_response["available"]) {
+                                $new_visit = array(
+                                    "start_time" => $slot_response["start_time"],
+                                    "end_time" => $slot_response["end_time"]
+                                );
+                                $available_visit_slots[] = $new_visit;
 //                            echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
-                            $day_assigned = true;
-                        } else {
-                            //check for next visit
+                                $day_assigned = true;
+                            } else {
+                                //check for next visit
 //                            echo "setting time1 to visit end time <br/>";
-                            $time1 = $visit_end_time;
+                                $time1 = $visit_end_time;
+                            }
                         }
-                    }
-                    //check for day start time to visit 1
-                    if (!$day_assigned) {
-                        $time1 = $last_visit_end_time;
-                        $time2 = $scheduling_day["day"] . " " . $day_end_time;
+                        //check for day start time to visit 1
+                        if (!$day_assigned) {
+                            $time1 = $last_visit_end_time;
+                            $time2 = $scheduling_day["day"] . " " . $day_end_time;
 //                        echo "at end of day <br/>";
 //                        echo "################ check between " . $time1 . " to " . $time2 . " <br/>";
-                        $slot_response = $this->time_slot_available($time1, $time2, $new_visit_duration);
+                            $slot_response = $this->time_slot_available($time1, $time2, $new_visit_duration);
 //                        echo "2. response from slot = " . json_encode($slot_response) . "<br/>";
-                        if ($slot_response["available"]) {
-                            $new_visit = array(
-                                "start_time" => $slot_response["start_time"],
-                                "end_time" => $slot_response["end_time"]
-                            );
-                            $available_visit_slots[] = $new_visit;
+                            if ($slot_response["available"]) {
+                                $new_visit = array(
+                                    "start_time" => $slot_response["start_time"],
+                                    "end_time" => $slot_response["end_time"]
+                                );
+                                $available_visit_slots[] = $new_visit;
 //                            echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
-                            $day_assigned = true;
+                                $day_assigned = true;
+                            }
                         }
-                    }
 
 //                    $time2 = 
 //                    echo "should check for visit slot <br/>";
-                } else {
+                    } else {
 //                    echo "visits_booked_for_day has no visits <br/>";
-                    $time2 = $scheduling_day["day"] . " " . $day_end_time;
+                        $time2 = $scheduling_day["day"] . " " . $day_end_time;
 
-                    $slot_response = $this->time_slot_available($time1, $time2, $new_visit_duration);
+                        $slot_response = $this->time_slot_available($time1, $time2, $new_visit_duration);
 //                    echo "response from slot = " . json_encode($slot_response) . "<br/>";
 //                    echo "2. response from slot = " . json_encode($slot_response) . "<br/>";
-                    if ($slot_response["available"]) {
-                        $new_visit = array(
-                            "start_time" => $slot_response["start_time"],
-                            "end_time" => $slot_response["end_time"]
-                        );
-                        $available_visit_slots[] = $new_visit;
+                        if ($slot_response["available"]) {
+                            $new_visit = array(
+                                "start_time" => $slot_response["start_time"],
+                                "end_time" => $slot_response["end_time"]
+                            );
+                            $available_visit_slots[] = $new_visit;
 //                        echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
-                        $day_assigned = true;
+                            $day_assigned = true;
+                        }
                     }
-                }
-            } else {
+                } else {
 //                echo "is not available <br/>";
-            }
-            $day = $day->modify('+1 day');
+                }
+                $day = $day->modify('+1 day');
 //            echo "moving to " . $day->format("Y-m-d") . "<br/>";
-        } while (sizeof($available_visit_slots) < 3);
+            } while (sizeof($available_visit_slots) < 3);
 
 
-        //echo "<br/> ============================================================= <br/>";
-        return $available_visit_slots;
+            //echo "<br/> ============================================================= <br/>";
+            return array(
+                "result" => "success",
+                "data" => $available_visit_slots
+            );
+        } else {
+            return array(
+                "result" => "error",
+                "message" => "Assign physician to patient before scheduling"
+            );
+        }
+//        $clinic_id = 1;
     }
 
     private function sort_visits_by_date($a, $b) {
