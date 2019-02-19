@@ -1802,7 +1802,7 @@ class Referral_model extends CI_Model {
                             ->from("records_patient_visit_reserved r_pvr, referral_patient_info pat, "
                                     . "clinic_referrals c_ref")
                             ->where(array(
-                                "r_pv.active" => 1,
+                                "r_pvr.active" => 1,
                                 "pat.active" => 1,
                                 "c_ref.active" => 1,
                                 "c_ref.assigned_physician" => $assigned_physician,
