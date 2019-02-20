@@ -69,7 +69,7 @@ class Cron_appointment_reminder extends CI_Controller {
                 if ($visit->notify_type == "call") {
 
 
-                    echo "checkig for clinic " . $patient_data->clinic_id . "<br/>";
+                    log_message("error", "checkig for patient " . $patient_data->patient_id);
                     $contact_number = $patient_data->cell_phone;
                     if ($patient_data->home_phone != "") {
                         //home number
@@ -123,6 +123,7 @@ class Cron_appointment_reminder extends CI_Controller {
                         log_message("error", "Call completed " . json_encode($resp));
                     }
                 } else if ($visit->notify_type == "sms") {
+                    log_message("error", "before sms data = " . json_encode($visit));
                     if ($visit->visit_name && $visit->visit_name != "") {
                         $visit->visit_name = "'" . $visit->visit_name . "'";
                     }

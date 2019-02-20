@@ -889,6 +889,8 @@ class Referral_model extends CI_Model {
                 $this->db->where("efax.to", "admin.id", false);
                 $this->db->where("c_ref.efax_id", "efax.id", false);
                 $result = $this->db->get()->result();
+                
+                log_message("error", "Add patient visit => " . json_encode($result));
 //                echo $this->db->last_query();
                 if ($result) {
 
@@ -2058,6 +2060,7 @@ class Referral_model extends CI_Model {
 //        echo json_encode($day) . "<br/>";
 //        echo $this->db->last_query() . "<br/>";
 
+        
         if ($data) {
             if ($data[0]->available === "yes") {
                 $response = array(
