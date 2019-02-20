@@ -21,12 +21,19 @@ class Cron_visit_booking_reminder extends CI_Controller {
         log_message("error", "Cron_visit_booking_reminder called");
 
         //get all to schedule a call
-        $before_1_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 hour")));
-        $before_1_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 hour 5 minute")));
-        $before_24_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 day")));
-        $before_24_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 day 5 minute")));
-        $before_48_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-2 day")));
-        $before_48_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-2 day 5 minute")));
+//        $before_1_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 hour")));
+//        $before_1_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 hour 5 minute")));
+//        $before_24_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 day")));
+//        $before_24_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 day 5 minute")));
+//        $before_48_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-2 day")));
+//        $before_48_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-2 day 5 minute")));
+        
+        $before_1_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-10 minute")));
+        $before_1_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-15 minute")));
+        $before_24_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-20 minute")));
+        $before_24_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-25 minute")));
+        $before_48_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-30 minute")));
+        $before_48_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-35 minute")));
 
         log_message("error", "1 hour = " . $before_1_hour->format("Y-m-d H:i:s") . " to " . $before_1_hour_5_min->format("Y-m-d H:i:s") . "<br/>");
         log_message("error", "24 hour = " . $before_24_hour->format("Y-m-d H:i:s") . " to " . $before_24_hour_5_min->format("Y-m-d H:i:s") . "<br/>");
