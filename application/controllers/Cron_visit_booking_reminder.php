@@ -28,16 +28,10 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //        $before_48_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-2 day")));
 //        $before_48_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-2 day 5 minute")));
         
-        $before_1_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-10 minute")));
-        $before_1_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-15 minute")));
-        $before_24_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-20 minute")));
-        $before_24_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-25 minute")));
-        $before_48_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-30 minute")));
-        $before_48_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-35 minute")));
+        $cur_time = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
+        $before_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-5 minute")));
 
-        log_message("error", "1 hour = " . $before_1_hour->format("Y-m-d H:i:s") . " to " . $before_1_hour_5_min->format("Y-m-d H:i:s") . "<br/>");
-        log_message("error", "24 hour = " . $before_24_hour->format("Y-m-d H:i:s") . " to " . $before_24_hour_5_min->format("Y-m-d H:i:s") . "<br/>");
-        log_message("error", "48 hour = " . $before_48_hour->format("Y-m-d H:i:s") . " to " . $before_48_hour_5_min->format("Y-m-d H:i:s") . "<br/>");
+        log_message("error", "1 hour = " . $cur_time->format("Y-m-d H:i:s") . " to " . $before_5_min->format("Y-m-d H:i:s") . "<br/>");
 //        $string_plus_72_hour = $plus_72_hour->format("Y-m-d H:i:s");
 //        $plus_72_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+3 day 5 minute")));
 //        $string_plus_72_hour_5_min = $plus_72_hour_5_min->format("Y-m-d H:i:s");
@@ -45,15 +39,15 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         ->group_start()
                         ->where(array(
                             "notify_type" => "sms",
-                            "create_datetime > " => $before_1_hour->format("Y-m-d H:i:s"),
-                            "create_datetime < " => $before_1_hour_5_min->format("Y-m-d H:i:s")
+                            "reminder_1h >= " => $before_5_min->format("Y-m-d H:i:s"),
+                            "reminder_1h < " => $cur_time->format("Y-m-d H:i:s")
                         ))->or_group_start()->where(array(
-                            "create_datetime > " => $before_24_hour->format("Y-m-d H:i:s"),
-                            "create_datetime < " => $before_24_hour_5_min->format("Y-m-d H:i:s")
+                            "reminder_24h >= " => $before_5_min->format("Y-m-d H:i:s"),
+                            "reminder_24h < " => $cur_time->format("Y-m-d H:i:s")
                         ))->group_end()
                         ->or_group_start()->where(array(
-                            "create_datetime > " => $before_48_hour->format("Y-m-d H:i:s"),
-                            "create_datetime < " => $before_48_hour_5_min->format("Y-m-d H:i:s")
+                            "reminder_48h >= " => $before_5_min->format("Y-m-d H:i:s"),
+                            "reminder_48h < " => $cur_time->format("Y-m-d H:i:s")
                         ))->group_end()
                         ->group_end()
                         ->where(array(
