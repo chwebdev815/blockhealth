@@ -908,7 +908,6 @@ class Referral_model extends CI_Model {
                     $msg_data = $result[0];
                     $confirm_visit_key = generate_random_string(120);
 //                    $weekdays = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-                    return true;
                     $response = $this->assign_slots($new_visit_duration, $patient_id);
                     if ($response["result"] === "error") {
                         $response = false;
@@ -2037,6 +2036,7 @@ class Referral_model extends CI_Model {
 
     private function check_day_availability($day, $assigned_physician) {
         if ($this->check_for_specific_leaves($day)) {
+            echo "checking availability of day $day <br/>";
             $availability_response = $this->check_for_weekend_days($day, $assigned_physician);
             if ($availability_response["available"]) {
                 return $availability_response;
@@ -2054,13 +2054,14 @@ class Referral_model extends CI_Model {
 
         $weekday_name = strtolower($day->format('D'));
         $day = strtolower($day->format('Y-m-d'));
-        $data = $this->db->select("$weekday_name as available, start_time, end_time")->from("schedule_visit_settings")->where(array(
+        $data = $this->db->select("$weekday_name as available, start_time, end_time")
+                ->from("schedule_visit_settings")->where(array(
                     "clinic_physician_id" => $assigned_physician, //convert to session then
                     "active" => "yes"
                 ))->get()->result();
 
-//        echo json_encode($day) . "<br/>";
-//        echo $this->db->last_query() . "<br/>";
+        echo json_encode($day) . "<br/>";
+        log_message("error", "check_for_weekend_days = " . $this->db->last_query());
 
         
         if ($data) {
