@@ -853,6 +853,8 @@ class Referral_model extends CI_Model {
     }
 
     public function add_patient_visit_model() {
+        log_message("error", "reaching right place");
+        return true;
         $this->form_validation->set_rules('id', 'Patient', 'required');
         // $this->form_validation->set_rules('visit_name', 'Visit Name', 'required|min_length[2]');
 //        $this->form_validation->set_rules('visit_date', 'Date', 'required');
