@@ -1004,9 +1004,9 @@ class Referral_model extends CI_Model {
                                 'clinic_id' => $msg_data->clinic_id,
                                 'type' => 'first_call',
                                 "patient_id" => $patient_id,
-                                "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
-                                "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
-                                "notify_email" => (isset($data["email"])) ? 1 : 0,
+                                "notify_voice" => 1,
+                                "notify_sms" => 1,
+                                "notify_email" => 1,
                                 "reserved_id" => $insert_id
                             );
 
@@ -1845,7 +1845,7 @@ class Referral_model extends CI_Model {
                 $scheduling_day = $this->check_day_availability($day, $assigned_physician);
 //            echo " [][][][][][] => checking availablility for day for pv to be created = " . json_encode($day->format("Y-m-d")) . "<br/>";
                 $day_assigned = false;
-                echo "availability checked fine";
+//                echo "availability checked fine";
 
                 if ($scheduling_day["available"]) {
 //                echo "is available <br/>";
@@ -2037,7 +2037,7 @@ class Referral_model extends CI_Model {
 
     private function check_day_availability($day, $assigned_physician) {
         if ($this->check_for_specific_leaves($day)) {
-            echo "checking availability of day ".json_encode($day) . " <br/>";
+//            echo "checking availability of day ".json_encode($day) . " <br/>";
             $availability_response = $this->check_for_weekend_days($day, $assigned_physician);
             if ($availability_response["available"]) {
                 return $availability_response;
@@ -2061,7 +2061,7 @@ class Referral_model extends CI_Model {
                     "active" => "yes"
                 ))->get()->result();
 
-        echo json_encode($day) . "<br/>";
+//        echo json_encode($day) . "<br/>";
         log_message("error", "check_for_weekend_days = " . $this->db->last_query());
 
         

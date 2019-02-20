@@ -15,6 +15,8 @@ class Call_view extends CI_Controller {
     }
 
     public function call() {
+        
+        
         log_message("error", "at call start from call_view");
         $pname = $this->input->post('defaultContactFormName');
         $patient_lname = $this->input->post('patient_lname');
@@ -31,6 +33,8 @@ class Call_view extends CI_Controller {
         $address = $this->input->post('address');
         $type = $this->input->post("type");
         $reserved_id = $this->input->post("reserved_id");
+        
+        log_message("error", "call function post = " . json_encode($this->input->post()));
 
         if (!empty($mob)) {
             $dataNew = $this->call_confirm($reserved_id, $clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $mob, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address);
