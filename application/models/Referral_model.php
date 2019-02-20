@@ -894,7 +894,6 @@ class Referral_model extends CI_Model {
                 log_message("error", "Add patient visit => " . json_encode($result));
 //                echo $this->db->last_query();
                 if ($result) {
-                    return true;
 
                     $allow_sms = $result[0]->allow_sms;
                     $allow_email = $result[0]->allow_email;
@@ -910,6 +909,7 @@ class Referral_model extends CI_Model {
                     $confirm_visit_key = generate_random_string(120);
 //                    $weekdays = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
                     $response = $this->assign_slots($new_visit_duration, $patient_id);
+                    return true;
                     if ($response["result"] === "error") {
                         $response = false;
                     } else if ($response["result"] === "success") {
