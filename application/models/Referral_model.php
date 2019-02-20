@@ -1845,6 +1845,7 @@ class Referral_model extends CI_Model {
                 $scheduling_day = $this->check_day_availability($day, $assigned_physician);
 //            echo " [][][][][][] => checking availablility for day for pv to be created = " . json_encode($day->format("Y-m-d")) . "<br/>";
                 $day_assigned = false;
+                echo "availability checked fine";
 
                 if ($scheduling_day["available"]) {
 //                echo "is available <br/>";
@@ -2036,7 +2037,7 @@ class Referral_model extends CI_Model {
 
     private function check_day_availability($day, $assigned_physician) {
         if ($this->check_for_specific_leaves($day)) {
-            echo "checking availability of day $day <br/>";
+            echo "checking availability of day ".json_encode($day) . " <br/>";
             $availability_response = $this->check_for_weekend_days($day, $assigned_physician);
             if ($availability_response["available"]) {
                 return $availability_response;
