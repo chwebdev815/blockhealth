@@ -908,8 +908,8 @@ class Referral_model extends CI_Model {
                     $msg_data = $result[0];
                     $confirm_visit_key = generate_random_string(120);
 //                    $weekdays = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-                    $response = $this->assign_slots($new_visit_duration, $patient_id);
                     return true;
+                    $response = $this->assign_slots($new_visit_duration, $patient_id);
                     if ($response["result"] === "error") {
                         $response = false;
                     } else if ($response["result"] === "success") {
