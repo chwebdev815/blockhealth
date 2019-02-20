@@ -854,7 +854,6 @@ class Referral_model extends CI_Model {
 
     public function add_patient_visit_model() {
         log_message("error", "reaching right place");
-        return true;
         $this->form_validation->set_rules('id', 'Patient', 'required');
         // $this->form_validation->set_rules('visit_name', 'Visit Name', 'required|min_length[2]');
 //        $this->form_validation->set_rules('visit_date', 'Date', 'required');
@@ -895,6 +894,7 @@ class Referral_model extends CI_Model {
                 log_message("error", "Add patient visit => " . json_encode($result));
 //                echo $this->db->last_query();
                 if ($result) {
+                    return true;
 
                     $allow_sms = $result[0]->allow_sms;
                     $allow_email = $result[0]->allow_email;
