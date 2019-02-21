@@ -195,9 +195,7 @@ class Webhook_twilio_sms extends CI_Controller {
                             $msg = "Internal error. Sorry for inconvinience.";
                         } else if ($response["result"] === "success") {
                             $allocations = $response["data"];
-
                             //make call with proper data
-
                             $update_data = array(
                                 "visit_date1" => substr($allocations[0]["start_time"], 0, 10),
                                 "visit_start_time1" => substr($allocations[0]["start_time"], 10),
@@ -247,7 +245,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                     . "\n"
                                     . "If you would like the clinic to contact you directly, please reply with '0'.\n"
                                     . "\n"
-                                    . "Please note - these dates will be reserved for the next 60 minutes"
+                                    . "Please note - these dates will be reserved for the next 60 minutes\n"
                                     . "Thank-you.";
 
                             $msg = str_replace("<patient name>", $patient_data->fname, $msg);
