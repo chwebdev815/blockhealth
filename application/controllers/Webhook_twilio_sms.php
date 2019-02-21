@@ -267,6 +267,22 @@ class Webhook_twilio_sms extends CI_Controller {
                             $msg = str_replace("<date3>", $visit_datetime[2]["date"], $msg);
                             $msg = str_replace("<time3>", $visit_datetime[2]["time"], $msg);
                             $msg = str_replace("<clinic name>", $patient_data->clinic_institution_name, $msg);
+
+                            //set status in accepted_status
+                            $referral_id = $this->db->select("c_ref.id")
+                                            ->from("clinic_referrals c_ref, referral_patient_info pat")
+                                            ->where(array(
+                                                "pat.id" => $reserved->patient_id
+                                            ))
+                                            ->where("c_ref.id", "pat.referral_id", false)
+                                            ->get()->result()[0]->id;
+
+                            $this->db->where(array(
+                                "id" => $referral_id
+                            ))->update("clinic_referrals", array(
+                                "accepted_status" => "SMS",
+                                "accepted_status_icon" => "green"
+                            ));
                         }
                     }
                 }
