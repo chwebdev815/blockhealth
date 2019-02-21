@@ -1048,7 +1048,8 @@ class Referral_model extends CI_Model {
                                     . "\n"
                                     . "If you would like the clinic to contact you directly, please reply with '0'.\n"
                                     . "\n"
-                                    . "Please note - these dates will be reserved for the next 60 minutes\n"
+                                    . "Please note - these dates will be reserved for the next 60 minutes.\n"
+                                    . "\n"
                                     . "Thank-you.";
 
                             $msg = str_replace("<patient name>", $msg_data->fname, $msg);

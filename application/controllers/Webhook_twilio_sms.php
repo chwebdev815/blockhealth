@@ -256,7 +256,8 @@ class Webhook_twilio_sms extends CI_Controller {
                                     . "\n"
                                     . "If you would like the clinic to contact you directly, please reply with '0'.\n"
                                     . "\n"
-                                    . "Please note - these dates will be reserved for the next 60 minutes\n"
+                                    . "Please note - these dates will be reserved for the next 60 minutes.\n"
+                                    . "\n"
                                     . "Thank-you.";
 
                             $msg = str_replace("<patient name>", $patient_data->fname, $msg);
@@ -287,8 +288,11 @@ class Webhook_twilio_sms extends CI_Controller {
                     }
                 }
                 echo "<Response><Sms>" . $msg . "</Sms></Response>";
+                exit();
             }
         }
+
+        echo "<Response><Sms>" . "501 Internal Server Error" . "</Sms></Response>";
     }
 
 }
