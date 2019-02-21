@@ -188,6 +188,7 @@ class Webhook_twilio_sms extends CI_Controller {
                         $patient_data = $patient_data[0];
 
                         //find asignable slots
+                        $new_visit_duration = 30;
                         $this->load->model("referral_model");
                         $response = $this->referral_model->assign_slots($new_visit_duration, $visit->patient_id);
                         if ($response["result"] === "error") {
