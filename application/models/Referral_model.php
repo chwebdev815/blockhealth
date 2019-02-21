@@ -889,7 +889,7 @@ class Referral_model extends CI_Model {
                 $this->db->where("efax.to", "admin.id", false);
                 $this->db->where("c_ref.efax_id", "efax.id", false);
                 $result = $this->db->get()->result();
-                
+
                 log_message("error", "Add patient visit => " . json_encode($result));
 //                echo $this->db->last_query();
                 if ($result) {
@@ -933,14 +933,13 @@ class Referral_model extends CI_Model {
                             $call_immediately = true;
                         }
 
-                        $visit_datetime = array();
-
                         if ($call_immediately) {
                             $expire_minutes = "10";
                         } else {
                             $expire_minutes = "60";
                         }
 
+                        $visit_datetime = array();
                         $visit_datetime[] = array(
                             "date" => $start_time1->format("l M jS"),
                             "time" => $start_time1->format("g:ia")
@@ -971,10 +970,10 @@ class Referral_model extends CI_Model {
                             "notify_voice" => 1,
                             "notify_sms" => 1,
                             "notify_email" => 1,
-    //                        "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT1H"))->format("Y-m-d H:i:s"),
-    //                        "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P1D"))->format("Y-m-d H:i:s"),
-    //                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P2D"))->format("Y-m-d H:i:s"),
-    //                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P3D"))->format("Y-m-d H:i:s"),
+                            //                        "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT1H"))->format("Y-m-d H:i:s"),
+                            //                        "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P1D"))->format("Y-m-d H:i:s"),
+                            //                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P2D"))->format("Y-m-d H:i:s"),
+                            //                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P3D"))->format("Y-m-d H:i:s"),
                             "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
                             "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT20M"))->format("Y-m-d H:i:s"),
                             "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT30M"))->format("Y-m-d H:i:s"),
@@ -983,8 +982,8 @@ class Referral_model extends CI_Model {
                             "visit_confirmed" => "N/A"
                         );
 
-    //                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
-    //                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
+                        //                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
+                        //                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
 
                         $this->db->insert("records_patient_visit_reserved", $insert_data);
 
@@ -1020,7 +1019,7 @@ class Referral_model extends CI_Model {
 
 
                             log_message("error", "data for start call = " . json_encode($post_arr));
-    //                        log_message("error", "Call should start now");
+                            //                        log_message("error", "Call should start now");
                             $ch = curl_init();
                             curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                             curl_setopt($ch, CURLOPT_URL, base_url() . "call_view/call");
@@ -2056,7 +2055,7 @@ class Referral_model extends CI_Model {
         $weekday_name = strtolower($day->format('D'));
         $day = strtolower($day->format('Y-m-d'));
         $data = $this->db->select("$weekday_name as available, start_time, end_time")
-                ->from("schedule_visit_settings")->where(array(
+                        ->from("schedule_visit_settings")->where(array(
                     "clinic_physician_id" => $assigned_physician, //convert to session then
                     "active" => "yes"
                 ))->get()->result();
@@ -2064,7 +2063,7 @@ class Referral_model extends CI_Model {
 //        echo json_encode($day) . "<br/>";
         log_message("error", "check_for_weekend_days = " . $this->db->last_query());
 
-        
+
         if ($data) {
             if ($data[0]->available === "yes") {
                 $response = array(

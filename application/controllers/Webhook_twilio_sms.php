@@ -164,11 +164,102 @@ class Webhook_twilio_sms extends CI_Controller {
                         ));
                     }
                 } else {
-                    $msg = "Visit response time is expired";
+                    $visit = $reserved;
+                    $this->db->select('admin.id as clinic_id, '
+                            . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
+                            'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
+                            "admin.address," .
+                            "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
+                            "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
+                    $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
+                    $this->db->where(array(
+                        "efax.active" => 1,
+                        "admin.active" => 1,
+                        "c_ref.active" => 1,
+                        "pat.active" => 1,
+                        "pat.id" => $visit->patient_id
+                    ));
+                    $this->db->where("pat.referral_id", "c_ref.id", false);
+                    $this->db->where("efax.to", "admin.id", false);
+                    $this->db->where("c_ref.efax_id", "efax.id", false);
+                    $patient_data = $this->db->get()->result();
+
+                    if ($patient_data) {
+                        $patient_data = $patient_data[0];
+
+                        //find asignable slots
+                        $response = $this->referral_model->assign_slots($new_visit_duration, $visit->patient_id);
+                        if ($response["result"] === "error") {
+                            $msg = "Internal error. Sorry for inconvinience.";
+                        } else if ($response["result"] === "success") {
+                            $allocations = $response["data"];
+
+                            //make call with proper data
+
+                            $update_data = array(
+                                "visit_date1" => substr($allocations[0]["start_time"], 0, 10),
+                                "visit_start_time1" => substr($allocations[0]["start_time"], 10),
+                                "visit_end_time1" => substr($allocations[0]["end_time"], 10),
+                                "visit_date2" => substr($allocations[1]["start_time"], 0, 10),
+                                "visit_start_time2" => substr($allocations[1]["start_time"], 10),
+                                "visit_end_time2" => substr($allocations[1]["end_time"], 10),
+                                "visit_date3" => substr($allocations[2]["start_time"], 0, 10),
+                                "visit_start_time3" => substr($allocations[2]["start_time"], 10),
+                                "visit_end_time3" => substr($allocations[2]["end_time"], 10),
+                                "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s")
+                            );
+                            $this->db->where(array(
+                                "id" => $visit->id
+                            ))->update("records_patient_visit_reserved", $update_data);
+
+
+                            //send sms
+                            $start_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["start_time"]);
+                            $start_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["start_time"]);
+                            $start_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["start_time"]);
+
+                            $visit_datetime = array();
+                            $visit_datetime[] = array(
+                                "date" => $start_time1->format("l M jS"),
+                                "time" => $start_time1->format("g:ia")
+                            );
+                            $visit_datetime[] = array(
+                                "date" => $start_time2->format("l M jS"),
+                                "time" => $start_time2->format("g:ia")
+                            );
+                            $visit_datetime[] = array(
+                                "date" => $start_time3->format("l M jS"),
+                                "time" => $start_time3->format("g:ia")
+                            );
+
+                            $msg = "Hello <patient name>,\n"
+                                    . "\n"
+                                    . "This is an automated appointment booking message from <clinic name>. "
+                                    . "Please select one of the following dates:\n"
+                                    . "\n"
+                                    . "<date1> at <time1> - reply with '1'\n"
+                                    . "\n"
+                                    . "<date2> at <time2> - reply with '2'\n"
+                                    . "\n"
+                                    . "<date3> at <time3> - reply with '3'\n"
+                                    . "\n"
+                                    . "If you would like the clinic to contact you directly, please reply with '0'.\n"
+                                    . "\n"
+                                    . "Please note - these dates will be reserved for the next 60 minutes"
+                                    . "Thank-you.";
+
+                            $msg = str_replace("<patient name>", $patient_data->fname, $msg);
+                            $msg = str_replace("<date1>", $visit_datetime[0]["date"], $msg);
+                            $msg = str_replace("<time1>", $visit_datetime[0]["time"], $msg);
+                            $msg = str_replace("<date2>", $visit_datetime[1]["date"], $msg);
+                            $msg = str_replace("<time2>", $visit_datetime[1]["time"], $msg);
+                            $msg = str_replace("<date3>", $visit_datetime[2]["date"], $msg);
+                            $msg = str_replace("<time3>", $visit_datetime[2]["time"], $msg);
+                            $msg = str_replace("<clinic name>", $patient_data->clinic_institution_name, $msg);
+                        }
+                    }
                 }
                 echo "<Response><Sms>" . $msg . "</Sms></Response>";
-            } else {
-                exit();
             }
         }
     }

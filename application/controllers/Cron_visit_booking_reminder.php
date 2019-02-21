@@ -99,9 +99,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     $contact_number = $patient_data->work_phone;
                 }
                 $new_visit_duration = 30;
-                //          | id | patient_id | visit_name | visit_date1 | visit_start_time1 | visit_end_time1 | visit_date2 | visit_start_time2 | visit_end_time2 | visit_date3 | visit_start_time3 | visit_end_time3 | visit_expire_time   | reminder_1h | reminder_24h        | reminder_48h        | reminder_72h        | confirm_key | notify_type | notify_voice | notify_sms | notify_email | confirm_visit_key                                                                                                                   | visit_confirmed | create_datetime     | active |
-//          | 80 |         42 |            | 2019-02-13  | 10:00:00          | 10:30:00        | 2019-02-14  | 09:00:00          | 09:30:00        | 2019-02-15  | 09:00:00          | 09:30:00        | 2019-02-12 11:20:42 | NULL        | 2019-02-13 10:20:42 | 2019-02-14 10:20:42 | 2019-02-15 10:20:42 | 1           | call        |            1 |          1 |            1 | 1549984842_8KGCkYmSij3x_ARUNATX_NbKm6XRbyIkhnWClitECxaB70vUBnRAa1jx8fojO5D5tzHOR9rsHC3OCyIcWyN6A6DIl0096EezcWm34OwMpzz17ge3O19n7N4t | Booked          | 2019-02-12 15:20:42 |      0 |
-//          
+                
                 //find asignable slots
                 $response = $this->referral_model->assign_slots($new_visit_duration, $visit->patient_id);
                 if ($response["result"] === "error") {
@@ -111,7 +109,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 }
                 //make call with proper data
 
-                $insert_data = array(
+                $update_data = array(
                     "visit_date1" => substr($allocations[0]["start_time"], 0, 10),
                     "visit_start_time1" => substr($allocations[0]["start_time"], 10),
                     "visit_end_time1" => substr($allocations[0]["end_time"], 10),
@@ -125,7 +123,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 );
                 $this->db->where(array(
                     "id" => $visit->id
-                ))->update("records_patient_visit_reserved", $insert_data);
+                ))->update("records_patient_visit_reserved", $update_data);
 
 //                    $contact_number = "+917201907712";
 
