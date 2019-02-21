@@ -27,7 +27,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //        $before_24_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 day 5 minute")));
 //        $before_48_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-2 day")));
 //        $before_48_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-2 day 5 minute")));
-        
+
         $cur_time = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
         $before_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-5 minute")));
 
@@ -35,23 +35,24 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //        $string_plus_72_hour = $plus_72_hour->format("Y-m-d H:i:s");
 //        $plus_72_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+3 day 5 minute")));
 //        $string_plus_72_hour_5_min = $plus_72_hour_5_min->format("Y-m-d H:i:s");
-        $remindable = $this->db->select("*")->from("records_patient_visit_reserved")
-                        ->group_start()
+        $remindable_1h = $this->db->select("res.*")->from("records_patient_visit_reserved res")
                         ->where(array(
-                            "notify_type" => "sms",
-                            "reminder_1h >= " => $before_5_min->format("Y-m-d H:i:s"),
-                            "reminder_1h < " => $cur_time->format("Y-m-d H:i:s")
-                        ))->or_group_start()->where(array(
-                            "reminder_24h >= " => $before_5_min->format("Y-m-d H:i:s"),
-                            "reminder_24h < " => $cur_time->format("Y-m-d H:i:s")
-                        ))->group_end()
-                        ->or_group_start()->where(array(
-                            "reminder_48h >= " => $before_5_min->format("Y-m-d H:i:s"),
-                            "reminder_48h < " => $cur_time->format("Y-m-d H:i:s")
-                        ))->group_end()
-                        ->group_end()
+                            "res.notify_type" => "sms",
+                            "res.reminder_1h >= " => $before_5_min->format("Y-m-d H:i:s"),
+                            "res.reminder_1h < " => $cur_time->format("Y-m-d H:i:s"),
+                            "res.visit_confirmed" => "N/A"
+                        ))->get()->result();
+        $remindable_24h = $this->db->select("res.*")->from("records_patient_visit_reserved res")
                         ->where(array(
-                            "visit_confirmed" => "N/A",
+                            "res.reminder_24h >= " => $before_5_min->format("Y-m-d H:i:s"),
+                            "res.reminder_24h < " => $cur_time->format("Y-m-d H:i:s"),
+                            "res.visit_confirmed" => "N/A"
+                        ))->get()->result();
+        $remindable_48h = $this->db->select("res.*")->from("records_patient_visit_reserved res")
+                        ->where(array(
+                            "res.reminder_48h >= " => $before_5_min->format("Y-m-d H:i:s"),
+                            "res.reminder_48h < " => $cur_time->format("Y-m-d H:i:s"),
+                            "res.visit_confirmed" => "N/A"
                         ))->get()->result();
 //        $remindable = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
 ////                    "id" => 10
@@ -107,10 +108,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //          
                     //find asignable slots
                     $response = $this->referral_model->assign_slots($new_visit_duration, $visit->patient_id);
-                    if($response["result"] === "error") {
+                    if ($response["result"] === "error") {
                         continue;
-                    }
-                    else if($response["result"] === "success") {
+                    } else if ($response["result"] === "success") {
                         $allocations = $response["data"];
                     }
                     //make call with proper data
