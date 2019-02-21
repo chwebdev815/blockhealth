@@ -203,7 +203,7 @@ class Webhook_twilio_sms extends CI_Controller {
                         $this->load->model("referral_model");
                         $response = $this->referral_model->assign_slots($new_visit_duration, $visit->patient_id);
                         if ($response["result"] === "error") {
-                            $msg = "Internal error. Sorry for inconvinience.";
+                            $msg = "501 - Internal server error.";
                         } else if ($response["result"] === "success") {
                             $allocations = $response["data"];
                             //make call with proper data
