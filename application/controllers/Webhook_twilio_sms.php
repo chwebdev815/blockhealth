@@ -67,9 +67,13 @@ class Webhook_twilio_sms extends CI_Controller {
 
 
                         //set status in accepted_status
-                        $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
-                                    "pat.id" => $reserved->patient_id
-                                ))->get()->result()[0]->id;
+                        $referral_id = $this->db->select("c_ref.id")
+                                        ->from("clinic_referrals c_ref, referral_patient_info pat")
+                                        ->where(array(
+                                            "pat.id" => $reserved->patient_id
+                                        ))
+                                        ->where("c_ref.id", "pat.referral_id", false)
+                                        ->get()->result()[0]->id;
 
                         $this->db->where(array(
                             "id" => $referral_id
@@ -140,9 +144,13 @@ class Webhook_twilio_sms extends CI_Controller {
 //                        $this->db->where("id", $reserved->id);
 //                        $this->db->update("records_patient_visit_reserved");
                         //set status in accepted_status
-                        $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
-                                    "pat.id" => $reserved->patient_id
-                                ))->get()->result()[0]->id;
+                        $referral_id = $this->db->select("c_ref.id")
+                                        ->from("clinic_referrals c_ref, referral_patient_info pat")
+                                        ->where(array(
+                                            "pat.id" => $reserved->patient_id
+                                        ))
+                                        ->where("c_ref.id", "pat.referral_id", false)
+                                        ->get()->result()[0]->id;
 
                         $this->db->where(array(
                             "id" => $referral_id
@@ -166,12 +174,15 @@ class Webhook_twilio_sms extends CI_Controller {
                 } else {
                     $visit = $reserved;
                     $this->db->select('admin.id as clinic_id, '
-                            . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
-                            'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
-                            "admin.address," .
-                            "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
-                            "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
-                    $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
+                            . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") '
+                            . 'THEN "false" ELSE "true" END AS allow_sms, '
+                            . 'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") '
+                            . 'THEN "false" ELSE "true" END AS allow_email, '
+                            . "admin.address,"
+                            . "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, "
+                            . "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
+                    $this->db->from("clinic_referrals c_ref, referral_patient_info pat, "
+                            . "efax_info efax, clinic_user_info admin");
                     $this->db->where(array(
                         "efax.active" => 1,
                         "admin.active" => 1,
