@@ -35,24 +35,23 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //        $string_plus_72_hour = $plus_72_hour->format("Y-m-d H:i:s");
 //        $plus_72_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+3 day 5 minute")));
 //        $string_plus_72_hour_5_min = $plus_72_hour_5_min->format("Y-m-d H:i:s");
-        $remindable_1h = $this->db->select("res.*")->from("records_patient_visit_reserved res")
+        $remindable = $this->db->select("*")->from("records_patient_visit_reserved")
+                        ->group_start()
                         ->where(array(
-                            "res.notify_type" => "sms",
-                            "res.reminder_1h >= " => $before_5_min->format("Y-m-d H:i:s"),
-                            "res.reminder_1h < " => $cur_time->format("Y-m-d H:i:s"),
-                            "res.visit_confirmed" => "N/A"
-                        ))->get()->result();
-        $remindable_24h = $this->db->select("res.*")->from("records_patient_visit_reserved res")
+                            "notify_type" => "sms",
+                            "reminder_1h >= " => $before_5_min->format("Y-m-d H:i:s"),
+                            "reminder_1h < " => $cur_time->format("Y-m-d H:i:s")
+                        ))->or_group_start()->where(array(
+                            "reminder_24h >= " => $before_5_min->format("Y-m-d H:i:s"),
+                            "reminder_24h < " => $cur_time->format("Y-m-d H:i:s")
+                        ))->group_end()
+                        ->or_group_start()->where(array(
+                            "reminder_48h >= " => $before_5_min->format("Y-m-d H:i:s"),
+                            "reminder_48h < " => $cur_time->format("Y-m-d H:i:s")
+                        ))->group_end()
+                        ->group_end()
                         ->where(array(
-                            "res.reminder_24h >= " => $before_5_min->format("Y-m-d H:i:s"),
-                            "res.reminder_24h < " => $cur_time->format("Y-m-d H:i:s"),
-                            "res.visit_confirmed" => "N/A"
-                        ))->get()->result();
-        $remindable_48h = $this->db->select("res.*")->from("records_patient_visit_reserved res")
-                        ->where(array(
-                            "res.reminder_48h >= " => $before_5_min->format("Y-m-d H:i:s"),
-                            "res.reminder_48h < " => $cur_time->format("Y-m-d H:i:s"),
-                            "res.visit_confirmed" => "N/A"
+                            "visit_confirmed" => "N/A",
                         ))->get()->result();
 //        $remindable = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
 ////                    "id" => 10
@@ -90,107 +89,79 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
             if ($patient_data) {
                 $patient_data = $patient_data[0];
-                if ($visit->notify_type == "call") {
-
-
-                    echo "checkig for clinic " . $patient_data->clinic_id . "<br/>";
-                    $contact_number = $patient_data->cell_phone;
-                    if ($patient_data->home_phone != "") {
-                        //home number
-                        $contact_number = $patient_data->home_phone;
-                    } else if ($patient_data->work_phone != "") {
-                        //work number
-                        $contact_number = $patient_data->work_phone;
-                    }
-                    $new_visit_duration = 30;
-                    //          | id | patient_id | visit_name | visit_date1 | visit_start_time1 | visit_end_time1 | visit_date2 | visit_start_time2 | visit_end_time2 | visit_date3 | visit_start_time3 | visit_end_time3 | visit_expire_time   | reminder_1h | reminder_24h        | reminder_48h        | reminder_72h        | confirm_key | notify_type | notify_voice | notify_sms | notify_email | confirm_visit_key                                                                                                                   | visit_confirmed | create_datetime     | active |
+                echo "checkig for clinic " . $patient_data->clinic_id . "<br/>";
+                $contact_number = $patient_data->cell_phone;
+                if ($patient_data->home_phone != "") {
+                    //home number
+                    $contact_number = $patient_data->home_phone;
+                } else if ($patient_data->work_phone != "") {
+                    //work number
+                    $contact_number = $patient_data->work_phone;
+                }
+                $new_visit_duration = 30;
+                //          | id | patient_id | visit_name | visit_date1 | visit_start_time1 | visit_end_time1 | visit_date2 | visit_start_time2 | visit_end_time2 | visit_date3 | visit_start_time3 | visit_end_time3 | visit_expire_time   | reminder_1h | reminder_24h        | reminder_48h        | reminder_72h        | confirm_key | notify_type | notify_voice | notify_sms | notify_email | confirm_visit_key                                                                                                                   | visit_confirmed | create_datetime     | active |
 //          | 80 |         42 |            | 2019-02-13  | 10:00:00          | 10:30:00        | 2019-02-14  | 09:00:00          | 09:30:00        | 2019-02-15  | 09:00:00          | 09:30:00        | 2019-02-12 11:20:42 | NULL        | 2019-02-13 10:20:42 | 2019-02-14 10:20:42 | 2019-02-15 10:20:42 | 1           | call        |            1 |          1 |            1 | 1549984842_8KGCkYmSij3x_ARUNATX_NbKm6XRbyIkhnWClitECxaB70vUBnRAa1jx8fojO5D5tzHOR9rsHC3OCyIcWyN6A6DIl0096EezcWm34OwMpzz17ge3O19n7N4t | Booked          | 2019-02-12 15:20:42 |      0 |
 //          
-                    //find asignable slots
-                    $response = $this->referral_model->assign_slots($new_visit_duration, $visit->patient_id);
-                    if ($response["result"] === "error") {
-                        continue;
-                    } else if ($response["result"] === "success") {
-                        $allocations = $response["data"];
-                    }
-                    //make call with proper data
+                //find asignable slots
+                $response = $this->referral_model->assign_slots($new_visit_duration, $visit->patient_id);
+                if ($response["result"] === "error") {
+                    continue;
+                } else if ($response["result"] === "success") {
+                    $allocations = $response["data"];
+                }
+                //make call with proper data
 
-                    $insert_data = array(
-                        "visit_date1" => substr($allocations[0]["start_time"], 0, 10),
-                        "visit_start_time1" => substr($allocations[0]["start_time"], 10),
-                        "visit_end_time1" => substr($allocations[0]["end_time"], 10),
-                        "visit_date2" => substr($allocations[1]["start_time"], 0, 10),
-                        "visit_start_time2" => substr($allocations[1]["start_time"], 10),
-                        "visit_end_time2" => substr($allocations[1]["end_time"], 10),
-                        "visit_date3" => substr($allocations[2]["start_time"], 0, 10),
-                        "visit_start_time3" => substr($allocations[2]["start_time"], 10),
-                        "visit_end_time3" => substr($allocations[2]["end_time"], 10),
-                        "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s")
-                    );
-                    $this->db->where(array(
-                        "id" => $visit->id
-                    ))->update("records_patient_visit_reserved", $insert_data);
+                $insert_data = array(
+                    "visit_date1" => substr($allocations[0]["start_time"], 0, 10),
+                    "visit_start_time1" => substr($allocations[0]["start_time"], 10),
+                    "visit_end_time1" => substr($allocations[0]["end_time"], 10),
+                    "visit_date2" => substr($allocations[1]["start_time"], 0, 10),
+                    "visit_start_time2" => substr($allocations[1]["start_time"], 10),
+                    "visit_end_time2" => substr($allocations[1]["end_time"], 10),
+                    "visit_date3" => substr($allocations[2]["start_time"], 0, 10),
+                    "visit_start_time3" => substr($allocations[2]["start_time"], 10),
+                    "visit_end_time3" => substr($allocations[2]["end_time"], 10),
+                    "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s")
+                );
+                $this->db->where(array(
+                    "id" => $visit->id
+                ))->update("records_patient_visit_reserved", $insert_data);
 
 //                    $contact_number = "+917201907712";
 
-                    $post_arr = array(
-                        'defaultContactFormName' => $patient_data->fname,
-                        "patient_lname" => $patient_data->lname,
-                        "defaultContactFormName2" => $visit->visit_name,
-                        'defaultContactFormName3' => $patient_data->clinic_institution_name,
-                        'defaultContactFormName4' => "aaa",
-                        'defaultContactFormName5' => "bbb",
-                        'defaultContactFormName6' => $contact_number,
-                        'address' => $patient_data->call_address,
-                        'clinic_id' => $patient_data->clinic_id,
-                        'type' => 'booking_reminder',
-                        "patient_id" => $visit->patient_id,
-                        "notify_voice" => $visit->notify_voice,
-                        "notify_sms" => $visit->notify_sms,
-                        "notify_email" => $visit->notify_email,
-                        "reserved_id" => $visit->id
-                    );
+                $post_arr = array(
+                    'defaultContactFormName' => $patient_data->fname,
+                    "patient_lname" => $patient_data->lname,
+                    "defaultContactFormName2" => $visit->visit_name,
+                    'defaultContactFormName3' => $patient_data->clinic_institution_name,
+                    'defaultContactFormName4' => "aaa",
+                    'defaultContactFormName5' => "bbb",
+                    'defaultContactFormName6' => $contact_number,
+                    'address' => $patient_data->call_address,
+                    'clinic_id' => $patient_data->clinic_id,
+                    'type' => 'booking_reminder',
+                    "patient_id" => $visit->patient_id,
+                    "notify_voice" => $visit->notify_voice,
+                    "notify_sms" => $visit->notify_sms,
+                    "notify_email" => $visit->notify_email,
+                    "reserved_id" => $visit->id
+                );
 
-                    echo "post array = " . json_encode($post_arr) . "<br/>";
-                    log_message("error", "Call should start now");
-                    $ch = curl_init();
-                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                    curl_setopt($ch, CURLOPT_URL, base_url() . "cron_visit_booking_reminder/call");
-                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                    curl_setopt($ch, CURLOPT_POST, 1);
-                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
-                    $resp = curl_exec($ch);
-                    if (curl_errno($ch)) {
-                        log_message("error", "Call error => " . json_encode(curl_error($ch)));
-                        return curl_error($ch);
-                    }
-                    curl_close($ch);
-                    log_message("error", "Call completed " . json_encode($resp));
-                } else if ($visit->notify_type == "sms") {
-
-                    if ($visit->visit_name && $visit->visit_name != "") {
-                        $visit->visit_name = "'" . $visit->visit_name . "'";
-                    }
-                    $msg = "Hello <patient name>,\n"
-                            . "\n"
-                            . "Your appointment<patient visit name> with <clinic name> has been booked for <date> at <time>.\n"
-                            . "\n"
-                            . "The address is:\n"
-                            . "<Address>\n"
-                            . "\n"
-                            . "Please type 1 to confirm this booking. "
-                            . "If this date does not work, please type 2 to alert the clinic staff.\n"
-                            . "Please note - these dates will be reserved for the next 60 minutes\n"
-                            . "Thank-you.";
-                    $msg = str_replace("<patient name>", $patient_data->fname, $msg);
-                    $msg = str_replace("<date>", $visit->visit_date, $msg);
-                    $msg = str_replace("<time>", $visit->visit_time, $msg);
-                    $msg = str_replace("<patient visit name>", $visit->visit_name, $msg);
-                    $msg = str_replace("<clinic name>", $patient_data->clinic_institution_name, $msg);
-                    $msg = str_replace("<Address>", $patient_data->address, $msg);
-
-                    $this->referral_model->send_sms($patient_data->cell_phone, $msg);
+                echo "post array = " . json_encode($post_arr) . "<br/>";
+                log_message("error", "Call should start now");
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                curl_setopt($ch, CURLOPT_URL, base_url() . "cron_visit_booking_reminder/call");
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
+                $resp = curl_exec($ch);
+                if (curl_errno($ch)) {
+                    log_message("error", "Call error => " . json_encode(curl_error($ch)));
+                    return curl_error($ch);
                 }
+                curl_close($ch);
+                log_message("error", "Call completed " . json_encode($resp));
             }
         }
     }

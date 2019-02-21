@@ -842,8 +842,7 @@ class Referral_model extends CI_Model {
                     "patient_id" => $patient_id,
                     "note_type" => $data["note_type"],
                     "description" => $data["description"]
-                        )
-                );
+                ));
                 return true;
             } else {
                 return "Unauthorized for this Operation";
