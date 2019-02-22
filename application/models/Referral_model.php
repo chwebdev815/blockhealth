@@ -1840,6 +1840,7 @@ class Referral_model extends CI_Model {
             $available_visit_slots = array();
             
             $day = $next_day;
+            $counter = 0;
             do {
                 //for each day
 //            echo "*** day = " . json_encode($day) . "<br/>";
@@ -1940,7 +1941,8 @@ class Referral_model extends CI_Model {
                 }
                 $day = $day->modify('+1 day');
 //            echo "moving to " . $day->format("Y-m-d") . "<br/>";
-            } while (sizeof($available_visit_slots) < 3);
+                $counter++;
+            } while (sizeof($available_visit_slots) < 3 && $counter < 100);
 
 
             //echo "<br/> ============================================================= <br/>";
