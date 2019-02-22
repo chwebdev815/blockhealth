@@ -907,6 +907,7 @@ class Referral_model extends CI_Model {
                     $msg_data = $result[0];
                     $confirm_visit_key = generate_random_string(120);
 //                    $weekdays = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+                    
                     $response = $this->assign_slots($new_visit_duration, $patient_id);
                     if ($response["result"] === "error") {
                         $response = false;
@@ -1837,7 +1838,7 @@ class Referral_model extends CI_Model {
 
             $visits_booked = $all_visits;
             $available_visit_slots = array();
-
+            return;
             $day = $next_day;
             do {
                 //for each day
