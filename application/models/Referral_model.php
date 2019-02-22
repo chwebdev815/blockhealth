@@ -1838,7 +1838,7 @@ class Referral_model extends CI_Model {
 
             $visits_booked = $all_visits;
             $available_visit_slots = array();
-            return;
+            
             $day = $next_day;
             do {
                 //for each day
