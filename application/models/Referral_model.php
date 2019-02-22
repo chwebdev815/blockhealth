@@ -2040,7 +2040,7 @@ class Referral_model extends CI_Model {
 
     private function check_day_availability($day, $assigned_physician) {
         if ($this->check_for_specific_leaves($day)) {
-//            echo "checking availability of day ".json_encode($day) . " <br/>";
+            echo "checking availability of day ".json_encode($day) . " <br/>";
             $availability_response = $this->check_for_weekend_days($day, $assigned_physician);
             if ($availability_response["available"]) {
                 return $availability_response;
@@ -2053,8 +2053,8 @@ class Referral_model extends CI_Model {
 
     private function check_for_weekend_days($day, $assigned_physician) {
         //convert day to weekday name
-        //echo "### called check_for_weekend_days <br/>";
-//        echo "day = " . json_encode($day) . "<br/>";
+        echo "### called check_for_weekend_days <br/>";
+        echo "day = " . json_encode($day) . "<br/>";
 
         $weekday_name = strtolower($day->format('D'));
         $day = strtolower($day->format('Y-m-d'));
@@ -2064,7 +2064,7 @@ class Referral_model extends CI_Model {
                     "active" => "yes"
                 ))->get()->result();
 
-//        echo json_encode($day) . "<br/>";
+        echo json_encode($day) . "<br/>";
         log_message("error", "check_for_weekend_days = " . $this->db->last_query());
 
 
@@ -2086,7 +2086,7 @@ class Referral_model extends CI_Model {
                 "available" => false
             );
         }
-        //echo "response = " . json_encode($response) . "<br/>";
+        echo "response = " . json_encode($response) . "<br/>";
         return $response;
     }
 
