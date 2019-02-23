@@ -2043,6 +2043,7 @@ class Referral_model extends CI_Model {
         if ($this->check_for_specific_leaves($day)) {
             echo "checking availability of day ".json_encode($day) . " <br/>";
             $availability_response = $this->check_for_weekend_days($day, $assigned_physician);
+            echo "called wekend function.";
             if ($availability_response["available"]) {
                 return $availability_response;
             }
