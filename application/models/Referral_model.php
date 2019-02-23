@@ -975,7 +975,8 @@ class Referral_model extends CI_Model {
                             //                        "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P1D"))->format("Y-m-d H:i:s"),
                             //                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P2D"))->format("Y-m-d H:i:s"),
                             //                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P3D"))->format("Y-m-d H:i:s"),
-                            "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
+                            "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))
+                                ->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
                             "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT20M"))->format("Y-m-d H:i:s"),
                             "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT30M"))->format("Y-m-d H:i:s"),
                             "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT40M"))->format("Y-m-d H:i:s"),
@@ -1038,6 +1039,7 @@ class Referral_model extends CI_Model {
                             log_message("error", "<br/> call response = " . $resp . "<br/>");
                             log_message("error", "Call completed " . json_encode($resp));
                         } else {
+                            echo "sending sms";
                             $msg = "Hello <patient name>,\n"
                                     . "\n"
                                     . "This is an automated appointment booking message from <clinic name>. "
@@ -1065,7 +1067,7 @@ class Referral_model extends CI_Model {
                             $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
 
                             $this->send_sms($msg_data->cell_phone, $msg);
-
+                            echo "sms sent";
                             //change accepted status to "SMS"
                             $this->db->where(array(
                                 "id" => $msg_data->referral_id
