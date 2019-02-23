@@ -44,7 +44,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                                 . "'2', if("
                                 . "reminder_48h >= '" . $before_5_min->format("Y-m-d H:i:s") . "' AND "
                                 . "reminder_48h < '" . $cur_time->format("Y-m-d H:i:s") . "', "
-                                . "'3', ))) as reminder_type")
+                                . "'3', 0))) as reminder_type")
                         ->from("records_patient_visit_reserved")
                         ->group_start()->where(array(
                             "notify_type" => "sms",
