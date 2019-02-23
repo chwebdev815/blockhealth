@@ -6,8 +6,19 @@ if (!defined('BASEPATH'))
 class Efax extends CI_Controller {
 
     public function index() {
-        $From = "+123456";
-        echo substr($From, 1);
+        $reminder_type = "1";
+        $notify_type = "sms";
+        $notify_status = "SMS, Call1";
+        
+        $status_number = intval($reminder_type) + (($notify_type === 'sms') ? 1 : 0);
+        $split = explode(", ", $notify_status);
+        echo "split 1 = " . json_encode($split);
+        $next_status = "Call" . $status_number;
+        $split[] = $next_status;
+        echo "split 2 = " . json_encode($split);
+        $notification_status = implode(", ", $split);
+        
+        echo "status = " . $notification_status;
     }
 
     public function send_referral_efax() {
