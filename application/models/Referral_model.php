@@ -2043,7 +2043,7 @@ class Referral_model extends CI_Model {
         if ($this->check_for_specific_leaves($day)) {
             echo "checking availability of day ".json_encode($day) . " <br/>";
             echo "dr = " . $assigned_physician;
-//            $availability_response = $this->check_for_weekend_days($day, $assigned_physician);
+            $availability_response = $this->check_for_weekend_days($day, $assigned_physician);
             echo "called wekend function.";
 //            if ($availability_response["available"]) {
 //                return $availability_response;
@@ -2059,39 +2059,39 @@ class Referral_model extends CI_Model {
         //convert day to weekday name
         echo "### called check_for_weekend_days <br/>";
         echo "day = " . json_encode($day) . "<br/>";
-        return true;
-        $weekday_name = strtolower($day->format('D'));
-        $day = strtolower($day->format('Y-m-d'));
-        $data = $this->db->select("$weekday_name as available, start_time, end_time")
-                        ->from("schedule_visit_settings")->where(array(
-                    "clinic_physician_id" => $assigned_physician, //convert to session then
-                    "active" => "yes"
-                ))->get()->result();
-
-        echo json_encode($day) . "<br/>";
-        log_message("error", "check_for_weekend_days = " . $this->db->last_query());
-
-
-        if ($data) {
-            if ($data[0]->available === "yes") {
-                $response = array(
-                    "available" => true,
-                    "day_start_time" => $data[0]->start_time,
-                    "day_end_time" => $data[0]->end_time,
-                    "day" => $day
-                );
-            } else {
-                $response = array(
-                    "available" => false
-                );
-            }
-        } else {
-            $response = array(
-                "available" => false
-            );
-        }
-        echo "response = " . json_encode($response) . "<br/>";
-        return $response;
+        
+//        $weekday_name = strtolower($day->format('D'));
+//        $day = strtolower($day->format('Y-m-d'));
+//        $data = $this->db->select("$weekday_name as available, start_time, end_time")
+//                        ->from("schedule_visit_settings")->where(array(
+//                    "clinic_physician_id" => $assigned_physician, //convert to session then
+//                    "active" => "yes"
+//                ))->get()->result();
+//
+//        echo json_encode($day) . "<br/>";
+//        log_message("error", "check_for_weekend_days = " . $this->db->last_query());
+//
+//
+//        if ($data) {
+//            if ($data[0]->available === "yes") {
+//                $response = array(
+//                    "available" => true,
+//                    "day_start_time" => $data[0]->start_time,
+//                    "day_end_time" => $data[0]->end_time,
+//                    "day" => $day
+//                );
+//            } else {
+//                $response = array(
+//                    "available" => false
+//                );
+//            }
+//        } else {
+//            $response = array(
+//                "available" => false
+//            );
+//        }
+//        echo "response = " . json_encode($response) . "<br/>";
+//        return $response;
     }
 
     private function check_for_specific_leaves($day) {
