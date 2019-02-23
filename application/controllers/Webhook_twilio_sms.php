@@ -93,7 +93,7 @@ class Webhook_twilio_sms extends CI_Controller {
                             "notify_voice" => $reserved->notify_voice,
                             "notify_sms" => $reserved->notify_sms,
                             "notify_email" => $reserved->notify_email,
-                            "visit_confirmed" => "Awaiting confirmation",
+                            "visit_confirmed" => "Awaiting Confirmation",
                             "confirm_visit_key" => $reserved->confirm_visit_key,
                             "notify_status" => "Confirmed",
                             "notify_status_icon" => "green"

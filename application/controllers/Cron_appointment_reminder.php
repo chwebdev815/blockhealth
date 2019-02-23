@@ -29,7 +29,7 @@ class Cron_appointment_reminder extends CI_Controller {
         $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
                     "concat(visit_date, ' ', visit_time) > " => $string_plus_72_hour,
                     "concat(visit_date, ' ', visit_time) < " => $string_plus_72_hour_5_min,
-                    "visit_confirmed" => "Awaiting confirmation",
+                    "visit_confirmed" => "Awaiting Confirmation",
                 ))->get()->result();
 //        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
 //                    "id" => 47
