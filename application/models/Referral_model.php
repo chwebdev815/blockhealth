@@ -866,6 +866,23 @@ class Referral_model extends CI_Model {
                 $this->db->trans_start();
                 $patient_id = $this->get_patient_id($data["id"]);
 
+                //check if patient is assigned, else validation error
+                $assigned_physician = $this->db->select("c_ref.assigned_physician")
+                                ->from("clinic_referrals c_ref ,referral_patient_info pat")
+                                ->where(array(
+                                    "pat.id" => $patient_id,
+                                    "pat.active" => 1,
+                                    "c_ref.active" => 1
+                                ))
+                                ->where("pat.referral_id", "c_ref.id", false)
+                                ->get()->result();
+                if ($assigned_physician) {
+                    if ($assigned_physician[0]->assigned_physician == "0") {
+                        return "Please assign physician before scheduling it.";
+                    }
+                } else {
+                    return "Please assign physician before scheduling it.";
+                }
 
                 //validate notifications if allowed or not
                 $this->db->select('admin.id as clinic_id, c_ref.id as referral_id,'
@@ -976,7 +993,7 @@ class Referral_model extends CI_Model {
                             //                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P2D"))->format("Y-m-d H:i:s"),
                             //                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P3D"))->format("Y-m-d H:i:s"),
                             "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))
-                                ->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
+                                    ->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
                             "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT20M"))->format("Y-m-d H:i:s"),
                             "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT30M"))->format("Y-m-d H:i:s"),
                             "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT40M"))->format("Y-m-d H:i:s"),
@@ -2066,7 +2083,7 @@ class Referral_model extends CI_Model {
         //convert day to weekday name
 //        echo "### called check_for_weekend_days <br/>";
 //        echo "day = " . json_encode($day) . "<br/>";
-        
+
         $weekday_name = strtolower($day->format('D'));
         $day = strtolower($day->format('Y-m-d'));
         $data = $this->db->select("$weekday_name as available, start_time, end_time")
