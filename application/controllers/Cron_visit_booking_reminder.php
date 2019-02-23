@@ -704,7 +704,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "notify_voice" => $reserved_data["notify_voice"],
                     "notify_sms" => $reserved_data["notify_sms"],
                     "notify_email" => $reserved_data["notify_email"],
-                    "visit_confirmed" => "Change required"
+                    "visit_confirmed" => "Change required",
+                    "notify_status" => "Contact directly",
+                    "notify_status_icon" => "yellow"
                 );
                 $this->db->insert("records_patient_visit", $insert_data);
 
@@ -718,7 +720,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 ));
 
                 //set status in accepted_status
-                $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
+                $referral_id = $this->db->select("c_ref.id")
+                        ->from("clinic_referrals c_ref, referral_patient_info pat")
+                        ->where(array(
                             "pat.id" => $get["patient_id"]
                         ))->get()->result()[0]->id;
 
@@ -763,26 +767,26 @@ class Cron_visit_booking_reminder extends CI_Controller {
             }
 
 
-            try {
-
-                $params = array(
-                    'data' => $_GET["Digits"],
-                    'to' => $_GET['To']
-                );
-
-                $defaults = array(
-                    CURLOPT_URL => $base_url . "efax/call_handle",
-                    CURLOPT_POST => true,
-                    CURLOPT_POSTFIELDS => http_build_query($params)
-                );
-                $ch = curl_init($base_url . "efax/call_handle");
-                curl_setopt_array($ch, $defaults);
-
-                curl_exec($ch);
-                curl_close($ch);
-            } catch (Exception $e) {
-                echo "Error in response file";
-            }
+//            try {
+//
+//                $params = array(
+//                    'data' => $_GET["Digits"],
+//                    'to' => $_GET['To']
+//                );
+//
+//                $defaults = array(
+//                    CURLOPT_URL => $base_url . "efax/call_handle",
+//                    CURLOPT_POST => true,
+//                    CURLOPT_POSTFIELDS => http_build_query($params)
+//                );
+//                $ch = curl_init($base_url . "efax/call_handle");
+//                curl_setopt_array($ch, $defaults);
+//
+//                curl_exec($ch);
+//                curl_close($ch);
+//            } catch (Exception $e) {
+//                echo "Error in response file";
+//            }
         }
     }
 
@@ -882,9 +886,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
                                 "id" => $reserved_id
                             ))->get()->result_array()[0];
 
-
-                    //[{"id":"0","patient_id":"2","visit_name":"visit check","visit_date1":"2019-02-08","visit_start_time1":"09:00:00","visit_end_time1":"09:30:00","visit_date2":"2019-02-11","visit_start_time2":"09:00:00","visit_end_time2":"09:30:00","visit_date3":"2019-02-12","visit_start_time3":"09:00:00","visit_end_time3":"09:30:00","visit_expire_time":"2019-02-07 11:21:53","reminder_1h":null,"reminder_24h":"2019-02-08 10:21:53","reminder_48h":"2019-02-09 10:21:53","reminder_72h":"2019-02-10 10:21:53","confirm_key":"1","notify_type":"call","notify_voice":"1","notify_sms":"1","notify_email":"1","confirm_visit_key":"1549552913_SphROVHWj3RuNDJpfkv0GkMy4N7Q5tJYT_PGUvBdyrHl3qLjKgjqA5YES5tYzbWrbK65eIiN9_8dpTw98PzJUxmMCQKb1FCcoJiDqAqzzyNZri7A6Gi0cFNP","visit_confirmed":"Awaiting Confirmation","create_datetime":"2019-02-07 15:21:53","active":"1"}]
-
                     $visit_date = $reserved_data["visit_date" . $num];
                     $visit_time = $reserved_data["visit_start_time" . $num];
                     $visit_end_time = $reserved_data["visit_end_time" . $num];
@@ -902,7 +903,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         "notify_sms" => $reserved_data["notify_sms"],
                         "notify_email" => $reserved_data["notify_email"],
                         "visit_confirmed" => "Awaiting Confirmation",
-                        "notify_status" => "Awaiting Confirmation",
+                        "notify_status" => "Confirmed",
                         "notify_status_icon" => "green"
                     );
                     //insert in scheduled visit
