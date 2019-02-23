@@ -120,9 +120,11 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     $allocations = $response["data"];
                 }
                 //make call with proper data
+                log_message("error", "reminder = " . $visit->reminder_type . ", ");
                 $status_number = intval($visit->reminder_type) + (($visit->notify_type === 'sms') ? 1 : 0);  
                 $split = $visit->notify_status . split(", ");
-                $notification_status = array_push($split, "Call".$status_number);
+                $notification_status = implode(array_push($split, "Call".$status_number), ", ");
+                
 
                 log_message("error", "status is changing from " . $visit->notify_status . " to " . $notification_status);
                 $update_data = array(
