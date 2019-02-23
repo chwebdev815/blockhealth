@@ -61,7 +61,9 @@ class Webhook_twilio_sms extends CI_Controller {
                             "notify_sms" => $reserved->notify_sms,
                             "notify_email" => $reserved->notify_email,
                             "visit_confirmed" => "Change required",
-                            "confirm_visit_key" => $reserved->confirm_visit_key
+                            "confirm_visit_key" => $reserved->confirm_visit_key,
+                            "notify_status" => "Contact directly",
+                            "notify_status_icon" => "yellow"
                         ));
                         $msg = "Thank you. Staff from the clinic will be in touch shortly";
 
@@ -92,7 +94,9 @@ class Webhook_twilio_sms extends CI_Controller {
                             "notify_sms" => $reserved->notify_sms,
                             "notify_email" => $reserved->notify_email,
                             "visit_confirmed" => "Awaiting confirmation",
-                            "confirm_visit_key" => $reserved->confirm_visit_key
+                            "confirm_visit_key" => $reserved->confirm_visit_key,
+                            "notify_status" => "Confirmed",
+                            "notify_status_icon" => "green"
                         );
 
                         if ($Body === "1") {
