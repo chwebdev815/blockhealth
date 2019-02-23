@@ -2039,7 +2039,7 @@ class Referral_model extends CI_Model {
     }
 
     private function check_day_availability($day, $assigned_physician) {
-        echo "checking day availability <br/>";
+        echo "checking day availability. here now<br/>";
         if ($this->check_for_specific_leaves($day)) {
             echo "checking availability of day ".json_encode($day) . " <br/>";
             $availability_response = $this->check_for_weekend_days($day, $assigned_physician);
@@ -2058,7 +2058,7 @@ class Referral_model extends CI_Model {
         //convert day to weekday name
         echo "### called check_for_weekend_days <br/>";
         echo "day = " . json_encode($day) . "<br/>";
-
+        return true;
         $weekday_name = strtolower($day->format('D'));
         $day = strtolower($day->format('Y-m-d'));
         $data = $this->db->select("$weekday_name as available, start_time, end_time")
