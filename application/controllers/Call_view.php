@@ -15,8 +15,8 @@ class Call_view extends CI_Controller {
     }
 
     public function call() {
-        
-        
+
+
         log_message("error", "at call start from call_view");
         $pname = $this->input->post('defaultContactFormName');
         $patient_lname = $this->input->post('patient_lname');
@@ -33,7 +33,7 @@ class Call_view extends CI_Controller {
         $address = $this->input->post('address');
         $type = $this->input->post("type");
         $reserved_id = $this->input->post("reserved_id");
-        
+
         log_message("error", "call function post = " . json_encode($this->input->post()));
 
         if (!empty($mob)) {
@@ -52,7 +52,7 @@ class Call_view extends CI_Controller {
         //$to = "+919876907251";  
 //        $to_number = "+917201907712";
 
-        
+
         $url = "http://35.203.47.37/" . "call_view/callhandle?"
                 . "pname=" . urlencode($pname) . "&"
                 . "patient_lname=" . urlencode($patient_lname) . "&"
@@ -82,8 +82,8 @@ class Call_view extends CI_Controller {
         $result = curl_exec($res);
         $resp = json_decode($result);
         $status = curl_getinfo($res, CURLINFO_HTTP_CODE);
-        
-        
+
+
         log_message("error", "at call_confirm from " . $url);
 //        echo "<pre>";
 //        print_r($resp);
@@ -246,7 +246,44 @@ class Call_view extends CI_Controller {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response><Say voice='Polly.Joanna'>Thank you</Say></Response>";
 
+                $get = $_GET;
+                //insert in scheduled visit
+                $insert_data = array(
+                    "patient_id" => $get["patient_id"],
+                    "visit_name" => $get["pvname"],
+                    "notify_type" => $reserved_data["notify_type"],
+                    "notify_voice" => $reserved_data["notify_voice"],
+                    "notify_sms" => $reserved_data["notify_sms"],
+                    "notify_email" => $reserved_data["notify_email"],
+                    "visit_confirmed" => "Change required",
+                    "notify_status" => "Wrong Number",
+                    "notify_status_icon" => "red"
+                );
+                $this->db->insert("records_patient_visit", $insert_data);
 
+                //disable from reserved table
+                $this->db->where(array(
+                    "id" => $reserved_id
+                ));
+                $this->db->update("records_patient_visit_reserved", array(
+                    "active" => 0,
+                    "visit_confirmed" => "Booked",
+                ));
+
+                //set status in accepted_status
+                $referral_id = $this->db->select("c_ref.id")
+                        ->from("clinic_referrals c_ref, referral_patient_info pat")
+                        ->where(array(
+                            "pat.id" => $get["patient_id"]
+                        ))->get()->result()[0]->id;
+
+                $this->db->where(array(
+                    "id" => $referral_id
+                ))->update("clinic_referrals", array(
+                    "accepted_status" => "Wrong Number",
+                    "accepted_status_icon" => "red"
+                ));
+                
                 $params = array(
                     'data' => $_GET["Digits"],
                     'to' => $_GET['To']
@@ -509,7 +546,9 @@ class Call_view extends CI_Controller {
                     "notify_voice" => $reserved_data["notify_voice"],
                     "notify_sms" => $reserved_data["notify_sms"],
                     "notify_email" => $reserved_data["notify_email"],
-                    "visit_confirmed" => "Change required"
+                    "visit_confirmed" => "Change required",
+                    "notify_status" => "Contact directly",
+                    "notify_status_icon" => "yellow"
                 );
                 $this->db->insert("records_patient_visit", $insert_data);
 
@@ -519,11 +558,13 @@ class Call_view extends CI_Controller {
                 ));
                 $this->db->update("records_patient_visit_reserved", array(
                     "active" => 0,
-                    "visit_confirmed" => "Booked"
+                    "visit_confirmed" => "Booked",
                 ));
 
                 //set status in accepted_status
-                $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
+                $referral_id = $this->db->select("c_ref.id")
+                        ->from("clinic_referrals c_ref, referral_patient_info pat")
+                        ->where(array(
                             "pat.id" => $get["patient_id"]
                         ))->get()->result()[0]->id;
 
@@ -706,7 +747,9 @@ class Call_view extends CI_Controller {
                         "notify_voice" => $reserved_data["notify_voice"],
                         "notify_sms" => $reserved_data["notify_sms"],
                         "notify_email" => $reserved_data["notify_email"],
-                        "visit_confirmed" => "Awaiting Confirmation"
+                        "visit_confirmed" => "Awaiting Confirmation",
+                        "notify_status" => "Confirmed",
+                        "notify_status_icon" => "green"
                     );
                     //insert in scheduled visit
                     $this->db->insert("records_patient_visit", $insert_data);
@@ -721,7 +764,9 @@ class Call_view extends CI_Controller {
 
 
                     //set status in accepted_status
-                    $referral_id = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, referral_patient_info pat")->where(array(
+                    $referral_id = $this->db->select("c_ref.id")
+                            ->from("clinic_referrals c_ref, referral_patient_info pat")
+                            ->where(array(
                                 "pat.id" => $get["patient_id"]
                             ))->get()->result()[0]->id;
 

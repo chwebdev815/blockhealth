@@ -980,6 +980,8 @@ class Referral_model extends CI_Model {
                             "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT30M"))->format("Y-m-d H:i:s"),
                             "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT40M"))->format("Y-m-d H:i:s"),
                             "confirm_visit_key" => $confirm_visit_key,
+                            "notify_status" => ($call_immediately) ? "Call1" : "SMS",
+                            "notify_status_icon" => "green",
                             "visit_confirmed" => "N/A"
                         );
 

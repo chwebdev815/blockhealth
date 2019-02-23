@@ -293,12 +293,36 @@ class Cron_appointment_reminder extends CI_Controller {
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         if ($_GET['Digits'] == 1) {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, your appointment has been confirmed </Say></Response>";
+            //set status for visit
+            $this->db->where(array(
+                "id" => $reserved_id
+            ))->update("records_patient_visit", array(
+                "visit_confirmed" => "Confirmed",
+                "notify_status" => "Confirmed",
+                "notify_status_icon" => "green"
+            ));
+
+            //set status in accepted_status
+            $referral_id = $this->db->select("c_ref.id")
+                            ->from("clinic_referrals c_ref, referral_patient_info pat")
+                            ->where(array(
+                                "pat.id" => $patient_id
+                            ))->get()->result()[0]->id;
+
+            $this->db->where(array(
+                "id" => $referral_id
+            ))->update("clinic_referrals", array(
+                "accepted_status" => "Confirmed",
+                "accepted_status_icon" => "green"
+            ));
         } elseif ($_GET['Digits'] == 2) {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, the clinic has been notified and will be in touch shortly</Say></Response>";
             $this->db->where(array(
                 "id" => $reserved_id
             ))->update("records_patient_visit", array(
-                "visit_confirmed" => "Change required"
+                "visit_confirmed" => "Change required",
+                "notify_status" => "Contact directly",
+                "notify_status_icon" => "yellow"
             ));
         } elseif ($_GET['Digits'] == 3) {
             echo "<Response><Redirect method='GET'>" .
@@ -316,68 +340,33 @@ class Cron_appointment_reminder extends CI_Controller {
             . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
             . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
             . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;Digits=timeout</Redirect></Response>";
+
+            //set visit status
+            $this->db->where(array(
+                "id" => $reserved_id
+            ))->update("records_patient_visit", array(
+                "visit_confirmed" => "Wrong Number",
+                "notify_status" => "Wrong Number",
+                "notify_status_icon" => "red"
+            ));
+            
+            
+            //set status in accepted_status
+            $referral_id = $this->db->select("c_ref.id")
+                            ->from("clinic_referrals c_ref, referral_patient_info pat")
+                            ->where(array(
+                                "pat.id" => $patient_id
+                            ))->get()->result()[0]->id;
+
+            $this->db->where(array(
+                "id" => $referral_id
+            ))->update("clinic_referrals", array(
+                "accepted_status" => "Wrong Number",
+                "accepted_status_icon" => "red"
+            ));
         } else {
             echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
         }
-
-
-
-//        try {
-//
-//            $params = array(
-//                'data' => $_REQUEST["Digits"],
-//                'to' => $_REQUEST['To']
-//            );
-//
-//            $defaults = array(
-//                CURLOPT_URL => "$base_url/efax/call_handle",
-//                CURLOPT_POST => true,
-//                CURLOPT_POSTFIELDS => http_build_query($params)
-//            );
-//            $ch = curl_init("$base_url/efax/call_handle");
-//            curl_setopt_array($ch, $defaults);
-//
-//            curl_exec($ch);
-//            curl_close($ch);
-//
-////	$myFile = "testFile.txt";
-////	$fh = fopen($myFile, 'a') or die("can't open file");
-////	$stringData = "Data saving from response ===> " . json_encode($_REQUEST);
-////	fwrite($fh, $stringData);
-////	fclose($fh);
-//        } catch (Exception $e) {
-//            echo "Error in response file";
-////	$myFile = "testFile.txt";
-////	$fh = fopen($myFile, 'a') or die("can't open file");
-////	$stringData = "Error in call handle" . $e->getMessage();
-////	fwrite($fh, $stringData);
-////	fclose($fh);
-//        }
-//
-//        if ($Body == "1") {
-//            if ($row->visit_confirmed == "Awaiting Confirmation" || $row->visit_confirmed == "Change required") {
-//                //change status to confirm
-//                $this->db->where(array(
-//                    "id" => $row->id
-//                ));
-//                $this->db->set("visit_confirmed", "Confirmed");
-//                $this->db->update("records_patient_visit");
-//                $change_status = true;
-//                log_message("error", "change (1) " . $this->db->last_query());
-//            }
-//        }
-//        if ($Body == "2") {
-//            if ($row->visit_confirmed == "Awaiting Confirmation") {
-//                //change status to Change required
-//                $this->db->where(array(
-//                    "id" => $row->id
-//                ));
-//                $this->db->set("visit_confirmed", "Change required");
-//                $this->db->update("records_patient_visit");
-//                $change_status = true;
-//                log_message("error", "change (2) " . $this->db->last_query());
-//            }
-//        }
     }
 
 }
