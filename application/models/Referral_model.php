@@ -1843,29 +1843,29 @@ class Referral_model extends CI_Model {
             $counter = 0;
             do {
                 //for each day
-                echo "*** day = " . json_encode($day) . "<br/>";
+//                echo "*** day = " . json_encode($day) . "<br/>";
                 $scheduling_day = $this->check_day_availability($day, $assigned_physician);
-                echo " [][][][][][] => checking availablility for day for pv to be created = " . json_encode($day->format("Y-m-d")) . "<br/>";
+//                echo " [][][][][][] => checking availablility for day for pv to be created = " . json_encode($day->format("Y-m-d")) . "<br/>";
                 $day_assigned = false;
 //                echo "availability checked fine";
 
                 if ($scheduling_day["available"]) {
-                    echo "is available <br/>";
+//                    echo "is available <br/>";
                     $day_start_time = $scheduling_day["day_start_time"];
                     $day_end_time = $scheduling_day["day_end_time"];
 
-                    echo "day times = $day_start_time and $day_end_time <br/>";
+//                    echo "day times = $day_start_time and $day_end_time <br/>";
 
                     $processed_keys = 0;
                     $time1 = $scheduling_day["day"] . " " . $day_start_time;
 
                     $visits_booked_for_day = $this->get_visit_booked_for_day($day, $visits_booked);
-                    echo "visits_booked_for_day = " . json_encode($visits_booked_for_day) . "<br/>";
+//                    echo "visits_booked_for_day = " . json_encode($visits_booked_for_day) . "<br/>";
                     if (sizeof($visits_booked_for_day) != 0) {
-                        echo "visits_booked_for_day has visits <br/>";
+//                        echo "visits_booked_for_day has visits <br/>";
 
                         for ($key = 0; $key < sizeof($visits_booked_for_day) && !$day_assigned; $key++) {
-                            echo "inside for loop <br/>";
+//                            echo "inside for loop <br/>";
                             $processed_keys = $key;
                             $visit_start_time = null;
                             $visit_end_time = null;
@@ -1881,20 +1881,20 @@ class Referral_model extends CI_Model {
 
                             $time2 = $visit_start_time;
 
-                            echo "################ check between " . $time1 . " to " . $time2 . " <br/>";
+//                            echo "################ check between " . $time1 . " to " . $time2 . " <br/>";
                             $slot_response = $this->time_slot_available($time1, $time2, $new_visit_duration);
-                            echo "1. response from slot = " . json_encode($slot_response) . "<br/>";
+//                            echo "1. response from slot = " . json_encode($slot_response) . "<br/>";
                             if ($slot_response["available"]) {
                                 $new_visit = array(
                                     "start_time" => $slot_response["start_time"],
                                     "end_time" => $slot_response["end_time"]
                                 );
                                 $available_visit_slots[] = $new_visit;
-                                echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
+//                                echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
                                 $day_assigned = true;
                             } else {
                                 //check for next visit
-                                echo "setting time1 to visit end time <br/>";
+//                                echo "setting time1 to visit end time <br/>";
                                 $time1 = $visit_end_time;
                             }
                         }
@@ -1902,50 +1902,50 @@ class Referral_model extends CI_Model {
                         if (!$day_assigned) {
                             $time1 = $last_visit_end_time;
                             $time2 = $scheduling_day["day"] . " " . $day_end_time;
-                            echo "at end of day <br/>";
-                            echo "################ check between " . $time1 . " to " . $time2 . " <br/>";
+//                            echo "at end of day <br/>";
+//                            echo "################ check between " . $time1 . " to " . $time2 . " <br/>";
                             $slot_response = $this->time_slot_available($time1, $time2, $new_visit_duration);
-                            echo "2. response from slot = " . json_encode($slot_response) . "<br/>";
+//                            echo "2. response from slot = " . json_encode($slot_response) . "<br/>";
                             if ($slot_response["available"]) {
                                 $new_visit = array(
                                     "start_time" => $slot_response["start_time"],
                                     "end_time" => $slot_response["end_time"]
                                 );
                                 $available_visit_slots[] = $new_visit;
-                                echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
+//                                echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
                                 $day_assigned = true;
                             }
                         }
 
 //                    $time2 = 
-                        echo "should check for visit slot <br/>";
+//                        echo "should check for visit slot <br/>";
                     } else {
-                        echo "visits_booked_for_day has no visits <br/>";
+//                        echo "visits_booked_for_day has no visits <br/>";
                         $time2 = $scheduling_day["day"] . " " . $day_end_time;
 
                         $slot_response = $this->time_slot_available($time1, $time2, $new_visit_duration);
-                        echo "response from slot = " . json_encode($slot_response) . "<br/>";
-                        echo "2. response from slot = " . json_encode($slot_response) . "<br/>";
+//                        echo "response from slot = " . json_encode($slot_response) . "<br/>";
+//                        echo "2. response from slot = " . json_encode($slot_response) . "<br/>";
                         if ($slot_response["available"]) {
                             $new_visit = array(
                                 "start_time" => $slot_response["start_time"],
                                 "end_time" => $slot_response["end_time"]
                             );
                             $available_visit_slots[] = $new_visit;
-                            echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
+//                            echo " =====> assigned to " . json_encode($new_visit) . "<br/>";
                             $day_assigned = true;
                         }
                     }
                 } else {
-                    echo "is not available <br/>";
+//                    echo "is not available <br/>";
                 }
                 $day = $day->modify('+1 day');
-                echo "moving to " . $day->format("Y-m-d") . "<br/>";
+//                echo "moving to " . $day->format("Y-m-d") . "<br/>";
                 $counter++;
             } while (sizeof($available_visit_slots) < 3 && $counter < 100);
 
 
-            echo "<br/> ============================================================= <br/>";
+//            echo "<br/> ============================================================= <br/>";
             return array(
                 "result" => "success",
                 "data" => $available_visit_slots
@@ -2039,18 +2039,18 @@ class Referral_model extends CI_Model {
     }
 
     private function check_day_availability($day, $assigned_physician) {
-        echo "checking day availability. here now<br/>";
+//        echo "checking day availability. here now<br/>";
         if ($this->check_for_specific_leaves($day)) {
-            echo "checking availability of day ".json_encode($day) . " <br/>";
-            echo "dr = " . $assigned_physician;
+//            echo "checking availability of day ".json_encode($day) . " <br/>";
+//            echo "dr = " . $assigned_physician;
             $availability_response = $this->check_for_weekend_days($day, $assigned_physician);
-            echo json_encode($availability_response) . "<br/>";
-            echo "called wekend function." . "<br/>";
+//            echo json_encode($availability_response) . "<br/>";
+//            echo "called wekend function." . "<br/>";
             if (isset($availability_response["available"]) && $availability_response["available"]) {
                 return $availability_response;
             }
         }
-        echo "specific leave false . <br/>";
+//        echo "specific leave false . <br/>";
         return array(
             "available" => false
         );
@@ -2071,7 +2071,7 @@ class Referral_model extends CI_Model {
                     "active" => "yes"
                 ))->get()->result();
 
-        echo json_encode($day) . "<br/>";
+//        echo json_encode($day) . "<br/>";
         log_message("error", "check_for_weekend_days = " . $this->db->last_query());
 //
 //
