@@ -866,24 +866,6 @@ class Referral_model extends CI_Model {
                 $this->db->trans_start();
                 $patient_id = $this->get_patient_id($data["id"]);
 
-                //check if patient is assigned, else validation error
-                $assigned_physician = $this->db->select("c_ref.assigned_physician")
-                                ->from("clinic_referrals c_ref ,referral_patient_info pat")
-                                ->where(array(
-                                    "pat.id" => $patient_id,
-                                    "pat.active" => 1,
-                                    "c_ref.active" => 1
-                                ))
-                                ->where("pat.referral_id", "c_ref.id", false)
-                                ->get()->result();
-                if ($assigned_physician) {
-                    if (intval($assigned_physician[0]->assigned_physician) == 0) {
-                        return "Please assign physician before scheduling it.";
-                    }
-                } else {
-                    return "Please assign physician before scheduling it.";
-                }
-
                 //validate notifications if allowed or not
                 $this->db->select('admin.id as clinic_id, c_ref.id as referral_id,'
                         . 'CASE WHEN ('
@@ -1784,7 +1766,8 @@ class Referral_model extends CI_Model {
                         ->where(array(
                             "pat.active" => 1,
                             "c_ref.active" => 1,
-                            "pat.id" => $patient_id
+                            "pat.id" => $patient_id,
+                            "c_ref.assigned_physician <>" => 0
                         ))
                         ->where("pat.referral_id", "c_ref.id", false)
                         ->get()->result();
