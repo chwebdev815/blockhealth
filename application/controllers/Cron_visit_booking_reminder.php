@@ -79,8 +79,10 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
             //get clinic id for patient
             $this->db->select('admin.id as clinic_id, '
-                    . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") THEN "false" ELSE "true" END AS allow_sms,' .
-                    'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, ' .
+                    . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") '
+                    . 'THEN "false" ELSE "true" END AS allow_sms,' .
+                    'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") '
+                    . 'THEN "false" ELSE "true" END AS allow_email, ' .
                     "admin.address," .
                     "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
                     "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
@@ -118,8 +120,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     $allocations = $response["data"];
                 }
                 //make call with proper data
-                $notification_status = intval($visit->reminder_type) + (($visit->notify_type === 'sms') ? 1 : 0);
-                $notification_status = array_push($visit->notify_status . split(", "), "Call$notification_status");
+                $status_number = intval($visit->reminder_type) + (($visit->notify_type === 'sms') ? 1 : 0);  
+                $split = $visit->notify_status . split(", ");
+                $notification_status = array_push($split, "Call".$status_number);
 
                 log_message("error", "status is changing from " . $visit->notify_status . " to " . $notification_status);
                 $update_data = array(
