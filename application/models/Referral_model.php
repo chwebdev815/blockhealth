@@ -877,7 +877,7 @@ class Referral_model extends CI_Model {
                                 ->where("pat.referral_id", "c_ref.id", false)
                                 ->get()->result();
                 if ($assigned_physician) {
-                    if ($assigned_physician[0]->assigned_physician == "0") {
+                    if (intval($assigned_physician[0]->assigned_physician) == 0) {
                         return "Please assign physician before scheduling it.";
                     }
                 } else {
