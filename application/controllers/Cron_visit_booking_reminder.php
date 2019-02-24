@@ -121,11 +121,20 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 }
                 //make call with proper data
                 log_message("error", "reminder = " . $visit->reminder_type . ", ");
-                $status_number = intval($visit->reminder_type) + (($visit->notify_type === 'sms') ? 1 : 0);
-                $split = explode(", ", $visit->notify_status);
-                $split[] = "Call".$status_number;
-                $notification_status = implode(", ", $split);
-                
+                $visit->reminder_type = intval($visit->reminder_type);
+                $notification_status = "Default";
+                if ($visit->reminder_type == 3) {
+                    $notification_status = "No response";
+                    $notification_status_icon = "red";
+                } else {
+                    $status_number = $visit->reminder_type + (($visit->notify_type === 'sms') ? 1 : 0);
+                    $split = explode(", ", $visit->notify_status);
+                    $split[] = "Call" . $status_number;
+                    $notification_status = implode(", ", $split);
+                    $notification_status_icon = "green";
+                }
+
+
                 log_message("error", "status is changing from " . $visit->notify_status . " to " . $notification_status);
                 $update_data = array(
                     "visit_date1" => substr($allocations[0]["start_time"], 0, 10),
@@ -139,7 +148,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "visit_end_time3" => substr($allocations[2]["end_time"], 10),
                     "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
                     "notify_status" => $notification_status,
-                    "notify_status_icon" => "green"
+                    "notify_status_icon" => $notification_status_icon
                 );
                 $this->db->where(array(
                     "id" => $visit->id
@@ -726,10 +735,10 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
                 //set status in accepted_status
                 $referral_id = $this->db->select("c_ref.id")
-                        ->from("clinic_referrals c_ref, referral_patient_info pat")
-                        ->where(array(
-                            "pat.id" => $get["patient_id"]
-                        ))->get()->result()[0]->id;
+                                ->from("clinic_referrals c_ref, referral_patient_info pat")
+                                ->where(array(
+                                    "pat.id" => $get["patient_id"]
+                                ))->get()->result()[0]->id;
 
                 $this->db->where(array(
                     "id" => $referral_id
