@@ -744,13 +744,13 @@ class Referral_model extends CI_Model {
                 if(intval($visit_scheduled->visits) > 0) {
                     return array(
                         "result" => "success",
-                        "is_patient_scheduled_model" => true
+                        "is_patient_scheduled" => true
                     );
                 }
                 else {
                     return array(
                         "result" => "success",
-                        "is_patient_scheduled_model" => false
+                        "is_patient_scheduled" => false
                     );
                 }
                 
