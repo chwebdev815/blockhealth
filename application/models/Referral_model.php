@@ -739,7 +739,7 @@ class Referral_model extends CI_Model {
                             "Confirmed",
                             "Change required"
                         ))
-                        ->get->result()[0];
+                        ->get()->result()[0];
                 
                 if(intval($visit_scheduled->visits) > 0) {
                     return array(
