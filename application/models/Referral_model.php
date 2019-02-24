@@ -996,10 +996,10 @@ class Referral_model extends CI_Model {
                         }
 
                         if ($call_immediately) {
-                            $expire_minutes = "10";
+                            $expire_minutes = "5";
                         } else {
-                            $expire_minutes = "60"; // uncomment this line
-//                            $expire_minutes = "0";  // comment this line
+//                            $expire_minutes = "60"; // uncomment this line
+                            $expire_minutes = "10";  // comment this line
                         }
 
                         $visit_datetime = array();
@@ -1075,7 +1075,7 @@ class Referral_model extends CI_Model {
                             );
 
 
-                            //change accepted status to "SMS"
+                            //change accepted status to "Call1"
                             $this->db->where(array(
                                 "id" => $msg_data->referral_id
                             ))->update("clinic_referrals", array(
@@ -1129,7 +1129,7 @@ class Referral_model extends CI_Model {
                             $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
 
                             $this->send_sms($msg_data->cell_phone, $msg);
-//                            echo "sms sent";
+                            
                             //change accepted status to "SMS"
                             $this->db->where(array(
                                 "id" => $msg_data->referral_id

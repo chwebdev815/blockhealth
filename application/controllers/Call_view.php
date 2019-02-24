@@ -255,9 +255,9 @@ class Call_view extends CI_Controller {
                     "notify_voice" => $reserved_data["notify_voice"],
                     "notify_sms" => $reserved_data["notify_sms"],
                     "notify_email" => $reserved_data["notify_email"],
-                    "visit_confirmed" => "Change required",
+                    "visit_confirmed" => "Wrong Number",
                     "notify_status" => "Wrong Number",
-                    "notify_status_icon" => "red"
+                    "notify_status_icon" => "blue"
                 );
                 $this->db->insert("records_patient_visit", $insert_data);
 
@@ -748,7 +748,7 @@ class Call_view extends CI_Controller {
                         "notify_sms" => $reserved_data["notify_sms"],
                         "notify_email" => $reserved_data["notify_email"],
                         "visit_confirmed" => "Awaiting Confirmation",
-                        "notify_status" => "Confirmed",
+                        "notify_status" => $reserved_data["notify_status"],
                         "notify_status_icon" => "green"
                     );
                     //insert in scheduled visit

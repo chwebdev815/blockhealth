@@ -38,13 +38,13 @@ class Cron_visit_booking_reminder extends CI_Controller {
         $remindable = $this->db->select("*, if(notify_type='sms' AND "
                                 . "reminder_1h >= '" . $before_5_min->format("Y-m-d H:i:s") . "' AND "
                                 . "reminder_1h < '" . $cur_time->format("Y-m-d H:i:s") . "', "
-                                . "'1', if("
+                                . "'1h', if("
                                 . "reminder_24h >= '" . $before_5_min->format("Y-m-d H:i:s") . "' AND "
                                 . "reminder_24h < '" . $cur_time->format("Y-m-d H:i:s") . "', "
-                                . "'2', if("
+                                . "'24h', if("
                                 . "reminder_48h >= '" . $before_5_min->format("Y-m-d H:i:s") . "' AND "
                                 . "reminder_48h < '" . $cur_time->format("Y-m-d H:i:s") . "', "
-                                . "'3', 0))) as reminder_type")
+                                . "'48h', 0))) as reminder_type")
                         ->from("records_patient_visit_reserved")
                         ->group_start()->where(array(
                             "notify_type" => "sms",
@@ -122,16 +122,27 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 //make call with proper data
                 log_message("error", "reminder = " . $visit->reminder_type . ", ");
                 $visit->reminder_type = intval($visit->reminder_type);
-                $notification_status = "Default";
-                if ($visit->reminder_type == 3) {
-                    $notification_status = "No response";
+                $notification_status = $visit->notify_status;
+                $notification_status_icon = "green";
+//                if ($visit->reminder_type == 3) {
+//                    $notification_status = "No response";
+//                    $notification_status_icon = "red";
+//                } else {
+//                    $status_number = $visit->reminder_type + (($visit->notify_type === 'sms') ? 1 : 0);
+//                    $split = explode(", ", $visit->notify_status);
+//                    $split[] = "Call" . $status_number;
+//                    $notification_status = implode(", ", $split);
+//                    $notification_status_icon = "green";
+//                }
+                if($visit->reminder_type === "1h") {
+                    $notification_status .= ", Call1";
+                }
+                else if($visit->reminder_type == "24h") {
+                    $notification_status .= ", Call2";
+                }
+                else if($visit->reminder_type == "48h") {
+                    $notification_status .= "No response";
                     $notification_status_icon = "red";
-                } else {
-                    $status_number = $visit->reminder_type + (($visit->notify_type === 'sms') ? 1 : 0);
-                    $split = explode(", ", $visit->notify_status);
-                    $split[] = "Call" . $status_number;
-                    $notification_status = implode(", ", $split);
-                    $notification_status_icon = "green";
                 }
 
 
@@ -437,7 +448,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 ))->update("records_patient_visit", array(
                     "visit_confirmed" => "Wrong Number",
                     "notify_status" => "Wrong Number",
-                    "notify_status_icon" => "red"
+                    "notify_status_icon" => "blue"
                 ));
 
                 //set status in accepted_status
@@ -917,7 +928,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         "notify_sms" => $reserved_data["notify_sms"],
                         "notify_email" => $reserved_data["notify_email"],
                         "visit_confirmed" => "Awaiting Confirmation",
-                        "notify_status" => "Confirmed",
+                        "notify_status" => $reserved_data["notify_status"],
                         "notify_status_icon" => "green"
                     );
                     //insert in scheduled visit
