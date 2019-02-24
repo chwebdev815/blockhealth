@@ -273,6 +273,16 @@ class Referral extends CI_Controller {
         }
         echo json_encode($response);
     }
+    
+    public function is_visit_scheduled() {
+        if (clinic_login()) {
+            $this->load->model("referral_model");
+            $response = $this->referral_model->is_visit_scheduled_model();
+        } else {
+            $response = "Session Expired";
+        }
+        echo json_encode($response);
+    }
 
     public function confirm_visit_key() {
         $this->load->model("referral_model");

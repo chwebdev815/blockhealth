@@ -723,6 +723,51 @@ class Referral_model extends CI_Model {
             return validation_errors();
     }
 
+    public function is_visit_scheduled_model() {
+        $this->form_validation->set_rules('id', 'Patient Id', 'required');
+        if ($this->form_validation->run()) {
+            $data = $this->input->post();
+            $authorized = $this->check_authentication($data["id"]);
+            if ($authorized) {
+                $visit_scheduled = $this->db->select("count(r_pv.id) as visits")
+                        ->from("records_patient_visit r_pv")
+                        ->where(array(
+                            "md5(r_pv.patient_id)" => $data["id"],
+                            "r_pv.active" => 1
+                        ))
+                        ->where_in("r_pv.visit_confirmed", array(
+                            "Confirmed",
+                            "Change required"
+                        ))
+                        ->get->result()[0];
+                
+                if(intval($visit_scheduled->visits) > 0) {
+                    return array(
+                        "result" => "success",
+                        "is_visit_scheduled" => true
+                    );
+                }
+                else {
+                    return array(
+                        "result" => "success",
+                        "is_visit_scheduled" => false
+                    );
+                }
+                
+            } else {
+                return array(
+                    "result" => "error",
+                    "msg" => "You are not authorized for such Operation"
+                );
+            }
+        } else {
+            return array(
+                "result" => "error",
+                "msg" => validation_errors()
+            );
+        }
+    }
+
     public function set_priority_model() {
         $this->form_validation->set_rules('id', 'Patient Id', 'required');
         $this->form_validation->set_rules('target', 'Priority', 'required');
