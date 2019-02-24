@@ -723,7 +723,7 @@ class Referral_model extends CI_Model {
             return validation_errors();
     }
 
-    public function is_visit_scheduled_model() {
+    public function is_patient_scheduled_model() {
         $this->form_validation->set_rules('id', 'Patient Id', 'required');
         if ($this->form_validation->run()) {
             $data = $this->input->post();
@@ -744,13 +744,13 @@ class Referral_model extends CI_Model {
                 if(intval($visit_scheduled->visits) > 0) {
                     return array(
                         "result" => "success",
-                        "is_visit_scheduled" => true
+                        "is_patient_scheduled_model" => true
                     );
                 }
                 else {
                     return array(
                         "result" => "success",
-                        "is_visit_scheduled" => false
+                        "is_patient_scheduled_model" => false
                     );
                 }
                 
