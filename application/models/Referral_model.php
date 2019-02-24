@@ -754,7 +754,9 @@ class Referral_model extends CI_Model {
                                 ))
                                 ->where_in("r_pv.visit_confirmed", array(
                                     "Confirmed",
-                                    "Change required"
+                                    "Change required",
+                                    "Awaiting Confirmation",
+                                    "N/A"
                                 ))
                                 ->get()->result()[0];
 
