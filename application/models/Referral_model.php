@@ -715,6 +715,23 @@ class Referral_model extends CI_Model {
                     $this->db->update("clinic_referrals", array(
                         "assigned_physician" => $physician_id
                     ));
+
+                    //disable scheduled visits for this patient
+
+                    $this->db->where(array(
+                                "md5(patient_id)" => $data['id']
+                            ))
+                            ->update("records_patient_visit", array(
+                                "active" => 0,
+                                "visit_confirmed" => "Inactive"
+                    ));
+                    $this->db->where(array(
+                                "md5(patient_id)" => $data['id']
+                            ))
+                            ->update("records_patient_visit_reserved", array(
+                                "active" => 0,
+                                "visit_confirmed" => "Inactive"
+                    ));
                     return ($this->db->affected_rows() == 1) ? true : "Referral Not Assigned";
                 }
             }
@@ -730,30 +747,28 @@ class Referral_model extends CI_Model {
             $authorized = $this->check_authentication($data["id"]);
             if ($authorized) {
                 $visit_scheduled = $this->db->select("count(r_pv.id) as visits")
-                        ->from("records_patient_visit r_pv")
-                        ->where(array(
-                            "md5(r_pv.patient_id)" => $data["id"],
-                            "r_pv.active" => 1
-                        ))
-                        ->where_in("r_pv.visit_confirmed", array(
-                            "Confirmed",
-                            "Change required"
-                        ))
-                        ->get()->result()[0];
-                
-                if(intval($visit_scheduled->visits) > 0) {
+                                ->from("records_patient_visit r_pv")
+                                ->where(array(
+                                    "md5(r_pv.patient_id)" => $data["id"],
+                                    "r_pv.active" => 1
+                                ))
+                                ->where_in("r_pv.visit_confirmed", array(
+                                    "Confirmed",
+                                    "Change required"
+                                ))
+                                ->get()->result()[0];
+
+                if (intval($visit_scheduled->visits) > 0) {
                     return array(
                         "result" => "success",
                         "is_patient_scheduled" => true
                     );
-                }
-                else {
+                } else {
                     return array(
                         "result" => "success",
                         "is_patient_scheduled" => false
                     );
                 }
-                
             } else {
                 return array(
                     "result" => "error",
