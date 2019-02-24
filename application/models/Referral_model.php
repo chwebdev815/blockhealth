@@ -998,7 +998,8 @@ class Referral_model extends CI_Model {
                         if ($call_immediately) {
                             $expire_minutes = "10";
                         } else {
-                            $expire_minutes = "60";
+//                            $expire_minutes = "60"; // uncomment this line
+                            $expire_minutes = "0";  // comment this line
                         }
 
                         $visit_datetime = array();
