@@ -136,7 +136,6 @@ class Cron_appointment_reminder extends CI_Controller {
                             . "\n"
                             . "Please type 1 to confirm this booking. "
                             . "If this date does not work, please type 2 to alert the clinic staff.\n"
-                            . "Please note - these dates will be reserved for the next 60 minutes\n"
                             . "Thank-you.";
                     $msg = str_replace("<patient name>", $patient_data->fname, $msg);
                     $msg = str_replace("<date>", $visit->visit_date, $msg);
@@ -297,9 +296,7 @@ class Cron_appointment_reminder extends CI_Controller {
             $this->db->where(array(
                 "id" => $reserved_id
             ))->update("records_patient_visit", array(
-                "visit_confirmed" => "Confirmed",
-                "notify_status" => "Confirmed",
-                "notify_status_icon" => "green"
+                "visit_confirmed" => "Confirmed"
             ));
 
             //set status in accepted_status
@@ -309,12 +306,12 @@ class Cron_appointment_reminder extends CI_Controller {
                                 "pat.id" => $patient_id
                             ))->get()->result()[0]->id;
 
-            $this->db->where(array(
-                "id" => $referral_id
-            ))->update("clinic_referrals", array(
-                "accepted_status" => "Confirmed",
-                "accepted_status_icon" => "green"
-            ));
+//            $this->db->where(array(
+//                "id" => $referral_id
+//            ))->update("clinic_referrals", array(
+//                "accepted_status" => "Confirmed",
+//                "accepted_status_icon" => "green"
+//            ));
         } elseif ($_GET['Digits'] == 2) {
             echo "<Response><Say voice='Polly.Joanna'>Thank you, the clinic has been notified and will be in touch shortly</Say></Response>";
             $this->db->where(array(
@@ -340,30 +337,6 @@ class Cron_appointment_reminder extends CI_Controller {
             . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
             . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
             . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;Digits=timeout</Redirect></Response>";
-
-            //set visit status
-            $this->db->where(array(
-                "id" => $reserved_id
-            ))->update("records_patient_visit", array(
-                "visit_confirmed" => "Wrong Number",
-                "notify_status" => "Wrong Number",
-                "notify_status_icon" => "red"
-            ));
-            
-            
-            //set status in accepted_status
-            $referral_id = $this->db->select("c_ref.id")
-                            ->from("clinic_referrals c_ref, referral_patient_info pat")
-                            ->where(array(
-                                "pat.id" => $patient_id
-                            ))->get()->result()[0]->id;
-
-            $this->db->where(array(
-                "id" => $referral_id
-            ))->update("clinic_referrals", array(
-                "accepted_status" => "Wrong Number",
-                "accepted_status_icon" => "red"
-            ));
         } else {
             echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
         }
