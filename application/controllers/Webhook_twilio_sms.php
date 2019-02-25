@@ -35,6 +35,8 @@ class Webhook_twilio_sms extends CI_Controller {
                             ->group_end()
                             ->get()->result();
 
+            log_message("error", "sql for find patient = " . $this->db->last_query());
+            log_message("error", "patient ids found = " . json_encode($patients));
             $possible_patients = array();
             foreach ($patients as $key => $value) {
                 $possible_patients[] = $value->id;
@@ -46,32 +48,34 @@ class Webhook_twilio_sms extends CI_Controller {
                                 ->where_in("patient_id", $possible_patients)
                                 ->order_by("id", "desc")
                                 ->limit(1)->get()->result();
+                log_message("error", "sql for find reserved = " . $this->db->last_query());
+                log_message("error", "reserved ids found = " . json_encode($reserved));
 
                 $scheduled = $this->db->select("*")
                                 ->from("records_patient_visit")
                                 ->where_in("patient_id", $possible_patients)
                                 ->order_by("id", "desc")
                                 ->limit(1)->get()->result();
+                log_message("error", "sql for find reserved = " . $this->db->last_query());
+                log_message("error", "scheduled ids found = " . json_encode($scheduled));
+
 
                 $visit = null;
-                if($scheduled && isset($scheduled->create_datetime) && 
+                if ($scheduled && isset($scheduled->create_datetime) &&
                         $reserved && isset($reserved->create_datetime)) {
                     $visit = ($scheduled->create_datetime > $reserved->create_datetime) ? $scheduled : $reserved;
                     log_message("error", "from both selected to 1 = " . json_encode($visit));
-                }
-                else if($scheduled && isset($scheduled->create_datetime)) {
+                } else if ($scheduled && isset($scheduled->create_datetime)) {
                     $visit = $scheduled->create_datetime;
                     log_message("error", "from both selected shcduled = " . json_encode($visit));
-                }
-                else if($reserved && isset($reserved->create_datetime)) {
+                } else if ($reserved && isset($reserved->create_datetime)) {
                     $visit = $reserved->create_datetime;
                     log_message("error", "from both selected reserved = " . json_encode($visit));
-                }
-                else {
+                } else {
                     log_message("error", "nothing at all = " . json_encode($visit));
                     return;
                 }
-                
+
                 $msg = "";
 
                 if ($visit->visit_confirmed === "N/A") {
