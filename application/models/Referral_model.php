@@ -598,6 +598,7 @@ class Referral_model extends CI_Model {
 
                 $reply = ($this->db->affected_rows() == 1) ? true : "Referral already Accepted";
 
+                
                 $this->db->select("c_usr.clinic_institution_name, date_format(c_ref.create_datetime, '%M %D') as referral_received, dr.fax, c_ref.referral_code");
                 $this->db->from("clinic_user_info c_usr, efax_info efax, clinic_referrals c_ref, referral_patient_info pat, referral_physician_info dr");
                 $this->db->where(array(
@@ -614,6 +615,8 @@ class Referral_model extends CI_Model {
                 $this->db->where("efax.id", "c_ref.efax_id", false);
                 $this->db->where("pat.referral_id", "c_ref.id", false);
                 $result = $this->db->get()->result()[0];
+
+
 
                 $file_name = "referral_accepted.html";
                 $replace_stack = array(
@@ -633,7 +636,9 @@ class Referral_model extends CI_Model {
                     "login_role" => $this->session->userdata("login_role")
                 ));
 
-                return $reply;
+                 
+                //send first visit request
+                return $this->create_patient_visit($data["id"], "First Visit");;
             } else
                 return "You are not authorized for such Operation";
         } else
@@ -924,236 +929,241 @@ class Referral_model extends CI_Model {
             $data = $this->input->post();
             $authorized = $this->check_authentication($data["id"]);
             if ($authorized) {
-                log_message("error", "inside add patient visit auth");
-                $this->db->trans_start();
-                $patient_id = $this->get_patient_id($data["id"]);
-
-                //validate notifications if allowed or not
-                $this->db->select('admin.id as clinic_id, c_ref.id as referral_id,'
-                        . 'CASE WHEN ('
-                        . '(pat.cell_phone = NULL OR pat.cell_phone = "") OR '
-                        . '(pat.work_phone = NULL OR pat.work_phone = "") OR '
-                        . '(pat.home_phone = NULL OR pat.home_phone = "")'
-                        . ') THEN "false" ELSE "true" END AS allow_sms,'
-                        . 'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, '
-                        . "admin.address, pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, "
-                        . "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
-                $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
-                $this->db->where(array(
-                    "efax.active" => 1,
-                    "admin.active" => 1,
-                    "c_ref.active" => 1,
-                    "pat.active" => 1,
-                    "pat.id" => $patient_id
-                ));
-                $this->db->where("pat.referral_id", "c_ref.id", false);
-                $this->db->where("efax.to", "admin.id", false);
-                $this->db->where("c_ref.efax_id", "efax.id", false);
-                $result = $this->db->get()->result();
-
-                log_message("error", "Add patient visit => " . json_encode($result));
-                log_message("error", "sql for patient info = " . $this->db->last_query());
-                if ($result) {
-
-                    $allow_sms = $result[0]->allow_sms;
-                    $allow_email = $result[0]->allow_email;
-                    if (!(isset($data["cell_phone"]) || isset($data["cell_phone_voice"])) && $allow_sms == "false") {
-                        return "Please add phone number for patient first.";
-                    }
-                    if (isset($data["email"]) && $allow_email == "false") {
-                        return "Please add email-id for patient first.";
-                    }
-
-
-                    $msg_data = $result[0];
-                    $confirm_visit_key = generate_random_string(120);
-//                    $weekdays = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
-
-                    $response = $this->assign_slots($new_visit_duration, $patient_id);
-                    if ($response["result"] === "error") {
-                        $response = false;
-                    } else if ($response["result"] === "success") {
-                        $allocations = $response["data"];
-//                    echo "<br/> ****************** <br/>" . "slots assigned = " . json_encode($allocations) . "<br/><br/>";
-//                    exit();
-                        $start_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["start_time"]);
-                        $end_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["end_time"]);
-                        $start_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["start_time"]);
-                        $end_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["end_time"]);
-                        $start_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["start_time"]);
-                        $end_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["end_time"]);
-
-                        $call_immediately = false;
-                        $contact_number = $msg_data->cell_phone;
-                        if ($msg_data->home_phone != "") {
-                            //home number
-                            $contact_number = $msg_data->home_phone;
-                            $call_immediately = true;
-                        } else if ($msg_data->work_phone != "") {
-                            //work number
-                            $contact_number = $msg_data->work_phone;
-                            $call_immediately = true;
-                        }
-
-                        if ($call_immediately) {
-                            $expire_minutes = "5";
-                        } else {
-//                            $expire_minutes = "60"; // uncomment this line
-                            $expire_minutes = "10";  // comment this line
-                        }
-
-                        $visit_datetime = array();
-                        $visit_datetime[] = array(
-                            "date" => $start_time1->format("l M jS"),
-                            "time" => $start_time1->format("g:ia")
-                        );
-                        $visit_datetime[] = array(
-                            "date" => $start_time2->format("l M jS"),
-                            "time" => $start_time2->format("g:ia")
-                        );
-                        $visit_datetime[] = array(
-                            "date" => $start_time3->format("l M jS"),
-                            "time" => $start_time3->format("g:ia")
-                        );
-                        //insert for temp storage for 60 min sms response
-                        "Expire time scheduled after $expire_minutes minutes to => " . (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s");
-                        
-                        $insert_data = array(
-                            "patient_id" => $patient_id,
-                            "visit_name" => $data["visit_name"],
-                            "visit_date1" => $start_time1->format("Y-m-d"),
-                            "visit_start_time1" => $start_time1->format("H:i:s"),
-                            "visit_end_time1" => $end_time1->format("H:i:s"),
-                            "visit_date2" => $start_time2->format("Y-m-d"),
-                            "visit_start_time2" => $start_time2->format("H:i:s"),
-                            "visit_end_time2" => $end_time2->format("H:i:s"),
-                            "visit_date3" => $start_time3->format("Y-m-d"),
-                            "visit_start_time3" => $start_time3->format("H:i:s"),
-                            "visit_end_time3" => $end_time3->format("H:i:s"),
-                            "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s"),
-                            "notify_type" => ($call_immediately) ? "call" : "sms",
-                            "notify_voice" => 1,
-                            "notify_sms" => 1,
-                            "notify_email" => 1,
-                            //                        "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT1H"))->format("Y-m-d H:i:s"),
-                            //                        "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P1D"))->format("Y-m-d H:i:s"),
-                            //                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P2D"))->format("Y-m-d H:i:s"),
-                            //                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P3D"))->format("Y-m-d H:i:s"),
-                            "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))
-                                    ->add(new DateInterval("PT5M"))->format("Y-m-d H:i:s"),
-                            "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
-                            "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT15M"))->format("Y-m-d H:i:s"),
-                            "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT20M"))->format("Y-m-d H:i:s"),
-                            "confirm_visit_key" => $confirm_visit_key,
-                            "notify_status" => ($call_immediately) ? "Call1" : "SMS",
-                            "notify_status_icon" => "green",
-                            "visit_confirmed" => "N/A",
-                            "create_datetime" => date("Y-m-d H:i:s")
-                        );
-
-                        //                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
-                        //                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
-
-                        $this->db->insert("records_patient_visit_reserved", $insert_data);
-
-                        $insert_id = $this->db->insert_id();
-
-                        if ($call_immediately) {
-                            $post_arr = array(
-                                'defaultContactFormName' => $msg_data->fname,
-                                "patient_lname" => $msg_data->lname,
-                                "defaultContactFormName2" => $data["visit_name"],
-                                'defaultContactFormName3' => $msg_data->clinic_institution_name,
-                                'defaultContactFormName4' => "ddd",
-                                'defaultContactFormName5' => "ttt",
-                                'defaultContactFormName6' => $contact_number,
-                                'address' => $msg_data->call_address,
-                                'clinic_id' => $msg_data->clinic_id,
-                                'type' => 'first_call',
-                                "patient_id" => $patient_id,
-                                "notify_voice" => 1,
-                                "notify_sms" => 1,
-                                "notify_email" => 1,
-                                "reserved_id" => $insert_id
-                            );
-
-
-                            //change accepted status to "Call1"
-                            $this->db->where(array(
-                                "id" => $msg_data->referral_id
-                            ))->update("clinic_referrals", array(
-                                "accepted_status" => "Call1",
-                                "accepted_status_icon" => "green"
-                            ));
-
-
-                            log_message("error", "data for start call = " . json_encode($post_arr));
-                            //                        log_message("error", "Call should start now");
-                            $ch = curl_init();
-                            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-                            curl_setopt($ch, CURLOPT_URL, base_url() . "call_view/call");
-                            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-                            curl_setopt($ch, CURLOPT_POST, 1);
-                            curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
-                            $resp = curl_exec($ch);
-                            if (curl_errno($ch)) {
-                                log_message("error", "Call error => " . json_encode(curl_error($ch)));
-                                return curl_error($ch);
-                            }
-                            curl_close($ch);
-                            log_message("error", "<br/> call response = " . $resp . "<br/>");
-                            log_message("error", "Call completed " . json_encode($resp));
-                        } else {
-//                            echo "sending sms";
-                            $msg = "Hello <patient name>,\n"
-                                    . "\n"
-                                    . "This is an automated appointment booking message from <clinic name>. "
-                                    . "Please select one of the following dates:\n"
-                                    . "\n"
-                                    . "<date1> at <time1> - reply with '1'\n"
-                                    . "\n"
-                                    . "<date2> at <time2> - reply with '2'\n"
-                                    . "\n"
-                                    . "<date3> at <time3> - reply with '3'\n"
-                                    . "\n"
-                                    . "If you would like the clinic to contact you directly, please reply with '0'.\n"
-                                    . "\n"
-                                    . "Please note - these dates will be reserved for the next 60 minutes.\n"
-                                    . "\n"
-                                    . "Thank-you.";
-
-                            $msg = str_replace("<patient name>", $msg_data->fname, $msg);
-                            $msg = str_replace("<date1>", $visit_datetime[0]["date"], $msg);
-                            $msg = str_replace("<time1>", $visit_datetime[0]["time"], $msg);
-                            $msg = str_replace("<date2>", $visit_datetime[1]["date"], $msg);
-                            $msg = str_replace("<time2>", $visit_datetime[1]["time"], $msg);
-                            $msg = str_replace("<date3>", $visit_datetime[2]["date"], $msg);
-                            $msg = str_replace("<time3>", $visit_datetime[2]["time"], $msg);
-                            $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
-
-                            $this->send_sms($msg_data->cell_phone, $msg);
-                            
-                            //change accepted status to "SMS"
-                            $this->db->where(array(
-                                "id" => $msg_data->referral_id
-                            ))->update("clinic_referrals", array(
-                                "accepted_status" => "SMS",
-                                "accepted_status_icon" => "green"
-                            ));
-                        }
-                        $response = true;
-                    }
-                } else {
-                    $response = "Patient information is incorrect";
-                }
-                $this->db->trans_complete();
-                return $response;
+                return $this->create_patient_visit($data["id"], $data["visit_name"]);
             } else {
                 return "You are not authorized for such Operation";
             }
         } else {
             return validation_errors();
         }
+    }
+
+    private function create_patient_visit($md5_patient_id, $visit_name) {
+
+        log_message("error", "inside add patient visit auth");
+        $this->db->trans_start();
+        $patient_id = $this->get_patient_id($md5_patient_id);
+
+        //validate notifications if allowed or not
+        $this->db->select('admin.id as clinic_id, c_ref.id as referral_id,'
+                . 'CASE WHEN ('
+                . '(pat.cell_phone = NULL OR pat.cell_phone = "") OR '
+                . '(pat.work_phone = NULL OR pat.work_phone = "") OR '
+                . '(pat.home_phone = NULL OR pat.home_phone = "")'
+                . ') THEN "false" ELSE "true" END AS allow_sms,'
+                . 'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, '
+                . "admin.address, pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, "
+                . "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
+        $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
+        $this->db->where(array(
+            "efax.active" => 1,
+            "admin.active" => 1,
+            "c_ref.active" => 1,
+            "pat.active" => 1,
+            "pat.id" => $patient_id
+        ));
+        $this->db->where("pat.referral_id", "c_ref.id", false);
+        $this->db->where("efax.to", "admin.id", false);
+        $this->db->where("c_ref.efax_id", "efax.id", false);
+        $result = $this->db->get()->result();
+
+        log_message("error", "Add patient visit => " . json_encode($result));
+        log_message("error", "sql for patient info = " . $this->db->last_query());
+        if ($result) {
+
+            $allow_sms = $result[0]->allow_sms;
+            $allow_email = $result[0]->allow_email;
+//                if (!(isset($data["cell_phone"]) || isset($data["cell_phone_voice"])) && $allow_sms == "false") {
+//                    return "Please add phone number for patient first.";
+//                }
+//                if (isset($data["email"]) && $allow_email == "false") {
+//                    return "Please add email-id for patient first.";
+//                }
+
+
+            $msg_data = $result[0];
+            $confirm_visit_key = generate_random_string(120);
+//                    $weekdays = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
+
+            $response = $this->assign_slots($new_visit_duration, $patient_id);
+            if ($response["result"] === "error") {
+                $response = false;
+            } else if ($response["result"] === "success") {
+                $allocations = $response["data"];
+//                    echo "<br/> ****************** <br/>" . "slots assigned = " . json_encode($allocations) . "<br/><br/>";
+//                    exit();
+                $start_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["start_time"]);
+                $end_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["end_time"]);
+                $start_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["start_time"]);
+                $end_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["end_time"]);
+                $start_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["start_time"]);
+                $end_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["end_time"]);
+
+                $call_immediately = false;
+                $contact_number = $msg_data->cell_phone;
+                if ($msg_data->home_phone != "") {
+                    //home number
+                    $contact_number = $msg_data->home_phone;
+                    $call_immediately = true;
+                } else if ($msg_data->work_phone != "") {
+                    //work number
+                    $contact_number = $msg_data->work_phone;
+                    $call_immediately = true;
+                }
+
+                if ($call_immediately) {
+                    $expire_minutes = "5";
+                } else {
+//                            $expire_minutes = "60"; // uncomment this line
+                    $expire_minutes = "10";  // comment this line
+                }
+
+                $visit_datetime = array();
+                $visit_datetime[] = array(
+                    "date" => $start_time1->format("l M jS"),
+                    "time" => $start_time1->format("g:ia")
+                );
+                $visit_datetime[] = array(
+                    "date" => $start_time2->format("l M jS"),
+                    "time" => $start_time2->format("g:ia")
+                );
+                $visit_datetime[] = array(
+                    "date" => $start_time3->format("l M jS"),
+                    "time" => $start_time3->format("g:ia")
+                );
+                //insert for temp storage for 60 min sms response
+                "Expire time scheduled after $expire_minutes minutes to => " . (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s");
+
+                $insert_data = array(
+                    "patient_id" => $patient_id,
+                    "visit_name" => $visit_name,
+                    "visit_date1" => $start_time1->format("Y-m-d"),
+                    "visit_start_time1" => $start_time1->format("H:i:s"),
+                    "visit_end_time1" => $end_time1->format("H:i:s"),
+                    "visit_date2" => $start_time2->format("Y-m-d"),
+                    "visit_start_time2" => $start_time2->format("H:i:s"),
+                    "visit_end_time2" => $end_time2->format("H:i:s"),
+                    "visit_date3" => $start_time3->format("Y-m-d"),
+                    "visit_start_time3" => $start_time3->format("H:i:s"),
+                    "visit_end_time3" => $end_time3->format("H:i:s"),
+                    "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s"),
+                    "notify_type" => ($call_immediately) ? "call" : "sms",
+                    "notify_voice" => 1,
+                    "notify_sms" => 1,
+                    "notify_email" => 1,
+                    //                        "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT1H"))->format("Y-m-d H:i:s"),
+                    //                        "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P1D"))->format("Y-m-d H:i:s"),
+                    //                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P2D"))->format("Y-m-d H:i:s"),
+                    //                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P3D"))->format("Y-m-d H:i:s"),
+                    "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))
+                            ->add(new DateInterval("PT5M"))->format("Y-m-d H:i:s"),
+                    "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
+                    "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT15M"))->format("Y-m-d H:i:s"),
+                    "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT20M"))->format("Y-m-d H:i:s"),
+                    "confirm_visit_key" => $confirm_visit_key,
+                    "notify_status" => ($call_immediately) ? "Call1" : "SMS",
+                    "notify_status_icon" => "green",
+                    "visit_confirmed" => "N/A",
+                    "create_datetime" => date("Y-m-d H:i:s")
+                );
+
+                //                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
+                //                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
+
+                $this->db->insert("records_patient_visit_reserved", $insert_data);
+
+                $insert_id = $this->db->insert_id();
+
+                if ($call_immediately) {
+                    $post_arr = array(
+                        'defaultContactFormName' => $msg_data->fname,
+                        "patient_lname" => $msg_data->lname,
+                        "defaultContactFormName2" => $visit_name,
+                        'defaultContactFormName3' => $msg_data->clinic_institution_name,
+                        'defaultContactFormName4' => "ddd",
+                        'defaultContactFormName5' => "ttt",
+                        'defaultContactFormName6' => $contact_number,
+                        'address' => $msg_data->call_address,
+                        'clinic_id' => $msg_data->clinic_id,
+                        'type' => 'first_call',
+                        "patient_id" => $patient_id,
+                        "notify_voice" => 1,
+                        "notify_sms" => 1,
+                        "notify_email" => 1,
+                        "reserved_id" => $insert_id
+                    );
+
+
+                    //change accepted status to "Call1"
+                    $this->db->where(array(
+                        "id" => $msg_data->referral_id
+                    ))->update("clinic_referrals", array(
+                        "accepted_status" => "Call1",
+                        "accepted_status_icon" => "green"
+                    ));
+
+
+                    log_message("error", "data for start call = " . json_encode($post_arr));
+                    //                        log_message("error", "Call should start now");
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+                    curl_setopt($ch, CURLOPT_URL, base_url() . "call_view/call");
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
+                    $resp = curl_exec($ch);
+                    if (curl_errno($ch)) {
+                        log_message("error", "Call error => " . json_encode(curl_error($ch)));
+                        return curl_error($ch);
+                    }
+                    curl_close($ch);
+                    log_message("error", "<br/> call response = " . $resp . "<br/>");
+                    log_message("error", "Call completed " . json_encode($resp));
+                } else {
+//                            echo "sending sms";
+                    $msg = "Hello <patient name>,\n"
+                            . "\n"
+                            . "This is an automated appointment booking message from <clinic name>. "
+                            . "Please select one of the following dates:\n"
+                            . "\n"
+                            . "<date1> at <time1> - reply with '1'\n"
+                            . "\n"
+                            . "<date2> at <time2> - reply with '2'\n"
+                            . "\n"
+                            . "<date3> at <time3> - reply with '3'\n"
+                            . "\n"
+                            . "If you would like the clinic to contact you directly, please reply with '0'.\n"
+                            . "\n"
+                            . "Please note - these dates will be reserved for the next 60 minutes.\n"
+                            . "\n"
+                            . "Thank-you.";
+
+                    $msg = str_replace("<patient name>", $msg_data->fname, $msg);
+                    $msg = str_replace("<date1>", $visit_datetime[0]["date"], $msg);
+                    $msg = str_replace("<time1>", $visit_datetime[0]["time"], $msg);
+                    $msg = str_replace("<date2>", $visit_datetime[1]["date"], $msg);
+                    $msg = str_replace("<time2>", $visit_datetime[1]["time"], $msg);
+                    $msg = str_replace("<date3>", $visit_datetime[2]["date"], $msg);
+                    $msg = str_replace("<time3>", $visit_datetime[2]["time"], $msg);
+                    $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
+
+                    $this->send_sms($msg_data->cell_phone, $msg);
+
+                    //change accepted status to "SMS"
+                    $this->db->where(array(
+                        "id" => $msg_data->referral_id
+                    ))->update("clinic_referrals", array(
+                        "accepted_status" => "SMS",
+                        "accepted_status_icon" => "green"
+                    ));
+                }
+                $response = true;
+            }
+        } else {
+            $response = "Patient information is incorrect";
+        }
+        $this->db->trans_complete();
+        return $response;
     }
 
     public function move_from_accepted_to_scheduled($patient_id, $clinic_id = "") {
