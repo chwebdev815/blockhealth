@@ -67,10 +67,10 @@ class Webhook_twilio_sms extends CI_Controller {
                     $visit = ($scheduled[0]->create_datetime > $reserved[0]->create_datetime) ? $scheduled[0] : $reserved[0];
                     log_message("error", "from both selected to 1 = " . json_encode($visit));
                 } else if ($scheduled) {
-                    $visit = $scheduled[0]->create_datetime;
+                    $visit = $scheduled[0];
                     log_message("error", "from both selected shcduled = " . json_encode($visit));
                 } else if ($reserved) {
-                    $visit = $reserved[0]->create_datetime;
+                    $visit = $reserved[0];
                     log_message("error", "from both selected reserved = " . json_encode($visit));
                 } else {
                     log_message("error", "nothing at all = " . json_encode($visit));
@@ -78,6 +78,7 @@ class Webhook_twilio_sms extends CI_Controller {
                 }
 
                 $msg = "";
+                log_message("error", "visit = " . json_encode($visit));
 
                 if ($visit->visit_confirmed === "N/A") {
                     //will check if status is "N/A" then will response like response of choosing date
