@@ -1141,7 +1141,7 @@ class Referral_model extends CI_Model {
                         $response = true;
                     }
                 } else {
-                    $response = false;
+                    $response = "Patient information is incorrect";
                 }
                 $this->db->trans_complete();
                 return $response;
