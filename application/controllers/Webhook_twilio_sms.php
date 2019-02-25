@@ -68,6 +68,7 @@ class Webhook_twilio_sms extends CI_Controller {
                     log_message("error", "from both selected reserved = " . json_encode($visit));
                 }
                 else {
+                    log_message("error", "nothing at all = " . json_encode($visit));
                     return;
                 }
                 
