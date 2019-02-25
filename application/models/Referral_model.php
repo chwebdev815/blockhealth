@@ -1016,6 +1016,8 @@ class Referral_model extends CI_Model {
                             "time" => $start_time3->format("g:ia")
                         );
                         //insert for temp storage for 60 min sms response
+                        "Expire time scheduled after $expire_minutes minutes to => " . (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s");
+                        
                         $insert_data = array(
                             "patient_id" => $patient_id,
                             "visit_name" => $data["visit_name"],
@@ -1045,7 +1047,8 @@ class Referral_model extends CI_Model {
                             "confirm_visit_key" => $confirm_visit_key,
                             "notify_status" => ($call_immediately) ? "Call1" : "SMS",
                             "notify_status_icon" => "green",
-                            "visit_confirmed" => "N/A"
+                            "visit_confirmed" => "N/A",
+                            "create_datetime" => date("Y-m-d H:i:s")
                         );
 
                         //                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");
