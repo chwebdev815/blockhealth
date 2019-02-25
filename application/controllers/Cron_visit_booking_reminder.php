@@ -121,7 +121,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 }
                 //make call with proper data
                 log_message("error", "reminder = " . $visit->reminder_type . ", ");
-                $visit->reminder_type = intval($visit->reminder_type);
+//                $visit->reminder_type = intval($visit->reminder_type);
                 $notification_status = $visit->notify_status;
                 $notification_status_icon = "green";
 //                if ($visit->reminder_type == 3) {
@@ -137,10 +137,10 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 if($visit->reminder_type === "1h") {
                     $notification_status .= ", Call1";
                 }
-                else if($visit->reminder_type == "24h") {
+                else if($visit->reminder_type === "24h") {
                     $notification_status .= ", Call2";
                 }
-                else if($visit->reminder_type == "48h") {
+                else if($visit->reminder_type === "48h") {
                     $notification_status = "No response";
                     $notification_status_icon = "red";
                 }
