@@ -54,13 +54,14 @@ class Webhook_twilio_sms extends CI_Controller {
                                 ->limit(1)->get()->result();
 
                 $visit = null;
-                if($scheduled->create_datetime && $reserved->create_datetime) {
+                if($scheduled && isset($scheduled->create_datetime) && 
+                        $reserved && isset($reserved->create_datetime)) {
                     $visit = ($scheduled->create_datetime > $reserved->create_datetime) ? $scheduled : $reserved;
                 }
-                else if($scheduled->create_datetime) {
+                else if($scheduled && isset($scheduled->create_datetime)) {
                     $visit = $scheduled->create_datetime;
                 }
-                else if($reserved->create_datetime) {
+                else if($reserved && isset($reserved->create_datetime)) {
                     $visit = $reserved->create_datetime;
                 }
                 else {
