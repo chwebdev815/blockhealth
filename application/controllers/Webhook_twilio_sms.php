@@ -61,6 +61,11 @@ class Webhook_twilio_sms extends CI_Controller {
 
 
                 $visit = null;
+                
+                if($reserved && isset($reserved["create_datetime"])) {
+                    log_message("error", "change array type");
+                }
+                
                 if ($scheduled && isset($scheduled->create_datetime) &&
                         $reserved && isset($reserved->create_datetime)) {
                     $visit = ($scheduled->create_datetime > $reserved->create_datetime) ? $scheduled : $reserved;
