@@ -63,6 +63,9 @@ class Webhook_twilio_sms extends CI_Controller {
                 else if($reserved->create_datetime) {
                     $visit = $reserved->create_datetime;
                 }
+                else {
+                    return;
+                }
                 
                 $msg = "";
 
