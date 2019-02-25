@@ -2139,7 +2139,7 @@ class Referral_model extends CI_Model {
                 ))->get()->result();
 
 //        echo json_encode($day) . "<br/>";
-        log_message("error", "check_for_weekend_days = " . $this->db->last_query());
+//        log_message("error", "check_for_weekend_days = " . $this->db->last_query());
 //
 //
         if ($data) {
