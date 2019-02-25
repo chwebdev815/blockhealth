@@ -57,12 +57,15 @@ class Webhook_twilio_sms extends CI_Controller {
                 if($scheduled && isset($scheduled->create_datetime) && 
                         $reserved && isset($reserved->create_datetime)) {
                     $visit = ($scheduled->create_datetime > $reserved->create_datetime) ? $scheduled : $reserved;
+                    log_message("error", "from both selected to 1 = " . json_encode($visit));
                 }
                 else if($scheduled && isset($scheduled->create_datetime)) {
                     $visit = $scheduled->create_datetime;
+                    log_message("error", "from both selected shcduled = " . json_encode($visit));
                 }
                 else if($reserved && isset($reserved->create_datetime)) {
                     $visit = $reserved->create_datetime;
+                    log_message("error", "from both selected reserved = " . json_encode($visit));
                 }
                 else {
                     return;
