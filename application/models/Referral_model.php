@@ -952,7 +952,7 @@ class Referral_model extends CI_Model {
                 $result = $this->db->get()->result();
 
                 log_message("error", "Add patient visit => " . json_encode($result));
-//                echo $this->db->last_query();
+                log_message("error", "sql for patient info = " . $this->db->last_query());
                 if ($result) {
 
                     $allow_sms = $result[0]->allow_sms;
