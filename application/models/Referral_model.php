@@ -638,7 +638,8 @@ class Referral_model extends CI_Model {
 
                  
                 //send first visit request
-                return $this->create_patient_visit($data["id"], "First Visit");;
+                $new_visit_duration = 30;
+                return $this->create_patient_visit($data["id"], "First Visit", $new_visit_duration);;
             } else
                 return "You are not authorized for such Operation";
         } else
@@ -929,7 +930,7 @@ class Referral_model extends CI_Model {
             $data = $this->input->post();
             $authorized = $this->check_authentication($data["id"]);
             if ($authorized) {
-                return $this->create_patient_visit($data["id"], $data["visit_name"]);
+                return $this->create_patient_visit($data["id"], $data["visit_name"], $new_visit_duration);
             } else {
                 return "You are not authorized for such Operation";
             }
@@ -938,8 +939,7 @@ class Referral_model extends CI_Model {
         }
     }
 
-    private function create_patient_visit($md5_patient_id, $visit_name) {
-
+    private function create_patient_visit($md5_patient_id, $visit_name, $new_visit_duration) {
         log_message("error", "inside add patient visit auth");
         $this->db->trans_start();
         $patient_id = $this->get_patient_id($md5_patient_id);
