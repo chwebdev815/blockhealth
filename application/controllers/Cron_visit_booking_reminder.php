@@ -134,13 +134,11 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //                    $notification_status = implode(", ", $split);
 //                    $notification_status_icon = "green";
 //                }
-                if($visit->reminder_type === "1h") {
+                if ($visit->reminder_type === "1h") {
                     $notification_status .= ", Call1";
-                }
-                else if($visit->reminder_type === "24h") {
+                } else if ($visit->reminder_type === "24h") {
                     $notification_status .= ", Call2";
-                }
-                else if($visit->reminder_type === "48h") {
+                } else if ($visit->reminder_type === "48h") {
                     $notification_status = "No response";
                     $notification_status_icon = "red";
                 }
@@ -170,13 +168,15 @@ class Cron_visit_booking_reminder extends CI_Controller {
                                 ->from("clinic_referrals c_ref, referral_patient_info pat")
                                 ->where(array(
                                     "pat.id" => $visit->patient_id
-                                ))->get()->result()[0]->id;
+                                ))
+                                ->where("c_ref.id", "pat.referral_id", false)
+                                ->get()->result()[0]->id;
 
                 $this->db->where(array(
                     "id" => $referral_id
                 ))->update("clinic_referrals", array(
                     "accepted_status" => $notification_status,
-                    "accepted_status_icon" => "green"
+                    "accepted_status_icon" => $notification_status_icon
                 ));
 //                    $contact_number = "+917201907712";
 
