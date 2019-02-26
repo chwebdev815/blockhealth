@@ -1063,8 +1063,7 @@ class Referral_model extends CI_Model {
                     "confirm_visit_key" => $confirm_visit_key,
                     "notify_status" => ($call_immediately) ? "Call1" : "SMS",
                     "notify_status_icon" => "green",
-                    "visit_confirmed" => "N/A",
-                    "create_datetime" => date("Y-m-d H:i:s")
+                    "visit_confirmed" => "N/A"
                 );
 
                 //                    echo "call/sms => " . (($call_immediately) ? "call" : "sms");

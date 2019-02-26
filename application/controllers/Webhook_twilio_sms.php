@@ -56,7 +56,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                 ->where_in("patient_id", $possible_patients)
                                 ->order_by("id", "desc")
                                 ->limit(1)->get()->result();
-                log_message("error", "sql for find reserved = " . $this->db->last_query());
+                log_message("error", "sql for find scheduled = " . $this->db->last_query());
                 log_message("error", "scheduled ids found = " . json_encode($scheduled));
 
 
@@ -66,6 +66,7 @@ class Webhook_twilio_sms extends CI_Controller {
                 if ($scheduled && $reserved) {
                     $visit = ($scheduled[0]->create_datetime > $reserved[0]->create_datetime) ? $scheduled[0] : $reserved[0];
                     log_message("error", "from both selected to 1 = " . json_encode($visit));
+                    log_message("error", "compared ' " . $scheduled[0]->create_datetime . " with " . $reserved[0]->create_datetime);
                 } else if ($scheduled) {
                     $visit = $scheduled[0];
                     log_message("error", "from both selected shcduled = " . json_encode($visit));
