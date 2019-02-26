@@ -1002,10 +1002,10 @@ class Referral_model extends CI_Model {
 
                 $call_immediately = true;
 
-                if ($msg_data->home_phone != "") {
-                    $contact_number = $msg_data->home_phone;
-                } else if ($msg_data->work_phone != "") {
+                if ($msg_data->work_phone != "") {
                     $contact_number = $msg_data->work_phone;
+                } else if ($msg_data->home_phone != "") {
+                    $contact_number = $msg_data->home_phone;
                 }
                 if ($msg_data->cell_phone != "") {
                     $contact_number = $msg_data->cell_phone;
