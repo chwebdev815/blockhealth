@@ -329,6 +329,8 @@
                     return '<span class="fc-event-dot" style="background-color:#88b794"></span>  ' + status;
                 } else if (dot == "yellow") {
                     return '<span class="fc-event-dot" style="background-color:#9da1c3"></span>  ' + status;
+                } else if (dot == "blue") {
+                    return '<span class="fc-event-dot" style="background-color:#e7e92a"></span>  ' + status;
                 } else {
                     return status;
                 }
