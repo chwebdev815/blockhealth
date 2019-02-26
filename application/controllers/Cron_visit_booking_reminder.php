@@ -442,6 +442,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "notify_status" => "Wrong Number",
                     "notify_status_icon" => "blue"
                 ));
+                
+                log_message("error", "wrong number 1 => " . $this->db->last_query());
 
                 //set status in accepted_status
                 $referral_id = $this->db->select("c_ref.id")
@@ -456,6 +458,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "accepted_status" => "Wrong Number",
                     "accepted_status_icon" => "red"
                 ));
+                log_message("error", "wrong number 2=> " . $this->db->last_query());
 
 
 
