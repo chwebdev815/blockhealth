@@ -251,7 +251,7 @@ class Call_view extends CI_Controller {
                     "notify_voice" => $reserved_data["notify_voice"],
                     "notify_sms" => $reserved_data["notify_sms"],
                     "notify_email" => $reserved_data["notify_email"],
-                    "visit_confirmed" => "Wrong Number",
+                    "visit_confirmed" => $reserved_data["visit_confirmed"],
                     "notify_status" => "Wrong Number",
                     "notify_status_icon" => "blue"
                 );
@@ -282,19 +282,29 @@ class Call_view extends CI_Controller {
                     "accepted_status_icon" => "red"
                 ));
 
-                $params = array(
-                    'data' => $_GET["Digits"],
-                    'to' => $_GET['To']
-                );
-                $defaults = array(
-                    CURLOPT_URL => $base_url . "call_view/vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc",
-                    CURLOPT_POST => true,
-                    CURLOPT_POSTFIELDS => http_build_query($params)
-                );
-                $ch = curl_init($base_url . "call_view/vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc");
-                curl_setopt_array($ch, $defaults);
-                curl_exec($ch);
-                curl_close($ch);
+                //all visits book status changed to wrong number
+                $this->db->where(array(
+                    "patient_id" => $get["patient_id"]
+                ))->update("records_patient_visit", array(
+                    "notify_status" => "Wrong Number",
+                    "notify_status_icon" => "blue"
+                ));
+                log_message("error", "all visits wrong number = > " . $this->db->last_query());
+
+//                $params = array(
+//                    'data' => $_GET["Digits"],
+//                    'to' => $_GET['To'],
+//                    'patient_id' => $get["patient_id"]
+//                );
+//                $defaults = array(
+//                    CURLOPT_URL => $base_url . "call_view/vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc",
+//                    CURLOPT_POST => true,
+//                    CURLOPT_POSTFIELDS => http_build_query($params)
+//                );
+//                $ch = curl_init($base_url . "call_view/vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc");
+//                curl_setopt_array($ch, $defaults);
+//                curl_exec($ch);
+//                curl_close($ch);
             } else {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response><Redirect method='GET'>" . $base_url . "call_view/callhandle?pname=" . urlencode($_GET['pname']) . "&amp;"

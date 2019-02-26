@@ -438,7 +438,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 $this->db->where(array(
                     "id" => $reserved_id
                 ))->update("records_patient_visit", array(
-                    "visit_confirmed" => "Wrong Number",
                     "notify_status" => "Wrong Number",
                     "notify_status_icon" => "blue"
                 ));
@@ -461,20 +460,30 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 log_message("error", "wrong number 2=> " . $this->db->last_query());
 
 
+                
+                //all visits book status changed to wrong number
+                $this->db->where(array(
+                    "patient_id" => $_GET["patient_id"]
+                ))->update("records_patient_visit", array(
+                    "notify_status" => "Wrong Number",
+                    "notify_status_icon" => "blue"
+                ));
+                log_message("error", "all visits wrong number = > " . $this->db->last_query());
 
-                $params = array(
-                    'data' => $_GET["Digits"],
-                    'to' => $_GET['To']
-                );
-                $defaults = array(
-                    CURLOPT_URL => $base_url . "cron_visit_booking_reminder/vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc",
-                    CURLOPT_POST => true,
-                    CURLOPT_POSTFIELDS => http_build_query($params)
-                );
-                $ch = curl_init($base_url . "cron_visit_booking_reminder/vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc");
-                curl_setopt_array($ch, $defaults);
-                curl_exec($ch);
-                curl_close($ch);
+//                $params = array(
+//                    'data' => $_GET["Digits"],
+//                    'to' => $_GET['To'],
+//                    'patient_id' => $_GET["patient_id"]
+//                );
+//                $defaults = array(
+//                    CURLOPT_URL => $base_url . "cron_visit_booking_reminder/vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc",
+//                    CURLOPT_POST => true,
+//                    CURLOPT_POSTFIELDS => http_build_query($params)
+//                );
+//                $ch = curl_init($base_url . "cron_visit_booking_reminder/vQee6Sn25pSzD6bDamgcfNvSq2NYHRhc");
+//                curl_setopt_array($ch, $defaults);
+//                curl_exec($ch);
+//                curl_close($ch);
             } else {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response><Redirect method='GET'>" . $base_url . "cron_visit_booking_reminder/callhandle?pname=" . urlencode($_GET['pname']) . "&amp;"
