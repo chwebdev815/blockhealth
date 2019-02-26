@@ -598,7 +598,7 @@ class Referral_model extends CI_Model {
 
                 $reply = ($this->db->affected_rows() == 1) ? true : "Referral already Accepted";
 
-                
+
                 $this->db->select("c_usr.clinic_institution_name, date_format(c_ref.create_datetime, '%M %D') as referral_received, dr.fax, c_ref.referral_code");
                 $this->db->from("clinic_user_info c_usr, efax_info efax, clinic_referrals c_ref, referral_patient_info pat, referral_physician_info dr");
                 $this->db->where(array(
@@ -636,10 +636,11 @@ class Referral_model extends CI_Model {
                     "login_role" => $this->session->userdata("login_role")
                 ));
 
-                 
+
                 //send first visit request
                 $new_visit_duration = 30;
-                return $this->create_patient_visit($data["id"], "First Visit", $new_visit_duration);;
+                return $this->create_patient_visit($data["id"], "First Visit", $new_visit_duration);
+                ;
             } else
                 return "You are not authorized for such Operation";
         } else
@@ -999,19 +1000,18 @@ class Referral_model extends CI_Model {
                 $start_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["start_time"]);
                 $end_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["end_time"]);
 
-                $call_immediately = false;
-                
-                $contact_number = $msg_data->cell_phone;
-                if ($msg_data->home_phone != "") {
-                    //home number
-                    $contact_number = $msg_data->home_phone;
-                    $call_immediately = true;
-                } else if ($msg_data->work_phone != "") {
-                    //work number
-                    $contact_number = $msg_data->work_phone;
-                    $call_immediately = true;
-                }
+                $call_immediately = true;
 
+                if ($msg_data->home_phone != "") {
+                    $contact_number = $msg_data->home_phone;
+                } else if ($msg_data->work_phone != "") {
+                    $contact_number = $msg_data->work_phone;
+                }
+                if ($msg_data->cell_phone != "") {
+                    $contact_number = $msg_data->cell_phone;
+                    $call_immediately = false;
+                }
+                
                 if ($call_immediately) {
                     $expire_minutes = "5";
                 } else {
