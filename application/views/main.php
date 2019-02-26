@@ -71,11 +71,11 @@
                 <li id="li_inbox" data-toggle="tooltip" data-placement="right" title="Fax Inbox">
                     <a class="clearfix" href="<?php echo base_url(); ?>inbox"><span>Fax Inbox</span><i class="numb-notifies" id="count_inbox">&nbsp;</i></a>
                 </li>
-                <li id="li_my_tasks" data-toggle="tooltip" data-placement="right" title="My Tasks">
-                    <a class="clearfix" href="<?php echo base_url(); ?>my_tasks"><span>My Tasks</span><i class="numb-notifies" id="count_my_tasks">&nbsp;</i></a>
+                <li id="li_my_tasks" data-toggle="tooltip" data-placement="right" title="Fax Triage">
+                    <a class="clearfix" href="<?php echo base_url(); ?>my_tasks"><span>Fax Triage</span><i class="numb-notifies" id="count_my_tasks">&nbsp;</i></a>
                 </li>
-                <li id="li_physician_triage" data-toggle="tooltip" data-placement="right" title="Physician Triage">
-                    <a class="clearfix" href="<?php echo base_url(); ?>physician_triage"><span>Physician Triage</span><i class="numb-notifies" id="count_physician">&nbsp;</i></a>
+                <li id="li_physician_triage" data-toggle="tooltip" data-placement="right" title="Referral Triage">
+                    <a class="clearfix" href="<?php echo base_url(); ?>physician_triage"><span>Referral Triage</span><i class="numb-notifies" id="count_physician">&nbsp;</i></a>
                 </li>
                 <li id="li_accepted" data-toggle="tooltip" data-placement="right" title="Accepted">
                     <a class="clearfix" href="<?php echo base_url(); ?>accepted"><span>Accepted</span><i class="numb-notifies" id="count_accepted"></i>&nbsp;</a>

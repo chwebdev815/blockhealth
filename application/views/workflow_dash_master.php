@@ -22,7 +22,7 @@
                             <p>
                                 <img src="assets/img/icon-admin-triage.png" />
                             </p>
-                            <p>Tasks to-do</p></div>
+                            <p>In Fax Triage</p></div>
                         <div class="count" id="tasks_count"></div>
                     </div>
                 </div>
@@ -34,7 +34,7 @@
                             <p>
                                 <i class="fa fa-stethoscope"></i>
                             </p>
-                            <p>In Physician Triage</p></div>
+                            <p>In Referral Triage</p></div>
                         <div class="count" id="physician_triage_count"></div>
                     </div>
                 </div>
@@ -46,7 +46,7 @@
                             <p>
                                 <i class="fa fa-calendar-o"></i>
                             </p>
-                            <p>To Assign or Schedule</p></div>
+                            <p>To Schedule</p></div>
                         <div class="count" id="accepted_count"></div>
                     </div>
                 </div>
