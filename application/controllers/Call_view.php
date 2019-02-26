@@ -247,11 +247,11 @@ class Call_view extends CI_Controller {
                 $insert_data = array(
                     "patient_id" => $get["patient_id"],
                     "visit_name" => $get["pvname"],
-                    "notify_type" => $reserved_data["notify_type"],
-                    "notify_voice" => $reserved_data["notify_voice"],
-                    "notify_sms" => $reserved_data["notify_sms"],
-                    "notify_email" => $reserved_data["notify_email"],
-                    "visit_confirmed" => $reserved_data["visit_confirmed"],
+                    "notify_type" => $reserved_data->notify_type,
+                    "notify_voice" => $reserved_data->notify_voice,
+                    "notify_sms" => $reserved_data->notify_sms,
+                    "notify_email" => $reserved_data->notify_email,
+                    "visit_confirmed" => $reserved_data->visit_confirmed,
                     "notify_status" => "Wrong Number",
                     "notify_status_icon" => "blue"
                 );
