@@ -345,10 +345,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
     public function step_two() {
 
-
-        //[{"id":"0","patient_id":"2","visit_name":"visit check","visit_date1":"2019-02-08","visit_start_time1":"09:00:00","visit_end_time1":"09:30:00","visit_date2":"2019-02-11","visit_start_time2":"09:00:00","visit_end_time2":"09:30:00","visit_date3":"2019-02-12","visit_start_time3":"09:00:00","visit_end_time3":"09:30:00","visit_expire_time":"2019-02-07 11:21:53","reminder_1h":null,"reminder_24h":"2019-02-08 10:21:53","reminder_48h":"2019-02-09 10:21:53","reminder_72h":"2019-02-10 10:21:53","confirm_key":"1","notify_type":"call","notify_voice":"1","notify_sms":"1","notify_email":"1","confirm_visit_key":"1549552913_SphROVHWj3RuNDJpfkv0GkMy4N7Q5tJYT_PGUvBdyrHl3qLjKgjqA5YES5tYzbWrbK65eIiN9_8dpTw98PzJUxmMCQKb1FCcoJiDqAqzzyNZri7A6Gi0cFNP","visit_confirmed":"Awaiting Confirmation","create_datetime":"2019-02-07 15:21:53","active":"1"}]
-
-
         $clinic_id = $_GET["clinic_id"];
         $patient_id = $_GET["patient_id"];
         $reserved_id = $_GET["reserved_id"];
@@ -356,11 +352,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
         $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
                     "id" => $reserved_id
                 ))->get()->result()[0];
-
-
-        //data reserved for 10 mins
-
-
 
         $date1 = date('F jS', strtotime($reserved_data->visit_date1 . " " . $reserved_data->visit_start_time1));
         $day1 = date('l', strtotime($reserved_data->visit_date1 . " " . $reserved_data->visit_start_time1));
@@ -757,6 +748,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "accepted_status" => "Contact directly",
                     "accepted_status_icon" => "yellow"
                 ));
+                
+                log_message("error", "updated for 0 with sql = $referral_id  => " . $this->db->last_query());
             } elseif ($_GET['Digits'] == 4) {
                 log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
                 echo "<Response>";

@@ -1000,6 +1000,7 @@ class Referral_model extends CI_Model {
                 $end_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["end_time"]);
 
                 $call_immediately = false;
+                
                 $contact_number = $msg_data->cell_phone;
                 if ($msg_data->home_phone != "") {
                     //home number
