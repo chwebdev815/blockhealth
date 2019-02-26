@@ -279,7 +279,7 @@ class Call_view extends CI_Controller {
                     "id" => $referral_id
                 ))->update("clinic_referrals", array(
                     "accepted_status" => "Wrong Number",
-                    "accepted_status_icon" => "red"
+                    "accepted_status_icon" => "blue"
                 ));
 
                 //all visits book status changed to wrong number
