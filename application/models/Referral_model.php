@@ -940,7 +940,7 @@ class Referral_model extends CI_Model {
         }
     }
 
-    private function create_patient_visit($md5_patient_id, $visit_name, $new_visit_duration) {
+    public function create_patient_visit($md5_patient_id, $visit_name, $new_visit_duration) {
         log_message("error", "inside add patient visit auth");
         $this->db->trans_start();
         $patient_id = $this->get_patient_id($md5_patient_id);
