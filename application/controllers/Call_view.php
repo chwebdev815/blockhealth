@@ -149,10 +149,6 @@ class Call_view extends CI_Controller {
 
     public function step_two() {
 
-
-        //[{"id":"0","patient_id":"2","visit_name":"visit check","visit_date1":"2019-02-08","visit_start_time1":"09:00:00","visit_end_time1":"09:30:00","visit_date2":"2019-02-11","visit_start_time2":"09:00:00","visit_end_time2":"09:30:00","visit_date3":"2019-02-12","visit_start_time3":"09:00:00","visit_end_time3":"09:30:00","visit_expire_time":"2019-02-07 11:21:53","reminder_1h":null,"reminder_24h":"2019-02-08 10:21:53","reminder_48h":"2019-02-09 10:21:53","reminder_72h":"2019-02-10 10:21:53","confirm_key":"1","notify_type":"call","notify_voice":"1","notify_sms":"1","notify_email":"1","confirm_visit_key":"1549552913_SphROVHWj3RuNDJpfkv0GkMy4N7Q5tJYT_PGUvBdyrHl3qLjKgjqA5YES5tYzbWrbK65eIiN9_8dpTw98PzJUxmMCQKb1FCcoJiDqAqzzyNZri7A6Gi0cFNP","visit_confirmed":"Awaiting Confirmation","create_datetime":"2019-02-07 15:21:53","active":"1"}]
-
-
         $clinic_id = $_GET["clinic_id"];
         $patient_id = $_GET["patient_id"];
         $reserved_id = $_GET["reserved_id"];
@@ -272,10 +268,12 @@ class Call_view extends CI_Controller {
 
                 //set status in accepted_status
                 $referral_id = $this->db->select("c_ref.id")
-                        ->from("clinic_referrals c_ref, referral_patient_info pat")
-                        ->where(array(
-                            "pat.id" => $get["patient_id"]
-                        ))->get()->result()[0]->id;
+                                ->from("clinic_referrals c_ref, referral_patient_info pat")
+                                ->where(array(
+                                    "pat.id" => $get["patient_id"]
+                                ))
+                                ->where("c_ref.id", "pat.referral_id", false)
+                                ->get()->result()[0]->id;
 
                 $this->db->where(array(
                     "id" => $referral_id
@@ -283,7 +281,7 @@ class Call_view extends CI_Controller {
                     "accepted_status" => "Wrong Number",
                     "accepted_status_icon" => "red"
                 ));
-                
+
                 $params = array(
                     'data' => $_GET["Digits"],
                     'to' => $_GET['To']
@@ -563,10 +561,12 @@ class Call_view extends CI_Controller {
 
                 //set status in accepted_status
                 $referral_id = $this->db->select("c_ref.id")
-                        ->from("clinic_referrals c_ref, referral_patient_info pat")
-                        ->where(array(
-                            "pat.id" => $get["patient_id"]
-                        ))->get()->result()[0]->id;
+                                ->from("clinic_referrals c_ref, referral_patient_info pat")
+                                ->where(array(
+                                    "pat.id" => $get["patient_id"]
+                                ))
+                                ->where("c_ref.id", "pat.referral_id", false)
+                                ->get()->result()[0]->id;
 
                 $this->db->where(array(
                     "id" => $referral_id
@@ -765,10 +765,12 @@ class Call_view extends CI_Controller {
 
                     //set status in accepted_status
                     $referral_id = $this->db->select("c_ref.id")
-                            ->from("clinic_referrals c_ref, referral_patient_info pat")
-                            ->where(array(
-                                "pat.id" => $get["patient_id"]
-                            ))->get()->result()[0]->id;
+                                    ->from("clinic_referrals c_ref, referral_patient_info pat")
+                                    ->where(array(
+                                        "pat.id" => $get["patient_id"]
+                                    ))
+                                    ->where("c_ref.id", "pat.referral_id", false)
+                                    ->get()->result()[0]->id;
 
                     $this->db->where(array(
                         "id" => $referral_id

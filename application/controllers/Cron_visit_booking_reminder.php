@@ -86,7 +86,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "admin.address," .
                     "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
                     "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
-            $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
+            $this->db->from("clinic_referrals c_ref, referral_patient_info pat, "
+                    . "efax_info efax, clinic_user_info admin");
             $this->db->where(array(
                 "efax.active" => 1,
                 "admin.active" => 1,
@@ -740,7 +741,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
                                 ->from("clinic_referrals c_ref, referral_patient_info pat")
                                 ->where(array(
                                     "pat.id" => $get["patient_id"]
-                                ))->get()->result()[0]->id;
+                                ))
+                                ->where("c_ref.id", "pat.referral_id", false)
+                                ->get()->result()[0]->id;
 
                 $this->db->where(array(
                     "id" => $referral_id
@@ -748,7 +751,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "accepted_status" => "Contact directly",
                     "accepted_status_icon" => "yellow"
                 ));
-                
+
                 log_message("error", "updated for 0 with sql = $referral_id  => " . $this->db->last_query());
             } elseif ($_GET['Digits'] == 4) {
                 log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
@@ -941,7 +944,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
                                     ->from("clinic_referrals c_ref, referral_patient_info pat")
                                     ->where(array(
                                         "pat.id" => $get["patient_id"]
-                                    ))->get()->result()[0]->id;
+                                    ))
+                                    ->where("c_ref.id", "pat.referral_id", false)
+                                    ->get()->result()[0]->id;
 
                     $this->db->where(array(
                         "id" => $referral_id

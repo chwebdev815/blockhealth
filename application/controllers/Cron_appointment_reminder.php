@@ -304,7 +304,9 @@ class Cron_appointment_reminder extends CI_Controller {
                             ->from("clinic_referrals c_ref, referral_patient_info pat")
                             ->where(array(
                                 "pat.id" => $patient_id
-                            ))->get()->result()[0]->id;
+                            ))
+                            ->where("c_ref.id", "pat.referral_id", false)
+                            ->get()->result()[0]->id;
 
 //            $this->db->where(array(
 //                "id" => $referral_id
