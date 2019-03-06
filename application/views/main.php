@@ -323,6 +323,7 @@
 
 
             function set_visit_status(status, dot) {
+                console.log(status, dot);
                 if (dot == "red") {
                     return '<span class="fc-event-dot" style="background-color:#f74444"></span>  ' + status;
                 } else if (dot == "green") {
@@ -332,6 +333,8 @@
                 } else if (dot == "blue") {
                     return '<span class="fc-event-dot" style="background-color:#e7e92a"></span>  ' + status;
                 } else {
+                    console.log("empty color");
+                    console.log(status, dot);
                     return status;
                 }
             }
