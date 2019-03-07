@@ -182,7 +182,7 @@ class Cron_appointment_reminder extends CI_Controller {
 
         $sid = 'AC2da3b84b65b63ccf4f05c27ac1713060';
         $token = '342a214ee959d16bf97ea87579016762';
-        $twilio_number = "+13658000973";
+        $twilio_number = "+16475607989";
         //$to = "+919876907251";  
 //        $to_number = "+917201907712";
 
