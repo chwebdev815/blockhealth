@@ -640,7 +640,6 @@ class Referral_model extends CI_Model {
                 //send first visit request
                 $new_visit_duration = 30;
                 return $this->create_patient_visit($data["id"], "First Visit", $new_visit_duration);
-                ;
             } else
                 return "You are not authorized for such Operation";
         } else
@@ -931,7 +930,62 @@ class Referral_model extends CI_Model {
             $data = $this->input->post();
             $authorized = $this->check_authentication($data["id"]);
             if ($authorized) {
-                return $this->create_patient_visit($data["id"], $data["visit_name"], $new_visit_duration);
+                //if booked by staff
+                if (isset($data["visit_slot_1"]) || isset($data["visit_slot_2"]) || isset($data["visit_slot_3"])) {
+                    $record_id = $data["record_id"];
+                    log_message("error", "=>" . isset($data["visit_slot_1"]) . "," . isset($data["visit_slot_2"]) . "," . isset($data["visit_slot_3"]));
+//                    echo "num = $num <br/>";
+                    if ((isset($data["visit_slot_1"]))) {
+                        $num = "1";
+                    }
+                    if ((isset($data["visit_slot_2"]))) {
+                        $num = "2";
+                    }
+                    if ((isset($data["visit_slot_3"]))) {
+                        $num = "3";
+                    }
+                    
+
+                    $record_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
+                                "id" => $record_id,
+                                "active" => "0"
+                            ))->get()->result_array();
+                    if ($record_data) {
+                        $record_data = $record_data[0];
+                        $insert_data = array(
+                            "patient_id" => $record_data["patient_id"],
+                            "visit_name" => $record_data["visit_name"],
+                            "visit_date" => $record_data["visit_date$num"],
+                            "visit_time" => $record_data["visit_start_time$num"],
+                            "visit_end_time" => $record_data["visit_end_time$num"],
+                            "notify_type" => $record_data["notify_type"],
+                            "notify_status" => "Booked by staff",
+                            "notify_status_icon" => "green",
+                            "visit_confirmed" => "Booked by staff"
+                        );
+                        $inserted = $this->db->insert("records_patient_visit", $insert_data);
+
+                        //change accepted status to "Booked by Staff"
+                        $referral_id = $this->get_referral_id(md5($record_data["patient_id"]));
+                        $this->db->where(array(
+                            "id" => $referral_id
+                        ))->update("clinic_referrals", array(
+                            "accepted_status" => "Booked by Staff",
+                            "accepted_status_icon" => "green"
+                        ));
+
+
+                        if ($inserted) {
+                            return true;
+                        } else {
+                            return "Failed to add visit record";
+                        }
+                    } else {
+                        return "Failed to add visit after timeout";
+                    }
+                } else {
+                    return $this->create_patient_visit($data["id"], $data["visit_name"], $new_visit_duration);
+                }
             } else {
                 return "You are not authorized for such Operation";
             }
@@ -1011,7 +1065,7 @@ class Referral_model extends CI_Model {
                     $contact_number = $msg_data->cell_phone;
                     $call_immediately = false;
                 }
-                
+
                 if ($call_immediately) {
                     $expire_minutes = "5";
                 } else {
@@ -1033,7 +1087,7 @@ class Referral_model extends CI_Model {
                     "time" => $start_time3->format("g:ia")
                 );
                 //insert for temp storage for 60 min sms response
-                "Expire time scheduled after $expire_minutes minutes to => " . (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s");
+                log_message("error", "Expire time scheduled after $expire_minutes minutes to => " . (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s"));
 
                 $insert_data = array(
                     "patient_id" => $patient_id,
@@ -1164,6 +1218,130 @@ class Referral_model extends CI_Model {
         }
         $this->db->trans_complete();
         return $response;
+    }
+
+    public function get_visit_allocation_for_manual_visit_model() {
+        $this->form_validation->set_rules('id', 'Patient Id', 'required');
+        if ($this->form_validation->run()) {
+            $data = $this->input->post();
+            $authorized = $this->check_authentication($data["id"]);
+            if ($authorized) {
+                //if physician assigned
+                $this->db->select("c_ref.assigned_physician");
+                $this->db->from("clinic_referrals c_ref, referral_patient_info pat");
+                $this->db->where(array(
+                    "c_ref.active" => 1,
+                    "pat.active" => 1,
+                    "md5(pat.id)" => $data["id"]
+                ));
+                $this->db->where("pat.referral_id", "c_ref.id", false);
+                $tmp_result = $this->db->get()->result();
+                $assigned_physician = $tmp_result[0]->assigned_physician;
+                if ($assigned_physician == "0") {
+                    return array(
+                        "result" => "error",
+                        "message" => "Patient must be assigned before accepting."
+                    );
+                }
+
+
+                //send first visit request
+                $md5_patient_id = $data["id"];
+                $visit_name = "Manual Visit";
+                $new_visit_duration = 30;
+                $patient_id = $this->get_patient_id($md5_patient_id);
+
+                $response = $this->assign_slots($new_visit_duration, $patient_id);
+                if ($response["result"] === "error") {
+                    return array(
+                        "result" => "error",
+                        "message" => "Not able to assign visit slot."
+                    );
+                } else if ($response["result"] === "success") {
+                    //reserve for 5 min
+                    $allocations = $response["data"];
+                    log_message("error", "Popup allocations = " . json_encode($allocations));
+
+                    $patient_data = $this->db->select("*")->from("referral_patient_info")->where(array(
+                                "id" => $patient_id
+                            ))->get()->result();
+
+                    if ($patient_data) {
+                        $patient_data = $patient_data[0];
+                        $call_immediately = true;
+                        if ($patient_data->work_phone != "") {
+                            $contact_number = $patient_data->work_phone;
+                        } else if ($patient_data->home_phone != "") {
+                            $contact_number = $patient_data->home_phone;
+                        }
+                        if ($patient_data->cell_phone != "") {
+                            $contact_number = $patient_data->cell_phone;
+                            $call_immediately = false;
+                        }
+
+                        $start_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["start_time"]);
+                        $end_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["end_time"]);
+                        $start_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["start_time"]);
+                        $end_time2 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[1]["end_time"]);
+                        $start_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["start_time"]);
+                        $end_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["end_time"]);
+                        $expire_minutes = "5"; // 5 minutes
+                        $this->db->insert("records_patient_visit_reserved", array(
+                            "patient_id" => $patient_id,
+                            "visit_name" => "",
+                            "visit_date1" => $start_time1->format("Y-m-d"),
+                            "visit_start_time1" => $start_time1->format("H:i:s"),
+                            "visit_end_time1" => $end_time1->format("H:i:s"),
+                            "visit_date2" => $start_time2->format("Y-m-d"),
+                            "visit_start_time2" => $start_time2->format("H:i:s"),
+                            "visit_end_time2" => $end_time2->format("H:i:s"),
+                            "visit_date3" => $start_time3->format("Y-m-d"),
+                            "visit_start_time3" => $start_time3->format("H:i:s"),
+                            "visit_end_time3" => $end_time3->format("H:i:s"),
+                            "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s"),
+                            "notify_type" => ($call_immediately) ? "call" : "sms",
+                            //                        "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT1H"))->format("Y-m-d H:i:s"),
+                            //                        "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P1D"))->format("Y-m-d H:i:s"),
+                            //                        "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P2D"))->format("Y-m-d H:i:s"),
+                            //                        "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("P3D"))->format("Y-m-d H:i:s"),
+                            "reminder_1h" => ($call_immediately) ? null : (new DateTime(date("Y-m-d H:i:s")))
+                                            ->add(new DateInterval("PT5M"))->format("Y-m-d H:i:s"),
+                            "reminder_24h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
+                            "reminder_48h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT15M"))->format("Y-m-d H:i:s"),
+                            "reminder_72h" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT20M"))->format("Y-m-d H:i:s"),
+                            "confirm_visit_key" => "",
+                            "notify_status" => ($call_immediately) ? "Call1" : "SMS",
+                            "notify_status_icon" => "green",
+                            "visit_confirmed" => "Booked by Staff",
+                            "active" => 0
+                        ));
+
+                        //response format for datetime
+                        $start_datetime1 = $start_time1->format('l, F jS') . " at " . $start_time1->format('g:iA');
+                        $start_datetime2 = $start_time2->format('l, F jS') . " at " . $start_time2->format('g:iA');
+                        $start_datetime3 = $start_time3->format('l, F jS') . " at " . $start_time3->format('g:iA');
+                        $record_id = $this->db->insert_id();
+
+                        return array(
+                            "result" => "success",
+                            "data" => array(
+                                "record_id" => $record_id,
+                                "allocations" => array(
+                                    "slot1" => $start_datetime1,
+                                    "slot2" => $start_datetime2,
+                                    "slot3" => $start_datetime3
+                                )
+                            )
+                        );
+                    } else {
+                        return array(
+                            "result" => "error",
+                            "message" => "Patient details not found"
+                        );
+                    }
+                }
+            }
+        }
     }
 
     public function move_from_accepted_to_scheduled($patient_id, $clinic_id = "") {
