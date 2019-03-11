@@ -988,7 +988,7 @@ class Referral_model extends CI_Model {
                             "visit_name" => $data["visit_name"],
                             "visit_date" => $visit_date->format("Y-m-d"),
                             "visit_time" => $data["visit_time"],
-                            "visit_end_time" => $visit_date->add(new DateInterval("PT".$visit_interval."M")),
+                            "visit_end_time" => $visit_date->add(new DateInterval("PT".$visit_interval."M"))->format("H:i:s"),
                             "notify_type" => $notify_type,
                             "notify_status" => "Booked by staff",
                             "notify_status_icon" => "green",
