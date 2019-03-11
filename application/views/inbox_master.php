@@ -13,10 +13,10 @@
     .popup_background{
         z-index: 0!important;
     }
-	
-.clr-lg-padd{
-	padding-right: 0px;
-}	
+
+    .clr-lg-padd{
+        padding-right: 0px;
+    }	
 </style>
 
 <!-- <button class="popup2_open">Click me 2!</button>
@@ -165,56 +165,44 @@
                                                 </div>
                                             </div>
                                         </div>-->
-                                    <div class="form-group col-lg-12">
-                                        <h4 class="modal-title" id="myModalLabel">Add Patient Details</h4>
-                                        <div class="form-group row">
-                                            <div class="col-md-12">
-                                                <label for="new-patient-name">Full Name *</label>
+                                        <div class="form-group col-lg-12">
+                                            <div class="form-group row">
+                                                <div class="col-md-12">
+                                                    <label for="new-patient-name">Full Name *</label>
+                                                </div>
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <input type="text" class="form-control required" name="pat_fname" id="new-patient-firstname" placeholder="First Name" autocomplete="off">
+                                                </div>
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <input type="text" class="form-control required" name="pat_lname" id="new-patient-lastname" placeholder="Last Name" autocomplete="off">
+                                                </div>
                                             </div>
-                                            <div class="col-sm-6 col-xs-12">
-                                                <input type="text" class="form-control required" name="pat_fname" id="new-patient-firstname" placeholder="First Name" autocomplete="off">
+                                            <div class="form-group row">
+                                                <div class="col-sm-4 col-xs-12">
+                                                    <select name="pat_dob_day" id="pat_dob_day" class="required"></select>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-12 no-left-right-padd">
+                                                    <select name="pat_dob_month" id="pat_dob_month" class="required"></select>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-12">                    
+                                                    <select name="pat_dob_year" id="pat_dob_year" class="required"></select>
+                                                </div>
                                             </div>
-                                            <div class="col-sm-6 col-xs-12">
-                                                <input type="text" class="form-control required" name="pat_lname" id="new-patient-lastname" placeholder="Last Name" autocomplete="off">
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-md-12">
-                                                <label for="new-patient-birthdate">
-                                                    Date of Birth *
-                                                </label>
-                                            </div>
-                                            <div class="col-sm-4 col-xs-12">
-                                                <select name="pat_dob_day" id="pat_dob_day" class="required"></select>
-                                            </div>
-                                            <div class="col-sm-4 col-xs-12 no-left-right-padd">
-                                                <select name="pat_dob_month" id="pat_dob_month" class="required"></select>
-                                            </div>
-                                            <div class="col-sm-4 col-xs-12">                    
-                                                <select name="pat_dob_year" id="pat_dob_year" class="required"></select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group row">
-                                            <div class="col-sm-6 col-xs-12">
-                                                <label for="new-patient-ohip">
-                                                    ICN
-                                                </label>
-                                                <input style="width: 100%;" type="text" class="" name="pat_ohip" id="new-patient-ohip" placeholder="1234-123-123-AB" autocomplete="off">
-                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <input style="width: 100%;" type="text" class="" name="pat_ohip" id="new-patient-ohip" placeholder="1234-123-123-AB" autocomplete="off">
+                                                </div>
 
 
-                                            <div class="col-sm-6 col-xs-12">
-                                                <label for="new-patient-ohip">
-                                                    Sex
-                                                </label>
-                                                <select style="width: 100%;" name="pat_gender" id="pat_gender" class="required">
-                                                    <option value="male" selected>Male</option>
-                                                    <option value="female">Female</option>
-                                                </select>
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <select style="width: 100%;" name="pat_gender" id="pat_gender" class="required">
+                                                        <option value="male" selected>Male</option>
+                                                        <option value="female">Female</option>
+                                                    </select>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                      
+
                                         <div class="form-group row">
                                             <div class="col-lg-12">
                                                 <h4 class="modal-title" id="task_h4">Task Details</h4>
@@ -344,7 +332,7 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        
+
                                         <div class="form-group row">
                                             <div class="col-lg-12">
                                                 <label for="">
