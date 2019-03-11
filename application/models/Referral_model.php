@@ -979,7 +979,7 @@ class Referral_model extends CI_Model {
                     $visit_interval = "30"; //30 minutes
                     $patient_data = $this->db->select("*")->from("referral_patient_info")->where(array(
                         "id" => $patient_id
-                    ));
+                    ))->get()->result();
                     if($patient_data) {
                         $notify_type = ($patient_data[0]->cell_phone != "")?"call":"sms";
 
