@@ -932,20 +932,10 @@ class Referral_model extends CI_Model {
             if ($authorized) {
                 //if booked by staff
                 $record_id = $data["record_id"];
-                if (isset($data["visit_slot_1"]) || isset($data["visit_slot_2"]) || isset($data["visit_slot_3"])) {
+                if (isset($data["visit_slot"])) {
                     log_message("error", "=>" . isset($data["visit_slot_1"]) . "," . isset($data["visit_slot_2"]) . "," . isset($data["visit_slot_3"]));
 //                    echo "num = $num <br/>";
-                    if ((isset($data["visit_slot_1"]))) {
-                        $num = "1";
-                    }
-                    if ((isset($data["visit_slot_2"]))) {
-                        $num = "2";
-                    }
-                    if ((isset($data["visit_slot_3"]))) {
-                        $num = "3";
-                    }
-
-
+                    $num = $data["visit_slot"];
                     $record_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
                                 "id" => $record_id,
                                 "active" => "0"
