@@ -980,37 +980,42 @@ class Referral_model extends CI_Model {
                     $patient_data = $this->db->select("*")->from("referral_patient_info")->where(array(
                         "id" => $patient_id
                     ));
-                    $notify_type = ($patient_data->cell_phone != "")?"call":"sms";
-                    
-                    $insert_data = array(
-                        "patient_id" => $patient_id,
-                        "visit_name" => $data["visit_name"],
-                        "visit_date" => $visit_date->format("Y-m-d"),
-                        "visit_time" => $data["visit_time"],
-                        "visit_end_time" => $visit_date->add(new DateInterval("PT".$visit_interval."M")),
-                        "notify_type" => $notify_type,
-                        "notify_status" => "Booked by staff",
-                        "notify_status_icon" => "green",
-                        "visit_confirmed" => "Booked by staff"
-                    );
-                    $inserted = $this->db->insert("records_patient_visit", $insert_data);
+                    if($patient_data) {
+                        $notify_type = ($patient_data[0]->cell_phone != "")?"call":"sms";
 
-                    //change accepted status to "Booked by Staff"
-                    $referral_id = $this->get_referral_id(md5($patient_id));
-                    $this->db->where(array(
-                        "id" => $referral_id
-                    ))->update("clinic_referrals", array(
-                        "accepted_status" => "Booked by Staff",
-                        "accepted_status_icon" => "green"
-                    ));
+                        $insert_data = array(
+                            "patient_id" => $patient_id,
+                            "visit_name" => $data["visit_name"],
+                            "visit_date" => $visit_date->format("Y-m-d"),
+                            "visit_time" => $data["visit_time"],
+                            "visit_end_time" => $visit_date->add(new DateInterval("PT".$visit_interval."M")),
+                            "notify_type" => $notify_type,
+                            "notify_status" => "Booked by staff",
+                            "notify_status_icon" => "green",
+                            "visit_confirmed" => "Booked by staff"
+                        );
+                        $inserted = $this->db->insert("records_patient_visit", $insert_data);
+
+                        //change accepted status to "Booked by Staff"
+                        $referral_id = $this->get_referral_id(md5($patient_id));
+                        $this->db->where(array(
+                            "id" => $referral_id
+                        ))->update("clinic_referrals", array(
+                            "accepted_status" => "Booked by Staff",
+                            "accepted_status_icon" => "green"
+                        ));
 
 
-                    if ($inserted) {
-                        return true;
-                    } else {
-                        return "Failed to add visit record";
-                    }
+                        if ($inserted) {
+                            return true;
+                        } else {
+                            return "Failed to add visit record";
+                        }
 //                    return $this->create_patient_visit($data["id"], $data["visit_name"], $new_visit_duration);
+                    }
+                    else {
+                        return "Patient details not found";
+                    }
                 }
             } else {
                 return "You are not authorized for such Operation";
