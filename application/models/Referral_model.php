@@ -931,8 +931,8 @@ class Referral_model extends CI_Model {
             $authorized = $this->check_authentication($data["id"]);
             if ($authorized) {
                 //if booked by staff
+                $record_id = $data["record_id"];
                 if (isset($data["visit_slot_1"]) || isset($data["visit_slot_2"]) || isset($data["visit_slot_3"])) {
-                    $record_id = $data["record_id"];
                     log_message("error", "=>" . isset($data["visit_slot_1"]) . "," . isset($data["visit_slot_2"]) . "," . isset($data["visit_slot_3"]));
 //                    echo "num = $num <br/>";
                     if ((isset($data["visit_slot_1"]))) {
@@ -944,7 +944,7 @@ class Referral_model extends CI_Model {
                     if ((isset($data["visit_slot_3"]))) {
                         $num = "3";
                     }
-                    
+
 
                     $record_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
                                 "id" => $record_id,
@@ -984,7 +984,42 @@ class Referral_model extends CI_Model {
                         return "Failed to add visit after timeout";
                     }
                 } else {
+                    $patient_id = $this->get_patient_id($data["id"]);
+                    $visit_date = date_create_from_format('j F Y H:i', $data["visit_date"] . " " . $data["visit_time"]);
+                    $visit_interval = "30"; //30 minutes
+                    $patient_data = $this->db->select("*")->from("referral_patient_info")->where(array(
+                        "id" => $patient_id
+                    ));
+                    $notify_type = ($patient_data->cell_phone != "")?"call":"sms";
                     
+                    $insert_data = array(
+                        "patient_id" => $patient_id,
+                        "visit_name" => $data["visit_name"],
+                        "visit_date" => $visit_date->format("Y-m-d"),
+                        "visit_time" => $data["visit_time"],
+                        "visit_end_time" => $visit_date->add(new DateInterval("PT".$visit_interval."M")),
+                        "notify_type" => $notify_type,
+                        "notify_status" => "Booked by staff",
+                        "notify_status_icon" => "green",
+                        "visit_confirmed" => "Booked by staff"
+                    );
+                    $inserted = $this->db->insert("records_patient_visit", $insert_data);
+
+                    //change accepted status to "Booked by Staff"
+                    $referral_id = $this->get_referral_id(md5($patient_id));
+                    $this->db->where(array(
+                        "id" => $referral_id
+                    ))->update("clinic_referrals", array(
+                        "accepted_status" => "Booked by Staff",
+                        "accepted_status_icon" => "green"
+                    ));
+
+
+                    if ($inserted) {
+                        return true;
+                    } else {
+                        return "Failed to add visit record";
+                    }
 //                    return $this->create_patient_visit($data["id"], $data["visit_name"], $new_visit_duration);
                 }
             } else {

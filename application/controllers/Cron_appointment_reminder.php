@@ -22,9 +22,9 @@ class Cron_appointment_reminder extends CI_Controller {
         log_message("error", "Cron_appointment_reminder called");
 
         //get all to schedule a call
-        $plus_72_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+3 day")));
+        $plus_72_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+2 day")));
         $string_plus_72_hour = $plus_72_hour->format("Y-m-d H:i:s");
-        $plus_72_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+3 day 5 minute")));
+        $plus_72_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+2 day 5 minute")));
         $string_plus_72_hour_5_min = $plus_72_hour_5_min->format("Y-m-d H:i:s");
         $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
                     "concat(visit_date, ' ', visit_time) > " => $string_plus_72_hour,
