@@ -199,7 +199,7 @@
                                                 <label for="new-patient-ohip">
                                                     ICN
                                                 </label>
-                                                <input type="text" class="" name="pat_ohip" id="new-patient-ohip" placeholder="1234-123-123-AB" autocomplete="off">
+                                                <input style="width: 100%;" type="text" class="" name="pat_ohip" id="new-patient-ohip" placeholder="1234-123-123-AB" autocomplete="off">
                                             </div>
 
 
@@ -207,7 +207,7 @@
                                                 <label for="new-patient-ohip">
                                                     Sex
                                                 </label>
-                                                <select name="pat_gender" id="pat_gender" class="required">
+                                                <select style="width: 100%;" name="pat_gender" id="pat_gender" class="required">
                                                     <option value="male" selected>Male</option>
                                                     <option value="female">Female</option>
                                                 </select>
@@ -270,7 +270,7 @@
                                                 </div>
                                             </div>
                                         </div> 
-                                        <div class="alert alert-sucess"><p>Patient Match Found</p></div>
+                                        <div class="alert alert-success"><p>Patient Match Found</p></div>
 
                                     </div>
                                 </div>
