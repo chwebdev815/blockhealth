@@ -984,7 +984,8 @@ class Referral_model extends CI_Model {
                         return "Failed to add visit after timeout";
                     }
                 } else {
-                    return $this->create_patient_visit($data["id"], $data["visit_name"], $new_visit_duration);
+                    
+//                    return $this->create_patient_visit($data["id"], $data["visit_name"], $new_visit_duration);
                 }
             } else {
                 return "You are not authorized for such Operation";
