@@ -341,6 +341,7 @@
         $("#wrap-container").removeClass("toggled");
         $("#patient_success_display").hide();
         $("#overlay_image").attr("src", "").hide();
+        $("#eFax-modal").find(".updated_mode").removeClass("updated_mode");
 
 
         $("#btn_save_task").attr("disabled", false);
