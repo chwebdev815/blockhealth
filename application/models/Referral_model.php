@@ -926,13 +926,19 @@ class Referral_model extends CI_Model {
 //        $this->form_validation->set_rules('visit_date', 'Date', 'required');
 //        $this->form_validation->set_rules('visit_time', 'Time', 'required');
         $new_visit_duration = 30; // static
+
+
         if ($this->form_validation->run()) {
             $data = $this->input->post();
             $authorized = $this->check_authentication($data["id"]);
             if ($authorized) {
+                $patient_id = $this->get_patient_id($data["id"]);
+                $referral_id = $this->get_referral_id(md5($patient_id));
+
                 //if booked by staff
                 $record_id = $data["record_id"];
                 if (isset($data["visit_slot"])) {
+
                     log_message("error", "=>" . isset($data["visit_slot_1"]) . "," . isset($data["visit_slot_2"]) . "," . isset($data["visit_slot_3"]));
 //                    echo "num = $num <br/>";
                     $num = $data["visit_slot"];
@@ -942,6 +948,21 @@ class Referral_model extends CI_Model {
                             ))->get()->result_array();
                     if ($record_data) {
                         $record_data = $record_data[0];
+
+                        //It should only add new visit if one visit is already confirmed by patient
+                        $result = $this->db->select("id, visit_confirmed")->from("records_patient_visit")->where(array(
+                                    "active" => 1,
+                                    "patient_id" => $patient_id
+                                ))->order_by("id", "desc")->limit(1)->get()->result();
+                        if ($result && $result[0]->visit_confirmed === "N/A") {
+                            $this->db->where(array(
+                                "id" => $result[0]->id
+                            ))->update("records_patient_visit", array(
+                                "active" => 0
+                            ));
+                        }
+
+                        //add new visit
                         $insert_data = array(
                             "patient_id" => $record_data["patient_id"],
                             "visit_name" => $record_data["visit_name"],
@@ -951,7 +972,7 @@ class Referral_model extends CI_Model {
                             "notify_type" => $record_data["notify_type"],
                             "notify_status" => "Booked by staff",
                             "notify_status_icon" => "green",
-                            "visit_confirmed" => "Booked by staff"
+                            "visit_confirmed" => "Awaiting Confirmation"
                         );
                         $inserted = $this->db->insert("records_patient_visit", $insert_data);
 
@@ -964,8 +985,13 @@ class Referral_model extends CI_Model {
                             "accepted_status_icon" => "green"
                         ));
 
-
                         if ($inserted) {
+                            //change status to scheduled
+                            $this->db->where("id", $referral_id)->update("clinic_referrals", array(
+                                "status" => "Scheduled"
+                            ));
+                            log_message("error", "changed status with " . $this->db->last_query());
+                            
                             return true;
                         } else {
                             return "Failed to add visit record";
@@ -974,46 +1000,65 @@ class Referral_model extends CI_Model {
                         return "Failed to add visit after timeout";
                     }
                 } else {
-                    $patient_id = $this->get_patient_id($data["id"]);
+
                     $visit_date = date_create_from_format('j F Y H:i', $data["visit_date"] . " " . $data["visit_time"]);
                     $visit_interval = "30"; //30 minutes
                     $patient_data = $this->db->select("*")->from("referral_patient_info")->where(array(
-                        "id" => $patient_id
-                    ))->get()->result();
-                    if($patient_data) {
-                        $notify_type = ($patient_data[0]->cell_phone != "")?"call":"sms";
+                                "id" => $patient_id
+                            ))->get()->result();
+                    if ($patient_data) {
+
+                        //It should only add new visit if one visit is already confirmed by patient
+                        $result = $this->db->select("id, visit_confirmed")->from("records_patient_visit")->where(array(
+                                    "active" => 1
+                                ))->order_by("id", "desc")->limit(1)->get()->result();
+                        if ($result && $result[0]->visit_confirmed === "N/A") {
+                            $this->db->where(array(
+                                "id" => $result[0]->id
+                            ))->update("records_patient_visit", array(
+                                "active" => 0
+                            ));
+                        }
+
+                        //add new visit
+                        $notify_type = ($patient_data[0]->cell_phone != "") ? "call" : "sms";
 
                         $insert_data = array(
                             "patient_id" => $patient_id,
                             "visit_name" => $data["visit_name"],
                             "visit_date" => $visit_date->format("Y-m-d"),
                             "visit_time" => $data["visit_time"],
-                            "visit_end_time" => $visit_date->add(new DateInterval("PT".$visit_interval."M"))->format("H:i:s"),
+                            "visit_end_time" => $visit_date->add(new DateInterval("PT" . $visit_interval . "M"))->format("H:i:s"),
                             "notify_type" => $notify_type,
                             "notify_status" => "Booked by staff",
                             "notify_status_icon" => "green",
-                            "visit_confirmed" => "Booked by staff"
+                            "visit_confirmed" => "Awaiting Confirmation"
                         );
                         $inserted = $this->db->insert("records_patient_visit", $insert_data);
 
+
+
+
                         //change accepted status to "Booked by Staff"
-                        $referral_id = $this->get_referral_id(md5($patient_id));
                         $this->db->where(array(
                             "id" => $referral_id
                         ))->update("clinic_referrals", array(
                             "accepted_status" => "Booked by Staff",
                             "accepted_status_icon" => "green"
                         ));
-
-
+                        
                         if ($inserted) {
+                            //change status to scheduled
+                            $this->db->where("id", $referral_id)->update("clinic_referrals", array(
+                                "status" => "Scheduled"
+                            ));
+                            log_message("error", "changed status with " . $this->db->last_query());
                             return true;
                         } else {
                             return "Failed to add visit record";
                         }
 //                    return $this->create_patient_visit($data["id"], $data["visit_name"], $new_visit_duration);
-                    }
-                    else {
+                    } else {
                         return "Patient details not found";
                     }
                 }
