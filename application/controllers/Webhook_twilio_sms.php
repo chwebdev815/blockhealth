@@ -9,10 +9,9 @@ class Webhook_twilio_sms extends CI_Controller {
     public function xvdnWyBnrjfdZkTzbhhxpjfSTzYbYbTN() {
         echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
         $data = $this->input->get();
-        $data1 = $this->input->post();
+      
         log_message("error", "webhook incoming sms = " . json_encode($data));
-        file_put_contents('textfile.txt','hello');
-        file_put_contents('filein2.txt',json_encode($data1));
+      
         $Body = strtoupper(trim($data["Body"]));
 //
         $From = $data["From"];
