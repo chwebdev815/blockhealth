@@ -922,11 +922,7 @@ class Referral_model extends CI_Model {
     public function add_patient_visit_model() {
         log_message("error", "reaching right place");
         $this->form_validation->set_rules('id', 'Patient', 'required');
-        // $this->form_validation->set_rules('visit_name', 'Visit Name', 'required|min_length[2]');
-//        $this->form_validation->set_rules('visit_date', 'Date', 'required');
-//        $this->form_validation->set_rules('visit_time', 'Time', 'required');
         $new_visit_duration = 30; // static
-
 
         if ($this->form_validation->run()) {
             $data = $this->input->post();
@@ -935,7 +931,7 @@ class Referral_model extends CI_Model {
                 $patient_id = $this->get_patient_id($data["id"]);
                 $referral_id = $this->get_referral_id(md5($patient_id));
 
-                //if booked by staff
+                //if selected a slot
                 $record_id = $data["record_id"];
                 if (isset($data["visit_slot"])) {
 
@@ -991,7 +987,7 @@ class Referral_model extends CI_Model {
                                 "status" => "Scheduled"
                             ));
                             log_message("error", "changed status with " . $this->db->last_query());
-                            
+
                             return true;
                         } else {
                             return "Failed to add visit record";
@@ -1046,7 +1042,7 @@ class Referral_model extends CI_Model {
                             "accepted_status" => "Booked by Staff",
                             "accepted_status_icon" => "green"
                         ));
-                        
+
                         if ($inserted) {
                             //change status to scheduled
                             $this->db->where("id", $referral_id)->update("clinic_referrals", array(
@@ -1512,22 +1508,6 @@ class Referral_model extends CI_Model {
                     $this->db->update("records_patient_visit", array(
                         "active" => 0
                     ));
-                    //notify them with sms and email
-                    // if ($result[0]->notify_sms == "1") {
-                    //     $msg = "Your visit with physician has been cancelled.";
-                    //     $this->send_sms($result[0]->cell_phone, $msg);
-                    // }
-                    // //send email
-                    // if ($result[0]->notify_email == "1") {
-                    //     $msg = "Your visit with physician has been deteled.";
-                    //     $template = $msg;
-                    //     $this->load->library('email');
-                    //     $this->email->from($this->email->smtp_user, "Blockhealth");
-                    //     $this->email->to($result[0]->email_id);
-                    //     $this->email->subject("Visit Cancelled");
-                    //     $this->email->message($template);
-                    //     $this->email->send();
-                    // }
                     $this->db->trans_complete();
                     return true;
                 } else
@@ -1539,103 +1519,106 @@ class Referral_model extends CI_Model {
     }
 
     public function update_patient_visit_model() {
+//        log_message("error", "on update patient");
         $this->form_validation->set_rules('id', 'Patient', 'required');
         $this->form_validation->set_rules('target', 'Patient Visit', 'required');
-        // $this->form_validation->set_rules('visit_name', 'Visit Name', 'required');
-        $this->form_validation->set_rules('visit_date', 'Date', 'required');
-        $this->form_validation->set_rules('visit_time', 'Time', 'required');
         if ($this->form_validation->run()) {
             $data = $this->input->post();
             $authorized = $this->check_authentication($data["id"]);
             if ($authorized) {
-                $this->db->trans_start();
-                $patient_id = $this->get_decrypted_id($data["id"], "referral_patient_info");
-                $patient_visit_id = $this->get_decrypted_id($data["target"], "records_patient_visit");
-                $my_date = date_create_from_format('j F Y', $data["visit_date"]);
-                $this->db->where(array(
-                    "id" => $patient_visit_id,
-                    "patient_id" => $patient_id,
-                    "active" => 1
-                ));
-                $this->db->update("records_patient_visit", array(
-                    "visit_name" => $data["visit_name"],
-                    "visit_date" => $my_date->format('Y-m-d'),
-                    "visit_time" => $data["visit_time"],
-                    "notify_sms" => (isset($data["cell_phone"])) ? 1 : 0,
-                    "notify_email" => (isset($data["email"])) ? 1 : 0,
-                    "notify_voice" => (isset($data["cell_phone_voice"])) ? 1 : 0,
-                    "visit_confirmed" => "N/A"
-                ));
-                $this->db->select("c_pv.visit_name, c_pv.confirm_visit_key, date_format(`c_pv`.`visit_date`,'%M %D, %Y') as visit_date, " .
-                        "date_format(`c_pv`.`visit_time`, '%I:%i %p') as visit_time, c_pv.notify_sms, c_pv.notify_email, admin.address," .
-                        "pat.email_id, pat.cell_phone, pat.fname, admin.clinic_institution_name");
-                $this->db->from("`records_patient_visit` `c_pv`, efax_info efax, clinic_user_info admin, `clinic_referrals` `c_ref`, referral_patient_info pat");
-                $this->db->join("clinic_physician_info c_dr", "c_ref.assigned_physician = c_dr.id and c_dr.active = 1", "left");
-                $this->db->where(array(
-                    "c_pv.active" => 1,
-                    "efax.active" => 1,
-                    "admin.active" => 1,
-                    "c_ref.active" => 1,
-                    "pat.active" => 1,
-                    "c_pv.id" => $patient_visit_id
-                ));
-                $this->db->where("c_pv.patient_id", "pat.id", false);
-                $this->db->where("pat.referral_id", "c_ref.id", false);
-                $this->db->where("efax.`to`", "admin.id", false);
-                $this->db->where("`c_ref`.efax_id", "efax.id", false);
-                $result = $this->db->get()->result();
-//                 log_message("error", "send sms sql = " . $this->db->last_query());
-                // log_message("error", "send sms sql = " . json_encode($result));
-                if ($result) {
-                    $msg_data = $result[0];
-                    //send patient visit booked sms
-                    $visit_name = (empty($msg_data->visit_name)) ? "" : " '$msg_data->visit_name'";
-                    if ($msg_data->notify_sms == "1") {
+                //if selected a slot
+                $target_id = $data["target"];
+                $record_id = $data["record_id"];
+                $patient_id = $this->get_patient_id($data["id"]);
+                $referral_id = $this->get_referral_id(md5($patient_id));
 
-                        $msg = "Hello <patient name>,\n" .
-                                "\n" .
-                                "Your appointment<patient visit name> with <clinic name> has been booked for <date> at <time>.\n" .
-                                "\n" .
-                                "The address is:\n" .
-                                "<Address>\n" .
-                                "\n" .
-                                "Please type 1 to confirm this booking. If this date does not work, please type 2 to alert the clinic staff.\n";
-                        $msg = str_replace("<patient name>", $msg_data->fname, $msg);
-                        $msg = str_replace("<date>", $msg_data->visit_date, $msg);
-                        $msg = str_replace("<time>", $msg_data->visit_time, $msg);
-                        $msg = str_replace("<patient visit name>", $visit_name, $msg);
-                        $msg = str_replace("<clinic name>", $msg_data->clinic_institution_name, $msg);
-                        $msg = str_replace("<Address>", $msg_data->address, $msg);
-                        //send sms
-                        $this->send_sms($msg_data->cell_phone, $msg);
+                if (isset($data["visit_slot"])) {
+
+//                    log_message("error", "on update patient visit slot");
+//                    echo "num = $num <br/>";
+                    $num = $data["visit_slot"];
+                    $record_data = $this->db->select("*")
+                            ->from("records_patient_visit_reserved")
+                            ->where(array(
+                                "id" => $record_id,
+                                "active" => "0"
+                            ))->get()->result_array();
+                    
+//                    log_message("error", "data to copy from = " . json_encode($record_data));
+                    if ($record_data) {
+                        $record_data = $record_data[0];
+                        //add new visit
+                        $update_data = array(
+                            "visit_date" => $record_data["visit_date$num"],
+                            "visit_time" => $record_data["visit_start_time$num"],
+                            "visit_end_time" => $record_data["visit_end_time$num"],
+                            "notify_type" => $record_data["notify_type"],
+                            "notify_status" => "Booked by staff",
+                            "notify_status_icon" => "green",
+                            "visit_confirmed" => "Awaiting Confirmation"
+                        );
+                        $updated = $this->db->where("md5(id)", $target_id)->update("records_patient_visit", $update_data);
+
+//                        log_message("error", "updated as " . $this->db->last_query());
+                        //change accepted status to "Booked by Staff"
+                        $referral_id = $this->get_referral_id(md5($record_data["patient_id"]));
+                        $this->db->where(array(
+                            "id" => $referral_id
+                        ))->update("clinic_referrals", array(
+                            "accepted_status" => "Booked by Staff",
+                            "accepted_status_icon" => "green"
+                        ));
+
+                        if ($updated) {
+                            return true;
+                        } else {
+                            return "Failed to update visit record";
+                        }
+                    } else {
+                        return "Failed to update visit after timeout";
                     }
-                    //send patient visit booked email
-                    if ($msg_data->notify_email == "1") {
-                        //template implement starts
-                        $template = file_get_contents("assets/templates/email_visit_changed.html");
-                        $template = str_replace("<patientVisitName/>", $visit_name, $template);
-                        $template = str_replace("<clinicName/>", $msg_data->clinic_institution_name, $template);
-                        $template = str_replace("<clinicAddress/>", $msg_data->address, $template);
-                        $template = str_replace("<date/>", $msg_data->visit_date, $template);
-                        $template = str_replace("<time/>", $msg_data->visit_time, $template);
-                        $template = str_replace("<name/>", $msg_data->fname, $template);
-                        $template = str_replace("###confirm_link###", base_url() . "referral/confirm_visit_key/" . $msg_data->confirm_visit_key, $template);
+                } else {
 
-                        //template implement ends
-                        //send mail informing ticket raised
-                        // old mail code starts
-//                        $this->load->library('email');
-//                        $this->email->from($this->email->smtp_user, "Blockhealth");
-//                        $this->email->to($msg_data->email_id);
-//                        $this->email->subject($msg_data->clinic_institution_name . " : Appointment Alert");
-//                        $this->email->message($template);
-//                        $this->email->send();
-                        // old mail code ends
-                        $response = send_mail("", "BlockHealth", $msg_data->email_id, "", $msg_data->clinic_institution_name . ": Appointment Alert", $template);
+                    $visit_date = date_create_from_format('j F Y H:i', $data["visit_date"] . " " . $data["visit_time"]);
+                    $visit_interval = "30"; //30 minutes
+                    $patient_data = $this->db->select("*")->from("referral_patient_info")->where(array(
+                                "id" => $patient_id
+                            ))->get()->result();
+                    if ($patient_data) {
+                        //add new visit
+                        $notify_type = ($patient_data[0]->cell_phone != "") ? "call" : "sms";
+
+                        $insert_data = array(
+                            "patient_id" => $patient_id,
+                            "visit_name" => $data["visit_name"],
+                            "visit_date" => $visit_date->format("Y-m-d"),
+                            "visit_time" => $data["visit_time"],
+                            "visit_end_time" => $visit_date->add(new DateInterval("PT" . $visit_interval . "M"))->format("H:i:s"),
+                            "notify_type" => $notify_type,
+                            "notify_status" => "Booked by staff",
+                            "notify_status_icon" => "green",
+                            "visit_confirmed" => "Awaiting Confirmation"
+                        );
+                        $inserted = $this->db->where("md5(id)", $target_id)->update("records_patient_visit", $update_data);
+
+                        //change accepted status to "Booked by Staff"
+                        $this->db->where(array(
+                            "id" => $referral_id
+                        ))->update("clinic_referrals", array(
+                            "accepted_status" => "Booked by Staff",
+                            "accepted_status_icon" => "green"
+                        ));
+
+                        if ($inserted) {
+                            return true;
+                        } else {
+                            return "Failed to update visit record";
+                        }
+//                    return $this->create_patient_visit($data["id"], $data["visit_name"], $new_visit_duration);
+                    } else {
+                        return "Patient details not found";
                     }
                 }
-                $this->db->trans_complete();
-                return true;
             }
             return "You are not authorized for such Operation";
         } else
