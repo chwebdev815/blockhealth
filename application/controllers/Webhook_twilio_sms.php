@@ -12,6 +12,7 @@ class Webhook_twilio_sms extends CI_Controller {
      
 		file_put_contents('/var/www/html/inSMS.txt',json_encode($_GET));
 		file_put_contents('/var/www/html/inSMS1.txt',json_encode($_REQUEST));
+		file_put_contents('/var/www/html/inSMS2.txt',json_encode($data));
         log_message("error", "webhook incoming sms = " . json_encode($data));
       
         $Body = strtoupper(trim($data["Body"]));
