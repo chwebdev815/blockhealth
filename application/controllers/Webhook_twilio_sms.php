@@ -11,10 +11,11 @@ class Webhook_twilio_sms extends CI_Controller {
         $data = $_GET;
 //        $data = $this->input->get();
         log_message("error", "webhook incoming sms = " . json_encode($data));
-
+      
         $Body = strtoupper(trim($data["Body"]));
 //
         $From = $data["From"];
+        
         //$Body = "1";
         //$From = "6479066970";
 
