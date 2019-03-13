@@ -13,12 +13,12 @@ class Webhook_twilio_sms extends CI_Controller {
         log_message("error", "webhook incoming sms = " . json_encode($data));
       file_put_contents('/var/www/html/inSMS4.txt',json_encode($data));
       file_put_contents('/var/www/html/inSMS5.txt','hello');
-        $Body = strtoupper(trim($data["Body"]));
+        //$Body = strtoupper(trim($data["Body"]));
 //
-        $From = $data["From"];
+        //$From = $data["From"];
         
-        //$Body = "1";
-        //$From = "6479066970";
+        $Body = "1";
+        $From = "6479066970";
 
         if ($Body === "0" || $Body === "1" || $Body === "2" || $Body === "3") {
             //find patient
