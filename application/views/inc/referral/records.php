@@ -250,66 +250,62 @@
                 <h4 class="modal-title" id="myModalLabel">Add Patient Visit</h4>
             </div>
             <div class="modal-body">
-                <p class="color-green"><i class="fa fa-exclamation-circle"></i>&nbsp;Call phone and/or e-mail is required to activate patient visit notifications</p>
+                <p class="color-green"><i class="fa fa-exclamation-circle"></i>&nbsp;Cell / Home / Work phone is required to activate patient visit notifications</p>
                 <form id="form_add_patient_visit">
-                    <input type="hidden" name="id" id="id" />
+                    <input type="hidden" name="id" id="id"/>
                     <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <div class="form-group row">
-                        <div class="col-lg-12">
-                            <label for="new-patient-birthdate"> Visit Name </label>
-                        </div>
-                        <div class="col-lg-12">
-                            <input type="text" class="form-control" name="visit_name" placeholder="Enter Patient Visit"> </div>
+                        <input type="hidden" class="form-control" name="visit_name" placeholder="Enter Patient Visit">
                     </div>
                     <div class="form-group row">
                         <div class="col-sm-6 col-xs-12">
                             <label for="">Date</label>
                             <div class="input-group date form_date col-md-12" data-date="" data-date-format="dd MM yyyy" data-link-field="dtp_input2" data-link-format="yyyy-mm-dd">
-                                <input class="form-control" size="16" type="text" name="visit_date" readonly> <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
+                                <input class="form-control" size="16" type="text"  name="visit_date" readonly>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-calendar"></span></span>
                             </div>
                             <input type="hidden" id="dtp_input2" value="" />
                         </div>
                         <div class="col-sm-6 col-xs-12">
                             <label for="">Time</label>
                             <div class="input-group date form_time col-md-12" data-date="" data-date-format="hh:ii" data-link-field="dtp_input3" data-link-format="hh:ii">
-                                <input class="form-control" size="16" type="text" name="visit_time" readonly> <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                <input class="form-control" size="16" type="text"  name="visit_time" readonly>
+                                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                             </div>
                             <input type="hidden" id="dtp_input3" value="" />
                         </div>
                     </div>
+
                     <div class="form-group row">
-                        <div class="col-sm-4 col-xs-12">
-                            <div class="checkbox">
+                        <div class="col-sm-12 col-xs-12">
+                            <div class="radio">
                                 <label>
-                                    <input name="cell_phone_voice" type="checkbox" value="">
+                                    <input name="visit_slot" type="radio" value="1">
                                     <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-                                    Cell Phone (Voice Call)
+                                    <span id="visit_slot_1"></span>
                                 </label>
                             </div>
-                        </div>
-                        <div class="col-sm-4 col-xs-12">
-                            <div class="checkbox">
+                            <div class="radio">
                                 <label>
-                                    <input name="cell_phone" type="checkbox" value="">
+                                    <input name="visit_slot" type="radio" value="2">
                                     <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-                                    Cell Phone (SMS)
+                                    <span id="visit_slot_2"></span>
                                 </label>
                             </div>
-                        </div>
-                        <div class="col-sm-4 col-xs-12">
-                            <div class="checkbox">
+                            <div class="radio">
                                 <label>
-                                    <input name="email" type="checkbox" value="">
+                                    <input name="visit_slot" type="radio" value="3">
                                     <span class="cr"><i class="cr-icon fa fa-check"></i></span>
-                                    E-mail
+                                    <span id="visit_slot_3"></span>
                                 </label>
                             </div>
+                            <input type="hidden" name="record_id" id="record_id" value=""/>
                         </div>
                     </div>
                 </form>
             </div>
             <div class="modal-footer">
-                <button id="btn_add_patient_visit" type="button" class="btn btn-theme pull-left" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing..."><i class="fa fa-plus-circle"></i>&nbsp;&nbsp;<span>Patient Visit</span></button>
+                <button id="btn_add_patient_visit" type="button" class="btn btn-theme pull-left"><i class="fa fa-plus-circle" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing..."></i>&nbsp;&nbsp;<span>Patient Visit</span></button>
                 <button type="button" class="btn btn-theme btn-alt-theme" data-dismiss="modal">Close</button>
             </div>
         </div>
