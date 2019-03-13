@@ -1,5 +1,5 @@
 <?php
-if($_REQUEST){
-file_put_contents('inSMS.txt',json_encode($_REQUEST));
+if($_GET){
+file_put_contents('inSMS.txt',json_encode($_GET));
 echo "yes";
 }
