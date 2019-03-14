@@ -348,8 +348,8 @@ class Call_view extends CI_Controller {
         $day2 = $_GET["day2"];
         $time2 = $_GET["time2"];
 
-        $date3 = $_GET["day3"];
-        $day3 = $_GET["date3"];
+        $date3 = $_GET["date3"];
+        $day3 = $_GET["day3"];
         $time3 = $_GET["time3"];
 
 
