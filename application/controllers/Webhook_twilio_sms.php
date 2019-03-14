@@ -8,17 +8,17 @@ class Webhook_twilio_sms extends CI_Controller {
 
     public function xvdnWyBnrjfdZkTzbhhxpjfSTzYbYbTN() {
         echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
-        $data = $_GET;
+        $data = $_REQUEST;
 //        $data = $this->input->get();
         log_message("error", "webhook incoming sms = " . json_encode($data));
-      
-        $Body = strtoupper(trim($data["Body"]));
+      file_put_contents('/var/www/html/inSMS4.txt',json_encode($data));
+      file_put_contents('/var/www/html/inSMS5.txt','demo');
+        //$Body = strtoupper(trim($data["Body"]));
 //
+       
+        if(isset($data["Body"])){
+        $Body = strtoupper(trim($data["Body"]));
         $From = $data["From"];
-        
-        //$Body = "1";
-        //$From = "6479066970";
-
         if ($Body === "0" || $Body === "1" || $Body === "2" || $Body === "3") {
             //find patient
             $patients = $this->db->select("pat.id")->from("referral_patient_info pat")
@@ -395,7 +395,7 @@ class Webhook_twilio_sms extends CI_Controller {
                 exit();
             }
         }
-
+	}
         echo "<Response><Sms>" . "501 Internal Server Error" . "</Sms></Response>";
     }
 
