@@ -66,7 +66,7 @@ class Inbox_model extends CI_Model {
     }
 
     public function save_task_model() {
-        $this->form_validation->set_rules('id', 'Patient', 'required');
+//        $this->form_validation->set_rules('id', 'Patient', 'required');
         $this->form_validation->set_rules('efax_id', 'Efax Id', 'required');
         $this->form_validation->set_rules('record_type', 'Record Type', 'required');
 //        $this->form_validation->set_rules('description', 'Description', 'required');
@@ -96,6 +96,7 @@ class Inbox_model extends CI_Model {
 //            $id = $this->get_decrypted_id($data["id"], "referral_patient_info");
             $physician_id = ((isset($data["assign_physician"])) ? $this->get_decrypted_id($data["assign_physician"], "clinic_physician_info") : 0);
             $patient_id = ((isset($data["id"])) ? ($this->get_decrypted_id($data["id"], "referral_patient_info")) : 0);
+            $patient_id = 2;
 
             $inserted = $this->db->insert("clinic_physician_tasks", array(
                 "clinic_id" => $this->session->userdata("user_id"),
@@ -126,13 +127,47 @@ class Inbox_model extends CI_Model {
             }
 
 
-            log_message("error", $efax_id . "./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
-            log_message("error", $efax_id . "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name . " to ./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
+//            log_message("error", $efax_id . "./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
+//            log_message("error", $efax_id . "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name . " to ./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
 
             rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
             rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, "./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
 
-            log_message("error", "insert = " . $this->db->last_query());
+            
+            //save entry in rpa_integration table
+            $this->db->insert("rpa_integration", array(
+               "api_type" => "UploadDocument",
+                "api_num" => 3,
+                "date" => date("Y-m-d"),
+                "time" => date("H:i:s"),
+                "status" => "NEW",
+                "pathway" => "AccuroCitrix",
+                "clinic_name" => "TCN",
+                "username" => "hahmed",
+                "password" => "Blockhealth19",
+                "pdf_location" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf",
+                "pdf_type" => "Imaging Note",
+                "active" => 1
+            ));
+            log_message("error", "inserted to rpa");
+            
+            //send to RPA nitegration
+            $request = curl_init('http://52.237.12.245/api/v1/patients/upload-documents');
+            curl_setopt($request, CURLOPT_POST, true);
+            curl_setopt($request, CURLOPT_POSTFIELDS, array(
+                "file" => base_url() . "uploads/physician_tasks/tiff/" . $new_file_name . ".tif",
+                "pathwayName" => "AccuroCitrix",
+                "username" => "hahmed",
+                "password" => "Blockhealth19",
+                "ClinicName" => "TCN_Uploads"
+            ));
+            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+            $response = curl_exec($request);
+            curl_close($request);
+            
+            log_message("error", "curl log = " . json_encode($response));
+
+//            log_message("error", "insert = " . $this->db->last_query());
 
             $this->db->trans_complete();
             if ($inserted) {
@@ -513,15 +548,15 @@ class Inbox_model extends CI_Model {
                     );
                     //If clinic has only 1 physician account, then assign by default 
                     $physicians = $this->db->select("id")->from("clinic_physician_info")->where(array(
-                        "clinic_id" => $this->session->userdata("user_id")
-                    ))->get()->result();
-                    if($physicians && sizeof($physicians) === 1) {
+                                "clinic_id" => $this->session->userdata("user_id")
+                            ))->get()->result();
+                    if ($physicians && sizeof($physicians) === 1) {
                         $insert_data["assigned_physician"] = $physicians[0]->id;
                     }
                     $this->db->insert("clinic_referrals", $insert_data);
                     //new referral record added
-                    
-                    
+
+
                     log_message("error", "update status  = " . $this->db->last_query());
                     $referral_id = $this->db->insert_id();
                     //remove from inbox by status referred true
