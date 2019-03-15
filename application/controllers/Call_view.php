@@ -242,7 +242,8 @@ class Call_view extends CI_Controller {
             } elseif ($_GET['Digits'] == 2) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response><Say voice='Polly.Joanna'>Thank you</Say></Response>";
-
+                
+                log_message("error", "###############################################");
                 $get = $_GET;
                 //insert in scheduled visit
                 $insert_data = array(
@@ -257,7 +258,7 @@ class Call_view extends CI_Controller {
                     "notify_status_icon" => "blue"
                 );
                 $this->db->insert("records_patient_visit", $insert_data);
-
+                log_message("error", "wrong number is set with " . $this->db->last_query());
                 //disable from reserved table
                 $this->db->where(array(
                     "id" => $reserved_id
@@ -282,6 +283,7 @@ class Call_view extends CI_Controller {
                     "accepted_status" => "Wrong Number",
                     "accepted_status_icon" => "blue"
                 ));
+                log_message("error", "second wrong number is set with " . $this->db->last_query());
 
                 //all visits book status changed to wrong number
                 $this->db->where(array(
