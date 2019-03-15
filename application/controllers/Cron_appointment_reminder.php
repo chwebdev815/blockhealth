@@ -20,20 +20,34 @@ class Cron_appointment_reminder extends CI_Controller {
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
 
         log_message("error", "Cron_appointment_reminder called");
+        //get all clinic and loop all
+        $clinics = $this->db->select("id, visit_confirm_time")->where("active", 1)->get()->result();
+        if ($clinics) {
+            foreach ($clinics as $key => $clinic) {
+                $hour = $clinic->visit_confirm_time;
+                //get all to schedule a call for specific clinic
+                $remind_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+$hour hour")));
+                $string_remind_hour = $remind_hour->format("Y-m-d H:i:s");
+                $remind_hour_5min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+$hour hour 5 minute")));
+                $string_remind_hour_5min = $remind_hour_5min->format("Y-m-d H:i:s");
+                $remindable = $this->db->select("r_pv.*")
+                        ->from("records_patient_visit r_pv, referral_patient_info pat, "
+                                . "clinic_referrals c_ref, efax_info efax, clinic_user_info c_usr")
+                        ->where(array(
+                            "concat(r_pv.visit_date, ' ', r_pv.visit_time) > " => $string_remind_hour,
+                            "concat(r_pv.visit_date, ' ', r_pv.visit_time) < " => $string_remind_hour_5min,
+                            "r_pv.visit_confirmed" => "N/A",
+                        ))->get()->result();
 
-        //get all to schedule a call
-        $plus_72_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+2 day")));
-        $string_plus_72_hour = $plus_72_hour->format("Y-m-d H:i:s");
-        $plus_72_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+2 day 5 minute")));
-        $string_plus_72_hour_5_min = $plus_72_hour_5_min->format("Y-m-d H:i:s");
-        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
-                    "concat(visit_date, ' ', visit_time) > " => $string_plus_72_hour,
-                    "concat(visit_date, ' ', visit_time) < " => $string_plus_72_hour_5_min,
-                    "visit_confirmed" => "Awaiting Confirmation",
-                ))->get()->result();
+                $this->init_reminder($remindable);
 //        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
 //                    "id" => 47
 //                ))->get()->result();
+            }
+        }
+    }
+
+    function init_reminder($remindable) {
 
         echo $this->db->last_query() . "<br/><br/>";
         echo json_encode($remindable) . "<br/><br/>";
