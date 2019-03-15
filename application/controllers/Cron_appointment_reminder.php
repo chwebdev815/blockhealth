@@ -40,7 +40,16 @@ class Cron_appointment_reminder extends CI_Controller {
                                     "concat(r_pv.visit_date, ' ', r_pv.visit_time) > " => $string_remind_hour,
                                     "concat(r_pv.visit_date, ' ', r_pv.visit_time) < " => $string_remind_hour_5min,
                                     "r_pv.visit_confirmed" => "N/A",
-                                ))->get()->result();
+                                    "pat.active" => 1,
+                                    "c_ref.active" => 1,
+                                    "c_usr.active" => 1,
+                                    "r_pv.active" => 1
+                                ))
+                        ->where("pat.id", "r_pv.patient_id", false)
+                        ->where("c_ref.id", "pat.referral_id", false)
+                        ->where("efax.id", "c_ref.efax_id", false)
+                        ->where("c_usr.id", "efax.to", false)
+                        ->get()->result();
                 log_message("error", "calculating reminder = " . $this->db->last_query());
                 $this->init_reminder($remindable);
 //        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
