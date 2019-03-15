@@ -143,8 +143,8 @@ class Call_view extends CI_Controller {
         . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
         . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
         . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-        . "notify_email=" . urlencode($_GET["notify_email"]) . "&amp;
-                    Digits=timeout</Redirect>
+        . "notify_email=" . urlencode($_GET["notify_email"]) . 
+                "</Redirect>
 		</Response>";
     }
 
