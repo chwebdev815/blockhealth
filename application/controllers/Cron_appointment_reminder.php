@@ -19,12 +19,14 @@ class Cron_appointment_reminder extends CI_Controller {
 
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
 
-        log_message("error", "Cron_appointment_reminder called");
+        log_message("error", "Cron_appointment_reminder called $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         //get all clinic and loop all
         $clinics = $this->db->select("id, visit_confirm_time")
-                ->from("clinic_user_info")->where("active", 1)->get()->result();
+                        ->from("clinic_user_info")->where("active", 1)->get()->result();
+        log_message("error", "Clinic users for timing = " . json_encode($clinics));
         if ($clinics) {
             foreach ($clinics as $key => $clinic) {
+                log_message("error", "clinic = " . $clinic->id);
                 $hour = $clinic->visit_confirm_time;
                 //get all to schedule a call for specific clinic
                 $remind_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+$hour hour")));
@@ -32,14 +34,14 @@ class Cron_appointment_reminder extends CI_Controller {
                 $remind_hour_5min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+$hour hour 5 minute")));
                 $string_remind_hour_5min = $remind_hour_5min->format("Y-m-d H:i:s");
                 $remindable = $this->db->select("r_pv.*")
-                        ->from("records_patient_visit r_pv, referral_patient_info pat, "
-                                . "clinic_referrals c_ref, efax_info efax, clinic_user_info c_usr")
-                        ->where(array(
-                            "concat(r_pv.visit_date, ' ', r_pv.visit_time) > " => $string_remind_hour,
-                            "concat(r_pv.visit_date, ' ', r_pv.visit_time) < " => $string_remind_hour_5min,
-                            "r_pv.visit_confirmed" => "N/A",
-                        ))->get()->result();
-
+                                ->from("records_patient_visit r_pv, referral_patient_info pat, "
+                                        . "clinic_referrals c_ref, efax_info efax, clinic_user_info c_usr")
+                                ->where(array(
+                                    "concat(r_pv.visit_date, ' ', r_pv.visit_time) > " => $string_remind_hour,
+                                    "concat(r_pv.visit_date, ' ', r_pv.visit_time) < " => $string_remind_hour_5min,
+                                    "r_pv.visit_confirmed" => "N/A",
+                                ))->get()->result();
+                log_message("error", "calculating reminder = " . $this->db->last_query());
                 $this->init_reminder($remindable);
 //        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
 //                    "id" => 47
@@ -62,8 +64,8 @@ class Cron_appointment_reminder extends CI_Controller {
             ));
             log_message("error", "update visit " . $visit->id . " before call");
             log_message("error", "q = " . $this->db->last_query());
-            
-            
+
+
             //get clinic id for patient
             $this->db->select('admin.id as clinic_id, '
                     . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") '
