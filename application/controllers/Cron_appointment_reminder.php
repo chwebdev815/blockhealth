@@ -59,10 +59,9 @@ class Cron_appointment_reminder extends CI_Controller {
         }
     }
 
-    function init_reminder($remindable) {
+    public function init_reminder($remindable) {
 
-        echo $this->db->last_query() . "<br/><br/>";
-        echo json_encode($remindable) . "<br/><br/>";
+        log_message("error", "init => " . json_encode($remindable) . "<br/><br/>");
 
         $this->load->model("referral_model");
         foreach ($remindable as $key => $value) {
