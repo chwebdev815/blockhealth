@@ -103,7 +103,6 @@ class Call_view extends CI_Controller {
         $address = $_GET['address'];
         $dataarray = http_build_query($_GET);
         $base_url = "http://35.203.47.37/";
-
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         echo "<Response>
             <Gather  timeout='3' numDigits='1' action='" . $base_url . "call_view/step_two?"
