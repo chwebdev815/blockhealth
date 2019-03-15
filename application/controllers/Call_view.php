@@ -127,7 +127,7 @@ class Call_view extends CI_Controller {
                 <Pause length='1'/>
                 <Say voice='Polly.Joanna'> If you are  " . $_GET['pname'] . "  " . $_GET['patient_lname'] . " , please enter 1 to continue. If this is the wrong number, please type 2 to end the call</Say>
 				</Gather>
-            <Pause length='10'/>
+            <Pause length='5'/>
             <Redirect method='GET'>
             " . $base_url . "call_view/callhandle?"
         . "pname=" . urlencode($_GET['pname']) . "&amp;"
