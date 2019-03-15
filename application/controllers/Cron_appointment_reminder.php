@@ -28,10 +28,13 @@ class Cron_appointment_reminder extends CI_Controller {
             foreach ($clinics as $key => $clinic) {
                 log_message("error", "clinic = " . $clinic->id);
                 $hour = $clinic->visit_confirm_time;
+                $day = floor($hour / 24);
+                $hour = ($hour % 24);
+                
                 //get all to schedule a call for specific clinic
-                $remind_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+$hour hour")));
+                $remind_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+$day day $hour hour")));
                 $string_remind_hour = $remind_hour->format("Y-m-d H:i:s");
-                $remind_hour_5min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+$hour hour 5 minute")));
+                $remind_hour_5min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+$day day $hour hour 5 minute")));
                 $string_remind_hour_5min = $remind_hour_5min->format("Y-m-d H:i:s");
                 $remindable = $this->db->select("r_pv.*")
                                 ->from("records_patient_visit r_pv, referral_patient_info pat, "
