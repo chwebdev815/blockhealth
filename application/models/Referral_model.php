@@ -1588,7 +1588,7 @@ class Referral_model extends CI_Model {
                         //add new visit
                         $notify_type = ($patient_data[0]->cell_phone != "") ? "call" : "sms";
 
-                        $insert_data = array(
+                        $update_data = array(
                             "patient_id" => $patient_id,
                             "visit_name" => $data["visit_name"],
                             "visit_date" => $visit_date->format("Y-m-d"),
