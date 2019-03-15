@@ -1028,7 +1028,7 @@ class Referral_model extends CI_Model {
                             "notify_type" => $notify_type,
                             "notify_status" => "Booked by staff",
                             "notify_status_icon" => "green",
-                            "visit_confirmed" => "Awaiting Confirmation"
+                            "visit_confirmed" => "N/A"
                         );
                         $inserted = $this->db->insert("records_patient_visit", $insert_data);
 
@@ -1555,7 +1555,7 @@ class Referral_model extends CI_Model {
                             "notify_type" => $record_data["notify_type"],
                             "notify_status" => "Booked by staff",
                             "notify_status_icon" => "green",
-                            "visit_confirmed" => "Awaiting Confirmation"
+                            "visit_confirmed" => "N/A"
                         );
                         $updated = $this->db->where("md5(id)", $target_id)->update("records_patient_visit", $update_data);
 
