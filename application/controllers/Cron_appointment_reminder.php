@@ -55,7 +55,14 @@ class Cron_appointment_reminder extends CI_Controller {
         $this->load->model("referral_model");
         foreach ($remindable as $key => $value) {
             $visit = $value;
-
+            //update it to awaiting confirmation
+            $this->db->where("id", $visit->id)->update("records_patient_visit", array(
+                "visit_confirmed" => "Awaiting Confirmation"
+            ));
+            log_message("error", "update visit " . $visit->id . " before call");
+            log_message("error", "q = " . $this->db->last_query());
+            
+            
             //get clinic id for patient
             $this->db->select('admin.id as clinic_id, '
                     . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") '
