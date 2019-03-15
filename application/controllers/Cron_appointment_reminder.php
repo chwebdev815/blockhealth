@@ -21,7 +21,8 @@ class Cron_appointment_reminder extends CI_Controller {
 
         log_message("error", "Cron_appointment_reminder called");
         //get all clinic and loop all
-        $clinics = $this->db->select("id, visit_confirm_time")->where("active", 1)->get()->result();
+        $clinics = $this->db->select("id, visit_confirm_time")
+                ->from("clinic_user_info")->where("active", 1)->get()->result();
         if ($clinics) {
             foreach ($clinics as $key => $clinic) {
                 $hour = $clinic->visit_confirm_time;
