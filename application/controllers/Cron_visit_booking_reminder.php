@@ -441,7 +441,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "notify_status" => "Wrong Number",
                     "notify_status_icon" => "blue"
                 ));
-                
+
                 log_message("error", "wrong number 1 => " . $this->db->last_query());
 
                 //set status in accepted_status
@@ -455,12 +455,13 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "id" => $referral_id
                 ))->update("clinic_referrals", array(
                     "accepted_status" => "Wrong Number",
-                    "accepted_status_icon" => "blue"
+                    "accepted_status_icon" => "blue",
+                    "accepted_status_date" => date("Y-m-d")
                 ));
                 log_message("error", "wrong number 2=> " . $this->db->last_query());
 
 
-                
+
                 //all visits book status changed to wrong number
                 $this->db->where(array(
                     "patient_id" => $_GET["patient_id"]
@@ -729,12 +730,10 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 $insert_data = array(
                     "patient_id" => $get["patient_id"],
                     "visit_name" => $get["pvname"],
-                    
                     "notify_type" => $reserved_data->notify_type,
                     "notify_voice" => $reserved_data->notify_voice,
                     "notify_sms" => $reserved_data->notify_sms,
                     "notify_email" => $reserved_data->notify_email,
-                    
                     "visit_confirmed" => "Change required",
                     "notify_status" => "Contact directly",
                     "notify_status_icon" => "yellow"
@@ -763,7 +762,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "id" => $referral_id
                 ))->update("clinic_referrals", array(
                     "accepted_status" => "Contact directly",
-                    "accepted_status_icon" => "yellow"
+                    "accepted_status_icon" => "yellow",
+                    "accepted_status_date" => date("Y-m-d")
                 ));
 
                 log_message("error", "updated for 0 with sql = $referral_id  => " . $this->db->last_query());
@@ -800,28 +800,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
             }
-
-
-//            try {
-//
-//                $params = array(
-//                    'data' => $_GET["Digits"],
-//                    'to' => $_GET['To']
-//                );
-//
-//                $defaults = array(
-//                    CURLOPT_URL => $base_url . "efax/call_handle",
-//                    CURLOPT_POST => true,
-//                    CURLOPT_POSTFIELDS => http_build_query($params)
-//                );
-//                $ch = curl_init($base_url . "efax/call_handle");
-//                curl_setopt_array($ch, $defaults);
-//
-//                curl_exec($ch);
-//                curl_close($ch);
-//            } catch (Exception $e) {
-//                echo "Error in response file";
-//            }
         }
     }
 

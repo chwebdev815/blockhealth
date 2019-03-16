@@ -337,13 +337,13 @@ class Cron_appointment_reminder extends CI_Controller {
             ));
 
             //set status in accepted_status
-            $referral_id = $this->db->select("c_ref.id")
-                            ->from("clinic_referrals c_ref, referral_patient_info pat")
-                            ->where(array(
-                                "pat.id" => $patient_id
-                            ))
-                            ->where("c_ref.id", "pat.referral_id", false)
-                            ->get()->result()[0]->id;
+//            $referral_id = $this->db->select("c_ref.id")
+//                            ->from("clinic_referrals c_ref, referral_patient_info pat")
+//                            ->where(array(
+//                                "pat.id" => $patient_id
+//                            ))
+//                            ->where("c_ref.id", "pat.referral_id", false)
+//                            ->get()->result()[0]->id;
 
 //            $this->db->where(array(
 //                "id" => $referral_id
@@ -360,6 +360,25 @@ class Cron_appointment_reminder extends CI_Controller {
                 "notify_status" => "Contact directly",
                 "notify_status_icon" => "yellow"
             ));
+            
+            //set status in accepted_status
+                $referral_id = $this->db->select("c_ref.id")
+                                ->from("clinic_referrals c_ref, referral_patient_info pat")
+                                ->where(array(
+                                    "pat.id" => $_GET["patient_id"]
+                                ))
+                                ->where("c_ref.id", "pat.referral_id", false)
+                                ->get()->result()[0]->id;
+
+                $this->db->where(array(
+                    "id" => $referral_id
+                ))->update("clinic_referrals", array(
+                    "accepted_status" => "Contact directly",
+                    "accepted_status_icon" => "yellow",
+                    "accepted_status_date" => date("Y-m-d")
+                ));
+            //,
+//                    "accepted_status_date" => date("Y-m-d")
         } elseif ($_GET['Digits'] == 3) {
             echo "<Response><Redirect method='GET'>" .
             $base_url . "cron_appointment_reminder/callhandle?"

@@ -49,7 +49,7 @@ class Call_view extends CI_Controller {
         $sid = 'AC2da3b84b65b63ccf4f05c27ac1713060';
         $token = '342a214ee959d16bf97ea87579016762';
         $twilio_number = "+16475607989";
-        
+
         //$to = "+919876907251";  
 //        $to_number = "+917201907712";
 
@@ -143,8 +143,8 @@ class Call_view extends CI_Controller {
         . "reserved_id=" . urlencode($_GET["reserved_id"]) . "&amp;"
         . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
         . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
-        . "notify_email=" . urlencode($_GET["notify_email"]) . 
-                "</Redirect>
+        . "notify_email=" . urlencode($_GET["notify_email"]) .
+        "</Redirect>
 		</Response>";
     }
 
@@ -242,7 +242,7 @@ class Call_view extends CI_Controller {
             } elseif ($_GET['Digits'] == 2) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response><Say voice='Polly.Joanna'>Thank you</Say></Response>";
-                
+
                 log_message("error", "###############################################");
                 $get = $_GET;
                 //insert in scheduled visit
@@ -281,7 +281,8 @@ class Call_view extends CI_Controller {
                     "id" => $referral_id
                 ))->update("clinic_referrals", array(
                     "accepted_status" => "Wrong Number",
-                    "accepted_status_icon" => "blue"
+                    "accepted_status_icon" => "blue",
+                    "accepted_status_date" => date("Y-m-d")
                 ));
                 log_message("error", "second wrong number is set with " . $this->db->last_query());
 
@@ -585,7 +586,8 @@ class Call_view extends CI_Controller {
                     "id" => $referral_id
                 ))->update("clinic_referrals", array(
                     "accepted_status" => "Contact directly",
-                    "accepted_status_icon" => "yellow"
+                    "accepted_status_icon" => "yellow",
+                    "accepted_status_date" => date("Y-m-d")
                 ));
             } elseif ($_GET['Digits'] == 4) {
                 log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
