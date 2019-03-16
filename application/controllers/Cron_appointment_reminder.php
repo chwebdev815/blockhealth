@@ -106,7 +106,7 @@ class Cron_appointment_reminder extends CI_Controller {
                 if ($visit->notify_type == "call") {
 
 
-                    log_message("error", "checkig for patient " . $patient_data->patient_id);
+                    log_message("error", "checkig for patient " . $visit->patient_id);
                     $contact_number = $patient_data->cell_phone;
                     if ($patient_data->home_phone != "") {
                         //home number
