@@ -52,6 +52,8 @@ class Cron_appointment_reminder extends CI_Controller {
                         ->where("c_ref.id", "pat.referral_id", false)
                         ->where("efax.id", "c_ref.efax_id", false)
                         ->where("c_usr.id", "efax.to", false)
+                        ->where("efax.to", "c_usr.id", false)
+                        ->where("c_usr.id", $clinic->id)
                         ->get()->result();
                 log_message("error", "calculating reminder = " . $this->db->last_query());
                 $this->init_reminder($remindable);
@@ -134,7 +136,7 @@ class Cron_appointment_reminder extends CI_Controller {
                             'defaultContactFormName6' => $contact_number,
                             'address' => $patient_data->call_address,
                             'clinic_id' => $patient_data->clinic_id,
-                            'type' => 'Call reminder before 72 hour',
+                            'type' => 'Call reminder before 48 hour',
                             "patient_id" => $visit->patient_id,
                             "notify_voice" => $visit->notify_voice,
                             "notify_sms" => $visit->notify_sms,
