@@ -152,6 +152,7 @@ class Referral_model extends CI_Model {
             $authorized = $this->check_authentication($data["id"]);
             if ($authorized) {
                 try {
+
                     $new_data = array(
                         "fname" => $data["dr_fname"],
                         "lname" => $data["dr_lname"],
@@ -161,32 +162,28 @@ class Referral_model extends CI_Model {
                         "address" => $data["dr_address"],
                         "billing_num" => $data["dr_billing_num"]
                     );
-                    $this->db->where(
-                            array(
-                                "active" => 1,
-                                "md5(id)" => $data["id"]
-                            )
-                    );
+                    $this->db->where(array(
+                        "active" => 1,
+                        "md5(patient_id)" => $data["id"]
+                    ));
                     $this->db->update("referral_physician_info", $new_data);
                     log_message("error", "updated rows = " . $this->db->affected_rows());
                     $updated = ($this->db->affected_rows() == 1) ? true : "Physician information remains same.";
                     log_message("error", "updated = " . $updated);
-                    $this->db->select("referral_id");
-                    $this->db->from("referral_patient_info");
-                    $this->db->where(
-                            array(
-                                "active" => 1,
-                                "md5(id)" => $data["id"]
-                            )
-                    );
-                    $result = $this->db->get()->result();
-                    $referral_id = $result[0]->referral_id;
-                    $this->db->where(array(
-                        "active" => 1,
-                        "id" => $referral_id
-                    ));
-                    $this->db->set("last_updated", "now()", false);
-                    $this->db->update("clinic_referrals", array());
+//                    $this->db->select("referral_id");
+//                    $this->db->from("referral_patient_info");
+//                    $this->db->where(array(
+//                        "active" => 1,
+//                        "md5(id)" => $data["id"]
+//                    ));
+//                    $result = $this->db->get()->result();
+//                    $referral_id = $result[0]->referral_id;
+//                    $this->db->where(array(
+//                        "active" => 1,
+//                        "id" => $referral_id
+//                    ));
+//                    $this->db->set("last_updated", "now()", false);
+//                    $this->db->update("clinic_referrals", array());
                     return true;
                 } catch (Exception $e) {
                     return "Failed to update physician information";
@@ -1538,12 +1535,12 @@ class Referral_model extends CI_Model {
 //                    echo "num = $num <br/>";
                     $num = $data["visit_slot"];
                     $record_data = $this->db->select("*")
-                            ->from("records_patient_visit_reserved")
-                            ->where(array(
-                                "id" => $record_id,
-                                "active" => "0"
-                            ))->get()->result_array();
-                    
+                                    ->from("records_patient_visit_reserved")
+                                    ->where(array(
+                                        "id" => $record_id,
+                                        "active" => "0"
+                                    ))->get()->result_array();
+
 //                    log_message("error", "data to copy from = " . json_encode($record_data));
                     if ($record_data) {
                         $record_data = $record_data[0];
