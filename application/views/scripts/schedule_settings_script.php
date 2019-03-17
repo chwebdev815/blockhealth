@@ -1,6 +1,7 @@
 <script>
     $(document).ready(function () {
-        $("#li_schedule_settings").addClass("active");
+        $("#second_menu_list").find("#li_schedule_settings").addClass("active");
+        $("#submitButton").click();
         get_clinic_physicians();
     });
 
