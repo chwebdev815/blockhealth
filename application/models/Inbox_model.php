@@ -151,7 +151,7 @@ class Inbox_model extends CI_Model {
                 "dob_month" => $data["pat_dob_month"],
                 "dob_year" => $data["pat_dob_year"],
                 "hin" => $data["pat_ohip"],
-                "pdf_location" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf",
+                "pdf_location" => "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf",
                 "pdf_type" => "Imaging Note",
                 "active" => 1
             ));
@@ -830,7 +830,7 @@ class Inbox_model extends CI_Model {
                         "dob_month" => $data["pat_dob_month"],
                         "dob_year" => $data["pat_dob_year"],
                         "hin" => $ohip,
-                        "pdf_location" => $target_dir . $file_new_name . ".pdf",
+                        "pdf_location" => "uploads/health_records/" . $file_new_name . ".pdf",
                         "pdf_type" => "Imaging Note",
                         "active" => 1
                     ));
