@@ -832,7 +832,6 @@ class Inbox_model extends CI_Model {
                         "hin" => $ohip,
                         
                         "email_id" => $data["pat_email"],
-                        "address" => $data[""],
                         "cell_phone" => $data["pat_cell_phone"],
                         "home_phone" => $data["pat_home_phone"],
                         "work_phone" => $data["pat_work_phone"],
