@@ -145,6 +145,14 @@ class Inbox_model extends CI_Model {
                 "clinic_name" => "TCN",
                 "username" => "hahmed",
                 "password" => "Blockhealth19",
+                
+                "first_name" => $data["pat_fname"],
+                "last_name" => $data["pat_lname"],
+                "dob_day" => $data["pat_dob_day"],
+                "dob_month" => $data["pat_dob_month"],
+                "dob_year" => $data["pat_dob_year"],
+                "hin" => $data["pat_ohip"],
+                
                 "pdf_location" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf",
                 "pdf_type" => "Imaging Note",
                 "active" => 1
