@@ -830,6 +830,14 @@ class Inbox_model extends CI_Model {
                         "dob_month" => $data["pat_dob_month"],
                         "dob_year" => $data["pat_dob_year"],
                         "hin" => $ohip,
+                        
+                        "email_id" => $data["pat_email"],
+                        "address" => $data[""],
+                        "cell_phone" => $data["pat_cell_phone"],
+                        "home_phone" => $data["pat_home_phone"],
+                        "work_phone" => $data["pat_work_phone"],
+                        "address" => $data["pat_address"],
+                                                
                         "pdf_location" => "uploads/health_records/" . $file_new_name . ".pdf",
                         "pdf_type" => "Imaging Note",
                         "active" => 1
