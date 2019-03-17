@@ -133,10 +133,10 @@ class Inbox_model extends CI_Model {
             rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
             rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, "./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
 
-            
+
             //save entry in rpa_integration table
             $this->db->insert("rpa_integration", array(
-               "api_type" => "UploadDocument",
+                "api_type" => "save",
                 "api_num" => 3,
                 "date" => date("Y-m-d"),
                 "time" => date("H:i:s"),
@@ -145,20 +145,19 @@ class Inbox_model extends CI_Model {
                 "clinic_name" => "TCN",
                 "username" => "hahmed",
                 "password" => "Blockhealth19",
-                
                 "first_name" => $data["pat_fname"],
                 "last_name" => $data["pat_lname"],
                 "dob_day" => $data["pat_dob_day"],
                 "dob_month" => $data["pat_dob_month"],
                 "dob_year" => $data["pat_dob_year"],
                 "hin" => $data["pat_ohip"],
-                
                 "pdf_location" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf",
                 "pdf_type" => "Imaging Note",
                 "active" => 1
             ));
             log_message("error", "inserted to rpa");
-            
+            log_message("error", $this->db->last_query());
+
             //send to RPA nitegration
             $request = curl_init('http://52.237.12.245/api/v1/patients/upload-documents');
             curl_setopt($request, CURLOPT_POST, true);
@@ -172,7 +171,7 @@ class Inbox_model extends CI_Model {
             curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
             $response = curl_exec($request);
             curl_close($request);
-            
+
             log_message("error", "curl log = " . json_encode($response));
 
 //            log_message("error", "insert = " . $this->db->last_query());
@@ -812,6 +811,33 @@ class Inbox_model extends CI_Model {
                     $response = $this->referral_model->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "New Referral");
 
                     log_message("error", "completed fax send");
+
+                    //save entry in rpa_integration table
+                    $this->db->insert("rpa_integration", array(
+                        "api_type" => "new referral",
+                        "api_num" => 2,
+                        "date" => date("Y-m-d"),
+                        "time" => date("H:i:s"),
+                        "status" => "NEW",
+                        "pathway" => "AccuroCitrix",
+                        "clinic_name" => "TCN",
+                        "username" => "hahmed",
+                        "password" => "Blockhealth19",
+                        
+                        "first_name" => $data["pat_fname"],
+                        "last_name" => $data["pat_lname"],
+                        "dob_day" => $data["pat_dob_day"],
+                        "dob_month" => $data["pat_dob_month"],
+                        "dob_year" => $data["pat_dob_year"],
+                        "hin" => $ohip,
+                        "pdf_location" => $target_dir . $file_new_name . ".pdf",
+                        "pdf_type" => "Imaging Note",
+                        "active" => 1
+                    ));
+                    log_message("error", "inserted to rpa");
+                    log_message("error", $this->db->last_query());
+
+
                     $this->db->trans_complete();
 
                     // return array(true, base_url() . "admin_triage/referral_details/" . md5($referral_id));
