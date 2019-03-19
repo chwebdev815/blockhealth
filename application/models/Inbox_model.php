@@ -71,6 +71,16 @@ class Inbox_model extends CI_Model {
         $this->form_validation->set_rules('record_type', 'Record Type', 'required');
 //        $this->form_validation->set_rules('description', 'Description', 'required');
         $this->form_validation->set_rules('assign_physician', 'Physician', 'required');
+        $this->form_validation->set_rules('record_type', 'Record Type', 'required');
+        $this->form_validation->set_rules('pat_gender', 'Sex', 'required');
+        $this->form_validation->set_rules('pat_dob_day', 'DOB Day', 'required');
+        $this->form_validation->set_rules('pat_dob_month', 'DOB Month', 'required');
+        $this->form_validation->set_rules('pat_dob_year', 'DOB Year', 'required');
+        $this->form_validation->set_rules('pat_fname', 'First Name', 'required');
+        $this->form_validation->set_rules('pat_lname', 'Last Name', 'required');
+        $this->form_validation->set_rules('pat_email', 'Email', 'required');
+        $this->form_validation->set_rules('pat_address', 'Address', 'required');
+
         if ($this->form_validation->run()) {
             $this->db->trans_start();
             $data = $this->input->post();
@@ -163,7 +173,8 @@ class Inbox_model extends CI_Model {
                         "dob_year" => $data["pat_dob_year"],
                         "hin" => $data["pat_ohip"],
                         "pdf_location" => "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf",
-                        "pdf_type" => "Imaging Note",
+                        "pdf_type" => "Documents",
+                        "assigned_provider" => "Arianna Muskat",
                         "active" => 1
                     ));
                     log_message("error", "inserted to rpa");
@@ -832,10 +843,13 @@ class Inbox_model extends CI_Model {
 
                     //only trigger RPA events (table entry + doc upload API) if pathway name is AccuroCitrix
                     //
-            $clinic = $this->db->select("first_name, integration_type, emr_pathway, emr_uname_1, emr_pwd_1")
+                    
+                    $clinic = $this->db->select("first_name, integration_type, "
+                                            . "emr_pathway, emr_uname_1, emr_pwd_1")
                                     ->from("clinic_user_info")
                                     ->where("id", $this->session->userdata("user_id"))
                                     ->get()->result();
+                    log_message("error", "only trigger RPA events = > " . $this->db->last_query());
 
                     if ($clinic) {
                         $clinic = $clinic[0];
@@ -863,7 +877,8 @@ class Inbox_model extends CI_Model {
                                 "work_phone" => $data["pat_work_phone"],
                                 "address" => $data["pat_address"],
                                 "pdf_location" => "uploads/health_records/" . $file_new_name . ".pdf",
-                                "pdf_type" => "Imaging Note",
+                                "pdf_type" => "Documents",
+                                "assigned_provider" => "Arianna Muskat",
                                 "active" => 1
                             ));
                             log_message("error", "inserted to rpa");
