@@ -857,6 +857,12 @@ class Inbox_model extends CI_Model {
                         "PDFRemote" => base_url() . "uploads/health_records/" . $file_new_name . ".pdf"
                     ));
 
+                    curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($request);
+                    curl_close($request);
+
+                    log_message("error", "curl log = " . json_encode($response));
+
                     $this->db->trans_complete();
 
                     // return array(true, base_url() . "admin_triage/referral_details/" . md5($referral_id));
