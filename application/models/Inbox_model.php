@@ -167,7 +167,7 @@ class Inbox_model extends CI_Model {
                 "username" => "hahmed",
                 "password" => "Blockhealth19",
                 "ClinicName" => "TCN",
-                "source" => "Remote",
+                "source" => "remote",
                 "PDFName" => "$new_file_name.pdf",
                 "PDFRemote" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf"
             ));
@@ -852,7 +852,7 @@ class Inbox_model extends CI_Model {
                         "username" => "hahmed",
                         "password" => "Blockhealth19",
                         "ClinicName" => "TCN",
-                        "source" => "Remote",
+                        "source" => "remote",
                         "PDFName" => "$file_new_name.pdf",
                         "PDFRemote" => base_url() . "uploads/health_records/" . $file_new_name . ".pdf"
                     ));
