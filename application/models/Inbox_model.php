@@ -70,16 +70,14 @@ class Inbox_model extends CI_Model {
         $this->form_validation->set_rules('efax_id', 'Efax Id', 'required');
         $this->form_validation->set_rules('record_type', 'Record Type', 'required');
 //        $this->form_validation->set_rules('description', 'Description', 'required');
-        $this->form_validation->set_rules('assign_physician', 'Physician', 'required');
-        $this->form_validation->set_rules('record_type', 'Record Type', 'required');
-        $this->form_validation->set_rules('pat_gender', 'Sex', 'required');
-        $this->form_validation->set_rules('pat_dob_day', 'DOB Day', 'required');
-        $this->form_validation->set_rules('pat_dob_month', 'DOB Month', 'required');
-        $this->form_validation->set_rules('pat_dob_year', 'DOB Year', 'required');
-        $this->form_validation->set_rules('pat_fname', 'First Name', 'required');
-        $this->form_validation->set_rules('pat_lname', 'Last Name', 'required');
-        $this->form_validation->set_rules('pat_email', 'Email', 'required');
-        $this->form_validation->set_rules('pat_address', 'Address', 'required');
+//        $this->form_validation->set_rules('assign_physician', 'Physician', 'required');
+//        $this->form_validation->set_rules('record_type', 'Record Type', 'required');
+//        $this->form_validation->set_rules('pat_gender', 'Sex', 'required');
+//        $this->form_validation->set_rules('pat_dob_day', 'DOB Day', 'required');
+//        $this->form_validation->set_rules('pat_dob_month', 'DOB Month', 'required');
+//        $this->form_validation->set_rules('pat_dob_year', 'DOB Year', 'required');
+//        $this->form_validation->set_rules('pat_fname', 'First Name', 'required');
+//        $this->form_validation->set_rules('pat_lname', 'Last Name', 'required');
 
         if ($this->form_validation->run()) {
             $this->db->trans_start();
