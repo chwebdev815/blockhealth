@@ -160,13 +160,16 @@ class Inbox_model extends CI_Model {
 
             //send to RPA nitegration
             $request = curl_init('http://52.237.12.245/api/v1/patients/upload-documents');
+
             curl_setopt($request, CURLOPT_POST, true);
             curl_setopt($request, CURLOPT_POSTFIELDS, array(
-                "file" => base_url() . "uploads/physician_tasks/tiff/" . $new_file_name . ".tif",
                 "pathwayName" => "AccuroCitrix",
                 "username" => "hahmed",
                 "password" => "Blockhealth19",
-                "ClinicName" => "TCN_Uploads"
+                "ClinicName" => "TCN_Uploads",
+                "Source" => "Remote",
+                "PDFName" => "$new_file_name.pdf",
+                "PDFRemote" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf"
             ));
             curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
             $response = curl_exec($request);
@@ -823,20 +826,17 @@ class Inbox_model extends CI_Model {
                         "clinic_name" => "TCN",
                         "username" => "hahmed",
                         "password" => "Blockhealth19",
-                        
                         "first_name" => $data["pat_fname"],
                         "last_name" => $data["pat_lname"],
                         "dob_day" => $data["pat_dob_day"],
                         "dob_month" => $data["pat_dob_month"],
                         "dob_year" => $data["pat_dob_year"],
                         "hin" => $ohip,
-                        
                         "email_id" => $data["pat_email"],
                         "cell_phone" => $data["pat_cell_phone"],
                         "home_phone" => $data["pat_home_phone"],
                         "work_phone" => $data["pat_work_phone"],
                         "address" => $data["pat_address"],
-                                                
                         "pdf_location" => "uploads/health_records/" . $file_new_name . ".pdf",
                         "pdf_type" => "Imaging Note",
                         "active" => 1
@@ -844,6 +844,18 @@ class Inbox_model extends CI_Model {
                     log_message("error", "inserted to rpa");
                     log_message("error", $this->db->last_query());
 
+
+                    $request = curl_init('http://52.237.12.245/api/v1/patients/upload-documents');
+                    curl_setopt($request, CURLOPT_POST, true);
+                    curl_setopt($request, CURLOPT_POSTFIELDS, array(
+                        "pathwayName" => "AccuroCitrix",
+                        "username" => "hahmed",
+                        "password" => "Blockhealth19",
+                        "ClinicName" => "TCN_Uploads",
+                        "Source" => "Remote",
+                        "PDFName" => "$file_new_name.pdf",
+                        "PDFRemote" => base_url() . "uploads/health_records/" . $file_new_name . ".pdf"
+                    ));
 
                     $this->db->trans_complete();
 
