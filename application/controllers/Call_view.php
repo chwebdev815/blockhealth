@@ -277,12 +277,13 @@ class Call_view extends CI_Controller {
                                 ->where("c_ref.id", "pat.referral_id", false)
                                 ->get()->result()[0]->id;
 
+                
+                $this->db->set("accepted_status_date", $reserved_data->created_datetime, false);
                 $this->db->where(array(
                     "id" => $referral_id
                 ))->update("clinic_referrals", array(
                     "accepted_status" => "Wrong Number",
-                    "accepted_status_icon" => "blue",
-                    "accepted_status_date" => date("Y-m-d")
+                    "accepted_status_icon" => "blue"
                 ));
                 log_message("error", "second wrong number is set with " . $this->db->last_query());
 
