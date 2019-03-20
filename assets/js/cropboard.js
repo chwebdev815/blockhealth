@@ -168,7 +168,7 @@ function fileUpload(data) {
             var formData = new FormData();
             formData.append('file', blob);
             console.log("building form data");
-             $.ajax('http://165.227.45.30/predict', {
+            $.ajax('http://165.227.45.30/predict', {
 //            $.ajax('http://165.227.45.30/predict_form', {
                 method: 'POST',
                 data: formData,
@@ -241,11 +241,13 @@ function fileUpload(data) {
                             }
                         }
                         if (response.predictions.hasOwnProperty('ICN')) {
-                            if (response.predictions.ICN != "") {
-                                root.find("#new-patient-ohip").val(response.predictions.ICN);
-                                data_points_captured.icn = response.predictions.ICN;
-                                tmp_selector += ', #new-patient-ohip';
-                                data_points += 1;
+                            if (response.predictions.ICN.hasOwnProperty('NO')) {
+                                if (response.predictions.ICN.NO != "") {
+                                    root.find("#new-patient-ohip").val(response.predictions.ICN.NO);
+                                    data_points_captured.icn = response.predictions.ICN.NO;
+                                    tmp_selector += ', #new-patient-ohip';
+                                    data_points += 1;
+                                }
                             }
                         }
 
@@ -728,11 +730,10 @@ $(document).ready(function () {
 
         if (cropper_activated) {
             global_data.crop_rotate = cropper.getData().rotate;
-        }
-        else {
+        } else {
             createCropper();
         }
-        
+
 //        createCropper();
         setTimeout(function () {
 //            cropper.rotate(global_data.crop_rotate);
@@ -743,7 +744,7 @@ $(document).ready(function () {
         btn_autofill = $(this);
         btn_autofill.button('loading');
 
-        
+
     });
 
     function execute_file_upload() {

@@ -1704,15 +1704,14 @@
                                     data_points_captured.dob_year = response.predictions.DOB.Year;
                                 }
                             }
+                            debugger
                             if (response.predictions.hasOwnProperty('ICN')) {
-                                if (response.predictions.ICN != "") {
-                                    if (response.predictions.ICN.hasOwnProperty('NO')) {
-                                        if (response.predictions.ICN.NO != "") {
-                                            root.find("#new-patient-ohip").val(response.predictions.ICN.NO);
-                                            data_points_captured.icn = response.predictions.ICN.NO;
-                                            tmp_selector += ', #new-patient-ohip';
-                                            data_points += 1;
-                                        }
+                                if (response.predictions.ICN.hasOwnProperty('NO')) {
+                                    if (response.predictions.ICN.NO != "") {
+                                        root.find("#new-patient-ohip").val(response.predictions.ICN.NO);
+                                        data_points_captured.icn = response.predictions.ICN.NO;
+                                        tmp_selector += ', #new-patient-ohip';
+                                        data_points += 1;
                                     }
                                 }
                             }
