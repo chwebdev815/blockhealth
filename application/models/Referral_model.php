@@ -936,20 +936,24 @@ class Referral_model extends CI_Model {
 //                    echo "num = $num <br/>";
                     $num = $data["visit_slot"];
                     $record_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
-                                "id" => $record_id,
-                                "active" => "0"
+                                "id" => $record_id
                             ))->get()->result_array();
                     if ($record_data) {
                         $record_data = $record_data[0];
 
                         //It should only add new visit if one visit is already confirmed by patient
-                        $result = $this->db->select("id, visit_confirmed")->from("records_patient_visit")->where(array(
-                                    "active" => 1,
-                                    "patient_id" => $patient_id
-                                ))->order_by("id", "desc")->limit(1)->get()->result();
-                        if ($result && $result[0]->visit_confirmed === "N/A") {
+                        $result = $this->db->select("pat.id")
+                                ->from("clinic_referrals c_ref, referral_patient_info pat")
+                                ->where(array(
+                                    "pat.id" => $patient_id,
+                                    "c_ref.status" => "Accepted",
+                                    "c_ref.active" => 1,
+                                    "pat.active" => 1
+                                ))->where("c_ref.id", "pat.referral_id")
+                                ->get()->result();
+                        if ($result) {
                             $this->db->where(array(
-                                "id" => $result[0]->id
+                                "patient_id" => $patient_id
                             ))->update("records_patient_visit", array(
                                 "active" => 0
                             ));
