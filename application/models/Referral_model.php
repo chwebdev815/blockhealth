@@ -957,6 +957,11 @@ class Referral_model extends CI_Model {
                             ))->update("records_patient_visit", array(
                                 "active" => 0
                             ));
+                            $this->db->where(array(
+                                "patient_id" => $patient_id
+                            ))->update("records_patient_visit_reserved", array(
+                                "active" => 0
+                            ));
                         }
 
                         //add new visit

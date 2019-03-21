@@ -105,6 +105,9 @@ function add_fax_count($sender, $receiver, $clinic_id, $fax_type, $login_role = 
     if(!$login_role || $login_role == "") {
         $login_role = $CI->session->userdata("login_role");
     }
+    if($sender === NULL) {
+        $sender = "123";
+    }
     $CI->db->insert("count_sent_fax", array(
         "sender" => $sender,
         "receiver" => $receiver,
