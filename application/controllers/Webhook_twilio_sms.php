@@ -211,6 +211,8 @@ class Webhook_twilio_sms extends CI_Controller {
                                     "active" => 0,
                                     "visit_confirmed" => "Booked"
                                 ));
+                                
+                                log_message("error", "reserved is deactivated with " . $this->db->last_query());
                             }
                         } else {
                             $visit = $reserved;
