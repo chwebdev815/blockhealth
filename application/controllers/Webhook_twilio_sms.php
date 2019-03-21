@@ -85,9 +85,8 @@ class Webhook_twilio_sms extends CI_Controller {
 
                     if ($visit->visit_confirmed === "N/A") {
                         //will check if status is "N/A" then will response like response of choosing date
-
                         $reserved = $visit;
-                        if ($reserved->visit_expire_time > date("Y-m-d H:i:s")) {
+                        if (!$reserved->visit_expire_time || $reserved->visit_expire_time > date("Y-m-d H:i:s")) {
                             log_message("error", "alive visit_expire_time");
 
                             if ($Body === "0") {
