@@ -1445,7 +1445,8 @@ class Referral_model extends CI_Model {
         $this->db->where("efax.id", "c_ref.efax_id", false);
         $this->db->where("pat.referral_id", "c_ref.id", false);
         $result = $this->db->get()->result()[0];
-
+        log_message("error", "q for fax = " . $this->db->last_query());
+        
         $file_name = "referral_scheduled.html";
         $replace_stack = array(
             "###clinic_name###" => $result->clinic_institution_name,
