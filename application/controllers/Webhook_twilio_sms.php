@@ -24,17 +24,9 @@ class Webhook_twilio_sms extends CI_Controller {
                     //find patient
                     $patients = $this->db->select("pat.id")->from("referral_patient_info pat")
                                     ->where(array(
-                                        "active" => 1
-                                    ))->group_start()
-                                    ->or_group_start()->where(array(
+                                        "active" => 1,
                                         "concat('+1',pat.cell_phone)" => $From
-                                    ))->group_end()
-                                    ->or_group_start()->where(array(
-                                        "concat('+1',pat.home_phone)" => $From
-                                    ))->group_end()
-                                    ->or_group_start()->where(array(
-                                        "concat('+1',pat.work_phone)" => $From
-                                    ))->group_end()
+                                    ))
                                     ->group_end()
                                     ->get()->result();
 
@@ -134,7 +126,9 @@ class Webhook_twilio_sms extends CI_Controller {
                                         "notify_sms" => $reserved->notify_sms,
                                         "notify_email" => $reserved->notify_email,
                                         "visit_confirmed" => "Awaiting Confirmation",
-                                        "confirm_visit_key" => $reserved->confirm_visit_key
+                                        "confirm_visit_key" => $reserved->confirm_visit_key,
+                                        "notify_status" => $reserved->notify_status,
+                                        "notify_status_icon" => $reserved->notify_status_icon
                                     );
 
                                     if ($Body === "1") {
