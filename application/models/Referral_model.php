@@ -990,10 +990,10 @@ class Referral_model extends CI_Model {
 
                         if ($inserted) {
                             //change status to scheduled
-                            $this->db->where("id", $referral_id)->update("clinic_referrals", array(
-                                "status" => "Scheduled"
-                            ));
-                            log_message("error", "changed status with " . $this->db->last_query());
+//                            $this->db->where("id", $referral_id)->update("clinic_referrals", array(
+//                                "status" => "Scheduled"
+//                            ));
+//                            log_message("error", "changed status with " . $this->db->last_query());
 
                             return true;
                         } else {
