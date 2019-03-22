@@ -26,9 +26,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                     ->where(array(
                                         "active" => 1,
                                         "concat('+1',pat.cell_phone)" => $From
-                                    ))
-                                    ->group_end()
-                                    ->get()->result();
+                                    ))->get()->result();
 
                     log_message("error", "sql for find patient = " . $this->db->last_query());
                     log_message("error", "patient ids found = " . json_encode($patients));
