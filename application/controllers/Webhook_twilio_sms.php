@@ -211,6 +211,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                     log_message("error", "reserved is deactivated with " . $this->db->last_query());
                                 }
                             } else {
+                                log_message("error", "should send new dates now");
                                 $visit = $reserved;
                                 $this->db->select('admin.id as clinic_id, '
                                         . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") '
@@ -235,12 +236,14 @@ class Webhook_twilio_sms extends CI_Controller {
                                 $patient_data = $this->db->get()->result();
 
                                 if ($patient_data) {
+                                    log_message("error", "patient data found = " . json_encode($patient_data));
                                     $patient_data = $patient_data[0];
 
                                     //find asignable slots
                                     $new_visit_duration = 30;
                                     $this->load->model("referral_model");
                                     $response = $this->referral_model->assign_slots($new_visit_duration, $visit->patient_id);
+                                    log_message("error", "prepared slots = " . json_encode($response));
                                     if ($response["result"] === "error") {
                                         $msg = "501 - Internal server error.";
                                     } else if ($response["result"] === "success") {
@@ -261,7 +264,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                         $this->db->where(array(
                                             "id" => $visit->id
                                         ))->update("records_patient_visit_reserved", $update_data);
-
+                                        log_message("error", "added patient visit");
 
                                         //send sms
                                         $start_time1 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[0]["start_time"]);
@@ -323,6 +326,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                             "accepted_status" => "SMS",
                                             "accepted_status_icon" => "green"
                                         ));
+                                        log_message("error", "update status with = " . $this->db->last_query());
                                     }
                                 }
                             }
