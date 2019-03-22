@@ -113,7 +113,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                     ))->update("clinic_referrals", array(
                                         "accepted_status" => "Contact directly",
                                         "accepted_status_icon" => "yellow",
-                                        "accepted_status_date" => date("Y-m-d")
+                                        "accepted_status_date" => date("Y-m-d H:i:s")
                                     ));
                                 }
 
@@ -188,6 +188,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                                     ->where("c_ref.id", "pat.referral_id", false)
                                                     ->get()->result()[0]->id;
 
+                                    $this->db->set("accepted_status_date", $reserved->created_datetime, false);
                                     $this->db->where(array(
                                         "id" => $referral_id
                                     ))->update("clinic_referrals", array(
@@ -315,7 +316,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                                         ))
                                                         ->where("c_ref.id", "pat.referral_id", false)
                                                         ->get()->result()[0]->id;
-
+                                        $this->db->set("accepted_status_date", $reserved->created_datetime, false);
                                         $this->db->where(array(
                                             "id" => $referral_id
                                         ))->update("clinic_referrals", array(
@@ -397,7 +398,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                     ))->update("clinic_referrals", array(
                                         "accepted_status" => "Contact directly",
                                         "accepted_status_icon" => "yellow",
-                                        "accepted_status_date" => date("Y-m-d")
+                                        "accepted_status_date" => date("Y-m-d H:i:s")
                                     ));
 
                                     $msg = "Thank you. Staff from the clinic will be in touch shortly";

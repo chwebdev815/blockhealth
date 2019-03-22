@@ -375,7 +375,7 @@ class Cron_appointment_reminder extends CI_Controller {
                 ))->update("clinic_referrals", array(
                     "accepted_status" => "Contact directly",
                     "accepted_status_icon" => "yellow",
-                    "accepted_status_date" => date("Y-m-d")
+                    "accepted_status_date" => date("Y-m-d H:i:s")
                 ));
             //,
 //                    "accepted_status_date" => date("Y-m-d")

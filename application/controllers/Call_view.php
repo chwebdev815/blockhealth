@@ -277,7 +277,7 @@ class Call_view extends CI_Controller {
                                 ->where("c_ref.id", "pat.referral_id", false)
                                 ->get()->result()[0]->id;
 
-                
+
                 $this->db->set("accepted_status_date", $reserved_data->created_datetime, false);
                 $this->db->where(array(
                     "id" => $referral_id
@@ -588,7 +588,7 @@ class Call_view extends CI_Controller {
                 ))->update("clinic_referrals", array(
                     "accepted_status" => "Contact directly",
                     "accepted_status_icon" => "yellow",
-                    "accepted_status_date" => date("Y-m-d")
+                    "accepted_status_date" => date("Y-m-d H:i:s")
                 ));
             } elseif ($_GET['Digits'] == 4) {
                 log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
@@ -788,6 +788,7 @@ class Call_view extends CI_Controller {
                                     ->where("c_ref.id", "pat.referral_id", false)
                                     ->get()->result()[0]->id;
 
+                    $this->db->set("accepted_status_date", $reserved_data["created_datetime"], false);
                     $this->db->where(array(
                         "id" => $referral_id
                     ))->update("clinic_referrals", array(

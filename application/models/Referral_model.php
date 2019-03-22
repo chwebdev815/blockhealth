@@ -949,7 +949,7 @@ class Referral_model extends CI_Model {
                                     "c_ref.status" => "Accepted",
                                     "c_ref.active" => 1,
                                     "pat.active" => 1
-                                ))->where("c_ref.id", "pat.referral_id")
+                                ))->where("c_ref.id", "pat.referral_id", false)
                                 ->get()->result();
                         if ($result) {
                             $this->db->where(array(
@@ -984,7 +984,8 @@ class Referral_model extends CI_Model {
                             "id" => $referral_id
                         ))->update("clinic_referrals", array(
                             "accepted_status" => "Booked by Staff",
-                            "accepted_status_icon" => "green"
+                            "accepted_status_icon" => "green",
+                            "accepted_status_date" => $record_data["create_datetime"]
                         ));
 
                         if ($inserted) {
@@ -1038,10 +1039,9 @@ class Referral_model extends CI_Model {
                         );
                         $inserted = $this->db->insert("records_patient_visit", $insert_data);
 
-
-
-
+                        
                         //change accepted status to "Booked by Staff"
+                        
                         $this->db->where(array(
                             "id" => $referral_id
                         ))->update("clinic_referrals", array(
