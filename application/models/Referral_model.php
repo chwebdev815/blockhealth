@@ -942,6 +942,15 @@ class Referral_model extends CI_Model {
                         $record_data = $record_data[0];
 
                         //It should only add new visit if one visit is already confirmed by patient
+//                        $result = $this->db->select("pat.id")
+//                                ->from("clinic_referrals c_ref, referral_patient_info pat")
+//                                ->where(array(
+//                                    "pat.id" => $patient_id,
+//                                    "c_ref.status" => "Accepted",
+//                                    "c_ref.active" => 1,
+//                                    "pat.active" => 1
+//                                ))->where("c_ref.id", "pat.referral_id", false)
+//                                ->get()->result();
                         $result = $this->db->select("pat.id")
                                 ->from("clinic_referrals c_ref, referral_patient_info pat")
                                 ->where(array(
@@ -951,6 +960,7 @@ class Referral_model extends CI_Model {
                                     "pat.active" => 1
                                 ))->where("c_ref.id", "pat.referral_id", false)
                                 ->get()->result();
+                        
                         if ($result) {
                             $this->db->where(array(
                                 "patient_id" => $patient_id
@@ -990,10 +1000,10 @@ class Referral_model extends CI_Model {
 
                         if ($inserted) {
                             //change status to scheduled
-//                            $this->db->where("id", $referral_id)->update("clinic_referrals", array(
-//                                "status" => "Scheduled"
-//                            ));
-//                            log_message("error", "changed status with " . $this->db->last_query());
+                            $this->db->where("id", $referral_id)->update("clinic_referrals", array(
+                                "status" => "Scheduled"
+                            ));
+                            log_message("error", "changed status with " . $this->db->last_query());
 
                             return true;
                         } else {
