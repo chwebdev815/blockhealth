@@ -61,7 +61,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         ->group_end()
                         ->where(array(
                             "visit_confirmed" => "N/A",
-                        ))->get()->result();
+                            "active" => 1
+                        ))
+                        ->get()->result();
 //        $remindable = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
 ////                    "id" => 10
 //                    "id" => 80
