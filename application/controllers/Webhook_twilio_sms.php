@@ -186,7 +186,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                                     ->where("c_ref.id", "pat.referral_id", false)
                                                     ->get()->result()[0]->id;
 
-                                    $this->db->set("accepted_status_date", $reserved->created_datetime, false);
+                                    $this->db->set("accepted_status_date", $reserved->create_datetime, false);
                                     $this->db->where(array(
                                         "id" => $referral_id
                                     ))->update("clinic_referrals", array(
