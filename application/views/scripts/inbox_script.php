@@ -1241,6 +1241,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "pageLength": 50,
             "language": {
                 "emptyTable": "Inbox is empty",
                 "info": "Showing _START_ to _END_ of _TOTAL_ " + global_data.table_inbox_title,
