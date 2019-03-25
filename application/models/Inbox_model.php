@@ -103,8 +103,17 @@ class Inbox_model extends CI_Model {
 
 //            $id = $this->get_decrypted_id($data["id"], "referral_patient_info");
             $physician_id = ((isset($data["assign_physician"])) ? $this->get_decrypted_id($data["assign_physician"], "clinic_physician_info") : 0);
-            $patient_id = ((isset($data["id"])) ? ($this->get_decrypted_id($data["id"], "referral_patient_info")) : 0);
-            $patient_id = 2;
+//            $patient_id = ((isset($data["id"])) ? ($this->get_decrypted_id($data["id"], "referral_patient_info")) : 0);
+//            $patient_id = 2;
+            $this->db->insert("referral_patient_info", array(
+                "fname" => $data["pat_fname"],
+                "lname" => $data["pat_lname"],
+                "dob" => $data["pat_dob_year"]."-".$data["pat_dob_month"]."-".$data["pat_dob_day"],
+                "ohip" => $data["pat_ohip"],
+                "gender" => $data["pat_gender"]
+            ));
+            
+            $patient_id = $this->db->insert_id();
 
             $inserted = $this->db->insert("clinic_physician_tasks", array(
                 "clinic_id" => $this->session->userdata("user_id"),

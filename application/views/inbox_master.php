@@ -189,7 +189,7 @@
                                                 <div class="col-sm-6 col-xs-12">
                                                     <select style="width: 100%;" name="pat_gender" id="pat_gender" class="required">
                                                         <option value="unassigned" selected>Unassigned</option>
-                                                        <option value="male" selected>Male</option>
+                                                        <option value="male">Male</option>
                                                         <option value="female">Female</option>
                                                     </select>
                                                 </div>
