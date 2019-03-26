@@ -108,11 +108,11 @@ class Inbox_model extends CI_Model {
             $this->db->insert("referral_patient_info", array(
                 "fname" => $data["pat_fname"],
                 "lname" => $data["pat_lname"],
-                "dob" => $data["pat_dob_year"]."-".$data["pat_dob_month"]."-".$data["pat_dob_day"],
+                "dob" => $data["pat_dob_year"] . "-" . $data["pat_dob_month"] . "-" . $data["pat_dob_day"],
                 "ohip" => $data["pat_ohip"],
                 "gender" => $data["pat_gender"]
             ));
-            
+
             $patient_id = $this->db->insert_id();
 
             $inserted = $this->db->insert("clinic_physician_tasks", array(
@@ -915,6 +915,7 @@ class Inbox_model extends CI_Model {
                         }
                     }
                     $this->db->trans_complete();
+                    log_message("error", "transactions saved");
 
                     // return array(true, base_url() . "admin_triage/referral_details/" . md5($referral_id));
                     return array(true, base_url() . "physician_triage/referral_details/" . md5($referral_id));
