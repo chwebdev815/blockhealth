@@ -212,6 +212,7 @@ class Inbox_model extends CI_Model {
 //            log_message("error", "insert = " . $this->db->last_query());
 
             $this->db->trans_complete();
+            log_message("error", "transactions saved");
             if ($inserted) {
                 return array(
                     "result" => "success"
@@ -875,8 +876,8 @@ class Inbox_model extends CI_Model {
                                 "password" => "Blockhealth19",
                                 "first_name" => $data["pat_fname"],
                                 "last_name" => $data["pat_lname"],
-                                "dob_day" => $data["pat_dob_day"],
-                                "dob_month" => $data["pat_dob_month"],
+                                "dob_day" => make_two_digit($data["pat_dob_day"]),
+                                "dob_month" => make_two_digit($data["pat_dob_month"]),
                                 "dob_year" => $data["pat_dob_year"],
                                 "hin" => $ohip,
                                 "email_id" => $data["pat_email"],
