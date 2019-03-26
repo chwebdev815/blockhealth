@@ -1408,8 +1408,6 @@
 //              .data().fileTif
 //            image_data = global_data.preview_images[$(this).parent().data("preview-index")];
 //            console.log("setting image for " + $(this).parent().data("preview-index"));
-            
-            
         });
 
 
