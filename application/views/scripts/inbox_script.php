@@ -1388,6 +1388,7 @@
             }, 500);
         });
 
+
         // $("#image1").on("click", function () {
         //     // $("#preview_image_container").hide();
         //     $("#image1").attr("src", "").hide();
