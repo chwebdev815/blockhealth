@@ -1,6 +1,6 @@
 deploy_dev:
   stage: deploy
-  image: php:5-cli-jessie
+  image: debian:buster
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y && apt-get install rsync -y)'
     - mkdir -p ~/.ssh
@@ -14,7 +14,7 @@ deploy_dev:
 
 deploy_production:
   stage: deploy
-  image: php:5-cli-jessie
+  image: debian:buster
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y && apt-get install rsync -y)'
     - mkdir -p ~/.ssh
