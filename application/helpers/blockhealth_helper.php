@@ -147,6 +147,21 @@ function send_mail($from, $from_name, $to, $to_name, $subject, $content, $attach
         return false;
     }
 }
+function make_two_digit($digit) {
+    //check if number
+    try {
+        $digit = (int)$digit;
+        if($digit < 10) {
+            return "0" . $digit;
+        }
+        else {
+            return "" . $digit;
+        }
+    } catch (Exception $ex) {
+        log_message("error", "error while converting to two digit from $digit");
+        return "00";
+    }
+}
 
 // function get_pdf_page_count($file) 
 // {
