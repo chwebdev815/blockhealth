@@ -325,9 +325,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
         . "notify_email=" . urlencode($_GET["notify_email"]) . "' method='GET'>
                 <Say  voice='Polly.Joanna'> Hello </Say>
                 <Pause length='1'/>
-                <Say voice='Polly.Joanna'> This is an automated appointment call for  " . $_GET['pname'] . "  " . $_GET['patient_lname'] . ".</Say>
+                <Say voice='Polly.Joanna'> This is an automated appointment call for  <emphasis level='moderate'>" . $_GET['pname'] . "  " . $_GET['patient_lname'] . "</emphasis>.</Say>
                 <Pause length='1'/>
-                <Say voice='Polly.Joanna'> If you are  " . $_GET['pname'] . "  " . $_GET['patient_lname'] . " , please enter 1 to continue. If this is the wrong number, please type 2 to end the call</Say>
+                <Say voice='Polly.Joanna'> If you are  <emphasis level='moderate'>" . $_GET['pname'] . "  " . $_GET['patient_lname'] . "</emphasis> , please enter 1 to continue. If this is the wrong number, please type 2 to end the call</Say>
 				</Gather>
             <Pause length='10'/>
             <Redirect method='GET'>
@@ -346,8 +346,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
         . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
         . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
         . "notify_email=" . urlencode($_GET["notify_email"]) .
-        "Digits=timeout</Redirect>"
-                . "</Response>";
+        "</Redirect>
+        </Response>";
     }
 
     public function step_two() {
@@ -516,7 +516,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 . "date3=" . urlencode($date3) . "&amp;"
                 . "day3=" . urlencode($day3) . "&amp;"
                 . "time3=" . urlencode($time3) . "&amp;"
-                . "Digits=timeout"
                 . "</Redirect>"
                 . "</Response>";
             }
