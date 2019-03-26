@@ -40,6 +40,7 @@ class Login_model extends CI_Model {
                     "email_id" => $data["signup-email"],
                     "active" => 1
                 ));
+                
                 $result = $this->db->get()->result();
                 // log_message("error", "mail res2 = " . json_encode($result));
                 if ($result) {
