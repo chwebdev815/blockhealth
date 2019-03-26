@@ -11,6 +11,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "pageLength": 50,
             "language": {
                 "emptyTable": "There are no " + global_data.table_clinic_referrals_title,
                 "info": "Showing _START_ to _END_ of _TOTAL_ " + global_data.table_clinic_referrals_title,

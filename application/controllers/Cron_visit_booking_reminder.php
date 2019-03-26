@@ -61,7 +61,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         ->group_end()
                         ->where(array(
                             "visit_confirmed" => "N/A",
-                        ))->get()->result();
+                            "active" => 1
+                        ))
+                        ->get()->result();
 //        $remindable = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
 ////                    "id" => 10
 //                    "id" => 80
@@ -125,6 +127,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //                $visit->reminder_type = intval($visit->reminder_type);
                 $notification_status = $visit->notify_status;
                 $notification_status_icon = "green";
+                $notification_datetime = date("Y-m-d H:i:s");
 //                if ($visit->reminder_type == 3) {
 //                    $notification_status = "No response";
 //                    $notification_status_icon = "red";
@@ -137,8 +140,10 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //                }
                 if ($visit->reminder_type === "1h") {
                     $notification_status .= ", Call1";
+                    $notification_datetime = $visit->created_datetime;
                 } else if ($visit->reminder_type === "24h") {
                     $notification_status .= ", Call2";
+                    $notification_datetime = $visit->created_datetime;
                 } else if ($visit->reminder_type === "48h") {
                     $notification_status = "No response";
                     $notification_status_icon = "red";
@@ -177,7 +182,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "id" => $referral_id
                 ))->update("clinic_referrals", array(
                     "accepted_status" => $notification_status,
-                    "accepted_status_icon" => $notification_status_icon
+                    "accepted_status_icon" => $notification_status_icon,
+                    "accepted_status_date" => $notification_datetime
                 ));
 //                    $contact_number = "+917201907712";
 
@@ -340,8 +346,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
         . "notify_voice=" . urlencode($_GET["notify_voice"]) . "&amp;"
         . "notify_sms=" . urlencode($_GET["notify_sms"]) . "&amp;"
         . "notify_email=" . urlencode($_GET["notify_email"]) .
-        "Digits=timeout</Redirect>
-		</Response>";
+        "Digits=timeout</Redirect>"
+                . "</Response>";
     }
 
     public function step_two() {
@@ -441,7 +447,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "notify_status" => "Wrong Number",
                     "notify_status_icon" => "blue"
                 ));
-                
+
                 log_message("error", "wrong number 1 => " . $this->db->last_query());
 
                 //set status in accepted_status
@@ -455,12 +461,13 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "id" => $referral_id
                 ))->update("clinic_referrals", array(
                     "accepted_status" => "Wrong Number",
-                    "accepted_status_icon" => "blue"
+                    "accepted_status_icon" => "blue",
+                    "accepted_status_date" => date("Y-m-d H:i:s")
                 ));
                 log_message("error", "wrong number 2=> " . $this->db->last_query());
 
 
-                
+
                 //all visits book status changed to wrong number
                 $this->db->where(array(
                     "patient_id" => $_GET["patient_id"]
@@ -729,12 +736,10 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 $insert_data = array(
                     "patient_id" => $get["patient_id"],
                     "visit_name" => $get["pvname"],
-                    
                     "notify_type" => $reserved_data->notify_type,
                     "notify_voice" => $reserved_data->notify_voice,
                     "notify_sms" => $reserved_data->notify_sms,
                     "notify_email" => $reserved_data->notify_email,
-                    
                     "visit_confirmed" => "Change required",
                     "notify_status" => "Contact directly",
                     "notify_status_icon" => "yellow"
@@ -763,9 +768,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "id" => $referral_id
                 ))->update("clinic_referrals", array(
                     "accepted_status" => "Contact directly",
-                    "accepted_status_icon" => "yellow"
+                    "accepted_status_icon" => "yellow",
+                    "accepted_status_date" => date("Y-m-d H:i:s")
                 ));
-
                 log_message("error", "updated for 0 with sql = $referral_id  => " . $this->db->last_query());
             } elseif ($_GET['Digits'] == 4) {
                 log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
@@ -800,28 +805,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
             }
-
-
-//            try {
-//
-//                $params = array(
-//                    'data' => $_GET["Digits"],
-//                    'to' => $_GET['To']
-//                );
-//
-//                $defaults = array(
-//                    CURLOPT_URL => $base_url . "efax/call_handle",
-//                    CURLOPT_POST => true,
-//                    CURLOPT_POSTFIELDS => http_build_query($params)
-//                );
-//                $ch = curl_init($base_url . "efax/call_handle");
-//                curl_setopt_array($ch, $defaults);
-//
-//                curl_exec($ch);
-//                curl_close($ch);
-//            } catch (Exception $e) {
-//                echo "Error in response file";
-//            }
         }
     }
 
@@ -966,7 +949,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         "id" => $referral_id
                     ))->update("clinic_referrals", array(
                         "accepted_status" => "Confirmed",
-                        "accepted_status_icon" => "green"
+                        "accepted_status_icon" => "green",
+                        "accepted_status_date" => $reserved_data["create_datetime"]
                     ));
 
                     $this->load->model("referral_model");

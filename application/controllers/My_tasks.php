@@ -4,7 +4,7 @@ class My_tasks extends CI_Controller {
     public function index() {
         if (clinic_login()) {
             $data['page_content'] = $this->load->view('my_tasks_master', NULL, TRUE);
-            $data['page_title'] = "My Tasks";
+            $data['page_title'] = "Fax Triage";
             $data['jquery'] = $this->load->view('scripts/my_tasks_script', NULL, TRUE);
             $this->load->view('main', $data);
         } else {

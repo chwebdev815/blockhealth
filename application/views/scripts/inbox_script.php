@@ -290,6 +290,11 @@
                 });
                 image.setDirectory(0);
                 temp_canvas = image.toCanvas();
+                $("#image_for_preview").attr("src", temp_canvas.toDataURL());
+//                return temp_canvas.toDataURL();
+                
+//                setTimeout(function() {
+//                }, 1000);
                 global_data.preview_images.push(temp_canvas.toDataURL());
                 // clearTimeout(global_data.previewTimeout);
                 // $("#hover-img-preview").hide();
@@ -1241,6 +1246,7 @@
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "pageLength": 50,
             "language": {
                 "emptyTable": "Inbox is empty",
                 "info": "Showing _START_ to _END_ of _TOTAL_ " + global_data.table_inbox_title,
@@ -1330,10 +1336,11 @@
         pagelength = datas.length;
         global_data.preview_images = [];
 
-        for (i = 0; i < pagelength; i++) {
-            tiff_file = base + "uploads/efax_tiff/" + datas[i][5];
-            get_first_page_from_tif(tiff_file);
-        }
+//        for (i = 0; i < pagelength; i++) {
+//            tiff_file = base + "uploads/efax_tiff/" + datas[i][5];
+//            get_first_page_from_tif(tiff_file);
+//              .data().fileTif
+//        }
 
         $('#table-action').hover(function () {
             clearTimeout(tableActionTO);
@@ -1381,6 +1388,7 @@
             }, 500);
         });
 
+
         // $("#image1").on("click", function () {
         //     // $("#preview_image_container").hide();
         //     $("#image1").attr("src", "").hide();
@@ -1391,9 +1399,15 @@
         $('button.popup2_open').click(function () {
             console.log("this should be called");
             $(this).attr("id", "table-hover-view-trigger-disabled");
-            image_data = global_data.preview_images[$(this).parent().data("preview-index")];
-            console.log("setting image for " + $(this).parent().data("preview-index"));
-            $("#image_for_preview").attr("src", image_data);
+            
+            let tiff_file_name = $(this).parent().data("file-tif");
+            
+            tiff_file = base + "uploads/efax_tiff/" + tiff_file_name;
+            $("#image_for_preview").attr("src", "");
+            get_first_page_from_tif(tiff_file);
+//              .data().fileTif
+//            image_data = global_data.preview_images[$(this).parent().data("preview-index")];
+//            console.log("setting image for " + $(this).parent().data("preview-index"));
         });
 
 
@@ -1704,12 +1718,15 @@
                                     data_points_captured.dob_year = response.predictions.DOB.Year;
                                 }
                             }
+                            debugger
                             if (response.predictions.hasOwnProperty('ICN')) {
-                                if (response.predictions.ICN != "") {
-                                    root.find("#new-patient-ohip").val(response.predictions.ICN);
-                                    data_points_captured.icn = response.predictions.ICN;
-                                    tmp_selector += ', #new-patient-ohip';
-                                    data_points += 1;
+                                if (response.predictions.ICN.hasOwnProperty('NO')) {
+                                    if (response.predictions.ICN.NO != "") {
+                                        root.find("#new-patient-ohip").val(response.predictions.ICN.NO);
+                                        data_points_captured.icn = response.predictions.ICN.NO;
+                                        tmp_selector += ', #new-patient-ohip';
+                                        data_points += 1;
+                                    }
                                 }
                             }
                             if (response.predictions.hasOwnProperty('phone')) {

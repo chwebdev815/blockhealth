@@ -157,14 +157,6 @@
                                     </div>
                                     <div class="form-group left-padd-20px right-padd-5px">
 
-                                        <!--<div class="form-group row">
-                                            <div class="col-lg-12 col-sm-12 col-xs-12">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                                                    <input id="pat_search_by_name" type="text" class="form-control" name="pat_search_by_name" placeholder="Enter a patient name to start search">
-                                                </div>
-                                            </div>
-                                        </div>-->
                                         <div class="form-group col-lg-12">
                                             <div class="form-group row">
                                                 <div class="col-md-12">
@@ -196,7 +188,8 @@
 
                                                 <div class="col-sm-6 col-xs-12">
                                                     <select style="width: 100%;" name="pat_gender" id="pat_gender" class="required">
-                                                        <option value="male" selected>Male</option>
+                                                        <option value="unassigned" selected>Unassigned</option>
+                                                        <option value="male">Male</option>
                                                         <option value="female">Female</option>
                                                     </select>
                                                 </div>
@@ -209,12 +202,6 @@
                                             </div>
                                             <div class="alert alert-danger" id="patient_error" style="display: none;"></div>
                                             <div class="alert alert-success" id="patient_success" style="display: none;"></div>
-                                            <input type="hidden" id="id" name="id" />
-                                            <input type="hidden" id="pat_ohip" name="pat_ohip" />
-                                            <input type="hidden" id="pat_dob_day" name="pat_dob_day" />
-                                            <input type="hidden" id="pat_dob_month" name="pat_dob_month" />
-                                            <input type="hidden" id="pat_dob_year" name="pat_dob_year" />
-                                            <input type="hidden" id="pat_lname" name="pat_lname" />
 
                                             <div class="col-lg-12">
                                                 <label for="assign_physician">
@@ -258,7 +245,7 @@
                                                 </div>
                                             </div>
                                         </div> 
-                                        <div class="alert alert-success"><p>Patient Match Found</p></div>
+                                        <!--<div class="alert alert-success"><p>Patient Match Found</p></div>-->
 
                                     </div>
                                 </div>
@@ -327,6 +314,7 @@
                                                     Sex
                                                 </label>
                                                 <select name="pat_gender" id="pat_gender" class="required">
+                                                    <option value="unassigned" selected>Unassigned</option>
                                                     <option value="male" selected>Male</option>
                                                     <option value="female">Female</option>
                                                 </select>

@@ -10,7 +10,7 @@ class Physician_triage extends CI_Controller {
 
             $data['page_content'] = $this->load->view('physician_triage_master', NULL, TRUE);
 
-            $data['page_title'] = "Physician Triage";
+            $data['page_title'] = "Referral Triage";
 
             $data['jquery'] = $this->load->view('scripts/physician_triage_script', NULL, TRUE);
 
@@ -58,7 +58,7 @@ class Physician_triage extends CI_Controller {
 
                 $data['page_content'] = $this->load->view('physician_triage_referral_details', NULL, TRUE);
 
-                $data['page_title'] = "Physician Triage Patient";
+                $data['page_title'] = "Referral Triage Patient";
 
                 $data['jquery'] = $this->load->view('scripts/physician_triage_referral_details_script', NULL, TRUE);
 

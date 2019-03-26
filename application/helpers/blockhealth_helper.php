@@ -105,6 +105,9 @@ function add_fax_count($sender, $receiver, $clinic_id, $fax_type, $login_role = 
     if(!$login_role || $login_role == "") {
         $login_role = $CI->session->userdata("login_role");
     }
+    if($sender === NULL) {
+        $sender = "123";
+    }
     $CI->db->insert("count_sent_fax", array(
         "sender" => $sender,
         "receiver" => $receiver,
@@ -142,6 +145,21 @@ function send_mail($from, $from_name, $to, $to_name, $subject, $content, $attach
     } catch (Exception $e) {
         log_message("error", "Error while mail - " . $e->getMessage());
         return false;
+    }
+}
+function make_two_digit($digit) {
+    //check if number
+    try {
+        $digit = (int)$digit;
+        if($digit < 10) {
+            return "0" . $digit;
+        }
+        else {
+            return "" . $digit;
+        }
+    } catch (Exception $ex) {
+        log_message("error", "error while converting to two digit from $digit");
+        return "00";
     }
 }
 

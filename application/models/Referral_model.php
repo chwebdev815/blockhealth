@@ -152,6 +152,7 @@ class Referral_model extends CI_Model {
             $authorized = $this->check_authentication($data["id"]);
             if ($authorized) {
                 try {
+
                     $new_data = array(
                         "fname" => $data["dr_fname"],
                         "lname" => $data["dr_lname"],
@@ -161,32 +162,28 @@ class Referral_model extends CI_Model {
                         "address" => $data["dr_address"],
                         "billing_num" => $data["dr_billing_num"]
                     );
-                    $this->db->where(
-                            array(
-                                "active" => 1,
-                                "md5(id)" => $data["id"]
-                            )
-                    );
+                    $this->db->where(array(
+                        "active" => 1,
+                        "md5(patient_id)" => $data["id"]
+                    ));
                     $this->db->update("referral_physician_info", $new_data);
                     log_message("error", "updated rows = " . $this->db->affected_rows());
                     $updated = ($this->db->affected_rows() == 1) ? true : "Physician information remains same.";
                     log_message("error", "updated = " . $updated);
-                    $this->db->select("referral_id");
-                    $this->db->from("referral_patient_info");
-                    $this->db->where(
-                            array(
-                                "active" => 1,
-                                "md5(id)" => $data["id"]
-                            )
-                    );
-                    $result = $this->db->get()->result();
-                    $referral_id = $result[0]->referral_id;
-                    $this->db->where(array(
-                        "active" => 1,
-                        "id" => $referral_id
-                    ));
-                    $this->db->set("last_updated", "now()", false);
-                    $this->db->update("clinic_referrals", array());
+//                    $this->db->select("referral_id");
+//                    $this->db->from("referral_patient_info");
+//                    $this->db->where(array(
+//                        "active" => 1,
+//                        "md5(id)" => $data["id"]
+//                    ));
+//                    $result = $this->db->get()->result();
+//                    $referral_id = $result[0]->referral_id;
+//                    $this->db->where(array(
+//                        "active" => 1,
+//                        "id" => $referral_id
+//                    ));
+//                    $this->db->set("last_updated", "now()", false);
+//                    $this->db->update("clinic_referrals", array());
                     return true;
                 } catch (Exception $e) {
                     return "Failed to update physician information";
@@ -939,21 +936,40 @@ class Referral_model extends CI_Model {
 //                    echo "num = $num <br/>";
                     $num = $data["visit_slot"];
                     $record_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
-                                "id" => $record_id,
-                                "active" => "0"
+                                "id" => $record_id
                             ))->get()->result_array();
                     if ($record_data) {
                         $record_data = $record_data[0];
 
                         //It should only add new visit if one visit is already confirmed by patient
-                        $result = $this->db->select("id, visit_confirmed")->from("records_patient_visit")->where(array(
-                                    "active" => 1,
-                                    "patient_id" => $patient_id
-                                ))->order_by("id", "desc")->limit(1)->get()->result();
-                        if ($result && $result[0]->visit_confirmed === "N/A") {
+//                        $result = $this->db->select("pat.id")
+//                                ->from("clinic_referrals c_ref, referral_patient_info pat")
+//                                ->where(array(
+//                                    "pat.id" => $patient_id,
+//                                    "c_ref.status" => "Accepted",
+//                                    "c_ref.active" => 1,
+//                                    "pat.active" => 1
+//                                ))->where("c_ref.id", "pat.referral_id", false)
+//                                ->get()->result();
+                        $result = $this->db->select("pat.id")
+                                ->from("clinic_referrals c_ref, referral_patient_info pat")
+                                ->where(array(
+                                    "pat.id" => $patient_id,
+                                    "c_ref.status" => "Accepted",
+                                    "c_ref.active" => 1,
+                                    "pat.active" => 1
+                                ))->where("c_ref.id", "pat.referral_id", false)
+                                ->get()->result();
+                        
+                        if ($result) {
                             $this->db->where(array(
-                                "id" => $result[0]->id
+                                "patient_id" => $patient_id
                             ))->update("records_patient_visit", array(
+                                "active" => 0
+                            ));
+                            $this->db->where(array(
+                                "patient_id" => $patient_id
+                            ))->update("records_patient_visit_reserved", array(
                                 "active" => 0
                             ));
                         }
@@ -978,7 +994,8 @@ class Referral_model extends CI_Model {
                             "id" => $referral_id
                         ))->update("clinic_referrals", array(
                             "accepted_status" => "Booked by Staff",
-                            "accepted_status_icon" => "green"
+                            "accepted_status_icon" => "green",
+                            "accepted_status_date" => $record_data["create_datetime"]
                         ));
 
                         if ($inserted) {
@@ -1032,10 +1049,9 @@ class Referral_model extends CI_Model {
                         );
                         $inserted = $this->db->insert("records_patient_visit", $insert_data);
 
-
-
-
+                        
                         //change accepted status to "Booked by Staff"
+                        
                         $this->db->where(array(
                             "id" => $referral_id
                         ))->update("clinic_referrals", array(
@@ -1448,7 +1464,8 @@ class Referral_model extends CI_Model {
         $this->db->where("efax.id", "c_ref.efax_id", false);
         $this->db->where("pat.referral_id", "c_ref.id", false);
         $result = $this->db->get()->result()[0];
-
+        log_message("error", "q for fax = " . $this->db->last_query());
+        
         $file_name = "referral_scheduled.html";
         $replace_stack = array(
             "###clinic_name###" => $result->clinic_institution_name,
@@ -1538,12 +1555,12 @@ class Referral_model extends CI_Model {
 //                    echo "num = $num <br/>";
                     $num = $data["visit_slot"];
                     $record_data = $this->db->select("*")
-                            ->from("records_patient_visit_reserved")
-                            ->where(array(
-                                "id" => $record_id,
-                                "active" => "0"
-                            ))->get()->result_array();
-                    
+                                    ->from("records_patient_visit_reserved")
+                                    ->where(array(
+                                        "id" => $record_id,
+                                        "active" => "0"
+                                    ))->get()->result_array();
+
 //                    log_message("error", "data to copy from = " . json_encode($record_data));
                     if ($record_data) {
                         $record_data = $record_data[0];

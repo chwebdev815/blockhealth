@@ -70,7 +70,15 @@ class Inbox_model extends CI_Model {
         $this->form_validation->set_rules('efax_id', 'Efax Id', 'required');
         $this->form_validation->set_rules('record_type', 'Record Type', 'required');
 //        $this->form_validation->set_rules('description', 'Description', 'required');
-        $this->form_validation->set_rules('assign_physician', 'Physician', 'required');
+//        $this->form_validation->set_rules('assign_physician', 'Physician', 'required');
+//        $this->form_validation->set_rules('record_type', 'Record Type', 'required');
+//        $this->form_validation->set_rules('pat_gender', 'Sex', 'required');
+//        $this->form_validation->set_rules('pat_dob_day', 'DOB Day', 'required');
+//        $this->form_validation->set_rules('pat_dob_month', 'DOB Month', 'required');
+//        $this->form_validation->set_rules('pat_dob_year', 'DOB Year', 'required');
+//        $this->form_validation->set_rules('pat_fname', 'First Name', 'required');
+//        $this->form_validation->set_rules('pat_lname', 'Last Name', 'required');
+
         if ($this->form_validation->run()) {
             $this->db->trans_start();
             $data = $this->input->post();
@@ -95,8 +103,17 @@ class Inbox_model extends CI_Model {
 
 //            $id = $this->get_decrypted_id($data["id"], "referral_patient_info");
             $physician_id = ((isset($data["assign_physician"])) ? $this->get_decrypted_id($data["assign_physician"], "clinic_physician_info") : 0);
-            $patient_id = ((isset($data["id"])) ? ($this->get_decrypted_id($data["id"], "referral_patient_info")) : 0);
-            $patient_id = 2;
+//            $patient_id = ((isset($data["id"])) ? ($this->get_decrypted_id($data["id"], "referral_patient_info")) : 0);
+//            $patient_id = 2;
+            $this->db->insert("referral_patient_info", array(
+                "fname" => $data["pat_fname"],
+                "lname" => $data["pat_lname"],
+                "dob" => $data["pat_dob_year"] . "-" . $data["pat_dob_month"] . "-" . $data["pat_dob_day"],
+                "ohip" => $data["pat_ohip"],
+                "gender" => $data["pat_gender"]
+            ));
+
+            $patient_id = $this->db->insert_id();
 
             $inserted = $this->db->insert("clinic_physician_tasks", array(
                 "clinic_id" => $this->session->userdata("user_id"),
@@ -133,43 +150,69 @@ class Inbox_model extends CI_Model {
             rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
             rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, "./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
 
-            
-            //save entry in rpa_integration table
-            $this->db->insert("rpa_integration", array(
-               "api_type" => "UploadDocument",
-                "api_num" => 3,
-                "date" => date("Y-m-d"),
-                "time" => date("H:i:s"),
-                "status" => "NEW",
-                "pathway" => "AccuroCitrix",
-                "clinic_name" => "TCN",
-                "username" => "hahmed",
-                "password" => "Blockhealth19",
-                "pdf_location" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf",
-                "pdf_type" => "Imaging Note",
-                "active" => 1
-            ));
-            log_message("error", "inserted to rpa");
-            
-            //send to RPA nitegration
-            $request = curl_init('http://52.237.12.245/api/v1/patients/upload-documents');
-            curl_setopt($request, CURLOPT_POST, true);
-            curl_setopt($request, CURLOPT_POSTFIELDS, array(
-                "file" => base_url() . "uploads/physician_tasks/tiff/" . $new_file_name . ".tif",
-                "pathwayName" => "AccuroCitrix",
-                "username" => "hahmed",
-                "password" => "Blockhealth19",
-                "ClinicName" => "TCN_Uploads"
-            ));
-            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-            $response = curl_exec($request);
-            curl_close($request);
-            
-            log_message("error", "curl log = " . json_encode($response));
+
+            //only trigger RPA events (table entry + doc upload API) if pathway name is AccuroCitrix
+            //
+            $clinic = $this->db->select("first_name, integration_type, emr_pathway, emr_uname_1, emr_pwd_1")
+                            ->from("clinic_user_info")
+                            ->where("id", $this->session->userdata("user_id"))
+                            ->get()->result();
+
+            if ($clinic) {
+                $clinic = $clinic[0];
+                if ($clinic->emr_pathway === "AccuroCitrix") {
+
+                    //save entry in rpa_integration table
+                    $this->db->insert("rpa_integration", array(
+                        "api_type" => "save",
+                        "api_num" => 3,
+                        "date" => date("Y-m-d"),
+                        "time" => date("H:i:s"),
+                        "status" => "NEW",
+                        "pathway" => $clinic->emr_pathway,
+                        "clinic_name" => $clinic->first_name,
+                        "username" => $clinic->emr_uname_1,
+                        "password" => $clinic->emr_pwd_1,
+                        "first_name" => $data["pat_fname"],
+                        "last_name" => $data["pat_lname"],
+                        "dob_day" => make_two_digit($data["pat_dob_day"]),
+                        "dob_month" => make_two_digit($data["pat_dob_month"]),
+                        "dob_year" => $data["pat_dob_year"],
+                        "hin" => $data["pat_ohip"],
+                        "pdf_name" => "$new_file_name.pdf",
+                        "pdf_location" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf",
+                        "pdf_type" => "Documents",
+                        "assigned_provider" => "Arianna Muskat",
+                        "active" => 1
+                    ));
+                    log_message("error", "inserted to rpa");
+                    log_message("error", $this->db->last_query());
+
+                    //send to RPA nitegration
+                    $request = curl_init('http://52.237.12.245/api/v1/patients/upload-documents');
+
+                    curl_setopt($request, CURLOPT_POST, true);
+                    curl_setopt($request, CURLOPT_POSTFIELDS, array(
+                        "pathwayName" => "AccuroCitrix",
+                        "username" => "hahmed",
+                        "password" => "Blockhealth19",
+                        "ClinicName" => "TCN",
+                        "source" => "remote",
+                        "PDFName" => "$new_file_name.pdf",
+                        "PDFRemote" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf"
+                    ));
+                    curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+                    $response = curl_exec($request);
+                    curl_close($request);
+
+                    log_message("error", "curl log = " . json_encode($response));
+                }
+            }
 
 //            log_message("error", "insert = " . $this->db->last_query());
 
             $this->db->trans_complete();
+            log_message("error", "transactions saved");
             if ($inserted) {
                 return array(
                     "result" => "success"
@@ -804,7 +847,75 @@ class Inbox_model extends CI_Model {
                     $response = $this->referral_model->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "New Referral");
 
                     log_message("error", "completed fax send");
+
+
+
+                    //only trigger RPA events (table entry + doc upload API) if pathway name is AccuroCitrix
+                    //
+                    
+                    $clinic = $this->db->select("first_name, integration_type, "
+                                            . "emr_pathway, emr_uname_1, emr_pwd_1")
+                                    ->from("clinic_user_info")
+                                    ->where("id", $this->session->userdata("user_id"))
+                                    ->get()->result();
+                    log_message("error", "only trigger RPA events = > " . $this->db->last_query());
+
+                    if ($clinic) {
+                        $clinic = $clinic[0];
+                        if ($clinic->emr_pathway === "AccuroCitrix") {
+                            //save entry in rpa_integration table
+                            $this->db->insert("rpa_integration", array(
+                                "api_type" => "new referral",
+                                "api_num" => 2,
+                                "date" => date("Y-m-d"),
+                                "time" => date("H:i:s"),
+                                "status" => "NEW",
+                                "pathway" => "AccuroCitrix",
+                                "clinic_name" => "TCN",
+                                "username" => "hahmed",
+                                "password" => "Blockhealth19",
+                                "first_name" => $data["pat_fname"],
+                                "last_name" => $data["pat_lname"],
+                                "dob_day" => make_two_digit($data["pat_dob_day"]),
+                                "dob_month" => make_two_digit($data["pat_dob_month"]),
+                                "dob_year" => $data["pat_dob_year"],
+                                "hin" => $ohip,
+                                "email_id" => $data["pat_email"],
+                                "cell_phone" => $data["pat_cell_phone"],
+                                "home_phone" => $data["pat_home_phone"],
+                                "work_phone" => $data["pat_work_phone"],
+                                "address" => $data["pat_address"],
+                                "pdf_location" => base_url() . "uploads/health_records/" . $file_new_name . ".pdf",
+                                "pdf_name" => "$file_new_name.pdf",
+                                "pdf_type" => "Documents",
+                                "assigned_provider" => "Arianna Muskat",
+                                "active" => 1
+                            ));
+                            log_message("error", "inserted to rpa");
+                            log_message("error", $this->db->last_query());
+
+
+                            $request = curl_init('http://52.237.12.245/api/v1/patients/upload-documents');
+                            curl_setopt($request, CURLOPT_POST, true);
+                            curl_setopt($request, CURLOPT_POSTFIELDS, array(
+                                "pathwayName" => "AccuroCitrix",
+                                "username" => "hahmed",
+                                "password" => "Blockhealth19",
+                                "ClinicName" => "TCN",
+                                "source" => "remote",
+                                "PDFName" => "$file_new_name.pdf",
+                                "PDFRemote" => base_url() . "uploads/health_records/" . $file_new_name . ".pdf"
+                            ));
+
+                            curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+                            $response = curl_exec($request);
+                            curl_close($request);
+
+                            log_message("error", "curl log = " . json_encode($response));
+                        }
+                    }
                     $this->db->trans_complete();
+                    log_message("error", "transactions saved");
 
                     // return array(true, base_url() . "admin_triage/referral_details/" . md5($referral_id));
                     return array(true, base_url() . "physician_triage/referral_details/" . md5($referral_id));
