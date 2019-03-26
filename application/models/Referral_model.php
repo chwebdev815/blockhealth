@@ -1476,7 +1476,7 @@ class Referral_model extends CI_Model {
         $fax_number = $result->fax;
         log_message("error", "sending fax");
         $this->load->model("referral_model");
-        $response = $this->referral_model->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", array(), 60, $clinic_id);
+//        $response = $this->referral_model->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", array(), 60, $clinic_id);
 
         log_message("error", "Last query = " . $this->db->last_query());
     }
