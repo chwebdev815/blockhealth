@@ -1333,7 +1333,7 @@
 
         for (i = 0; i < pagelength; i++) {
             tiff_file = base + "uploads/efax_tiff/" + datas[i][5];
-            get_first_page_from_tif(tiff_file);
+//            get_first_page_from_tif(tiff_file);
         }
 
         $('#table-action').hover(function () {
