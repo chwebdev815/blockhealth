@@ -1,6 +1,6 @@
 deploy_dev:
   stage: deploy
-  image: php:5-cli-jessie
+  image: debian:buster
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y && apt-get install rsync -y)'
     - mkdir -p ~/.ssh
@@ -8,13 +8,13 @@ deploy_dev:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
   script:
-    - rsync -avzOC  --no-g -e ssh --exclude='.git/' --exclude='.svn/'  --exclude='.gitlab-ci.yml' ./ deployer@35.203.47.37:"/var/www/html || true"
+    - rsync -avzO -e ssh --exclude='.git/' --exclude='.svn/'  --exclude='.gitlab-ci.yml' ./ deployer@35.203.47.37:"/var/www/html || true"
   only:
     - dev
 
 deploy_production:
   stage: deploy
-  image: php:5-cli-jessie
+  image: debian:buster
   before_script:
     - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y && apt-get install rsync -y)'
     - mkdir -p ~/.ssh
@@ -22,6 +22,6 @@ deploy_production:
     - '[[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config'
     - ssh-add <(echo "$SSH_PRIVATE_KEY")
   script:
-    - rsync -avzOC  --no-g -e ssh --exclude='.git/' --exclude='.svn/'  --exclude='.gitlab-ci.yml' ./ deployer@35.203.47.37:"/var/www/html || true"
+    - rsync -avzO -e ssh --exclude='.git/' --exclude='.svn/'  --exclude='.gitlab-ci.yml' ./ deployer@35.203.47.37:"/var/www/html || true"
   only:
     - master
