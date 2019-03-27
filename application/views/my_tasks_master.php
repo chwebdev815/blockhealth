@@ -14,7 +14,9 @@
             <tr>
                 <th>Patient Name</th>
                 <th>Record Type</th>
-                <th>Details</th>
+                <th>
+                    <?php echo ($this->session->userdata("emr_pathway") === "")?"EMR Status":"Details"; ?>
+                </th>
                 <th>Days</th>
                 <th>Pages</th>
                 <th>&nbsp;</th>
