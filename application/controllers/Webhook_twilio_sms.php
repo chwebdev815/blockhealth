@@ -345,6 +345,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                     //1 to confirm this booking
                                     log_message("error", "body 111");
 
+                                    
                                     $this->db->select('admin.id as clinic_id, '
                                             . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") '
                                             . 'THEN "false" ELSE "true" END AS allow_sms, '
