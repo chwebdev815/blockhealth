@@ -1213,7 +1213,7 @@ class Referral_model extends CI_Model {
                 //                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
 
                 $this->db->insert("records_patient_visit_reserved", $insert_data);
-
+                log_message("error", "inserted for new visit = " . json_encode($insert_data));
                 $insert_id = $this->db->insert_id();
 
                 if ($call_immediately) {
