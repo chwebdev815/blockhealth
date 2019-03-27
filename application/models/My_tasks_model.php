@@ -4,6 +4,9 @@ class My_tasks_model extends CI_Model {
 
     public function ssp_my_tasks_model() {
         $table = "view_my_tasks";
+        if($this->session->userdata("emr_pathway") === "true") {
+            $table = "view_my_task_emr";
+        }
         $primaryKey = "id";
         $columns = array(
             array('db' => 'patient_name', 'dt' => 0),

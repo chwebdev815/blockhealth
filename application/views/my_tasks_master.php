@@ -15,7 +15,7 @@
                 <th>Patient Name</th>
                 <th>Record Type</th>
                 <th>
-                    <?php echo ($this->session->userdata("emr_pathway") === "")?"EMR Status":"Details"; ?>
+                    <?php echo ($this->session->userdata("emr_pathway") === "true")?"EMR Status":"Details"; ?>
                 </th>
                 <th>Days</th>
                 <th>Pages</th>

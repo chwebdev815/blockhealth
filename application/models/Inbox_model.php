@@ -128,6 +128,7 @@ class Inbox_model extends CI_Model {
                 "sender_fax_number" => $efax_info[0]->sender_fax_number
             ));
             log_message("error", "insert = " . $this->db->last_query());
+            $task_id = $this->db->insert_id();
 
             if ((isset($data["id"])) && $data["id"] != "") {
 
@@ -161,11 +162,11 @@ class Inbox_model extends CI_Model {
             if ($clinic) {
                 $clinic = $clinic[0];
                 if ($clinic->emr_pathway === "AccuroCitrix") {
-
                     //save entry in rpa_integration table
                     $this->db->insert("rpa_integration", array(
                         "api_type" => "save",
                         "api_num" => 3,
+                        "fk_id" => $task_id,
                         "date" => date("Y-m-d"),
                         "time" => date("H:i:s"),
                         "status" => "NEW",
@@ -870,6 +871,7 @@ class Inbox_model extends CI_Model {
                                 "date" => date("Y-m-d"),
                                 "time" => date("H:i:s"),
                                 "status" => "NEW",
+                                "fk_id" => $referral_id,
                                 "pathway" => "AccuroCitrix",
                                 "clinic_name" => "TCN",
                                 "username" => "hahmed",
