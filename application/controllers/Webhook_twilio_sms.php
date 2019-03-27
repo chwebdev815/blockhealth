@@ -334,7 +334,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                     }
                                 }
                             }
-                        } else if ($visit->visit_confirmed === "N/A") {
+                        } else if ($visit->visit_confirmed === "Awaiting Confirmation") {
                             //will check if status is "Awaiting Confirmation"  then will response for confirming date selected earlier
                             $reserved = $visit;
                             $scheduled_time = ($reserved->visit_date . " " . $reserved->visit_time);
@@ -415,6 +415,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                 $msg = "Visit confirmation time expired";
                             }
                         }
+                        log_message("error", "Return SMS = " . $msg);
                         echo "<Response><Sms>" . $msg . "</Sms></Response>";
                         exit();
                     }
