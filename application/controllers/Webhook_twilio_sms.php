@@ -193,7 +193,11 @@ class Webhook_twilio_sms extends CI_Controller {
                                         "accepted_status" => "Confirmed",
                                         "accepted_status_icon" => "green"
                                     ));
+                                    //aa
 
+                                    
+                                    
+                                    
 
                                     $this->load->model("referral_model");
                                     $this->referral_model->move_from_accepted_to_scheduled($reserved->patient_id, $clinic[0]->id);
