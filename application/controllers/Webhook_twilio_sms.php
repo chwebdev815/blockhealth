@@ -334,7 +334,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                     }
                                 }
                             }
-                        } else if ($visit->visit_confirmed === "Awaiting Confirmation") {
+                        } else if ($visit->visit_confirmed === "N/A") {
                             //will check if status is "Awaiting Confirmation"  then will response for confirming date selected earlier
                             $reserved = $visit;
                             $scheduled_time = ($reserved->visit_date . " " . $reserved->visit_time);
@@ -345,7 +345,6 @@ class Webhook_twilio_sms extends CI_Controller {
                                     //1 to confirm this booking
                                     log_message("error", "body 111");
 
-                                    
                                     $this->db->select('admin.id as clinic_id, '
                                             . 'CASE WHEN (pat.cell_phone = NULL OR pat.cell_phone = "") '
                                             . 'THEN "false" ELSE "true" END AS allow_sms, '
@@ -367,7 +366,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                     $this->db->where("efax.to", "admin.id", false);
                                     $this->db->where("c_ref.efax_id", "efax.id", false);
                                     $patient_data = $this->db->get()->result();
-                                    log_message("error", "patient find q = " . $this->db->last_query());
+
                                     $this->db->where(array(
                                         "active" => 1,
                                         "id" => $reserved->id
@@ -416,7 +415,6 @@ class Webhook_twilio_sms extends CI_Controller {
                                 $msg = "Visit confirmation time expired";
                             }
                         }
-                        log_message("error", "Return SMS = " . $msg);
                         echo "<Response><Sms>" . $msg . "</Sms></Response>";
                         exit();
                     }
