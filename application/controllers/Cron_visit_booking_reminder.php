@@ -161,7 +161,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "visit_date3" => substr($allocations[2]["start_time"], 0, 10),
                     "visit_start_time3" => substr($allocations[2]["start_time"], 10),
                     "visit_end_time3" => substr($allocations[2]["end_time"], 10),
-//                    "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
+                    "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
                     "notify_status" => $notification_status,
                     "notify_status_icon" => $notification_status_icon
                 );
