@@ -737,13 +737,16 @@ class Call_view extends CI_Controller {
                 echo "<Hangup/>";
                 echo "</Response>";
 
+                log_message("error", "here after thankyou");
                 $num = $_GET['selected_slot'];
                 if ($num == 1 || $num == 2 || $num == 3) {
+                    log_message("error", "123 is $num");
                     $reserved_id = $_GET["reserved_id"];
                     $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
                                 "id" => $reserved_id
                             ))->get()->result_array()[0];
 
+                    log_message("error", "data after = " . json_encode($reserved_data));
 
                     //[{"id":"0","patient_id":"2","visit_name":"visit check","visit_date1":"2019-02-08","visit_start_time1":"09:00:00","visit_end_time1":"09:30:00","visit_date2":"2019-02-11","visit_start_time2":"09:00:00","visit_end_time2":"09:30:00","visit_date3":"2019-02-12","visit_start_time3":"09:00:00","visit_end_time3":"09:30:00","visit_expire_time":"2019-02-07 11:21:53","reminder_1h":null,"reminder_24h":"2019-02-08 10:21:53","reminder_48h":"2019-02-09 10:21:53","reminder_72h":"2019-02-10 10:21:53","confirm_key":"1","notify_type":"call","notify_voice":"1","notify_sms":"1","notify_email":"1","confirm_visit_key":"1549552913_SphROVHWj3RuNDJpfkv0GkMy4N7Q5tJYT_PGUvBdyrHl3qLjKgjqA5YES5tYzbWrbK65eIiN9_8dpTw98PzJUxmMCQKb1FCcoJiDqAqzzyNZri7A6Gi0cFNP","visit_confirmed":"Awaiting Confirmation","create_datetime":"2019-02-07 15:21:53","active":"1"}]
 
@@ -752,6 +755,8 @@ class Call_view extends CI_Controller {
                     $visit_end_time = $reserved_data["visit_end_time" . $num];
 
                     $get = $_GET;
+
+                    log_message("error", "data after = " . json_encode($reserved_data));
 
                     $insert_data = array(
                         "patient_id" => $get["patient_id"],
@@ -773,10 +778,12 @@ class Call_view extends CI_Controller {
                     $this->db->where(array(
                         "id" => $reserved_id
                     ));
+                    log_message("error", "inserted with " . $this->db->last_query());
                     $this->db->update("records_patient_visit_reserved", array(
                         "active" => 0,
                         "visit_confirmed" => "Booked"
                     ));
+                    log_message("error", "updated with " . $this->db->last_query());
 
 
                     //set status in accepted_status
@@ -787,6 +794,8 @@ class Call_view extends CI_Controller {
                                     ))
                                     ->where("c_ref.id", "pat.referral_id", false)
                                     ->get()->result()[0]->id;
+                    
+                    log_message("error", "accepted fetch " . $this->db->last_query());
 
                     $this->db->set("accepted_status_date", $reserved_data["created_datetime"], false);
                     $this->db->where(array(
@@ -795,9 +804,12 @@ class Call_view extends CI_Controller {
                         "accepted_status" => "Confirmed",
                         "accepted_status_icon" => "green"
                     ));
+                    log_message("error", "update 2 with " . $this->db->last_query());
 
                     $this->load->model("referral_model");
                     $this->referral_model->move_from_accepted_to_scheduled($get["patient_id"], $clinic_id);
+                    
+                    log_message("error", "finished from move");
                 }
             } else {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";

@@ -261,8 +261,9 @@ class Webhook_twilio_sms extends CI_Controller {
                                             "visit_date3" => substr($allocations[2]["start_time"], 0, 10),
                                             "visit_start_time3" => substr($allocations[2]["start_time"], 10),
                                             "visit_end_time3" => substr($allocations[2]["end_time"], 10),
-//                                            "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s")
+                                            "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s")
                                         );
+                                        
                                         $this->db->where(array(
                                             "id" => $visit->id
                                         ))->update("records_patient_visit_reserved", $update_data);

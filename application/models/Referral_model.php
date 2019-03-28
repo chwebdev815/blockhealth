@@ -1447,7 +1447,7 @@ class Referral_model extends CI_Model {
             "status" => "Scheduled",
             "scheduled_datetime" => date("Y-m-d H:i:s")
         ));
-
+        log_message("error", "at status send " . $this->db->last_query());
         //send status fax
         $this->db->select("c_usr.clinic_institution_name, date_format(c_ref.create_datetime, '%M %D') as referral_received, dr.fax, c_ref.referral_code");
         $this->db->from("clinic_user_info c_usr, efax_info efax, clinic_referrals c_ref, referral_patient_info pat, referral_physician_info dr");
