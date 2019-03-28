@@ -1132,6 +1132,7 @@ class Referral_model extends CI_Model {
             if ($response["result"] === "error") {
                 $response = false;
             } else if ($response["result"] === "success") {
+                log_message("error", "Error on success => " . json_encode($response));
                 $allocations = $response["data"];
 //                    echo "<br/> ****************** <br/>" . "slots assigned = " . json_encode($allocations) . "<br/><br/>";
 //                    exit();
