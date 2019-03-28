@@ -1444,6 +1444,7 @@ class Referral_model extends CI_Model {
             "active" => 1
         ));
         
+        
         $this->db->update("clinic_referrals", array(
             "status" => "Scheduled",
             "scheduled_datetime" => date("Y-m-d H:i:s")
