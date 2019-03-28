@@ -2706,17 +2706,17 @@ form.patients-details-form fieldset {
     display: inline-block;
 }
 .dot-success {
-    background-color: #40e040;
+    background-color: #88b794;
 }
 .dot-danger {
-    background-color: #e64c23;
+    background-color: #f74444;
 }
 .dot-info {
-    background-color: #51aae4;
+    background-color: #9da1c3;
 }
 .dot-disabled {
     background-color: #40e040;
 }
 .dot-yellow {
-    background-color: #daf622;
+    background-color: #e7e92a;
 }
