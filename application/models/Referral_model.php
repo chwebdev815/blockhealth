@@ -1144,7 +1144,7 @@ class Referral_model extends CI_Model {
                 $end_time3 = DateTime::createFromFormat('Y-m-d H:i:s', $allocations[2]["end_time"]);
 
                 $call_immediately = true;
-
+                $contact_number = "";
                 if ($msg_data->work_phone != "") {
                     $contact_number = $msg_data->work_phone;
                 } else if ($msg_data->home_phone != "") {
@@ -2158,8 +2158,8 @@ class Referral_model extends CI_Model {
                             ->order_by("1")->get()->result();
 
 
-            log_message("error", "visits booked = " . json_encode($visits_reserved));
-            log_message("error", "visits booked = " . $this->db->last_query());
+            log_message("error", "visits reserved = " . json_encode($visits_reserved));
+            log_message("error", "visits reserved = " . $this->db->last_query());
 
             $visits_reserved = $this->filter_reserved($visits_reserved, $next_day->format('Y-m-d'));
 //        echo "visits booked = " . json_encode($visits_booked) . "<br/>";
