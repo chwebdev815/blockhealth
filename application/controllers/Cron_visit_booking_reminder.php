@@ -140,10 +140,10 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //                }
                 if ($visit->reminder_type === "1h") {
                     $notification_status .= ", Call1";
-                    $notification_datetime = $visit->created_datetime;
+                    $notification_datetime = $visit->create_datetime;
                 } else if ($visit->reminder_type === "24h") {
                     $notification_status .= ", Call2";
-                    $notification_datetime = $visit->created_datetime;
+                    $notification_datetime = $visit->create_datetime;
                 } else if ($visit->reminder_type === "48h") {
                     $notification_status = "No response";
                     $notification_status_icon = "red";
