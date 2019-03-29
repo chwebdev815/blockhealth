@@ -915,7 +915,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     $current_date->add(new DateInterval('P2D'));
                     log_message("error", "compare <br/>" . $current_date->format("Y-m-d H:i:s") . "<br/>" .
                             $visit_date . " " . $visit_time . "<br/>");
-                    if ($current_date->format("Y-m-d H:i:s") < ($visit_date . " " . $visit_time)) {
+                    if ($current_date->format("Y-m-d H:i:s") > ($visit_date . " " . $visit_time)) {
                         log_message("error", "less than 48h so N/A");
                         $visit_confirmed = "N/A";
                     }
