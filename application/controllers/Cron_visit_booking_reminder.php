@@ -908,6 +908,20 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     $visit_end_time = $reserved_data["visit_end_time" . $num];
 
                     $get = $_GET;
+                    
+                    //dynamic status 
+                    $visit_confirmed = "Awaiting Confirmation";
+                    $current_date = new DateTime(date("Y-m-d H:i:s"));
+                    $current_date->add(new DateInterval('P2D'));
+                    log_message("error", "compare <br/>" . $current_date->format("Y-m-d H:i:s") . "<br/>" .
+                            $visit_date . " " . $visit_time . "<br/>");
+                    if ($current_date->format("Y-m-d H:i:s") < ($visit_date . " " . $visit_time)) {
+                        log_message("error", "less than 48h so N/A");
+                        $visit_confirmed = "N/A";
+                    }
+                    else {
+                        log_message("error", "more than 48h so Aw.. Conf..");
+                    }
 
                     $insert_data = array(
                         "patient_id" => $get["patient_id"],
@@ -919,7 +933,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         "notify_voice" => $reserved_data["notify_voice"],
                         "notify_sms" => $reserved_data["notify_sms"],
                         "notify_email" => $reserved_data["notify_email"],
-                        "visit_confirmed" => "Awaiting Confirmation",
+                        "visit_confirmed" => $visit_confirmed,
                         "notify_status" => $reserved_data["notify_status"],
                         "notify_status_icon" => "green"
                     );
