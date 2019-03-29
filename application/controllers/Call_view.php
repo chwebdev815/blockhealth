@@ -757,7 +757,19 @@ class Call_view extends CI_Controller {
                     $get = $_GET;
 
                     log_message("error", "data after = " . json_encode($reserved_data));
-
+                    //dynamic status 
+                    $visit_confirmed = "Awaiting Confirmation";
+                    $current_date = new DateTime(date("Y-m-d H:i:s"));
+                    $current_date->add(new DateInterval('P2D'));
+                    log_message("error", "compare <br/>" . $current_date->format("Y-m-d H:i:s") . "<br/>" .
+                            $visit_date . " " . $visit_time . "<br/>");
+                    if ($current_date->format("Y-m-d H:i:s") < ($visit_date . " " . $visit_time)) {
+                        log_message("error", "less than 48h so N/A");
+                        $visit_confirmed = "N/A";
+                    }
+                    else {
+                        log_message("error", "more than 48h so Aw.. Conf..");
+                    }
                     $insert_data = array(
                         "patient_id" => $get["patient_id"],
                         "visit_name" => $get["pvname"],
@@ -768,7 +780,7 @@ class Call_view extends CI_Controller {
                         "notify_voice" => $reserved_data["notify_voice"],
                         "notify_sms" => $reserved_data["notify_sms"],
                         "notify_email" => $reserved_data["notify_email"],
-                        "visit_confirmed" => "Awaiting Confirmation",
+                        "visit_confirmed" => $visit_confirmed,
                         "notify_status" => $reserved_data["notify_status"],
                         "notify_status_icon" => "green"
                     );
@@ -794,7 +806,7 @@ class Call_view extends CI_Controller {
                                     ))
                                     ->where("c_ref.id", "pat.referral_id", false)
                                     ->get()->result()[0]->id;
-                    
+
                     log_message("error", "accepted fetch " . $this->db->last_query());
 
                     $this->db->set("accepted_status_date", $reserved_data["create_datetime"]);
@@ -808,7 +820,7 @@ class Call_view extends CI_Controller {
 
                     $this->load->model("referral_model");
                     $this->referral_model->move_from_accepted_to_scheduled($get["patient_id"], $clinic_id);
-                    
+
                     log_message("error", "finished from move");
                 }
             } else {

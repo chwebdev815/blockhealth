@@ -9,7 +9,7 @@ class Efax extends CI_Controller {
         $reminder_type = "1";
         $notify_type = "sms";
         $notify_status = "SMS, Call1";
-        
+
         $status_number = intval($reminder_type) + (($notify_type === 'sms') ? 1 : 0);
         $split = explode(", ", $notify_status);
         echo "split 1 = " . json_encode($split);
@@ -17,7 +17,7 @@ class Efax extends CI_Controller {
         $split[] = $next_status;
         echo "split 2 = " . json_encode($split);
         $notification_status = implode(", ", $split);
-        
+
         echo "status = " . $notification_status;
     }
 
@@ -31,8 +31,17 @@ class Efax extends CI_Controller {
         echo json_encode($response);
     }
 
-    public function show_session() {
-        echo json_encode($this->session->userdata);
+    public function test() {
+        $visit_date = "2019-03-30";
+        $visit_time = "09:00:00";
+        $visit_confirmed = "Awaiting Confirmation";
+        $current_date = new DateTime(date("Y-m-d H:i:s"));
+        $current_date->add(new DateInterval('P2D'));
+        log_message("error", "compare <br/>" . $current_date->format("Y-m-d H:i:s") . "<br/>" .
+                $visit_date . " " . $visit_time . "<br/>");
+        if ($current_date->format("Y-m-d H:i:s") < ($visit_date . " " . $visit_time)) {
+            $visit_confirmed = "N/A";
+        }
     }
 
     public function call_handle() {
