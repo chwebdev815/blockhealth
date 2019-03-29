@@ -278,7 +278,7 @@ class Call_view extends CI_Controller {
                                 ->get()->result()[0]->id;
 
 
-                $this->db->set("accepted_status_date", $reserved_data->create_datetime, false);
+                $this->db->set("accepted_status_date", $reserved_data->create_datetime);
                 $this->db->where(array(
                     "id" => $referral_id
                 ))->update("clinic_referrals", array(
@@ -797,7 +797,7 @@ class Call_view extends CI_Controller {
                     
                     log_message("error", "accepted fetch " . $this->db->last_query());
 
-                    $this->db->set("accepted_status_date", $reserved_data["create_datetime"], false);
+                    $this->db->set("accepted_status_date", $reserved_data["create_datetime"]);
                     $this->db->where(array(
                         "id" => $referral_id
                     ))->update("clinic_referrals", array(
