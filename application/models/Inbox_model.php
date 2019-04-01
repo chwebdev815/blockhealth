@@ -799,7 +799,7 @@ class Inbox_model extends CI_Model {
                     if (!file_exists($patient_dir)) {
                         mkdir($patient_dir);
                     }
-                    $target_dir = $patient_dir;
+                    $target_dir = $patient_dir . "/";
                     $file_new_name = $this->generate_random_string(32);
                     rename($source_dir . $file_old_name, $target_dir . $file_new_name . ".pdf");
 
