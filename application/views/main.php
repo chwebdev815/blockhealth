@@ -253,6 +253,7 @@
 
             base = "<?php echo base_url(); ?>";
             global_data.referral_id = "<?php echo $this->uri->segment(3); ?>";
+            global_data.clinic_id = "<?php echo md5($this->session->userdata("user_id")); ?>";
 
             tableActionTO = null;
             myDropzone = null;

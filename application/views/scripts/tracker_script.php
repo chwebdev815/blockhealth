@@ -138,6 +138,14 @@ if ($this->session->flashdata("error") != null) {
         $("#modal_upload_missing_items").on("click", ".btn_view_missing_pdf", function () {
             $("#modal_view_missing_item").modal("show");
             PDFObject.embed(base + "uploads/health_records/" + $(this).data("path") + ".pdf", "#pdf_view_div");
+            
+//            
+//                        global_data.uploaded_file_path = base + "uploads/clinics/"+
+//                                global_data.clinic_id+"/"+global_data.referral_id+"/" + 
+//                                $(this).data("id") + ".pdf";
+//                        PDFObject.embed(base + "uploads/clinics/"+
+//                                global_data.clinic_id+"/"+global_data.referral_id+"/" + 
+//                                , "#pdf_view_div");
         });
 
         $("#modal_upload_missing_items").on("click", ".btn_remove_missing_pdf", function () {
