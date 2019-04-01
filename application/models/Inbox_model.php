@@ -564,7 +564,7 @@ class Inbox_model extends CI_Model {
             }
 
             //check efax authenticity
-            $this->db->select("id, file_name");
+            $this->db->select("id, file_name, to");
             $this->db->from("efax_info");
             $this->db->where(array(
                 "md5(id)" => $data["id"],
@@ -784,11 +784,24 @@ class Inbox_model extends CI_Model {
 
 
                     //create default clinical note
+                    $clinic_id = $result[0]->to;
                     $source_dir = "./uploads/efax/";
                     $file_old_name = $efax_file . ".pdf";
-                    $target_dir = "./uploads/health_records/";
+                    $clinic_dir = "./uploads/clinics/" . md5($clinic_id);
+                    if (!file_exists($clinic_dir)) {
+                        mkdir($clinic_dir);
+                    }
+                    $patient_dir = "$clinic_dir/" . md5($patient_id);
+                    if (!file_exists($patient_dir)) {
+                        mkdir($patient_dir);
+                    }
+                    $target_dir = $patient_dir;
                     $file_new_name = $this->generate_random_string(32);
                     rename($source_dir . $file_old_name, $target_dir . $file_new_name . ".pdf");
+
+//                    $target_dir = "./uploads/clinics/".md5($clinic_id)."/health_records/";
+//                    $file_new_name = $this->generate_random_string(32);
+//                    rename($source_dir . $file_old_name, $target_dir . $file_new_name . ".pdf");
                     $this->db->insert("records_clinic_notes", array(
                         "efax_id" => $efax_id,
                         "patient_id" => $patient_id,
@@ -887,7 +900,8 @@ class Inbox_model extends CI_Model {
                                 "home_phone" => $data["pat_home_phone"],
                                 "work_phone" => $data["pat_work_phone"],
                                 "address" => $data["pat_address"],
-                                "pdf_location" => base_url() . "uploads/health_records/" . $file_new_name . ".pdf",
+                                "pdf_location" => base_url() . "uploads/clinics/" . 
+                                md5($clinic_id) . "/" . md5($patient_id) . "/" . $file_new_name . ".pdf",
                                 "pdf_name" => "$file_new_name.pdf",
                                 "pdf_type" => "Documents",
                                 "assigned_provider" => "Arianna Muskat",
@@ -906,7 +920,8 @@ class Inbox_model extends CI_Model {
                                 "ClinicName" => "TCN",
                                 "source" => "remote",
                                 "PDFName" => "$file_new_name.pdf",
-                                "PDFRemote" => base_url() . "uploads/health_records/" . $file_new_name . ".pdf"
+                                "PDFRemote" => base_url() . "uploads/clinics/" . 
+                                md5($clinic_id) . "/" . md5($patient_id) . "/" . $file_new_name . ".pdf"
                             ));
 
                             curl_setopt($request, CURLOPT_RETURNTRANSFER, true);

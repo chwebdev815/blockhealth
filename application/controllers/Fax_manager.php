@@ -159,7 +159,9 @@ class Fax_manager extends CI_Controller {
             $decodedResult = json_decode($result, 1);
             // save the result to a file
             $pdf_fax_file_name = $this->generate_random_string(32);
+            //get patient id here.
             $file_path = getcwd() . "/uploads/efax/" . $pdf_fax_file_name . ".pdf";
+            
             log_message("error", "pdf saved at = " . $file_path);
             file_put_contents($file_path, base64_decode($decodedResult["Result"]));
             curl_close($ch);
@@ -197,11 +199,11 @@ class Fax_manager extends CI_Controller {
             // save the result to a file
             $tiff_fax_file_name = $this->generate_random_string(32) . ".tif";
             $file_path = getcwd() . "/uploads/efax_tiff/" . $tiff_fax_file_name;
-            echo "file path = " . $file_path . "<br/>";
+//            echo "file path = " . $file_path . "<br/>";
             file_put_contents($file_path, base64_decode($decodedResult["Result"]));
             curl_close($ch);
             log_message("error", "tiff also saved");
-            echo "TIFF also saved";
+//            echo "TIFF also saved";
         }
         if($from == "") {
             $from = "0";
