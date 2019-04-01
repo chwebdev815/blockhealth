@@ -59,6 +59,7 @@ class Referral_model extends CI_Model {
             $this->db->where_in("c_ref.status", array($state, $state2));
         }
         $result = $this->db->get()->result();
+        log_message("error", "msg = " . $this->db->last_query());
         return ($result) ? true : false;
     }
 
