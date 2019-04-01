@@ -827,7 +827,7 @@ class Referral_model extends CI_Model {
             if (!empty($_FILES['asdqwe']['name']) && $_FILES['asdqwe']['name'][0] != "blob") {
                 $clinic_id = md5($this->session->userdata("user_id"));
                 $patient_id = $data["id"];
-                $target_dir = "./uploads/clinics/$clinic_id/$patient_id";
+                $target_dir = "./uploads/clinics/$clinic_id/$patient_id/";
                 $config = array();
                 $config['upload_path'] = $target_dir;
                 $config['max_size'] = '10000';
@@ -873,8 +873,7 @@ class Referral_model extends CI_Model {
                     "description" => $data["description"],
                     "record_file" => $file_name,
                     "physician" => $physician_name
-                        )
-                );
+                ));
                 return true;
             } else {
                 return "Unauthorized access attempt";
