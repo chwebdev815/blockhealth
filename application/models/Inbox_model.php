@@ -787,11 +787,15 @@ class Inbox_model extends CI_Model {
                     $clinic_id = $result[0]->to;
                     $source_dir = "./uploads/efax/";
                     $file_old_name = $efax_file . ".pdf";
+                    $clinic_dir = "./uploads/clinics";
+                    if (!file_exists($clinic_dir)) {
+                        mkdir($clinic_dir);
+                    }
                     $clinic_dir = "./uploads/clinics/" . md5($clinic_id);
                     if (!file_exists($clinic_dir)) {
                         mkdir($clinic_dir);
                     }
-                    $patient_dir = "$clinic_dir/" . md5($patient_id);
+                    $patient_dir = $clinic_dir . "/" . md5($patient_id);
                     if (!file_exists($patient_dir)) {
                         mkdir($patient_dir);
                     }
