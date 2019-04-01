@@ -131,6 +131,12 @@ class Inbox_model extends CI_Model {
             log_message("error", "insert = " . $this->db->last_query());
             $task_id = $this->db->insert_id();
 
+            if(!file_exists("./uploads/clinics/$clinic_id")) {
+                mkdir("./uploads/clinics/$clinic_id");
+            }
+            if(!file_exists("./uploads/clinics/$clinic_id/" . md5($patient_id))) {
+                mkdir("./uploads/clinics/$clinic_id/" . md5($patient_id));
+            }
             if ((isset($data["id"])) && $data["id"] != "") {
 
                 $inserted = $this->db->insert("records_clinic_notes", array(
