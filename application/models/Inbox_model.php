@@ -114,6 +114,7 @@ class Inbox_model extends CI_Model {
             ));
 
             $patient_id = $this->db->insert_id();
+            $clinic_id = md5($this->session->userdata("user_id"));
 
             $inserted = $this->db->insert("clinic_physician_tasks", array(
                 "clinic_id" => $this->session->userdata("user_id"),
@@ -140,16 +141,16 @@ class Inbox_model extends CI_Model {
                     "record_file" => $new_file_name
                 ));
 
-                copy("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/health_records/" . $new_file_name . ".pdf");
-                log_message("error", "patient record => " . $efax_id . " => ./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/health_records/" . $new_file_name . ".pdf");
+                copy("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+                log_message("error", "patient record => " . $efax_id . " => ./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
             }
 
 
 //            log_message("error", $efax_id . "./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
 //            log_message("error", $efax_id . "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name . " to ./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
 
-            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
-            rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, "./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
+            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+            rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, "./uploads/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".tif");
 
 
             //only trigger RPA events (table entry + doc upload API) if pathway name is AccuroCitrix
@@ -904,7 +905,7 @@ class Inbox_model extends CI_Model {
                                 "home_phone" => $data["pat_home_phone"],
                                 "work_phone" => $data["pat_work_phone"],
                                 "address" => $data["pat_address"],
-                                "pdf_location" => base_url() . "uploads/clinics/" . 
+                                "pdf_location" => base_url() . "uploads/clinics/" .
                                 md5($clinic_id) . "/" . md5($patient_id) . "/" . $file_new_name . ".pdf",
                                 "pdf_name" => "$file_new_name.pdf",
                                 "pdf_type" => "Documents",
@@ -924,7 +925,7 @@ class Inbox_model extends CI_Model {
                                 "ClinicName" => "TCN",
                                 "source" => "remote",
                                 "PDFName" => "$file_new_name.pdf",
-                                "PDFRemote" => base_url() . "uploads/clinics/" . 
+                                "PDFRemote" => base_url() . "uploads/clinics/" .
                                 md5($clinic_id) . "/" . md5($patient_id) . "/" . $file_new_name . ".pdf"
                             ));
 
