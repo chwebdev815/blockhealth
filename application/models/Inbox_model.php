@@ -149,8 +149,8 @@ class Inbox_model extends CI_Model {
 //            log_message("error", $efax_id . "./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
 //            log_message("error", $efax_id . "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name . " to ./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
 
-            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
-            rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, "./uploads/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".tif");
+            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+            rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, "./uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".tif");
 
 
             //only trigger RPA events (table entry + doc upload API) if pathway name is AccuroCitrix
