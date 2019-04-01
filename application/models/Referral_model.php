@@ -828,6 +828,9 @@ class Referral_model extends CI_Model {
                 $clinic_id = md5($this->session->userdata("user_id"));
                 $patient_id = $data["id"];
                 $target_dir = "./uploads/clinics/$clinic_id/$patient_id/";
+                if(!file_exists($target_dir)) {
+                    mkdir($target_dir);
+                }
                 $config = array();
                 $config['upload_path'] = $target_dir;
                 $config['max_size'] = '10000';
