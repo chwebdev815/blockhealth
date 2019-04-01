@@ -825,7 +825,9 @@ class Referral_model extends CI_Model {
             log_message("error", "uploading" . json_encode($_FILES));
             log_message("error", json_encode($_FILES['asdqwe']['name']));
             if (!empty($_FILES['asdqwe']['name']) && $_FILES['asdqwe']['name'][0] != "blob") {
-                $target_dir = "./uploads/health_records/";
+                $clinic_id = md5($this->session->userdata("user_id"));
+                $patient_id = $data["id"];
+                $target_dir = "./uploads/clinics/$clinic_id/$patient_id";
                 $config = array();
                 $config['upload_path'] = $target_dir;
                 $config['max_size'] = '10000';
