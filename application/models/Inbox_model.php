@@ -939,7 +939,7 @@ class Inbox_model extends CI_Model {
                     log_message("error", "transactions saved");
 
                     // return array(true, base_url() . "admin_triage/referral_details/" . md5($referral_id));
-                    return array(true, base_url() . "physician_triage/referral_details/" . md5($referral_id));
+                    return array(true, base_url() . "physician_triage/referral_details/" . md5($patient_id));
                 } catch (Exception $exception) {
                     return array(false, "SQL Exception occured");
                 }
