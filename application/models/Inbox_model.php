@@ -184,7 +184,7 @@ class Inbox_model extends CI_Model {
                         "dob_year" => $data["pat_dob_year"],
                         "hin" => $data["pat_ohip"],
                         "pdf_name" => "$new_file_name.pdf",
-                        "pdf_location" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf",
+                        "pdf_location" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf",
                         "pdf_type" => "Documents",
                         "active" => 1
                     );
@@ -210,7 +210,7 @@ class Inbox_model extends CI_Model {
                         "dob_year" => $data["pat_dob_year"],
                         "hin" => $data["pat_ohip"],
                         "pdf_name" => "$new_file_name.pdf",
-                        "pdf_location" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf",
+                        "pdf_location" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf",
                         "pdf_type" => "Documents",
                         "assigned_provider" => "Arianna Muskat",
                         "active" => 1
@@ -229,7 +229,7 @@ class Inbox_model extends CI_Model {
                         "ClinicName" => "TCN",
                         "source" => "remote",
                         "PDFName" => "$new_file_name.pdf",
-                        "PDFRemote" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf"
+                        "PDFRemote" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name  . ".pdf"
                     ));
                     curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
                     $response = curl_exec($request);
@@ -286,14 +286,14 @@ class Inbox_model extends CI_Model {
             log_message("error", "setting referred => " . $this->db->last_query());
 
             $new_file_name = generate_random_string(32);
-            log_message("error", $efax_id . "./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/health_records/" . $new_file_name . ".pdf");
-            log_message("error", "delete = > " . "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name);
-            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/health_records/" . $new_file_name . ".pdf");
-//            unlink("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name);
+            
+            $patient_id = $this->get_decrypted_id($data["id"], "referral_patient_info");
+            $clinic_id = $this->session->userdata("user_id");
+            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+            unlink("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name);
 
-            $id = $this->get_decrypted_id($data["id"], "referral_patient_info");
             $inserted = $this->db->insert("records_clinic_notes", array(
-                "patient_id" => $id,
+                "patient_id" => $patient_id,
                 "record_type" => $data["record_type"],
                 "description" => $data["description"],
                 "record_file" => $new_file_name
