@@ -164,9 +164,19 @@ function make_two_digit($digit) {
 }
 
 function save_json($clinic_id, $data_object) {
-    $myFile = "uploads/clinics/" . md5($clinic_id) . "/metadata.json";
+    $clinic_dir = "uploads/clinics/" . md5($clinic_id);
     $arr_data = array(); // create empty array
     try {
+        $myFile = $clinic_dir."/metadata.json";
+        if(!file_exists($clinic_dir)) {
+            mkdir($clinic_dir);
+        }
+        if(!file_exists($myFile)) {
+            $file_object = fopen($myFile, "w");
+            fwrite($file_object, "[]");
+            fclose($file_object);
+        }
+        
         //Get data from existing json file
         $jsondata = file_get_contents($myFile);
 
