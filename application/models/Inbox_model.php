@@ -131,10 +131,10 @@ class Inbox_model extends CI_Model {
             log_message("error", "insert = " . $this->db->last_query());
             $task_id = $this->db->insert_id();
 
-            if(!file_exists("./uploads/clinics/$clinic_id")) {
+            if (!file_exists("./uploads/clinics/$clinic_id")) {
                 mkdir("./uploads/clinics/$clinic_id");
             }
-            if(!file_exists("./uploads/clinics/$clinic_id/" . md5($patient_id))) {
+            if (!file_exists("./uploads/clinics/$clinic_id/" . md5($patient_id))) {
                 mkdir("./uploads/clinics/$clinic_id/" . md5($patient_id));
             }
             if ((isset($data["id"])) && $data["id"] != "") {
@@ -168,6 +168,32 @@ class Inbox_model extends CI_Model {
 
             if ($clinic) {
                 $clinic = $clinic[0];
+
+                if ($clinic->emr_pathway === "OscarEMR") {
+                    //save to json file for API integration
+                    $data_object = array(
+                        "api_type" => "save",
+                        "api_num" => 3,
+                        "date" => date("Y-m-d"),
+                        "time" => date("H:i:s"),
+                        "status" => "NEW",
+                        "pathway" => $clinic->emr_pathway,
+                        "clinic_name" => $clinic->first_name,
+                        "username" => $clinic->emr_uname_1,
+                        "password" => $clinic->emr_pwd_1,
+                        "first_name" => $data["pat_fname"],
+                        "last_name" => $data["pat_lname"],
+                        "dob_day" => make_two_digit($data["pat_dob_day"]),
+                        "dob_month" => make_two_digit($data["pat_dob_month"]),
+                        "dob_year" => $data["pat_dob_year"],
+                        "hin" => $data["pat_ohip"],
+                        "pdf_name" => "$new_file_name.pdf",
+                        "pdf_location" => base_url() . "uploads/physician_tasks/pdf/" . $new_file_name . ".pdf",
+                        "pdf_type" => "Documents",
+                        "active" => 1
+                    );
+                    save_json($this->session->userdata("user_id"), $data_object);
+                }
                 if ($clinic->emr_pathway === "AccuroCitrix") {
                     //save entry in rpa_integration table
                     $this->db->insert("rpa_integration", array(
@@ -887,6 +913,39 @@ class Inbox_model extends CI_Model {
 
                     if ($clinic) {
                         $clinic = $clinic[0];
+                        if ($clinic->emr_pathway === "OscarEMR") {
+                            //save to json file for API integration
+                            $data_object = array(
+                                "patient_id" => md5($patient_id),
+                                "api_type" => "new referral",
+                                "api_num" => 2,
+                                "date" => date("Y-m-d"),
+                                "time" => date("H:i:s"),
+                                "status" => "NEW",
+                                "fk_id" => $referral_id,
+                                "pathway" => "AccuroCitrix",
+                                "clinic_name" => "TCN",
+                                "username" => "hahmed",
+                                "password" => "Blockhealth19",
+                                "first_name" => $data["pat_fname"],
+                                "last_name" => $data["pat_lname"],
+                                "dob_day" => make_two_digit($data["pat_dob_day"]),
+                                "dob_month" => make_two_digit($data["pat_dob_month"]),
+                                "dob_year" => $data["pat_dob_year"],
+                                "hin" => $ohip,
+                                "email_id" => $data["pat_email"],
+                                "cell_phone" => $data["pat_cell_phone"],
+                                "home_phone" => $data["pat_home_phone"],
+                                "work_phone" => $data["pat_work_phone"],
+                                "address" => $data["pat_address"],
+                                "pdf_location" => base_url() . "uploads/clinics/" .
+                                md5($clinic_id) . "/" . md5($patient_id) . "/" . $file_new_name . ".pdf",
+                                "pdf_name" => "$file_new_name.pdf",
+                                "pdf_type" => "Documents",
+                                "active" => 1
+                            );
+                            save_json($this->session->userdata("user_id"), $data_object);
+                        }
                         if ($clinic->emr_pathway === "AccuroCitrix") {
                             //save entry in rpa_integration table
                             $this->db->insert("rpa_integration", array(
