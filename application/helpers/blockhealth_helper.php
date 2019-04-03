@@ -163,6 +163,10 @@ function make_two_digit($digit) {
     }
 }
 
+function files_dir() {
+    return "/var/emrsftp/clinics/";
+}
+
 function save_json($clinic_id, $data_object) {
     $clinic_dir = "uploads/clinics/" . md5($clinic_id);
     $arr_data = array(); // create empty array

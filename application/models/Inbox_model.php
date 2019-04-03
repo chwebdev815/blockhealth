@@ -131,11 +131,11 @@ class Inbox_model extends CI_Model {
             log_message("error", "insert = " . $this->db->last_query());
             $task_id = $this->db->insert_id();
 
-            if (!file_exists("./uploads/clinics/$clinic_id")) {
-                mkdir("./uploads/clinics/$clinic_id");
+            if (!file_exists(files_dir() . "$clinic_id")) {
+                mkdir(files_dir() . "$clinic_id");
             }
-            if (!file_exists("./uploads/clinics/$clinic_id/" . md5($patient_id))) {
-                mkdir("./uploads/clinics/$clinic_id/" . md5($patient_id));
+            if (!file_exists(files_dir() . "$clinic_id/" . md5($patient_id))) {
+                mkdir(files_dir() . "$clinic_id/" . md5($patient_id));
             }
             if ((isset($data["id"])) && $data["id"] != "") {
 
@@ -147,16 +147,16 @@ class Inbox_model extends CI_Model {
                     "record_file" => $new_file_name
                 ));
 
-                copy("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
-                log_message("error", "patient record => " . $efax_id . " => ./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+                copy("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+                log_message("error", "patient record => " . $efax_id . " => ./uploads/efax/" . $efax_info[0]->file_name . ".pdf to .".files_dir()."$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
             }
 
 
 //            log_message("error", $efax_id . "./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
 //            log_message("error", $efax_id . "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name . " to ./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
 
-            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
-            rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, "./uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".tif");
+            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+            rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".tif");
 
 
             //only trigger RPA events (table entry + doc upload API) if pathway name is AccuroCitrix
@@ -289,7 +289,7 @@ class Inbox_model extends CI_Model {
             
             $patient_id = $this->get_decrypted_id($data["id"], "referral_patient_info");
             $clinic_id = $this->session->userdata("user_id");
-            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
             unlink("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name);
 
             $inserted = $this->db->insert("records_clinic_notes", array(
@@ -820,7 +820,7 @@ class Inbox_model extends CI_Model {
                     if (!file_exists($clinic_dir)) {
                         mkdir($clinic_dir);
                     }
-                    $clinic_dir = "./uploads/clinics/" . md5($clinic_id);
+                    $clinic_dir = files_dir() . "" . md5($clinic_id);
                     if (!file_exists($clinic_dir)) {
                         mkdir($clinic_dir);
                     }
@@ -832,7 +832,7 @@ class Inbox_model extends CI_Model {
                     $file_new_name = $this->generate_random_string(32);
                     rename($source_dir . $file_old_name, $target_dir . $file_new_name . ".pdf");
 
-//                    $target_dir = "./uploads/clinics/".md5($clinic_id)."/health_records/";
+//                    $target_dir = files_dir() . "".md5($clinic_id)."/health_records/";
 //                    $file_new_name = $this->generate_random_string(32);
 //                    rename($source_dir . $file_old_name, $target_dir . $file_new_name . ".pdf");
                     $this->db->insert("records_clinic_notes", array(
