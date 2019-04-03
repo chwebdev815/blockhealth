@@ -828,7 +828,7 @@ class Referral_model extends CI_Model {
                 $clinic_id = md5($this->session->userdata("user_id"));
                 $patient_id = $data["id"];
                 $target_dir = "./uploads/clinics/$clinic_id/$patient_id/";
-                if(!file_exists($target_dir)) {
+                if (!file_exists($target_dir)) {
                     mkdir($target_dir);
                 }
                 $config = array();
@@ -957,15 +957,15 @@ class Referral_model extends CI_Model {
 //                                ))->where("c_ref.id", "pat.referral_id", false)
 //                                ->get()->result();
                         $result = $this->db->select("pat.id")
-                                ->from("clinic_referrals c_ref, referral_patient_info pat")
-                                ->where(array(
-                                    "pat.id" => $patient_id,
-                                    "c_ref.status" => "Accepted",
-                                    "c_ref.active" => 1,
-                                    "pat.active" => 1
-                                ))->where("c_ref.id", "pat.referral_id", false)
-                                ->get()->result();
-                        
+                                        ->from("clinic_referrals c_ref, referral_patient_info pat")
+                                        ->where(array(
+                                            "pat.id" => $patient_id,
+                                            "c_ref.status" => "Accepted",
+                                            "c_ref.active" => 1,
+                                            "pat.active" => 1
+                                        ))->where("c_ref.id", "pat.referral_id", false)
+                                        ->get()->result();
+
                         if ($result) {
                             $this->db->where(array(
                                 "patient_id" => $patient_id
@@ -1054,9 +1054,9 @@ class Referral_model extends CI_Model {
                         );
                         $inserted = $this->db->insert("records_patient_visit", $insert_data);
 
-                        
+
                         //change accepted status to "Booked by Staff"
-                        
+
                         $this->db->where(array(
                             "id" => $referral_id
                         ))->update("clinic_referrals", array(
@@ -1445,17 +1445,17 @@ class Referral_model extends CI_Model {
         $this->db->where(array("active" => 1, "id" => $patient_id));
         $result = $this->db->get()->result();
         $referral_id = $result[0]->referral_id;
+        log_message("error", " STEP Move referral id for update => " . $referral_id);
+        
         $this->db->where(array(
             "id" => $referral_id,
             "active" => 1
         ));
-        
-        
         $this->db->update("clinic_referrals", array(
             "status" => "Scheduled",
             "scheduled_datetime" => date("Y-m-d H:i:s")
         ));
-        log_message("error", "at status send " . $this->db->last_query());
+        log_message("error", "STEP at status send " . $this->db->last_query());
         //send status fax
         $this->db->select("c_usr.clinic_institution_name, date_format(c_ref.create_datetime, '%M %D') as referral_received, dr.fax, c_ref.referral_code");
         $this->db->from("clinic_user_info c_usr, efax_info efax, clinic_referrals c_ref, referral_patient_info pat, referral_physician_info dr");
@@ -1472,8 +1472,8 @@ class Referral_model extends CI_Model {
         $this->db->where("efax.id", "c_ref.efax_id", false);
         $this->db->where("pat.referral_id", "c_ref.id", false);
         $result = $this->db->get()->result()[0];
-        log_message("error", "q for fax = " . $this->db->last_query());
-        
+        log_message("error", "STEP q for fax = " . $this->db->last_query());
+
         $file_name = "referral_scheduled.html";
         $replace_stack = array(
             "###clinic_name###" => $result->clinic_institution_name,
@@ -1483,8 +1483,7 @@ class Referral_model extends CI_Model {
         );
         $fax_number = $result->fax;
         log_message("error", "sending fax");
-        $this->load->model("referral_model");
-//        $response = $this->referral_model->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", array(), 60, $clinic_id);
+        $response = $this->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", array(), 60, $clinic_id);
 
         log_message("error", "Last query = " . $this->db->last_query());
     }

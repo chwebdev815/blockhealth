@@ -12,6 +12,10 @@ class Webhook_twilio_sms extends CI_Controller {
             $data = $_REQUEST;
 //        $data = $this->input->get();
             log_message("error", "webhook incoming sms = " . json_encode($data));
+            $on_start = $this->db->select("*")->from("records_patient_visit_reserved")
+                            ->order_by("id", "desc")
+                            ->limit("2")->get()->result();
+            log_message("error", "At First = " . json_encode($on_start));
 //            file_put_contents('/var/www/html/inSMS4.txt', json_encode($data));
 //            file_put_contents('/var/www/html/inSMS5.txt', 'demo');
             //$Body = strtoupper(trim($data["Body"]));
@@ -20,7 +24,9 @@ class Webhook_twilio_sms extends CI_Controller {
             if (isset($data["Body"])) {
                 $Body = strtoupper(trim($data["Body"]));
                 $From = $data["From"];
+                log_message("error", " STEP 1 ===> in body");
                 if ($Body === "0" || $Body === "1" || $Body === "2" || $Body === "3") {
+                    log_message("error", " STEP 1.1 ===> in 1,2,3,0");
                     //find patient
                     $patients = $this->db->select("pat.id")->from("referral_patient_info pat")
                                     ->where(array(
@@ -36,6 +42,7 @@ class Webhook_twilio_sms extends CI_Controller {
                     }
 
                     if (sizeof($possible_patients) > 0) {
+                        log_message("error", " STEP 1.1.1 ===> patients > 0");
                         $reserved = $this->db->select("*")
                                         ->from("records_patient_visit_reserved")
                                         ->where_in("patient_id", $possible_patients)
@@ -75,13 +82,17 @@ class Webhook_twilio_sms extends CI_Controller {
                         log_message("error", "visit = " . json_encode($visit));
 
                         if ($visit->visit_confirmed === "N/A") {
+                            log_message("error", " STEP 1.1.1.1 ===> in visit = NA");
                             //will check if status is "N/A" then will response like response of choosing date
 
                             $reserved = $visit;
                             if ($reserved->visit_expire_time > date("Y-m-d H:i:s")) {
-                                log_message("error", "alive visit_expire_time");
+                                log_message("error", " STEP 1.1.1.1.1 => visit expire time is less");
+                                log_message("error", "alive visit_expire_time : " . $reserved->visit_expire_time
+                                        . " > " . date("Y-m-d H:i:s"));
 
                                 if ($Body === "0") {
+                                    log_message("error", " STEP 1.1.1.1.1.1 => body 0");
                                     log_message("error", "body 0");
                                     $this->db->insert("records_patient_visit", array(
                                         "visit_name" => $reserved->visit_name,
@@ -113,9 +124,12 @@ class Webhook_twilio_sms extends CI_Controller {
                                         "accepted_status_icon" => "yellow",
                                         "accepted_status_date" => date("Y-m-d H:i:s")
                                     ));
+
+                                    log_message("error", " STEP 1.1.1.1.1.1 => update = " . $this->db->last_query());
                                 }
 
                                 if ($Body === "1" || $Body === "2" || $Body === "3") {
+                                    log_message("error", " STEP 1.1.1.1.1.2 => Body = 1,2,3");
                                     log_message("error", "body $Body");
                                     $insert_data = array(
                                         "visit_name" => $reserved->visit_name,
@@ -145,6 +159,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                         $insert_data["visit_end_time"] = $reserved->visit_end_time3;
                                     }
                                     $this->db->insert("records_patient_visit", $insert_data);
+                                    log_message("error", " STEP 1.1.1.1.1.2 => inserted visit = " . $this->db->last_query());
 
                                     $this->db->select("c_usr.address, c_usr.id")
                                             ->from("clinic_user_info c_usr, referral_patient_info pat, "
@@ -162,7 +177,6 @@ class Webhook_twilio_sms extends CI_Controller {
                                         $address = "Clinic Address";
                                     }
 
-                                    log_message("error", "insert = " . $this->db->last_query());
                                     $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $insert_data["visit_date"] . " " . $insert_data["visit_time"]);
                                     $date = $datetime->format("l M jS");
                                     $time = $datetime->format("g:ia");
@@ -193,13 +207,12 @@ class Webhook_twilio_sms extends CI_Controller {
                                         "accepted_status" => "Confirmed",
                                         "accepted_status_icon" => "green"
                                     ));
+                                    
+                                    log_message("error", " STEP 1.1.1.1.1.2 => update accepted table = " . $this->db->last_query());
                                     //aa
 
-                                    
-                                    
-                                    
-
                                     $this->load->model("referral_model");
+                                    log_message("error", " STEP 1.1.1.1.1.2 => going to = move with " . $reserved->patient_id . "," .  $clinic[0]->id);
                                     $this->referral_model->move_from_accepted_to_scheduled($reserved->patient_id, $clinic[0]->id);
                                 }
                                 if ($Body === "1" || $Body === "2" || $Body === "3" || $Body === "0") {
@@ -263,7 +276,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                             "visit_end_time3" => substr($allocations[2]["end_time"], 10),
                                             "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s")
                                         );
-                                        
+
                                         $this->db->where(array(
                                             "id" => $visit->id
                                         ))->update("records_patient_visit_reserved", $update_data);
@@ -322,7 +335,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                                         ))
                                                         ->where("c_ref.id", "pat.referral_id", false)
                                                         ->get()->result()[0]->id;
-                                        
+
                                         log_message("error", "reserved is set to = " . json_encode($reserved));
                                         $this->db->set("accepted_status_date", $reserved->create_datetime);
                                         $this->db->where(array(
