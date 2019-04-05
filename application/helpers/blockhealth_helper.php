@@ -168,6 +168,10 @@ function files_dir() {
     return "uploads/clinics/";
 }
 
+function get_metadata_path($md5_clinic_id) {
+    return "/var/emrsftp/clinics/$md5_clinic_id/metadata.json";
+}
+
 function save_json($clinic_id, $data_object) {
     $clinic_dir = "uploads/clinics/" . md5($clinic_id);
     $arr_data = array(); // create empty array

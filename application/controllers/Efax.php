@@ -11,6 +11,15 @@ class Efax extends CI_Controller {
 //            "m2" => "gracias"
 //        );
 //        save_json($this->session->userdata("user_id"), $data_object);
+        
+        $metadata_path = get_metadata_path("1679091c5a880faf6fb5e6087eb1b2dc");
+        if(!file_exists($metadata_path)) {
+            echo "Path $metadata_path does not exist";
+        }
+        else {
+            $jsondata = file_get_contents($metadata_path);
+            echo $jsondata;
+        }
     }
 
     public function send_referral_efax() {
