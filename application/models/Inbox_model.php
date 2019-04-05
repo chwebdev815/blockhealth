@@ -102,7 +102,7 @@ class Inbox_model extends CI_Model {
             $new_file_name = generate_random_string(32);
 
 //            $id = $this->get_decrypted_id($data["id"], "referral_patient_info");
-            $physician_id = ((isset($data["assign_physician"])) ? 
+            $physician_id = ((isset($data["assign_physician"])) ?
                     $this->get_decrypted_id($data["assign_physician"], "clinic_physician_info") : 0);
 //            $patient_id = ((isset($data["id"])) ? ($this->get_decrypted_id($data["id"], "referral_patient_info")) : 0);
 //            $patient_id = 2;
@@ -133,9 +133,11 @@ class Inbox_model extends CI_Model {
             $task_id = $this->db->insert_id();
 
             if (!file_exists("./" . files_dir() . "$clinic_id")) {
+                log_message("error", "creating clinic folder =>" . "./" . files_dir() . "$clinic_id");
                 mkdir("./" . files_dir() . "$clinic_id");
             }
             if (!file_exists("./" . files_dir() . "$clinic_id/" . md5($patient_id))) {
+                log_message("error", "creating patient folder =>" . "./" . files_dir() . "$clinic_id/" . md5($patient_id));
                 mkdir("./" . files_dir() . "$clinic_id/" . md5($patient_id));
             }
             if ((isset($data["id"])) && $data["id"] != "") {
@@ -149,7 +151,7 @@ class Inbox_model extends CI_Model {
                 ));
 
                 copy("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
-                log_message("error", "patient record => " . $efax_id . " => ./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./".files_dir()."$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+                log_message("error", "patient record => " . $efax_id . " => ./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
             }
 
 
@@ -230,7 +232,7 @@ class Inbox_model extends CI_Model {
                         "ClinicName" => "TCN",
                         "source" => "remote",
                         "PDFName" => "$new_file_name.pdf",
-                        "PDFRemote" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name  . ".pdf"
+                        "PDFRemote" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf"
                     ));
                     curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
                     $response = curl_exec($request);
@@ -287,7 +289,7 @@ class Inbox_model extends CI_Model {
             log_message("error", "setting referred => " . $this->db->last_query());
 
             $new_file_name = generate_random_string(32);
-            
+
             $patient_id = $this->get_decrypted_id($data["id"], "referral_patient_info");
             $clinic_id = $this->session->userdata("user_id");
             rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
@@ -621,9 +623,11 @@ class Inbox_model extends CI_Model {
                         "status" => $first_status
                     );
                     //If clinic has only 1 physician account, then assign by default 
-                    $physicians = $this->db->select("id")->from("clinic_physician_info")->where(array(
-                                "clinic_id" => $this->session->userdata("user_id")
-                            ))->get()->result();
+                    $physicians = $this->db->select("id")
+                                    ->from("clinic_physician_info")
+                                    ->where(array(
+                                        "clinic_id" => $this->session->userdata("user_id")
+                                    ))->get()->result();
                     if ($physicians && sizeof($physicians) === 1) {
                         $insert_data["assigned_physician"] = $physicians[0]->id;
                     }
@@ -680,7 +684,9 @@ class Inbox_model extends CI_Model {
                     //store clinical triage info linked to patient id
                     $clinical_triage_data = array(
                         "patient_id" => $patient_id,
-                        "priority" => (!isset($data["priority"]) || $data["priority"] == null || empty($data["priority"])) ? "not_specified" : $data["priority"]
+                        "priority" => (!isset($data["priority"]) ||
+                        $data["priority"] == null || empty($data["priority"])) ?
+                        "not_specified" : $data["priority"]
                     );
                     $this->db->insert("referral_clinic_triage", $clinical_triage_data);
                     $clinic_triage_id = $this->db->insert_id();
@@ -760,12 +766,14 @@ class Inbox_model extends CI_Model {
                             }
                         }
                     }
-
+                    $referral_checklist = array();
                     //insert referral checklist
-                    if (isset($data["referral_checklist"]))
+                    if (isset($data["referral_checklist"])) {
                         $referral_checklist = $data["referral_checklist"];
-                    else
+                    }
+                    else {
                         $referral_checklist = array();
+                    }
 
                     log_message("error", "checklist array = " . json_encode($referral_checklist));
                     //insert default checklist info
