@@ -164,7 +164,8 @@ function make_two_digit($digit) {
 }
 
 function files_dir() {
-    return "/var/emrsftp/clinics/";
+//    return "/var/emrsftp/clinics/";
+    return "uploads/clinics/";
 }
 
 function save_json($clinic_id, $data_object) {

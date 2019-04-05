@@ -102,7 +102,8 @@ class Inbox_model extends CI_Model {
             $new_file_name = generate_random_string(32);
 
 //            $id = $this->get_decrypted_id($data["id"], "referral_patient_info");
-            $physician_id = ((isset($data["assign_physician"])) ? $this->get_decrypted_id($data["assign_physician"], "clinic_physician_info") : 0);
+            $physician_id = ((isset($data["assign_physician"])) ? 
+                    $this->get_decrypted_id($data["assign_physician"], "clinic_physician_info") : 0);
 //            $patient_id = ((isset($data["id"])) ? ($this->get_decrypted_id($data["id"], "referral_patient_info")) : 0);
 //            $patient_id = 2;
             $this->db->insert("referral_patient_info", array(
@@ -131,11 +132,11 @@ class Inbox_model extends CI_Model {
             log_message("error", "insert = " . $this->db->last_query());
             $task_id = $this->db->insert_id();
 
-            if (!file_exists(files_dir() . "$clinic_id")) {
-                mkdir(files_dir() . "$clinic_id");
+            if (!file_exists("./" . files_dir() . "$clinic_id")) {
+                mkdir("./" . files_dir() . "$clinic_id");
             }
-            if (!file_exists(files_dir() . "$clinic_id/" . md5($patient_id))) {
-                mkdir(files_dir() . "$clinic_id/" . md5($patient_id));
+            if (!file_exists("./" . files_dir() . "$clinic_id/" . md5($patient_id))) {
+                mkdir("./" . files_dir() . "$clinic_id/" . md5($patient_id));
             }
             if ((isset($data["id"])) && $data["id"] != "") {
 
@@ -148,15 +149,15 @@ class Inbox_model extends CI_Model {
                 ));
 
                 copy("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
-                log_message("error", "patient record => " . $efax_id . " => ./uploads/efax/" . $efax_info[0]->file_name . ".pdf to .".files_dir()."$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+                log_message("error", "patient record => " . $efax_id . " => ./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./".files_dir()."$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
             }
 
 
 //            log_message("error", $efax_id . "./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
 //            log_message("error", $efax_id . "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name . " to ./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
 
-            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
-            rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".tif");
+            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+            rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, "./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".tif");
 
 
             //only trigger RPA events (table entry + doc upload API) if pathway name is AccuroCitrix
