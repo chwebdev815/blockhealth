@@ -207,15 +207,16 @@ class Webhook_twilio_sms extends CI_Controller {
                                         "accepted_status" => "Confirmed",
                                         "accepted_status_icon" => "green"
                                     ));
-                                    
+
                                     log_message("error", " STEP 1.1.1.1.1.2 => update accepted table = " . $this->db->last_query());
                                     //aa
 
                                     $this->load->model("referral_model");
-                                    log_message("error", " STEP 1.1.1.1.1.2 => going to = move with " . $reserved->patient_id . "," .  $clinic[0]->id);
+                                    log_message("error", " STEP 1.1.1.1.1.2 => going to = move with " . $reserved->patient_id . "," . $clinic[0]->id);
                                     $this->referral_model->move_from_accepted_to_scheduled($reserved->patient_id, $clinic[0]->id);
                                 }
                                 if ($Body === "1" || $Body === "2" || $Body === "3" || $Body === "0") {
+                                    log_message("error", "STEP 1,2,3,0");
                                     $this->db->where(array(
                                         "id" => $reserved->id
                                     ))->update("records_patient_visit_reserved", array(
@@ -226,6 +227,8 @@ class Webhook_twilio_sms extends CI_Controller {
                                     log_message("error", "reserved is deactivated with " . $this->db->last_query());
                                 }
                             } else {
+                                log_message("error", "STEP 1,2,3,0");
+                                log_message("error", "NEW Dates should be sent, expiry time is gone.");
                                 log_message("error", "should send new dates now");
                                 $visit = $reserved;
                                 $this->db->select('admin.id as clinic_id, '

@@ -11,15 +11,28 @@ class Efax extends CI_Controller {
 //            "m2" => "gracias"
 //        );
 //        save_json($this->session->userdata("user_id"), $data_object);
+
+        $xml_data = '<?xml version="1.0" encoding="UTF-8" ?>
+            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:rep="http://www.softlinx.com/ReplixFax">
+               <soapenv:Header/>
+               <soapenv:Body>
+                  <rep:QueryReceiveFax>
+                     <QueryReceiveFaxInput>
+                     </QueryReceiveFaxInput>
+                  </rep:QueryReceiveFax>
+               </soapenv:Body>
+            </soapenv:Envelope>';
+        $URL = "http://38.104.251.164/softlinx/replixfax/wsapi";
+
+        $ch = curl_init($URL);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "$xml_data");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        $output = curl_exec($ch);
+        curl_close($ch);
         
-        $metadata_path = get_metadata_path("1679091c5a880faf6fb5e6087eb1b2dc");
-        if(!file_exists($metadata_path)) {
-            echo "Path $metadata_path does not exist";
-        }
-        else {
-            $jsondata = file_get_contents($metadata_path);
-            echo $jsondata;
-        }
+        echo $output;
     }
 
     public function send_referral_efax() {
