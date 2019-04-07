@@ -6,13 +6,7 @@ if (!defined('BASEPATH'))
 class Efax extends CI_Controller {
 
     public function index() {
-//        $data_object = array(
-//            "m1" => "hola",
-//            "m2" => "gracias"
-//        );
-//        save_json($this->session->userdata("user_id"), $data_object);
-
-        $xml_data = '<?xml version="1.0" encoding="UTF-8" ?>
+        $originalXML = '<?xml version="1.0" encoding="UTF-8" ?>
             <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:rep="http://www.softlinx.com/ReplixFax">
                <soapenv:Header/>
                <soapenv:Body>
@@ -22,17 +16,23 @@ class Efax extends CI_Controller {
                   </rep:QueryReceiveFax>
                </soapenv:Body>
             </soapenv:Envelope>';
-        $URL = "http://38.104.251.164/softlinx/replixfax/wsapi";
 
-        $ch = curl_init($URL);
-        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
-        curl_setopt($ch, CURLOPT_POST, 1);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, "$xml_data");
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $output = curl_exec($ch);
-        curl_close($ch);
-        
-        echo $output;
+//Translate the XML above in a array, like PHP SOAP function requires
+        $myParams = array(
+            'firstClient' => array(
+                'name' => 'someone',
+                'adress' => 'R. 1001'
+            ),
+            'secondClient' => array(
+                'name' => 'another one',
+                'adress' => ''
+            )
+        );
+
+        $webService = new SoapClient("http://38.104.251.164/softlinx/replixfax/wsapi");
+        $result = $webService->someWebServiceFunction($myParams);
+
+        echo json_encode($result);
     }
 
     public function send_referral_efax() {
