@@ -6,33 +6,55 @@ if (!defined('BASEPATH'))
 class Efax extends CI_Controller {
 
     public function index() {
-        $originalXML = '<?xml version="1.0" encoding="UTF-8" ?>
-            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:rep="http://www.softlinx.com/ReplixFax">
-               <soapenv:Header/>
-               <soapenv:Body>
-                  <rep:QueryReceiveFax>
-                     <QueryReceiveFaxInput>
-                     </QueryReceiveFaxInput>
-                  </rep:QueryReceiveFax>
-               </soapenv:Body>
-            </soapenv:Envelope>';
 
-//Translate the XML above in a array, like PHP SOAP function requires
-        $myParams = array(
-            'firstClient' => array(
-                'name' => 'someone',
-                'adress' => 'R. 1001'
-            ),
-            'secondClient' => array(
-                'name' => 'another one',
-                'adress' => ''
-            )
-        );
+        //Data, connection, auth
+        $soapUrl = "38.104.251.164/softlinx/replixfax/wsapi"; // asmx URL of WSDL
+        $soapUser = "4162669449";  //  username
+        $soapPassword = "HwDH3zvK"; // password
+        // xml post structure
 
-        $webService = new SoapClient("http://38.104.251.164/softlinx/replixfax/wsapi");
-        $result = $webService->someWebServiceFunction($myParams);
+        $xml_post_string = '<soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:rep="http://www.softlinx.com/ReplixFax">
+                            <soapenv:Header/>
+                            <soapenv:Body>
+                               <rep:QueryReceiveFax>
+                                  <QueryReceiveFaxInput>
 
-        echo json_encode($result);
+
+
+                                  </QueryReceiveFaxInput>
+                               </rep:QueryReceiveFax>
+                            </soapenv:Body>
+                         </soapenv:Envelope>';   // data from the form, e.g. some ID number
+
+        $headers = array(
+            "Content-type: text/xml;charset=\"utf-8\"",
+            "Accept: text/xml",
+            "Cache-Control: no-cache",
+            "Pragma: no-cache",
+            "SOAPAction: http://www.softlinx.com/wsapi/op=QueryReceiveFax/ver=66",
+            "Content-length: " . strlen($xml_post_string),
+        ); //SOAPAction: your op URL
+
+        $url = $soapUrl;
+
+        // PHP cURL  for https connection with auth
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERPWD, $soapUser . ":" . $soapPassword); // username and password - declared at the top of the doc
+        curl_setopt($ch, CURLOPT_HTTPAUTH, CURLAUTH_ANY);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 10);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $xml_post_string); // the SOAP request
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        // converting
+        $response = curl_exec($ch);
+        curl_close($ch);
+
+        print_r($response);
+        exit();
     }
 
     public function send_referral_efax() {
