@@ -5,6 +5,85 @@ if (!defined('BASEPATH'))
 
 class Efax extends CI_Controller {
 
+    public function get_images() {
+
+        //Data, connection, auth
+        $soapUrl = "38.104.251.164/softlinx/replixfax/wsapi"; // asmx URL of WSDL
+        $soapUser = "4162669449";  //  username
+        $soapPassword = "HwDH3zvK"; // password
+        // xml post structure
+
+        $xml_post_string = '<?xml version="1.0" encoding="utf-8"?>            
+                            <soapenv:Envelope xmlns:soapenv="http://schemas.xmlsoap.org/soap/envelope/" xmlns:rep="http://www.softlinx.com/ReplixFax">
+                            <soapenv:Header/>
+                            <soapenv:Body>
+                               <rep:GetReceiveFaxContent>
+                                  <GetReceiveFaxContentInput>
+                                     <FaxId>24224650</FaxId>
+                                     <FaxContentType>pdf</FaxContentType>
+                                  </GetReceiveFaxContentInput>
+                               </rep:GetReceiveFaxContent>
+                            </soapenv:Body>
+                         </soapenv:Envelope>';
+
+        $headers = array(
+            "Content-Transfer-Encoding: binary",
+            "Accept-Ranges: bytes",
+            "Cache-Control: no-cache",
+            "Content-Encoding: none",
+            "Pragma: no-cache",
+            "SOAPAction: http://www.softlinx.com/wsapi/op=GetReceiveFaxContent/ver=66",
+            "Content-length: " . strlen($xml_post_string),
+        ); //SOAPAction: your op URL
+        $filename = 'recv-fax-24224650.pdf';
+        header('Content-Type: application/.pdf');
+        header('Content-Disposition: attachment; filename=' . $filename . '.pdf');
+
+
+        $url = $soapUrl;
+
+        // PHP cURL  for https connection with auth
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_URL, $url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, "$xml_post_string");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_USERPWD, $soapUser . ":" . $soapPassword);
+        curl_setopt($ch, CURLOPT_BINARYTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($ch, CURLOPT_HEADER, 1);
+        $response = curl_exec($ch);
+        
+//        echo "file = " . json_encode($response);
+//        exit();
+        
+//        file_put_contents("hello.pdf", base64_decode($response));
+//        exit();
+//
+        $destination = dirname(_FILE_) . '/' . $filename . '.pdf';
+        $file = fopen($destination, "w+");
+        fputs($file, $response);
+        fclose($file);
+        readfile($destination);
+//
+//
+//        exit();
+//
+//        // converting
+//        $response = curl_exec($ch);
+//        curl_close($ch);
+//
+//
+//        file_put_contents("xyz.pdf", $response);
+//
+//        exit();
+//
+//        die;
+    }
+
     public function index() {
 
         //Data, connection, auth

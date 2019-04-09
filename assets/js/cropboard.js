@@ -561,6 +561,7 @@ function file_upload_triage(data) {
 
                         if (response.predictions.hasOwnProperty('pharmacologic_substance')) {
                             tmp = response.predictions.pharmacologic_substance;
+                            debugger
                             if (tmp != "No Match Found" && tmp.length != 0) {
                                 for (i = 0; i < tmp.length; i++) {
                                     elem = {};
@@ -571,9 +572,23 @@ function file_upload_triage(data) {
                                     for (j = 0; j < text.length; j++) {
                                         medic = text[j];
                                         if (medic != "source" && medic != "source_count") {
+                                            suffix = "";
+                                            attrs = tmp[i][text].attributes;
+                                            if (attrs.length !== 0) {
+                                                suffix_array = [];
+                                                for (attr_index = 0; attr_index < attrs.length; attr_index++) {
+                                                    cur_attr = attrs[attr_index];
+                                                    if(typeof(cur_attr.Type) !== "undefined" && typeof(cur_attr.Text) !== "undefined" ) {
+                                                        suffix_array.push(cur_attr.Type.substring(0, 3) + ": " + cur_attr.Text);
+                                                    }
+                                                }
+                                                suffix += "(" + suffix_array.join(", ");
+                                            }
+
+
                                             data_points += 1;
-                                            add_medications(medic);
-                                            elem.concept = my_string(medic);
+                                            add_medications(medic + suffix);
+                                            elem.concept = my_string(medic + suffix);
                                             if (Array.isArray(tmp[i][medic])) {
                                                 //save multiple sentences
                                                 sentences = tmp[i][medic];
