@@ -586,7 +586,9 @@ class Inbox_model extends CI_Model {
         if ($this->form_validation->run()) {
             $data = $this->input->post();
             //check if referral already created for this fax. 
-            $result = $this->db->select("c_ref.id")->from("clinic_referrals c_ref, efax_info efax")->where(array(
+            $result = $this->db->select("c_ref.id")
+                    ->from("clinic_referrals c_ref, efax_info efax")
+                    ->where(array(
                         "efax.active" => 1,
                         "c_ref.active" => 1,
                         "md5(efax.id)" => $data["id"]

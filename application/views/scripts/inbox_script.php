@@ -292,7 +292,7 @@
                 temp_canvas = image.toCanvas();
                 $("#image_for_preview").attr("src", temp_canvas.toDataURL());
 //                return temp_canvas.toDataURL();
-                
+
 //                setTimeout(function() {
 //                }, 1000);
                 global_data.preview_images.push(temp_canvas.toDataURL());
@@ -1072,7 +1072,10 @@
                 $(value).show();
         });
         $(".btn-toggle-referral").on("click", function () {
-            createCropper();
+            setTimeout(function () {
+                createCropper();
+            }, 1200);
+
             if ($("#wrap-container").hasClass("toggled") && $("#wrap-container").find("#save-patient-wrapper").css("display") === "block") {
             } else {
                 $("#wrap-container").toggleClass("toggled");
@@ -1400,9 +1403,9 @@
         $('button.popup2_open').click(function () {
             console.log("this should be called");
             $(this).attr("id", "table-hover-view-trigger-disabled");
-            
+
             let tiff_file_name = $(this).parent().data("file-tif");
-            
+
             tiff_file = base + "uploads/efax_tiff/" + tiff_file_name;
             $("#image_for_preview").attr("src", "");
             get_first_page_from_tif(tiff_file);
