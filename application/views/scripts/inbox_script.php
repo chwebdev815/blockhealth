@@ -1074,7 +1074,7 @@
         $(".btn-toggle-referral").on("click", function () {
             setTimeout(function () {
                 createCropper();
-            }, 1200);
+            }, 1000);
 
             if ($("#wrap-container").hasClass("toggled") && $("#wrap-container").find("#save-patient-wrapper").css("display") === "block") {
             } else {
