@@ -17,6 +17,12 @@
     .clr-lg-padd{
         padding-right: 0px;
     }	
+    div.checkbox > label {
+        width: 90%;
+    }
+    div.checkbox > label > input{
+        width: 90%;
+    }
 </style>
 
 <!-- <button class="popup2_open">Click me 2!</button>

@@ -586,7 +586,6 @@ function file_upload_triage(data) {
                                                 suffix += " (" + suffix_array.join(", ") + ")";
                                             }
 
-
                                             data_points += 1;
                                             add_medications(medic + suffix);
                                             elem.concept = my_string(medic + suffix);
