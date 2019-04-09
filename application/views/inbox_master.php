@@ -177,13 +177,13 @@
                                             </div>
                                             <div class="form-group row">
                                                 <div class="col-sm-4 col-xs-12">
-                                                    <select name="pat_dob_day" id="pat_dob_day" class="required"></select>
+                                                    <select name="pat_dob_day" id="pat_dob_day" class=""></select>
                                                 </div>
                                                 <div class="col-sm-4 col-xs-12 no-left-right-padd">
-                                                    <select name="pat_dob_month" id="pat_dob_month" class="required"></select>
+                                                    <select name="pat_dob_month" id="pat_dob_month" class=""></select>
                                                 </div>
                                                 <div class="col-sm-4 col-xs-12">                    
-                                                    <select name="pat_dob_year" id="pat_dob_year" class="required"></select>
+                                                    <select name="pat_dob_year" id="pat_dob_year" class=""></select>
                                                 </div>
                                             </div>
                                             <div class="form-group row">
@@ -297,13 +297,13 @@
                                                 </label>
                                             </div>
                                             <div class="col-sm-4 col-xs-12">
-                                                <select name="pat_dob_day" id="pat_dob_day" class="required"></select>
+                                                <select name="pat_dob_day" id="pat_dob_day" class=""></select>
                                             </div>
                                             <div class="col-sm-4 col-xs-12 no-left-right-padd">
-                                                <select name="pat_dob_month" id="pat_dob_month" class="required"></select>
+                                                <select name="pat_dob_month" id="pat_dob_month" class=""></select>
                                             </div>
                                             <div class="col-sm-4 col-xs-12">                    
-                                                <select name="pat_dob_year" id="pat_dob_year" class="required"></select>
+                                                <select name="pat_dob_year" id="pat_dob_year" class=""></select>
                                             </div>
                                         </div>
                                         <div class="form-group row">

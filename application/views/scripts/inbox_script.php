@@ -1072,6 +1072,7 @@
                 $(value).show();
         });
         $(".btn-toggle-referral").on("click", function () {
+            createCropper();
             if ($("#wrap-container").hasClass("toggled") && $("#wrap-container").find("#save-patient-wrapper").css("display") === "block") {
             } else {
                 $("#wrap-container").toggleClass("toggled");
