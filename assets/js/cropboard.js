@@ -579,10 +579,11 @@ function file_upload_triage(data) {
                                                 for (attr_index = 0; attr_index < attrs.length; attr_index++) {
                                                     cur_attr = attrs[attr_index];
                                                     if(typeof(cur_attr.Type) !== "undefined" && typeof(cur_attr.Text) !== "undefined" ) {
-                                                        suffix_array.push(cur_attr.Type.substring(0, 3) + ": " + cur_attr.Text);
+                                                        tmp_type = cur_attr.Type.substring(0, 3).toLowerCase();
+                                                        suffix_array.push(tmp_type + ": " + cur_attr.Text);
                                                     }
                                                 }
-                                                suffix += "(" + suffix_array.join(", ") + ")";
+                                                suffix += " (" + suffix_array.join(", ") + ")";
                                             }
 
 
