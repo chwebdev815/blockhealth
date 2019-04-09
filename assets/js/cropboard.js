@@ -582,7 +582,7 @@ function file_upload_triage(data) {
                                                         suffix_array.push(cur_attr.Type.substring(0, 3) + ": " + cur_attr.Text);
                                                     }
                                                 }
-                                                suffix += "(" + suffix_array.join(", ");
+                                                suffix += "(" + suffix_array.join(", ") + ")";
                                             }
 
 
