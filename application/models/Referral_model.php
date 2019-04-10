@@ -1222,7 +1222,7 @@ class Referral_model extends CI_Model {
                 log_message("error", "inserted for new visit = " . json_encode($insert_data));
                 $insert_id = $this->db->insert_id();
 
-                if ($call_immediately) {
+                if ($call_immediately || !$call_immediately) {
                     $post_arr = array(
                         'defaultContactFormName' => $msg_data->fname,
                         "patient_lname" => $msg_data->lname,
@@ -1267,7 +1267,8 @@ class Referral_model extends CI_Model {
                     curl_close($ch);
                     log_message("error", "<br/> call response = " . $resp . "<br/>");
                     log_message("error", "Call completed " . json_encode($resp));
-                } else {
+                } 
+                if($call_immediately || !$call_immediately) {
 //                            echo "sending sms";
                     $msg = "Hello <patient name>,\n"
                             . "\n"
