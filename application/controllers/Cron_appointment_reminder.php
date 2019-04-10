@@ -30,7 +30,7 @@ class Cron_appointment_reminder extends CI_Controller {
                 $hour = $clinic->visit_confirm_time;
                 $day = floor($hour / 24);
                 $hour = ($hour % 24);
-                
+
                 //get all to schedule a call for specific clinic
                 $remind_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+$day day $hour hour")));
                 $string_remind_hour = $remind_hour->format("Y-m-d H:i:s");
@@ -48,13 +48,13 @@ class Cron_appointment_reminder extends CI_Controller {
                                     "c_usr.active" => 1,
                                     "r_pv.active" => 1
                                 ))
-                        ->where("pat.id", "r_pv.patient_id", false)
-                        ->where("c_ref.id", "pat.referral_id", false)
-                        ->where("efax.id", "c_ref.efax_id", false)
-                        ->where("c_usr.id", "efax.to", false)
-                        ->where("efax.to", "c_usr.id", false)
-                        ->where("c_usr.id", $clinic->id)
-                        ->get()->result();
+                                ->where("pat.id", "r_pv.patient_id", false)
+                                ->where("c_ref.id", "pat.referral_id", false)
+                                ->where("efax.id", "c_ref.efax_id", false)
+                                ->where("c_usr.id", "efax.to", false)
+                                ->where("efax.to", "c_usr.id", false)
+                                ->where("c_usr.id", $clinic->id)
+                                ->get()->result();
                 log_message("error", "calculating reminder = " . $this->db->last_query());
                 $this->init_reminder($remindable);
 //        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
@@ -103,7 +103,7 @@ class Cron_appointment_reminder extends CI_Controller {
 
             if ($patient_data) {
                 $patient_data = $patient_data[0];
-                if ($visit->notify_type == "call") {
+                if ($visit->notify_type == "call" || 1) {
 
 
                     log_message("error", "checkig for patient " . $visit->patient_id);
@@ -159,7 +159,7 @@ class Cron_appointment_reminder extends CI_Controller {
                         curl_close($ch);
                         log_message("error", "Call completed " . json_encode($resp));
                     }
-                } else if ($visit->notify_type == "sms") {
+                } else if ($visit->notify_type == "sms" || 1) {
                     log_message("error", "before sms data = " . json_encode($visit));
                     if ($visit->visit_name && $visit->visit_name != "") {
                         $visit->visit_name = "'" . $visit->visit_name . "'";
@@ -344,7 +344,6 @@ class Cron_appointment_reminder extends CI_Controller {
 //                            ))
 //                            ->where("c_ref.id", "pat.referral_id", false)
 //                            ->get()->result()[0]->id;
-
 //            $this->db->where(array(
 //                "id" => $referral_id
 //            ))->update("clinic_referrals", array(
@@ -360,23 +359,23 @@ class Cron_appointment_reminder extends CI_Controller {
                 "notify_status" => "Contact directly",
                 "notify_status_icon" => "yellow"
             ));
-            
-            //set status in accepted_status
-                $referral_id = $this->db->select("c_ref.id")
-                                ->from("clinic_referrals c_ref, referral_patient_info pat")
-                                ->where(array(
-                                    "pat.id" => $_GET["patient_id"]
-                                ))
-                                ->where("c_ref.id", "pat.referral_id", false)
-                                ->get()->result()[0]->id;
 
-                $this->db->where(array(
-                    "id" => $referral_id
-                ))->update("clinic_referrals", array(
-                    "accepted_status" => "Contact directly",
-                    "accepted_status_icon" => "yellow",
-                    "accepted_status_date" => date("Y-m-d H:i:s")
-                ));
+            //set status in accepted_status
+            $referral_id = $this->db->select("c_ref.id")
+                            ->from("clinic_referrals c_ref, referral_patient_info pat")
+                            ->where(array(
+                                "pat.id" => $_GET["patient_id"]
+                            ))
+                            ->where("c_ref.id", "pat.referral_id", false)
+                            ->get()->result()[0]->id;
+
+            $this->db->where(array(
+                "id" => $referral_id
+            ))->update("clinic_referrals", array(
+                "accepted_status" => "Contact directly",
+                "accepted_status_icon" => "yellow",
+                "accepted_status_date" => date("Y-m-d H:i:s")
+            ));
             //,
 //                    "accepted_status_date" => date("Y-m-d")
         } elseif ($_GET['Digits'] == 3) {
