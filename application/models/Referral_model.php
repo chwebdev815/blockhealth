@@ -1268,6 +1268,8 @@ class Referral_model extends CI_Model {
                     log_message("error", "<br/> call response = " . $resp . "<br/>");
                     log_message("error", "Call completed " . json_encode($resp));
                 } 
+                
+                
                 if($call_immediately || !$call_immediately) {
 //                            echo "sending sms";
                     $msg = "Hello <patient name>,\n"
