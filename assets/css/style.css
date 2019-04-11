@@ -1298,10 +1298,10 @@ input.db-nav-search-input{
     width: 80px;
 }
 
-.vector-logo {
-    width: 60px;
+.vector-logo {    
+    width: 55px;
     position: absolute;
-    left: 10px;
+    left: 25px;
     top: 5px;
     transition: all .4s;
 }
