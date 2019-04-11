@@ -7,7 +7,7 @@ class Accepted extends CI_Controller {
     public function index() {
         if (clinic_login()) {
             $data['page_content'] = $this->load->view('accepted_master', NULL, TRUE);
-            $data['page_title'] = "Accepted";
+            $data['page_title'] = "Booking";
             $data['jquery'] = $this->load->view('scripts/accepted_script', NULL, TRUE);
             $this->load->view('main', $data);
         } else {
