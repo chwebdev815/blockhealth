@@ -77,8 +77,8 @@
                 <li id="li_physician_triage" data-toggle="tooltip" data-placement="right" title="Referral Triage">
                     <a class="clearfix" href="<?php echo base_url(); ?>physician_triage"><span>Referral Triage</span><i class="numb-notifies" id="count_physician">&nbsp;</i></a>
                 </li>
-                <li id="li_accepted" data-toggle="tooltip" data-placement="right" title="Accepted">
-                    <a class="clearfix" href="<?php echo base_url(); ?>accepted"><span>Accepted</span><i class="numb-notifies" id="count_accepted"></i>&nbsp;</a>
+                <li id="li_accepted" data-toggle="tooltip" data-placement="right" title="Booking">
+                    <a class="clearfix" href="<?php echo base_url(); ?>accepted"><span>Booking</span><i class="numb-notifies" id="count_accepted"></i>&nbsp;</a>
                 </li>
                 <li id="li_scheduled" data-toggle="tooltip" data-placement="right" title="Scheduled">
                     <a class="clearfix" href="<?php echo base_url(); ?>scheduled"><span>Scheduled</span><i class="numb-notifies" id="count_scheduled_stopped">&nbsp;</i></a>
