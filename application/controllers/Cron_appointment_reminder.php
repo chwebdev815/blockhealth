@@ -103,18 +103,19 @@ class Cron_appointment_reminder extends CI_Controller {
 
             if ($patient_data) {
                 $patient_data = $patient_data[0];
+
+                log_message("error", "checkig for patient " . $visit->patient_id);
+                $contact_number = $patient_data->cell_phone;
+                if ($patient_data->home_phone != "") {
+                    //home number
+                    $contact_number = $patient_data->home_phone;
+                } else if ($patient_data->work_phone != "") {
+                    //work number
+                    $contact_number = $patient_data->work_phone;
+                }
+
                 if ($visit->notify_type == "call" || 1) {
 
-
-                    log_message("error", "checkig for patient " . $visit->patient_id);
-                    $contact_number = $patient_data->cell_phone;
-                    if ($patient_data->home_phone != "") {
-                        //home number
-                        $contact_number = $patient_data->home_phone;
-                    } else if ($patient_data->work_phone != "") {
-                        //work number
-                        $contact_number = $patient_data->work_phone;
-                    }
                     $new_visit_duration = 30;
                     //find asignable slots
                     $allocations = null;
@@ -181,7 +182,7 @@ class Cron_appointment_reminder extends CI_Controller {
                     $msg = str_replace("<clinic name>", $patient_data->clinic_institution_name, $msg);
                     $msg = str_replace("<Address>", $patient_data->address, $msg);
 
-                    $this->referral_model->send_sms($patient_data->cell_phone, $msg);
+                    $this->referral_model->send_sms($contact_number, $msg);
                 }
             }
         }
