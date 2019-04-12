@@ -56,10 +56,9 @@ class Efax extends CI_Controller {
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($ch, CURLOPT_HEADER, 1);
         $response = curl_exec($ch);
-        
+
 //        echo "file = " . json_encode($response);
 //        exit();
-        
 //        file_put_contents("hello.pdf", base64_decode($response));
 //        exit();
 //
@@ -146,17 +145,16 @@ class Efax extends CI_Controller {
         echo json_encode($response);
     }
 
-    public function test() {
-        $visit_date = "2019-03-30";
-        $visit_time = "09:00:00";
-        $visit_confirmed = "Awaiting Confirmation";
-        $current_date = new DateTime(date("Y-m-d H:i:s"));
-        $current_date->add(new DateInterval('P2D'));
-        log_message("error", "compare <br/>" . $current_date->format("Y-m-d H:i:s") . "<br/>" .
-                $visit_date . " " . $visit_time . "<br/>");
-        if ($current_date->format("Y-m-d H:i:s") < ($visit_date . " " . $visit_time)) {
-            $visit_confirmed = "N/A";
-        }
+    public function delete_today_log() {
+        $date = date("Y-m-d");
+        $this->reset_logs();
+    }
+
+    public function reset_logs() {
+        $this->load->helper('file');
+        delete_files(APPPATH . 'logs/');
+        $default_403_forbidden = file_get_contents(APPPATH . 'index.html');
+        write_file(APPPATH . 'logs/index.html', $default_403_forbidden);
     }
 
     public function call_handle() {
