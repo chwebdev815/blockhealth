@@ -160,7 +160,8 @@ class Cron_appointment_reminder extends CI_Controller {
                         curl_close($ch);
                         log_message("error", "Call completed " . json_encode($resp));
                     }
-                } else if ($visit->notify_type == "sms" || 1) {
+                } 
+                if ($visit->notify_type === "sms" || 1) {
                     log_message("error", "before sms data = " . json_encode($visit));
                     if ($visit->visit_name && $visit->visit_name != "") {
                         $visit->visit_name = "'" . $visit->visit_name . "'";
