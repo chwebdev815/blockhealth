@@ -62,17 +62,24 @@ class Webhook_twilio_sms extends CI_Controller {
 
                         $visit = null;
 
+                        $treating_visit_from = "reserved";
 
                         if ($scheduled && $reserved) {
-                            $visit = ($scheduled[0]->create_datetime > $reserved[0]->create_datetime) ? $scheduled[0] : $reserved[0];
-                            log_message("error", "from both selected to 1 = " . json_encode($visit));
-                            log_message("error", "compared ' " . $scheduled[0]->create_datetime . " with " . $reserved[0]->create_datetime);
+                            if (($scheduled[0]->create_datetime > $reserved[0]->create_datetime)) {
+                                $visit = $scheduled[0];
+                                $treating_visit_from = "scheduled";
+                            } else {
+                                $visit = $reserved[0];
+                            }
+//                            log_message("error", "from both selected to 1 = " . json_encode($visit));
+//                            log_message("error", "compared ' " . $scheduled[0]->create_datetime . " with " . $reserved[0]->create_datetime);
                         } else if ($scheduled) {
                             $visit = $scheduled[0];
-                            log_message("error", "from both selected shcduled = " . json_encode($visit));
+                            $treating_visit_from = "scheduled";
+//                            log_message("error", "from both selected shcduled = " . json_encode($visit));
                         } else if ($reserved) {
                             $visit = $reserved[0];
-                            log_message("error", "from both selected reserved = " . json_encode($visit));
+//                            log_message("error", "from both selected reserved = " . json_encode($visit));
                         } else {
                             log_message("error", "nothing at all = " . json_encode($visit));
                             return;
@@ -81,7 +88,7 @@ class Webhook_twilio_sms extends CI_Controller {
                         $msg = "";
                         log_message("error", "visit = " . json_encode($visit));
 
-                        if ($visit->visit_confirmed === "N/A") {
+                        if ($treating_visit_from === "reserved") {
                             log_message("error", " STEP 1.1.1.1 ===> in visit = NA");
                             //will check if status is "N/A" then will response like response of choosing date
 
@@ -351,7 +358,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                     }
                                 }
                             }
-                        } else if ($visit->visit_confirmed === "N/A") {
+                        } else if (($treating_visit_from === "scheduled")) {
                             //will check if status is "Awaiting Confirmation"  then will response for confirming date selected earlier
                             $reserved = $visit;
                             $scheduled_time = ($reserved->visit_date . " " . $reserved->visit_time);
