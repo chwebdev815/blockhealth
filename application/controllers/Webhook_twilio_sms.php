@@ -409,11 +409,11 @@ class Webhook_twilio_sms extends CI_Controller {
                                     $datetime = DateTime::createFromFormat('Y-m-d H:i:s', $reserved->visit_date . " " . $reserved->visit_time);
                                     $date = $datetime->format("l M jS");
                                     $time = $datetime->format("g:ia");
-                                    log_message("error", "val 1 = " . $reserved->visit_name);
-                                    log_message("error", "val 2 = " . json_encode($patient_data));
-                                    log_message("error", "val 2 = " . json_encode($patient_data[0]));
-                                    log_message("error", "val 3 = $date and $time");
-                                    
+//                                    log_message("error", "val 1 = " . $reserved->visit_name);
+//                                    log_message("error", "val 2 = " . json_encode($patient_data));
+//                                    log_message("error", "val 2 = " . json_encode($patient_data[0]));
+//                                    log_message("error", "val 3 = $date and $time");
+                                    $patient_data = $patient_data[0];
                                     $msg = "Your appointment " . $reserved->visit_name . " with "
                                             . $patient_data->clinic_institution_name . " is coming up on $date at $time.";
                                 } else if ($Body === "2") {
