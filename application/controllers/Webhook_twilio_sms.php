@@ -30,9 +30,13 @@ class Webhook_twilio_sms extends CI_Controller {
                     //find patient
                     $patients = $this->db->select("pat.id")->from("referral_patient_info pat")
                                     ->where(array(
-                                        "active" => 1,
-                                        "concat('+1',pat.cell_phone)" => $From
-                                    ))->get()->result();
+                                        "active" => 1
+                                    ))->or_group_start()
+                                    ->where("concat('+1',pat.cell_phone)", $From)
+                                    ->where("concat('+1',pat.home_phone)", $From)
+                                    ->where("concat('+1',pat.work_phone)", $From)
+                                    ->group_end()
+                                    ->get()->result();
 
                     log_message("error", "sql for find patient = " . $this->db->last_query());
                     log_message("error", "patient ids found = " . json_encode($patients));
