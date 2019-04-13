@@ -30,7 +30,7 @@ class Webhook_twilio_sms extends CI_Controller {
                     //find patient
                     $patients = $this->db->select("pat.id")->from("referral_patient_info pat")
                                     ->where(array(
-                                        "active" => 1
+                                        "pat.active" => 1
                                     ))->or_group_start()
                                     ->where("concat('+1',pat.cell_phone)", $From)
                                     ->where("concat('+1',pat.home_phone)", $From)
@@ -50,6 +50,7 @@ class Webhook_twilio_sms extends CI_Controller {
                         $reserved = $this->db->select("*")
                                         ->from("records_patient_visit_reserved")
                                         ->where_in("patient_id", $possible_patients)
+                                        ->where("active", 1)
                                         ->order_by("id", "desc")
                                         ->limit(1)->get()->result();
                         log_message("error", "sql for find reserved = " . $this->db->last_query());
@@ -58,6 +59,7 @@ class Webhook_twilio_sms extends CI_Controller {
                         $scheduled = $this->db->select("*")
                                         ->from("records_patient_visit")
                                         ->where_in("patient_id", $possible_patients)
+                                        ->where("active", 1)
                                         ->order_by("id", "desc")
                                         ->limit(1)->get()->result();
                         log_message("error", "sql for find scheduled = " . $this->db->last_query());
