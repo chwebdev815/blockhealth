@@ -110,24 +110,58 @@
                         <fieldset>
                             <form id="form_patient_save" class="form-horizontal patients-details-form" autocomplete="off">
                                 <div class="form-bottom">
-                                    <div class="form-group row  left-padd-20px right-padd-5px">
-                                        <h4 class="modal-title">Select Patient</h4>
-                                        <br/>
+
+                                    <div class="form-group row left-padd-20px right-padd-5px">
+                                        <div class="">
+                                            <h4 class="modal-title" id="myModalLabel">Select Patient</h4>
+                                            <br/>
+                                        </div>
                                         <div class="pull-left">
                                             <button id="btnStartPatientCrop" type="button" class="btn btn-theme">
                                                 <span class="fa fa-crop fa-2"></span>
                                             </button>
-                                            <!--<button id="btn_search_patient" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading..." type="button" class="btn btn-theme btn-alt-theme"><i class="fa" aria-hidden="true"><img src="assets/img/magic-wand.png" width="16"></i>&nbsp;&nbsp;Search</button>-->
-                                            <button id="btn_extract_patient" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading..." type="button" class="btn btn-theme btn-alt-theme btn-autofil"><i class="fa" aria-hidden="true"><img src="assets/img/magic-wand.png" width="16"></i>&nbsp;&nbsp;Auto Fill</button>
+                                            <button id="btn_extract_patient" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading..." type="button" class="btn btn-theme btn-alt-theme btn-autofil">
+                                                <i class="fa" aria-hidden="true"><img src="assets/img/magic-wand.png" width="16"></i>&nbsp;&nbsp;Auto Fill
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="form-group left-padd-20px right-padd-5px">
-                                        <div class="alert alert-danger" id="patient_error" style="display: none;"></div>
-                                        <div class="form-group row">
-                                            <div class="col-lg-12 col-sm-12 col-xs-12">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                                                    <input id="pat_search_by_name" type="text" class="form-control" name="pat_search_by_name" placeholder="Enter a patient name to start search">
+
+                                        <div class="form-group col-lg-12">
+                                            <div class="form-group row">
+                                                <div class="col-md-12">
+                                                    <label for="new-patient-name">Full Name *</label>
+                                                </div>
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <input type="text" class="form-control required" name="pat_fname" id="new-patient-firstname" placeholder="First Name" autocomplete="off">
+                                                </div>
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <input type="text" class="form-control required" name="pat_lname" id="new-patient-lastname" placeholder="Last Name" autocomplete="off">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-4 col-xs-12">
+                                                    <select name="pat_dob_day" id="pat_dob_day" class=""></select>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-12 no-left-right-padd">
+                                                    <select name="pat_dob_month" id="pat_dob_month" class=""></select>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-12">                    
+                                                    <select name="pat_dob_year" id="pat_dob_year" class=""></select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <input style="width: 100%;" type="text" class="" name="pat_ohip" id="new-patient-ohip" placeholder="1234-123-123-AB" autocomplete="off">
+                                                </div>
+
+
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <select style="width: 100%;" name="pat_gender" id="pat_gender" class="required">
+                                                        <option value="unassigned" selected>Unassigned</option>
+                                                        <option value="male">Male</option>
+                                                        <option value="female">Female</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
@@ -138,12 +172,6 @@
                                             </div>
                                             <div class="alert alert-danger" id="patient_error" style="display: none;"></div>
                                             <div class="alert alert-success" id="patient_success" style="display: none;"></div>
-                                            <input type="hidden" id="id" name="id" />
-                                            <input type="hidden" id="pat_ohip" name="pat_ohip" />
-                                            <input type="hidden" id="pat_dob_day" name="pat_dob_day" />
-                                            <input type="hidden" id="pat_dob_month" name="pat_dob_month" />
-                                            <input type="hidden" id="pat_dob_year" name="pat_dob_year" />
-                                            <input type="hidden" id="pat_lname" name="pat_lname" />
 
                                             <div class="col-lg-12">
                                                 <label for="assign_physician">
@@ -157,17 +185,16 @@
                                                     <strong>Select Record Type</strong>
                                                 </label>
                                                 <select id="record_type" placeholder="Record Type" name="record_type" class="form-control">
-                                                    <option>Referral</option>
-                                                    <option>Consult or Imaging Report</option>
-                                                    <option>Lab Test</option>
-                                                    <option>Prescriptions</option>
-                                                    <option>Notes</option>
-                                                    <option>Other</option>
+                                                    <option data-show=".file-upload">Referral</option>
+                                                    <option data-show=".file-upload">Consult or Imaging Report</option>
+                                                    <option data-show=".file-upload">Lab Test</option>
+                                                    <option data-show=".file-upload">Prescriptions</option>
+                                                    <option data-show=".file-upload">Notes</option>
+                                                    <option data-show=".file-upload">Other</option>
                                                 </select>
                                             </div>
-
                                             <div class="col-lg-12 cl-t-listing wrapper_div">
-                                                <label for="new-patient-ohip">
+                                                <label for="assign_physician">
                                                     <strong>Enter Details/Notes</strong>
                                                 </label>
                                                 <div>
@@ -175,14 +202,21 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <button type="button" id="btn_save_task" class="btn btn-theme">Save</button>
+
                                         <div class="form-group row">
                                             <div class="col-lg-12 cl-t-listing wrapper_div">
-                                                <div id="patient_success_display" class="success-icon pull-right">
-                                                    <span class="fa fa-check"></span>
-                                                </div>
+                                                <button type="button" id="btn_save_task" class="btn btn-theme">Save</button>
                                             </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <div class="col-lg-12 cl-t-listing wrapper_div">
+                                                <div id="patient_success_display" class="success-icon pull-right menu">
+                                                    <span class="fa fa-check tick-icon"></span>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <!--<div class="alert alert-success"><p>Patient Match Found</p></div>-->
+
                                     </div>
                                 </div>
                             </form>
