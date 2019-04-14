@@ -252,7 +252,6 @@
                                             </div>
                                         </div> 
                                         <!--<div class="alert alert-success"><p>Patient Match Found</p></div>-->
-
                                     </div>
                                 </div>
                             </form>
