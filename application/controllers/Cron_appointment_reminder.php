@@ -73,7 +73,7 @@ class Cron_appointment_reminder extends CI_Controller {
             $visit = $value;
             //update it to awaiting confirmation
             $this->db->where("id", $visit->id)->update("records_patient_visit", array(
-                "visit_confirmed" => "N/A"
+                "visit_confirmed" => "Awaiting Confirmation"
             ));
             log_message("error", "update visit " . $visit->id . " before call");
             log_message("error", "q = " . $this->db->last_query());

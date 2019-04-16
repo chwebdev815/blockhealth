@@ -909,19 +909,21 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
                     $get = $_GET;
                     
+                    //static NA
+                    $visit_confirmed = "N/A";
                     //dynamic status 
-                    $visit_confirmed = "Awaiting Confirmation";
-                    $current_date = new DateTime(date("Y-m-d H:i:s"));
-                    $current_date->add(new DateInterval('P2D'));
-                    log_message("error", "compare <br/>" . $current_date->format("Y-m-d H:i:s") . "<br/>" .
-                            $visit_date . " " . $visit_time . "<br/>");
-                    if ($current_date->format("Y-m-d H:i:s") < ($visit_date . " " . $visit_time)) {
-                        log_message("error", "more than 48h so N/A");
-                        $visit_confirmed = "N/A";
-                    }
-                    else {
-                        log_message("error", "less than 48h so Aw.. Conf..");
-                    }
+//                    $visit_confirmed = "Awaiting Confirmation";
+//                    $current_date = new DateTime(date("Y-m-d H:i:s"));
+//                    $current_date->add(new DateInterval('P2D'));
+//                    log_message("error", "compare <br/>" . $current_date->format("Y-m-d H:i:s") . "<br/>" .
+//                            $visit_date . " " . $visit_time . "<br/>");
+//                    if ($current_date->format("Y-m-d H:i:s") < ($visit_date . " " . $visit_time)) {
+//                        log_message("error", "more than 48h so N/A");
+//                        $visit_confirmed = "N/A";
+//                    }
+//                    else {
+//                        log_message("error", "less than 48h so Aw.. Conf..");
+//                    }
 
                     $insert_data = array(
                         "patient_id" => $get["patient_id"],
