@@ -760,6 +760,7 @@ class Call_view extends CI_Controller {
                     log_message("error", "data after = " . json_encode($reserved_data));
                     //static status 
                     $visit_confirmed = "N/A";
+                    
                     //dynamic status 
 //                    $visit_confirmed = "Awaiting Confirmation";
 //                    $current_date = new DateTime(date("Y-m-d H:i:s"));
