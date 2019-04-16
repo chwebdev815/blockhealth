@@ -15,6 +15,7 @@ class Call_view extends CI_Controller {
     }
 
     public function call() {
+        //Initial Call /  Immediate Call
 
 
         log_message("error", "at call start from call_view");
@@ -757,19 +758,21 @@ class Call_view extends CI_Controller {
                     $get = $_GET;
 
                     log_message("error", "data after = " . json_encode($reserved_data));
+                    //static status 
+                    $visit_confirmed = "N/A";
                     //dynamic status 
-                    $visit_confirmed = "Awaiting Confirmation";
-                    $current_date = new DateTime(date("Y-m-d H:i:s"));
-                    $current_date->add(new DateInterval('P2D'));
-                    log_message("error", "compare <br/>" . $current_date->format("Y-m-d H:i:s") . "<br/>" .
-                            $visit_date . " " . $visit_time . "<br/>");
-                    if ($current_date->format("Y-m-d H:i:s") < ($visit_date . " " . $visit_time)) {
-                        log_message("error", "greater than 48h so N/A");
-                        $visit_confirmed = "N/A";
-                    }
-                    else {
-                        log_message("error", "less than 48h so Aw.. Conf");
-                    }
+//                    $visit_confirmed = "Awaiting Confirmation";
+//                    $current_date = new DateTime(date("Y-m-d H:i:s"));
+//                    $current_date->add(new DateInterval('P2D'));
+//                    log_message("error", "compare <br/>" . $current_date->format("Y-m-d H:i:s") . "<br/>" .
+//                            $visit_date . " " . $visit_time . "<br/>");
+//                    if ($current_date->format("Y-m-d H:i:s") < ($visit_date . " " . $visit_time)) {
+//                        log_message("error", "greater than 48h so N/A");
+//                        $visit_confirmed = "N/A";
+//                    }
+//                    else {
+//                        log_message("error", "less than 48h so Aw.. Conf");
+//                    }
                     $insert_data = array(
                         "patient_id" => $get["patient_id"],
                         "visit_name" => $get["pvname"],

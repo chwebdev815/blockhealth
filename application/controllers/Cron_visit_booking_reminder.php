@@ -3,6 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Cron_visit_booking_reminder extends CI_Controller {
+//Booking reminder for 1h, 24h, 48h post of visit created
 
     public function index() {
         if (isset($argv)) {
