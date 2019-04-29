@@ -151,9 +151,11 @@ class My_tasks_model extends CI_Model {
             
             $data = $this->input->post();
             
-            $task_data = $this->db->select("tsk.record_type, tsk.notes, md5(dr.id) as id")->
+            $task_data = $this->db->select("tsk.record_type, tsk.notes, md5(dr.id) as id,"
+                    . "pat.fname, pat.lname, pat.dob, pat.ohip, pat.gender")->
             from("clinic_physician_tasks tsk")->
             join("clinic_physician_info dr", "tsk.assigned_to = dr.id and dr.active = 1", "LEFT")->
+            join("referral_patient_info pat", "tsk.patient_id = pat.id and pat.active = 1", "LEFT")->
             where(array(
                 "md5(tsk.id)" => $data["id"],
                 "tsk.active" => 1
