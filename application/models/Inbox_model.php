@@ -83,7 +83,8 @@ class Inbox_model extends CI_Model {
             $this->db->trans_start();
             $data = $this->input->post();
             $efax_id = $this->get_decrypted_id($data["efax_id"], "efax_info");
-            $efax_info = $this->db->select("file_name, tiff_file_name, pages, create_datetime, sender_fax_number")->from("efax_info")->where(array(
+            $efax_info = $this->db->select("file_name, tiff_file_name, pages, "
+                            . "create_datetime, sender_fax_number")->from("efax_info")->where(array(
                         "active" => 1,
                         "referred" => 0,
                         "id" => $efax_id,
@@ -587,12 +588,12 @@ class Inbox_model extends CI_Model {
             $data = $this->input->post();
             //check if referral already created for this fax. 
             $result = $this->db->select("c_ref.id")
-                    ->from("clinic_referrals c_ref, efax_info efax")
-                    ->where(array(
-                        "efax.active" => 1,
-                        "c_ref.active" => 1,
-                        "md5(efax.id)" => $data["id"]
-                    ))->where("c_ref.efax_id", "efax.id", false)->get()->result();
+                            ->from("clinic_referrals c_ref, efax_info efax")
+                            ->where(array(
+                                "efax.active" => 1,
+                                "c_ref.active" => 1,
+                                "md5(efax.id)" => $data["id"]
+                            ))->where("c_ref.efax_id", "efax.id", false)->get()->result();
             if ($result) {
                 return array(false, "Referral already created for this fax");
             }
@@ -772,8 +773,7 @@ class Inbox_model extends CI_Model {
                     //insert referral checklist
                     if (isset($data["referral_checklist"])) {
                         $referral_checklist = $data["referral_checklist"];
-                    }
-                    else {
+                    } else {
                         $referral_checklist = array();
                     }
 
@@ -866,8 +866,10 @@ class Inbox_model extends CI_Model {
                     log_message("error", "=========================================");
                     log_message("error", "=========================================");
 
-                    $this->db->select("c_usr.clinic_institution_name, date_format(c_ref.create_datetime, '%M %D') as referral_received, dr.fax");
-                    $this->db->from("clinic_user_info c_usr, efax_info efax, clinic_referrals c_ref, referral_physician_info dr");
+                    $this->db->select("c_usr.clinic_institution_name, "
+                            . "date_format(c_ref.create_datetime, '%M %D') as referral_received, dr.fax");
+                    $this->db->from("clinic_user_info c_usr, efax_info efax, "
+                            . "clinic_referrals c_ref, referral_physician_info dr");
                     $this->db->where(array(
                         "efax.id" => $efax_id,
                         "efax.active" => 1,
@@ -880,9 +882,11 @@ class Inbox_model extends CI_Model {
                     $this->db->where("efax.id", "c_ref.efax_id", false);
                     $result = $this->db->get()->result()[0];
 
-                    $this->db->select("if( ref_c.checklist_type = 'stored', c_items.name , ref_c.checklist_name) as 'doc_name'");
+                    $this->db->select("if( ref_c.checklist_type = 'stored', "
+                            . "c_items.name , ref_c.checklist_name) as 'doc_name'");
                     $this->db->from("referral_checklist ref_c");
-                    $this->db->join("clinic_referral_checklist_items c_items", "c_items.id = ref_c.checklist_id and c_items.active=1", "left");
+                    $this->db->join("clinic_referral_checklist_items c_items", 
+                            "c_items.id = ref_c.checklist_id and c_items.active=1", "left");
                     $this->db->where(array(
                         "ref_c.active" => 1,
                         "ref_c.attached" => "false",
@@ -950,7 +954,7 @@ class Inbox_model extends CI_Model {
                         }
                         if ($clinic->emr_pathway === "AccuroCitrix") {
                             //save entry in rpa_integration table
-                            $this->db->insert("rpa_integration", array(
+                            $rpa_data = array(
                                 "api_type" => "new referral",
                                 "api_num" => 2,
                                 "date" => date("Y-m-d"),
@@ -977,8 +981,19 @@ class Inbox_model extends CI_Model {
                                 "pdf_name" => "$file_new_name.pdf",
                                 "pdf_type" => "Documents",
                                 "assigned_provider" => "Arianna Muskat",
+                                "rp_first_name" => $data["dr_fname"],
+                                "rp_last_name" => $data["dr_lname"],
+                                "rp_number" => $data["dr_billing_num"],
                                 "active" => 1
-                            ));
+                            );
+                            
+                            $drugs = $data["medications"];
+                            foreach ($drugs as $key => $value) {
+                                $rpa_data["medication" . ($key + 1)] = $value;
+                            }
+                            
+                            $this->db->insert("rpa_integration", $rpa_data);
+                            
                             log_message("error", "inserted to rpa");
                             log_message("error", $this->db->last_query());
 
