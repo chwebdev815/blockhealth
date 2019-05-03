@@ -1,3 +1,19 @@
+<style>
+    .popup_content {
+        margin: 10px;
+        padding: 0 10px;
+        max-width: 100%;
+        background: white;
+        -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    }
+    .popup_wrapper{
+        top: 10%!important;
+    }
+    .popup_background{
+        z-index: 0!important;
+    }
+</style>
 
 <section id="popup2">
     <img id="image_for_preview" width="" height="500" src="" />
@@ -24,7 +40,7 @@
                 <th>Patient Name</th>
                 <th>Record Type</th>
                 <th>
-                    <?php echo ($this->session->userdata("emr_pathway") === "true")?"EMR Status":"Details"; ?>
+                    <?php echo ($this->session->userdata("emr_pathway") === "true") ? "EMR Status" : "Details"; ?>
                 </th>
                 <th>Days</th>
                 <th>Pages</th>
@@ -273,3 +289,19 @@
         </div>
     </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/gh/vast-engineering/jquery-popup-overlay@2/jquery.popupoverlay.min.js"></script>
+
+
+<script>
+    $('#popup2, #popup3').popup({
+        pagecontainer: '#page',
+        type: 'tooltip',
+        background: true,
+        color: '#fff',
+        escape: true,
+        horizontal: 'left',
+        vertical: 'middle'
+
+    });
+</script>	
