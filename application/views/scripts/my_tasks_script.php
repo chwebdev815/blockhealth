@@ -204,12 +204,12 @@
             "drawCallback": set_my_tasks_table,
             "dom": get_dom_plan(),
             "columnDefs": [
-                {"width": "25%", "targets": 0},
-                {"width": "25%", "targets": 1},
-                {"width": "35%", "targets": 2},
-                {"width": "6%", "targets": 3},
-                {"width": "6%", "targets": 4},
-                {"width": "3%", "targets": 5}
+//                {"width": "25%", "targets": 0},
+//                {"width": "25%", "targets": 1},
+//                {"width": "35%", "targets": 2},
+//                {"width": "6%", "targets": 3},
+//                {"width": "6%", "targets": 4},
+//                {"width": "3%", "targets": 5}
             ]
         });
         $("#table_my_tasks").wrap('<div class="table-responsive"></div>');
