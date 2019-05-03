@@ -1,7 +1,10 @@
 
-<div class="preview-image-container">
+<section id="popup2">
+    <img id="image_for_preview" width="" height="500" src="" />
+</section>
+<!--<div class="preview-image-container">
     <img id="hover-img-preview"> 
-</div>
+</div>-->
 
 <div class="db-content-inside">
     <div id="table-action" class="btn-group" role="group" data-patient-id="0">
