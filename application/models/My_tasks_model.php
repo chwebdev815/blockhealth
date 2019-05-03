@@ -11,9 +11,9 @@ class My_tasks_model extends CI_Model {
         $columns = array(
             array('db' => 'patient_name', 'dt' => 0),
             array('db' => 'record_type', 'dt' => 1),
-            array('db' => 'notes', 'dt' => 2),
-            array('db' => 'diff', 'dt' => 3),
-            array('db' => 'pages', 'dt' => 4),
+            array('db' => 'pages', 'dt' => 2),
+            array('db' => 'notes', 'dt' => 3),
+            array('db' => 'diff', 'dt' => 4),
             array('db' => 'id', 'dt' => 5),
             array('db' => 'pdf_file', 'dt' => 6),
             array('db' => 'tiff_file', 'dt' => 7),
