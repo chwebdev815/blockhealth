@@ -5,9 +5,15 @@
 
 <div class="db-content-inside">
     <div id="table-action" class="btn-group" role="group" data-patient-id="0">
-        <button type="button" id="table-hover-view-trigger" class="btn btn-default"><i class="fa fa-eye"></i></button>
-        <button type="button" id="table-hover-edit-trigger" class="btn btn-default"><i class="fa fa-edit"></i></button>
-        <a href="javascript:void(0)" download id="table-hover-delete-trigger" class="btn btn-default"><i class="fa fa-download"></i></a>
+        <button type="button" id="" class="btn btn-default popup2_open">
+            <i class="fa fa-eye"></i>
+        </button>
+        <button type="button" id="table-hover-edit-trigger" class="btn btn-default">
+            <i class="fa fa-edit"></i>
+        </button>
+        <a href="javascript:void(0)" download id="table-hover-delete-trigger" class="btn btn-default">
+            <i class="fa fa-download"></i>
+        </a>
     </div>
     <table class="table table-hover db-table" id="table_my_tasks">
         <thead>
