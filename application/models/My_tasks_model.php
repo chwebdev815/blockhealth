@@ -20,7 +20,6 @@ class My_tasks_model extends CI_Model {
             array('db' => 'sender_fax_number', 'dt' => 8),
             array('db' => 'task_date_time', 'dt' => 9),
             array('db' => 'patient_id', 'dt' => 10)
-            
         );
 
         $sql_details = array(
