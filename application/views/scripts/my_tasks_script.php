@@ -195,9 +195,24 @@
             },
             "ajax": "<?php echo base_url(); ?>my_tasks/ssp_my_tasks",
             "rowCallback": function (row, data, index) {
-//                debugger
-                $('td:eq(5)', row).html(
-                        set_my_tasks_data(data[5], data[6], data[7], data[8], data[9], data[10], row)
+//                        array('db' => 'patient_name', 'dt' => 0),
+//                        array('db' => 'record_type', 'dt' => 1),
+//                        array('db' => 'notes', 'dt' => 2),
+//                        array('db' => 'status', 'dt' => 3),
+//                        array('db' => 'id', 'dt' => 4),
+//                        array('db' => 'pdf_file', 'dt' => 5),
+//                        array('db' => 'tiff_file', 'dt' => 6),
+//                        array('db' => 'sender_fax_number', 'dt' => 7),
+//                        array('db' => 'task_date_time', 'dt' => 8),
+//                        array('db' => 'patient_id', 'dt' => 9)
+                $('td:eq(4)', row).html(
+                        set_my_tasks_data(
+                                data[4],
+                                data[5],
+                                data[6],
+                                data[7],
+                                data[8],
+                                data[9], row)
                         );
                 $(row).addClass('db-table-link-row');
             },
@@ -496,9 +511,9 @@
 //        debugger
         $(row).attr("data-id", id);
         $(row).attr("data-file-pdf", pdf_file);
-        $(row).attr("data-patient-id", patient_id);
         $(row).attr("data-file-tif", tif_file);
         $(row).attr("data-sender-fax-number", sender_fax_number);
+        $(row).attr("data-patient-id", patient_id);
 //        console.log("here");
 //        debugger
         $(row).attr("data-date", datetime);

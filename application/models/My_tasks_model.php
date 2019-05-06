@@ -11,15 +11,14 @@ class My_tasks_model extends CI_Model {
         $columns = array(
             array('db' => 'patient_name', 'dt' => 0),
             array('db' => 'record_type', 'dt' => 1),
-            array('db' => 'pages', 'dt' => 2),
-            array('db' => 'notes', 'dt' => 3),
-            array('db' => 'diff', 'dt' => 4),
-            array('db' => 'id', 'dt' => 5),
-            array('db' => 'pdf_file', 'dt' => 6),
-            array('db' => 'tiff_file', 'dt' => 7),
-            array('db' => 'sender_fax_number', 'dt' => 8),
-            array('db' => 'task_date_time', 'dt' => 9),
-            array('db' => 'patient_id', 'dt' => 10)
+            array('db' => 'notes', 'dt' => 2),
+            array('db' => 'status', 'dt' => 3),
+            array('db' => 'id', 'dt' => 4),
+            array('db' => 'pdf_file', 'dt' => 5),
+            array('db' => 'tiff_file', 'dt' => 6),
+            array('db' => 'sender_fax_number', 'dt' => 7),
+            array('db' => 'task_date_time', 'dt' => 8),
+            array('db' => 'patient_id', 'dt' => 9)
         );
 
         $sql_details = array(
