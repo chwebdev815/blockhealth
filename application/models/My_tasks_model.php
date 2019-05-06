@@ -44,7 +44,7 @@ class My_tasks_model extends CI_Model {
     
     public function update_task_model() {
         log_message("error", "updating task");
-        $this->form_validation->set_rules('id', 'Patient', 'required');
+        $this->form_validation->set_rules('id', 'Patient ID', 'required');
         $this->form_validation->set_rules('task_id', 'Task ID', 'required');
         $this->form_validation->set_rules('record_type', 'Record Type', 'required');
 //        $this->form_validation->set_rules('description', 'Description', 'required');

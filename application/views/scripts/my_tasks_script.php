@@ -596,6 +596,9 @@
         $("#btn_save_task").removeClass("btn-disabled").attr("disabled", false);
         $("#overlay_image").attr("src", "").hide();
         $("#patient_success_display").hide();
+        
+        root = $("#form_patient_save");
+        root.find("#id").val(patient_id);
 
         modal = $("#eFax-modal");
 

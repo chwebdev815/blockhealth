@@ -127,10 +127,10 @@
 
                     <!-- Sidebar -->
                     <div id="sidebar-wrapper">
-                        <input type="hidden" name="id" id="id" />
-                        <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                         <fieldset>
                             <form id="form_patient_save" class="form-horizontal patients-details-form" autocomplete="off">
+                                <input type="hidden" name="id" id="id" />
+                                <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                                 <div class="form-bottom">
 
                                     <div class="form-group row left-padd-20px right-padd-5px">
