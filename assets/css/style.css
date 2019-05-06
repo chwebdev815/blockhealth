@@ -2720,3 +2720,10 @@ form.patients-details-form fieldset {
 .dot-yellow {
     background-color: #e7e92a;
 }
+
+
+/*fax triage table*/ 
+span.small-case {
+    font-size: 10px;
+    color: #c49898;
+}

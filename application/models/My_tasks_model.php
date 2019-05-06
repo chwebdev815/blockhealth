@@ -82,7 +82,7 @@ class My_tasks_model extends CI_Model {
                     "description" => $data["description"],
                     "record_file" => $new_file_name
                 ));
-                
+                //files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf"
                 copy("./uploads/physician_tasks/pdf/" . $task_info[0]->pdf_file, "./uploads/health_records/" . $new_file_name . ".pdf");
                 log_message("error", "task record => " . $task_id . " => ./uploads/physician_tasks/pdf" . $task_info[0]->pdf_file ." to ./uploads/health_records/" . $new_file_name . ".pdf");
             
