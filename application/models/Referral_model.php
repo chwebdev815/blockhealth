@@ -328,7 +328,7 @@ class Referral_model extends CI_Model {
                     "active" => 1,
                     "id" => $referral_id
                 ));
-                $this->db->update("clinic_referrals", array("status" => "Physician Triage"));
+                $this->db->update("clinic_referrals", array("status" => "Referral Triage"));
                 log_message("error", "accept q = " . $this->db->last_query());
                 return ($this->db->affected_rows() == 1) ? true : "Referral already Accepted";
             } else
@@ -458,7 +458,7 @@ class Referral_model extends CI_Model {
                 );
 
                 $text2 = "<h2>Referral has been triaged and accepted</h2>";
-                if ($info[0]->status === "Admin Triage" || $info[0]->status === "Physician Triage") {
+                if ($info[0]->status === "Referral Triage") {
                     $text2 = "<h2>Referral is being triaged</h2>";
                 }
                 $additional_replace = array(

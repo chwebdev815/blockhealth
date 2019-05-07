@@ -95,9 +95,9 @@ class Tracker_model extends CI_Model {
             $stage1 = "Referral has been received";
 
             //stage 2
-            $this->db->select("if((c_ref.status = 'Physician Triage' OR c_ref.status = 'Admin Triage') and miss.id,"
+            $this->db->select("if((c_ref.status = 'Referral Triage') and miss.id,"
                     . "'Referral has been triaged and missing items have been requested',"
-                    . "if(c_ref.status = 'Physician Triage' OR c_ref.status = 'Admin Triage',"
+                    . "if(c_ref.status = 'Referral Triage' OR c_ref.status = 'Admin Triage',"
                     . "'Referral is being triaged',"
                     . "if(c_ref.status = 'Cancelled' or c_ref.status = 'Declined',"
                     . "'Referral has been declined and returned',"

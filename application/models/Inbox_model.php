@@ -616,7 +616,7 @@ class Inbox_model extends CI_Model {
                     $efax_file = $result[0]->file_name;
                     $referral_reason = (isset($data["reasons"])) ? $data["reasons"][0] : "";
                     // $first_status = "Admin Triage";
-                    $first_status = "Physician Triage";
+                    $first_status = "Referral Triage";
                     $this->db->set("last_updated", "now()", false);
 
                     $insert_data = array(

@@ -50,7 +50,7 @@ class Physician_triage extends CI_Controller {
 
             $this->load->model("referral_model");
 
-            $response = $this->referral_model->check_valid_referral_state_model("Physician Triage");
+            $response = $this->referral_model->check_valid_referral_state_model("Referral Triage");
 
 
 
