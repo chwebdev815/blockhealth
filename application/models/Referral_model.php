@@ -19,7 +19,7 @@ class Referral_model extends CI_Model {
         $sql = "select ";
         $sql .= "(select count(*) from inbox_dash where clinic_id ='" . $clinic_id . "') as count_inbox,";
         $sql .= "(select count(*) from admin_triage_dash where clinic_admin ='" . $clinic_id . "') as count_admin,";
-        $sql .= "(select count(*) from physician_triage_dash where clinic_admin ='" . $clinic_id . "') as count_physician,";
+        $sql .= "(select count(*) from view_dash_referral_triage where clinic_admin ='" . $clinic_id . "') as count_physician,";
         $sql .= "(select count(*) from accepted_dash where " . $col . " ='" . $match . "' and  clinic_admin ='" . $clinic_id . "') as count_accepted,";
         $sql .= "(select count(r_pv.id) from 
             records_patient_visit r_pv, referral_patient_info pat, clinic_referrals c_ref, efax_info efax  
