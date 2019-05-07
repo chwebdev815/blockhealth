@@ -74,17 +74,16 @@ class My_tasks_model extends CI_Model {
             log_message("error", "update = " . $this->db->last_query());
 
             if ((isset($data["id"])) && $data["id"] != "") {
-                $new_file_name = generate_random_string(32);
+//                $new_file_name = generate_random_string(32);
                 $inserted = $this->db->insert("records_clinic_notes", array(
                     "patient_id" => $patient_id,
                     "physician" => "Admin",
                     "record_type" => $data["record_type"],
                     "description" => $data["description"],
-                    "record_file" => $new_file_name
+                    "record_file" => $task_info[0]->pdf_file
                 ));
-                //files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf"
-                copy("./uploads/physician_tasks/pdf/" . $task_info[0]->pdf_file, "./uploads/health_records/" . $new_file_name . ".pdf");
-                log_message("error", "task record => " . $task_id . " => ./uploads/physician_tasks/pdf" . $task_info[0]->pdf_file ." to ./uploads/health_records/" . $new_file_name . ".pdf");
+//                copy(files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $task_info[0]->pdf_file, "./uploads/health_records/" . $new_file_name . ".pdf");
+//                log_message("error", "task record => " . $task_id . " => ./uploads/physician_tasks/pdf" . $task_info[0]->pdf_file ." to ./uploads/health_records/" . $new_file_name . ".pdf");
             
             }
            
