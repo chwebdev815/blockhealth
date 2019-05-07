@@ -56,7 +56,7 @@
                 tiles = $(".top_tiles");
                 tiles.find("#inbox_count").html(data.count_inbox);
                 tiles.find("#tasks_count").html(data.count_my_tasks);
-                tiles.find("#physician_triage_count").html(data.count_physician);
+                tiles.find("#referral_triage_count").html(data.count_physician);
                 tiles.find("#accepted_count").html(parseInt(data.count_accepted));
             }
         });

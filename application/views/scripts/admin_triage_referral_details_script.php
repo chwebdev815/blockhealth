@@ -277,7 +277,7 @@
                 if (IsJsonString(response)) {
                     data = JSON.parse(response);
                     if (data == true) {
-                        location.href = base + "physician_triage/referral_details/" + global_data.referral_id;
+                        location.href = base + "referral_triage/referral_details/" + global_data.referral_id;
                     } else {
                         error(data);
                     }

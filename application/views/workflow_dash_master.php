@@ -27,7 +27,7 @@
                     </div>
                 </div>
             </a>
-            <a href="<?php echo base_url(); ?>physician_triage">
+            <a href="<?php echo base_url(); ?>referral_triage">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="tile-stats clearfix">
                         <div class="icon">
@@ -35,7 +35,7 @@
                                 <i class="fa fa-stethoscope"></i>
                             </p>
                             <p>In Referral Triage</p></div>
-                        <div class="count" id="physician_triage_count"></div>
+                        <div class="count" id="referral_triage_count"></div>
                     </div>
                 </div>
             </a>

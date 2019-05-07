@@ -74,8 +74,8 @@
                 <li id="li_my_tasks" data-toggle="tooltip" data-placement="right" title="Fax Triage">
                     <a class="clearfix" href="<?php echo base_url(); ?>my_tasks"><span>Fax Triage</span><i class="numb-notifies" id="count_my_tasks">&nbsp;</i></a>
                 </li>
-                <li id="li_physician_triage" data-toggle="tooltip" data-placement="right" title="Referral Triage">
-                    <a class="clearfix" href="<?php echo base_url(); ?>physician_triage"><span>Referral Triage</span><i class="numb-notifies" id="count_physician">&nbsp;</i></a>
+                <li id="li_referral_triage" data-toggle="tooltip" data-placement="right" title="Referral Triage">
+                    <a class="clearfix" href="<?php echo base_url(); ?>referral_triage"><span>Referral Triage</span><i class="numb-notifies" id="count_physician">&nbsp;</i></a>
                 </li>
                 <li id="li_accepted" data-toggle="tooltip" data-placement="right" title="Booking">
                     <a class="clearfix" href="<?php echo base_url(); ?>accepted"><span>Booking</span><i class="numb-notifies" id="count_accepted"></i>&nbsp;</a>
