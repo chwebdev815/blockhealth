@@ -5,6 +5,16 @@ if (!defined('BASEPATH'))
 
 class Efax extends CI_Controller {
 
+    public function check() {
+        $pos = strpos($value, ",");
+        $value = ($pos) ? substr($value, 0, $pos) . ")" : $value;
+
+        echo $value . "<br/><br/>";
+        //only send the first attribute
+        //in the rpa_integration table
+        //gliclazide (dos: 30mg)
+    }
+
     public function get_images() {
 
         //Data, connection, auth

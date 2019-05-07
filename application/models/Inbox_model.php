@@ -885,8 +885,7 @@ class Inbox_model extends CI_Model {
                     $this->db->select("if( ref_c.checklist_type = 'stored', "
                             . "c_items.name , ref_c.checklist_name) as 'doc_name'");
                     $this->db->from("referral_checklist ref_c");
-                    $this->db->join("clinic_referral_checklist_items c_items", 
-                            "c_items.id = ref_c.checklist_id and c_items.active=1", "left");
+                    $this->db->join("clinic_referral_checklist_items c_items", "c_items.id = ref_c.checklist_id and c_items.active=1", "left");
                     $this->db->where(array(
                         "ref_c.active" => 1,
                         "ref_c.attached" => "false",
@@ -986,14 +985,16 @@ class Inbox_model extends CI_Model {
                                 "rp_number" => $data["dr_billing_num"],
                                 "active" => 1
                             );
-                            
+
                             $drugs = $data["medications"];
                             foreach ($drugs as $key => $value) {
+                                $pos = strpos($value, ",");
+                                $value = ($pos) ? substr($value, 0, $pos) . ")" : $value;
                                 $rpa_data["medication" . ($key + 1)] = $value;
                             }
-                            
+
                             $this->db->insert("rpa_integration", $rpa_data);
-                            
+
                             log_message("error", "inserted to rpa");
                             log_message("error", $this->db->last_query());
 
