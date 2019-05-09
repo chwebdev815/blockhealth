@@ -217,3 +217,16 @@ function save_json($clinic_id, $data_object) {
         );
     }
 }
+
+function convert_priority_to_display_name($db_priority) {
+    switch($db_priority) {
+        case "routine":
+            return "Routine";
+        case "sub_urgent":
+            return "Sub Urgent";
+        case "urgent":
+            return "Urgent";
+        case "not_specified":
+            return "Undefined";
+    }
+}
