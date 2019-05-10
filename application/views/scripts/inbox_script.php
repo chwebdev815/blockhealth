@@ -1021,7 +1021,7 @@
                     }
                 },
                 error: function (response) {
-                    error("Request Terminated : " + response.responseText);
+                    handle_ajax_error(response);
                 },
                 complete: function () {
                     $("#btn_view_request_missing_items_inbox").button("reset");
@@ -1038,6 +1038,9 @@
             $.post({
                 url: url,
                 data: data,
+                error: function (response) {
+                    handle_ajax_error(response);
+                },
                 complete: function() {
                     $("#btn_request_missing_items_inbox").button('reset');
                 }

@@ -286,6 +286,16 @@
                 $("#modal_error").find(".modal-title").html(header);
                 view("modal_error");
             }
+            
+            function handle_ajax_error(response) {
+                if(response.status === 404) {
+                    error("Error 404: Request target not found");
+                }
+                else {
+                    error("Error 501: Internal server error");
+                }
+            }
+            
             function view(modal_id) {
                 setTimeout(function () {
                     $("#" + modal_id).modal("show");
@@ -389,10 +399,10 @@
                                 error("Unexpected Error Occured");
                             }
                         },
-                        error: function(response) {
-                            error("Request Terminated : " + response.responseText);
+                        error: function (response) {
+                            handle_ajax_error(response);
                         },
-                        complete: function() {
+                        complete: function () {
                             $("#btn_view_request_missing_items").button("reset");
                         }
                     });
@@ -406,7 +416,13 @@
                     $("#btn_request_missing_items").button('loading');
                     $.post({
                         url: url,
-                        data: data
+                        data: data,
+                        complete: function (response) {
+                            $("#btn_request_missing_items").button('reset');
+                        },
+                        error: function (response) {
+                            handle_ajax_error(response); 
+                        }
                     }).done(function (response) {
                         if (IsJsonString(response)) {
                             data = JSON.parse(response);
@@ -420,8 +436,6 @@
                         } else {
                             error("Unexpected Error Occured");
                         }
-                    }).complete(function () {
-                        $("#btn_request_missing_items").button('reset');
                     });
                 });
 
