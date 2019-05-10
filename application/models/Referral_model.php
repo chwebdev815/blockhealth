@@ -332,8 +332,9 @@ class Referral_model extends CI_Model {
                 return ($this->db->affected_rows() == 1) ? true : "Referral already Accepted";
             } else
                 return "You are not authorized for such Operation";
-        } else
+        } else {
             return validation_errors();
+        }
     }
 
     public function missing_items_details_model() {
@@ -344,8 +345,16 @@ class Referral_model extends CI_Model {
             if ($authorized) {
                 $patient_id = $this->get_decrypted_id($data['id'], "referral_patient_info");
                 //get previous request details
-                $this->db->select("DATE_FORMAT(max(miss.create_datetime), '%l %p')  AS last_request_time," .
-                        "DATE_FORMAT(max(miss.create_datetime), '%M %D')  AS last_request_date," .
+//                $this->db->select("id")
+//                        ->from("referral_missing_item_request_info")
+//                        ->where(array(
+//                            "active" => 1,
+//                            "MD5(patient_id)" => $data['id']
+//                        ))->order_by("create_datetime", "desc")
+//                        ->limit("1");
+                
+                $this->db->select("DATE_FORMAT(miss.create_datetime, '%l %p')  AS last_request_time," .
+                        "DATE_FORMAT(miss.create_datetime, '%M %D')  AS last_request_date," .
                         "dr.fax as dr_fax," .
                         "concat('Dr. ', dr.fname, ' ', dr.lname) as dr_name, miss.id");
                 $this->db->from("`referral_missing_item_request_info` miss, referral_physician_info dr");
@@ -356,7 +365,6 @@ class Referral_model extends CI_Model {
                     "md5(dr.patient_id)" => $data['id']
                 ));
                 $this->db->where("miss.requested_to", "dr.id", false);
-                $this->db->group_by("miss.patient_id");
                 $this->db->order_by("miss.create_datetime", "desc");
                 $this->db->limit("1");
 
