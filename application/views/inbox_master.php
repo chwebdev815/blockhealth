@@ -64,22 +64,6 @@
     </table>
 </div>
 
-
-<!--<div class="modal fade" id="modal_preview" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">            
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <img id="hover-img-preview" width="300" height="300">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->
-
-
 <div id="modal_delete_referral" class="modal fade" role="dialog" style="z-index: 2056 !important;">
     <div class="modal-dialog modal-md">
         <!-- Modal content-->
@@ -586,6 +570,10 @@
                                             <div class="input_fields_wrap edit_documents"></div>
                                             <button type="button" id="btn_add_documents" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add Checklist Item</button>
                                         </div>
+                                        <a class="btn btn-theme btn-alt-theme" href="javascript:void(0)" 
+                                           id="btn_view_request_missing_items_inbox" 
+                                           data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>
+                                           Processing...">Request missing items</a>
                                     </div>
                                 </div>
                             </fieldset>
@@ -636,59 +624,27 @@
     </div>
 </div>
 <!--<div class="modal-footer">  </div> -->
-<!-- Save eFax Modal Modal //-->
-<!--<div class="modal fade" id="add_health_record" tabindex="-1" role="dialog" aria-labelledby="add-record-label">
-    <div class="modal-dialog" role="document">
+
+<!--Modal for request missing items-->
+<div id="modal_missing_items" class="modal fade" role="dialog" style="z-index: 2056 !important;">
+    <div class="modal-dialog modal-md">
+        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"> Add Health Record</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Request Missing Items</h4>
             </div>
             <div class="modal-body">
-                <form id="form_health_record">
-                    <input type="hidden" name="id" id="id" />
-                    <input type="hidden" name="target" id="target" />
-                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
-                    <div class="form-group row">
-                        <div class="col-lg-12">
-                            <label for="new-patient-birthdate">
-                                Select Record
-                            </label>
-                        </div>
-                        <div class="col-lg-12">
-                            <select name="record_type" id="signup-speciality" class="div-toggle" data-target=".my-info-1" placeholder="Speciality" name="signup-speciality" class="form-control">
-                                <option value="Referral Form" data-show=".file-upload">Referral Form</option>
-                                <option value="Clinical Notes" data-show=".file-upload">Clinical Notes</option>
-                                <option value="Lab Results" data-show=".file-upload">Lab Results</option>
-                                <option value="Diagnosis and Reason for Referral" data-show=".reason-referral">Diagnosis and Reason for Referral</option>
-                                <option value="Surgical Notes" data-show=".file-upload">Surgical Notes</option>
-                                <option value="Prescriptions &amp; medications" data-show=".file-upload">Prescriptions &amp; medications</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="my-info-1_">
-                        <div class="form-group row">
-                            <div class="col-lg-12">
-                                <label for="new-patient-ohip">
-                                    Description
-                                </label>
-                            </div>
-                            <div class="col-lg-12">
-                                <textarea name="description" style="height: 100px" class="form-control" placeholder="Enter Record Details" id="referral-note"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                <div class="alert alert-info content"> </div>
             </div>
             <div class="modal-footer">
-                <a id="btn_save_health_record" href="#" class="btn btn-theme">
-                    <i class="fa fa-plus-circle"></i>&nbsp;&nbsp;Add Health Record
-                </a>
-                <button type="button" class="btn btn-theme btn-alt-theme" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-theme btn-success" id="btn_request_missing_items" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading...">Send Request Fax</button>
             </div>
         </div>
     </div>
-</div>-->
+</div>
+
+<!--save efax modal-->
 <div class="modal fade" id="save-efax-modal" tabindex="-1" role="dialog" aria-labelledby="add-referral-label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

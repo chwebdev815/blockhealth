@@ -990,8 +990,73 @@
             $(this).closest("div.checkbox").remove();
             x_documents--;
         });
-
         // add fields code completed.
+
+
+
+        $("#btn_view_request_missing_items_inbox").on("click", function () {
+            $("#btn_view_request_missing_items_inbox").button("loading");
+            form = $("#sample_form");
+            form.find("#id").val(global_data.referral_id);
+            url = base + "inbox/missing_items_details";
+            data = form.serialize();
+            $.post({
+                url: url,
+                data: data,
+                success: function (response) {
+                    if (IsJsonString(response)) {
+                        data = JSON.parse(response);
+                        if (data.hasOwnProperty("result")) {
+                            if (data.result === "success") {
+                                $("#modal_missing_items").find(".content").html(data.data);
+                                view("modal_missing_items");
+                            } else {
+                                error("Unexpected Error Occured");
+                            }
+                        } else {
+                            error("Something went wrong");
+                        }
+                    } else {
+                        error("Unexpected Error Occured");
+                    }
+                },
+                error: function (response) {
+                    error("Request Terminated : " + response.responseText);
+                },
+                complete: function () {
+                    $("#btn_view_request_missing_items_inbox").button("reset");
+                }
+            });
+        });
+
+        $("#btn_request_missing_items_inbox").on("click", function () {
+            form = $("#sample_form");
+            form.find("#id").val(global_data.referral_id);
+            url = base + "inbox/request_missing_items";
+            data = form.serialize();
+            $("#btn_request_missing_items_inbox").button('loading');
+            $.post({
+                url: url,
+                data: data,
+                complete: function() {
+                    $("#btn_request_missing_items_inbox").button('reset');
+                }
+            }).done(function (response) {
+                if (IsJsonString(response)) {
+                    data = JSON.parse(response);
+                    if (data === true) {
+                        $(".modal").modal("hide");
+                        success("Missing item request has been sent");
+                    } else {
+                        $(".modal").modal("hide");
+                        success(response);
+                    }
+                } else {
+                    error("Unexpected Error Occured");
+                }
+            });
+        });
+
 
         $("#btn_add_referral").on("click", function () {
             //new referral

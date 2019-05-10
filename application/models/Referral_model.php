@@ -344,14 +344,6 @@ class Referral_model extends CI_Model {
             $authorized = $this->check_authentication($data["id"]);
             if ($authorized) {
                 $patient_id = $this->get_decrypted_id($data['id'], "referral_patient_info");
-                //get previous request details
-//                $this->db->select("id")
-//                        ->from("referral_missing_item_request_info")
-//                        ->where(array(
-//                            "active" => 1,
-//                            "MD5(patient_id)" => $data['id']
-//                        ))->order_by("create_datetime", "desc")
-//                        ->limit("1");
                 
                 $this->db->select("DATE_FORMAT(miss.create_datetime, '%l %p')  AS last_request_time," .
                         "DATE_FORMAT(miss.create_datetime, '%M %D')  AS last_request_date," .
@@ -375,7 +367,8 @@ class Referral_model extends CI_Model {
                 if ($result) {
                     // request has been previously sent for that referral
                     $alert_data = "Missing item request was previously sent to " .
-                            $result[0]->dr_name . " at " . $result[0]->last_request_time . " on " . $result[0]->last_request_date . ". " .
+                            $result[0]->dr_name . " at " . $result[0]->last_request_time . " on " . 
+                            $result[0]->last_request_date . ". " .
                             "Are you sure you would like to send a missing item request again?";
                 } else {
                     //first time sending request
