@@ -638,7 +638,7 @@
                 <div class="alert alert-info content"> </div>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-theme btn-success" id="btn_request_missing_items" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading...">Send Request Fax</button>
+                <button type="button" class="btn btn-theme btn-success" id="btn_request_missing_items_inbox" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading...">Send Request Fax</button>
             </div>
         </div>
     </div>

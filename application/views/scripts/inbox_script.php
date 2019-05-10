@@ -389,7 +389,8 @@
                     checklists +=
                             '<div class="checkbox">' +
                             '<label>' +
-                            '<input type="checkbox" value="' + value.id + '" name="referral_checklist[]">' +
+                            '<input type="checkbox" value="' + value.id + '" name="referral_checklist[]" ' +
+                            'data-name="' + value.name + '">' +
                             '<span class="cr"><i class="cr-icon fa fa-check"></i></span>' +
                             value.name +
                             '</label>' +
@@ -996,8 +997,7 @@
 
         $("#btn_view_request_missing_items_inbox").on("click", function () {
             $("#btn_view_request_missing_items_inbox").button("loading");
-            form = $("#sample_form");
-            form.find("#id").val(global_data.referral_id);
+            form = $("#signupForm");
             url = base + "inbox/missing_items_details";
             data = form.serialize();
             $.post({
@@ -1030,18 +1030,29 @@
         });
 
         $("#btn_request_missing_items_inbox").on("click", function () {
-            form = $("#sample_form");
-            form.find("#id").val(global_data.referral_id);
+            form = $("#signupForm");
             url = base + "inbox/request_missing_items";
             data = form.serialize();
+
+            $("#referral_checklist").find("input:unchecked").each(function (index, value) {
+                a = $(value).closest("label").text();
+                data += "&missing_item[]=" + a;
+            });
+
+            $("div.edit_documents").find("input:unchecked").each(function (index, value) {
+                a = $(value).closest("label").find(".dummy_checkbox").val();
+                data += "&missing_item[]=" + a;
+            });
+
             $("#btn_request_missing_items_inbox").button('loading');
+
             $.post({
                 url: url,
                 data: data,
                 error: function (response) {
                     handle_ajax_error(response);
                 },
-                complete: function() {
+                complete: function () {
                     $("#btn_request_missing_items_inbox").button('reset');
                 }
             }).done(function (response) {
