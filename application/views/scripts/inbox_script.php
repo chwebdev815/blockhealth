@@ -1063,7 +1063,7 @@
                         success("Missing item request has been sent");
                     } else {
                         $(".modal").modal("hide");
-                        success(response);
+                        success(JSON.parse(response));
                     }
                 } else {
                     error("Unexpected Error Occured");

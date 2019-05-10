@@ -1300,7 +1300,7 @@ class Inbox_model extends CI_Model {
     }
 
     public function request_missing_items_model() {
-        $this->form_validation->set_rules('dr_fax', 'Physician Fax Number', 'required|min_length[11]|numeric');
+        $this->form_validation->set_rules('dr_fax', 'Physician Fax Number', 'required|min_length[10]|numeric');
 
         if ($this->form_validation->run()) {
             $data = $this->input->post();
