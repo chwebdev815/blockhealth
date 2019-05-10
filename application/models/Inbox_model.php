@@ -1304,64 +1304,57 @@ class Inbox_model extends CI_Model {
 
         if ($this->form_validation->run()) {
             $data = $this->input->post();
-            $authorized = $this->check_authentication($data["id"]);
-            if ($authorized) {
-                //send fax to request missing items
-                //Send fax in following format, with clinic name, patient name, missing item list, and referral code dynamically added
-                
-                $checklist = array();
-                foreach ($data["missing_item"] as $key => $value) {
-                    $checklist[] = array(
-                        "doc_name" => $value
-                    );
-                }
+            //send fax to request missing items
+            //Send fax in following format, with clinic name, patient name, missing item list, and referral code dynamically added
 
-                $this->db->select("c_usr.clinic_institution_name");
-                $this->db->from("clinic_user_info c_usr");
-                $this->db->where(array(
-                    "c_usr.active" => 1,
-                    "c_usr.id" => $this->session->userdata("user_id")
-                ));
-                $info = $this->db->get()->result();
-
-                $file_name = "referral_missing.html";
-                $replace_stack = array(
-                    "###clinic_name###" => $info[0]->clinic_institution_name,
-                    "###referral_code###" => "#$#$#$",
-                    "###time1###" => "Date",
-                    "###time2###" => ""
+            $checklist = array();
+            foreach ($data["missing_item"] as $key => $value) {
+                $checklist[] = array(
+                    "doc_name" => $value
                 );
+            }
 
-                $text2 = "<h2>Referral has been triaged and accepted</h2>";
-                $additional_replace = array(
-                    "###text2###" => $text2
-                );
+            $this->db->select("c_usr.clinic_institution_name");
+            $this->db->from("clinic_user_info c_usr");
+            $this->db->where(array(
+                "c_usr.active" => 1,
+                "c_usr.id" => $this->session->userdata("user_id")
+            ));
+            $info = $this->db->get()->result();
 
-                $fax_number = $data["dr_fax"];
-                $this->load->model("referral_model");
-                $response = $this->referral_model->send_status_fax($file_name, $checklist, 
-                        $replace_stack, $fax_number, "Request Missing Items", 
-                        $additional_replace);
-                log_message("error", "file sent successfully");
+            $file_name = "referral_missing.html";
+            $replace_stack = array(
+                "###clinic_name###" => $info[0]->clinic_institution_name,
+                "###referral_code###" => "#$#$#$",
+                "###time1###" => "Date",
+                "###time2###" => ""
+            );
 
-                //store missing item request
-                $result = $this->db->insert("referral_missing_item_request_info", array(
-                    "patient_id" => 0,
-                    "requested_to" => 0
-                ));
+            $text2 = "<h2>Referral has been triaged and accepted</h2>";
+            $additional_replace = array(
+                "###text2###" => $text2
+            );
 
-                $this->db->trans_complete();
-                if ($result) {
-                    return true;
-                    // return array(
-                    //  "sender fax" => $info[0]->fax,
-                    //  "referral_code" => $info[0]->referral_code
-                    // );
-                } else {
-                    return "Operation not completed";
-                }
+            $fax_number = $data["dr_fax"];
+            $this->load->model("referral_model");
+            $response = $this->referral_model->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "Request Missing Items", $additional_replace);
+            log_message("error", "file sent successfully");
+
+            //store missing item request
+            $result = $this->db->insert("referral_missing_item_request_info", array(
+                "patient_id" => 0,
+                "requested_to" => 0
+            ));
+
+            $this->db->trans_complete();
+            if ($result) {
+                return true;
+                // return array(
+                //  "sender fax" => $info[0]->fax,
+                //  "referral_code" => $info[0]->referral_code
+                // );
             } else {
-                return "You are not authorized for such Operation";
+                return "Operation not completed";
             }
         } else {
             return validation_errors();
