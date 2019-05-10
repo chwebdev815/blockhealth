@@ -492,8 +492,9 @@ class Referral_model extends CI_Model {
                     //  "sender fax" => $info[0]->fax,
                     //  "referral_code" => $info[0]->referral_code
                     // );
-                } else
+                } else {
                     return "Operation not completed";
+                }
             } else {
                 return "You are not authorized for such Operation";
             }

@@ -371,23 +371,28 @@
                     data = form.serialize();
                     $.post({
                         url: url,
-                        data: data
-                    }).done(function (response) {
-                        $("#btn_view_request_missing_items").button("reset");
-                        if (IsJsonString(response)) {
-                            data = JSON.parse(response);
-                            if (data.hasOwnProperty("result")) {
-                                if (data.result === "success") {
-                                    $("#modal_missing_items").find(".content").html(data.data);
-                                    view("modal_missing_items");
+                        data: data,
+                        success: function (response) {
+                            $("#btn_view_request_missing_items").button("reset");
+                            if (IsJsonString(response)) {
+                                data = JSON.parse(response);
+                                if (data.hasOwnProperty("result")) {
+                                    if (data.result === "success") {
+                                        $("#modal_missing_items").find(".content").html(data.data);
+                                        view("modal_missing_items");
+                                    } else {
+                                        error("Unexpected Error Occured");
+                                    }
                                 } else {
-                                    error("Unexpected Error Occured");
+                                    error("Something went wrong");
                                 }
                             } else {
-                                error("Something went wrong");
+                                error("Unexpected Error Occured");
                             }
-                        } else
-                            error("Unexpected Error Occured");
+                        },
+                        error: function(response) {
+                            error("Request Terminated : " + response.responseText);
+                        }
                     });
                 });
 
