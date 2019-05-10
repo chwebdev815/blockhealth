@@ -1287,4 +1287,119 @@ class Inbox_model extends CI_Model {
         return $referral_code;
     }
 
+    public function missing_items_details_model() {
+        $data = $this->input->post();
+        $dr_name = $data["dr_fname"] . " " . $data["dr_lname"];
+        $alert_data = "Are you sure you would like to send a missing item request to " . $dr_name;
+
+        //return result data 
+        return array(
+            "result" => "success",
+            "data" => $alert_data
+        );
+    }
+
+    public function request_missing_items_model() {
+        $this->form_validation->set_rules('id', 'Patient Id', 'required');
+        $this->form_validation->set_rules('dr_fax', 'Physician Fax Number', 'required|min_length[11]|numeric');
+
+        if ($this->form_validation->run()) {
+            $data = $this->input->post();
+            $authorized = $this->check_authentication($data["id"]);
+            if ($authorized) {
+                //send fax to request missing items
+                //Send fax in following format, with clinic name, patient name, missing item list, and referral code dynamically added
+                $this->db->trans_start();
+                $this->db->select("if( ref_c.checklist_type = 'stored', c_items.name , ref_c.checklist_name) as 'doc_name'");
+                $this->db->from("referral_checklist ref_c");
+                $this->db->join("clinic_referral_checklist_items c_items", "c_items.id = ref_c.checklist_id and c_items.active=1", "left");
+                $this->db->where(array(
+                    "ref_c.active" => 1,
+                    "ref_c.attached" => "false",
+                    "md5(ref_c.patient_id)" => $data['id']
+                ));
+                $this->db->or_group_start()
+                        ->where("c_items.clinic_id", $this->session->userdata("user_id"))
+                        ->where("ref_c.checklist_type", "typed")
+                        ->group_end();
+                $checklist = $this->db->get()->result();
+
+                $this->db->select("concat(pat.fname, ' ', pat.lname) as patient_name," .
+                        "c_usr.clinic_institution_name," .
+                        "c_ref.referral_code," .
+                        "dr.fax, dr.id as dr_id,"
+                        . "efax.from as efax_from,"
+                        . "date_format(efax.create_datetime, '%M %D') as referral_received,"
+                        . "date_format(c_ref.create_datetime, '%M %D') as referral_triaged,"
+                        . "c_ref.status");
+                $this->db->from("referral_patient_info pat, clinic_user_info c_usr, clinic_referrals c_ref, efax_info efax, referral_physician_info dr");
+                $this->db->where(array(
+                    "pat.active" => 1,
+                    "c_usr.active" => 1,
+                    "c_ref.active" => 1,
+                    "efax.active" => 1,
+                    "dr.active" => 1,
+                    "md5(pat.id)" => $data['id'],
+                    "md5(dr.patient_id)" => $data['id'],
+                    "c_usr.id" => $this->session->userdata("user_id")
+                ));
+                $this->db->where("c_ref.id", "pat.referral_id", false);
+                $this->db->where("c_ref.efax_id", "efax.id", false);
+                $info = $this->db->get()->result();
+
+                $file_name = "referral_missing.html";
+                $replace_stack = array(
+                    "###clinic_name###" => $info[0]->clinic_institution_name,
+                    "###referral_code###" => $info[0]->referral_code,
+                    "###time1###" => $info[0]->referral_triaged,
+                    "###time2###" => ""
+                );
+
+                $text2 = "<h2>Referral has been triaged and accepted</h2>";
+                if ($info[0]->status === "Referral Triage") {
+                    $text2 = "<h2>Referral is being triaged</h2>";
+                }
+                $additional_replace = array(
+                    "###text2###" => $text2
+                );
+
+                $fax_number = $info[0]->fax;
+
+                $response = $this->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "Request Missing Items", $additional_replace);
+                log_message("error", "file sent successfully");
+
+                //store missing item request
+                $patient_id = $this->get_decrypted_id($data["id"], "referral_patient_info");
+                $result = $this->db->insert("referral_missing_item_request_info", array(
+                    "patient_id" => $patient_id,
+                    "requested_to" => $info[0]->dr_id
+                ));
+
+                //update missing status
+                $referral_id = $this->get_referral_id($data["id"]);
+                $this->db->where(array(
+                    "id" => $referral_id
+                ));
+                $this->db->update("clinic_referrals", array(
+                    "missing_item_status" => "Missing item requested"
+                ));
+
+                $this->db->trans_complete();
+                if ($result) {
+                    return true;
+                    // return array(
+                    //  "sender fax" => $info[0]->fax,
+                    //  "referral_code" => $info[0]->referral_code
+                    // );
+                } else {
+                    return "Operation not completed";
+                }
+            } else {
+                return "You are not authorized for such Operation";
+            }
+        } else {
+            return validation_errors();
+        }
+    }
+
 }

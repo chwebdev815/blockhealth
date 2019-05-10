@@ -281,6 +281,7 @@
                 $("#modal_success").find(".modal-title").html(header);
                 view("modal_success");
             }
+            
             function error(msg, header = "Operation Failed") {
                 $("#modal_error").find(".alert-danger").html(msg);
                 $("#modal_error").find(".modal-title").html(header);

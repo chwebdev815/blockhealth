@@ -75,6 +75,27 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
+    
+    public function missing_items_details() {
+        if (clinic_login()) {
+            $this->load->model("inbox_model");
+            $response = $this->inbox_model->missing_items_details_model();
+        } else {
+            $response = "Session Expired";
+        }
+        echo json_encode($response);
+    }
+
+    public function request_missing_items() {
+        if (clinic_login()) {
+            $this->load->model("inbox_model");
+            $response = $this->inbox_model->request_missing_items_model();
+        } else {
+            $response = "Session Expired";
+        }
+        echo json_encode($response);
+    }
+    
     public function delete_referral() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -84,6 +105,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
+    
     public function get_clinic_patients() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
