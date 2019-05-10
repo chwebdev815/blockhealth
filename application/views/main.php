@@ -373,7 +373,6 @@
                         url: url,
                         data: data,
                         success: function (response) {
-                            $("#btn_view_request_missing_items").button("reset");
                             if (IsJsonString(response)) {
                                 data = JSON.parse(response);
                                 if (data.hasOwnProperty("result")) {
@@ -392,6 +391,9 @@
                         },
                         error: function(response) {
                             error("Request Terminated : " + response.responseText);
+                        },
+                        complete: function() {
+                            $("#btn_view_request_missing_items").button("reset");
                         }
                     });
                 });
