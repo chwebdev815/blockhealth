@@ -1118,11 +1118,9 @@ class Inbox_model extends CI_Model {
     public function get_referral_checklist_model() {
         $this->db->select("md5(id) as id, name");
         $this->db->from("clinic_referral_checklist_items");
-        $this->db->where(
-                array(
-                    "clinic_id" => $this->session->userdata("user_id")
-                )
-        );
+        $this->db->where(array(
+            "clinic_id" => $this->session->userdata("user_id")
+        ));
         return $this->db->get()->result();
     }
 
