@@ -513,6 +513,67 @@ class Referral_model extends CI_Model {
         $tmp = "";
         foreach ($checklist as $key => $value) {
             log_message("error", "val = " . json_encode($value));
+            $tmp .= str_replace("###item_name###", ($key + 1) . ". " . $value->doc_name, $item_template);
+        }
+        $replace_stack["###missing_items###"] = $tmp;
+        log_message("error", "replace stack = " . json_encode($replace_stack));
+
+        $content = "";
+        $this->load->helper('file');
+        $content = read_file("assets/templates/$file_name");
+        foreach ($replace_stack as $key => $value) {
+            log_message("error", "converting $key with $value");
+            $content = str_replace($key, $value, $content);
+        }
+
+        foreach ($additional_replace as $key => $value) {
+            $content = str_replace($key, $value, $content);
+        }
+
+        $tmp_file_name = $this->generate_random_string(10);
+        $dest_file = "assets/fax_assets/" . $tmp_file_name . ".pdf";
+
+        $fp = fopen($dest_file, 'w');
+        $postData = array(
+            "user-id" => "blockhealth",
+            "api-key" => "6FQP7ct7wapUVDyvHph9W6wNGkPbY8SnVZnIczjX5I64erpM",
+            "content" => $content,
+            "format" => "PDF"
+        );
+        $url = "https://neutrinoapi.com/html5-render";
+
+        set_time_limit(300);
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_POST, 1);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+        curl_setopt($ch, CURLOPT_FILE, $fp);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_exec($ch);
+        $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+        if ($status != 200) {
+            // handle API error...
+            log_message("error", "API Error" . $status);
+            return false;
+        }
+
+
+        $fax_content = "Blockhealth Notification Fax";
+        $fax_success = $this->send_fax($fax_number, $fax_content, $dest_file, $reason, $clinic_id);
+        log_message("error", "fax code completed" . $fax_success);
+        unlink($dest_file);
+        return true;
+    }
+
+    public function send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, $reason, $additional_replace = array(), $timeout = 60, $clinic_id = "") {
+        log_message("error", "checklist prepared = " . json_encode($checklist));
+//        send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", $clinic_id)
+        log_message("error", "$file_name, $fax_number");
+
+        $item_template = '<h3 style="margin-bottom: 0em; margin-top: 0em;  font-size: 16px;"> ###item_name###<br>';
+        $tmp = "";
+        foreach ($checklist as $key => $value) {
+            log_message("error", "val = " . json_encode($value));
             $tmp .= str_replace("###item_name###", ($key + 1) . ". " . $value["doc_name"], $item_template);
         }
         $replace_stack["###missing_items###"] = $tmp;

@@ -1336,7 +1336,7 @@ class Inbox_model extends CI_Model {
 
             $fax_number = $data["dr_fax"];
             $this->load->model("referral_model");
-            $response = $this->referral_model->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "Request Missing Items", $additional_replace);
+            $response = $this->referral_model->send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, "Request Missing Items", $additional_replace);
             log_message("error", "file sent successfully");
 
             //store missing item request
