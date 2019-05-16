@@ -513,7 +513,7 @@ class Referral_model extends CI_Model {
         $tmp = "";
         foreach ($checklist as $key => $value) {
             log_message("error", "val = " . json_encode($value));
-            $tmp .= str_replace("###item_name###", ($key + 1) . ". " . $value->doc_name, $item_template);
+            $tmp .= str_replace("###item_name###", ($key + 1) . ". " . $value["doc_name"], $item_template);
         }
         $replace_stack["###missing_items###"] = $tmp;
         log_message("error", "replace stack = " . json_encode($replace_stack));
