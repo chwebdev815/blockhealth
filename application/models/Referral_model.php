@@ -505,12 +505,14 @@ class Referral_model extends CI_Model {
     }
 
     public function send_status_fax($file_name, $checklist, $replace_stack, $fax_number, $reason, $additional_replace = array(), $timeout = 60, $clinic_id = "") {
+        log_message("error", "checklist prepared = " . json_encode($checklist));
 //        send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", $clinic_id)
         log_message("error", "$file_name, $fax_number");
 
         $item_template = '<h3 style="margin-bottom: 0em; margin-top: 0em;  font-size: 16px;"> ###item_name###<br>';
         $tmp = "";
         foreach ($checklist as $key => $value) {
+            log_message("error", "val = " . json_encode($value));
             $tmp .= str_replace("###item_name###", ($key + 1) . ". " . $value->doc_name, $item_template);
         }
         $replace_stack["###missing_items###"] = $tmp;

@@ -1311,6 +1311,7 @@ class Inbox_model extends CI_Model {
                     "doc_name" => $value
                 );
             }
+            log_message("error", "checklist prepared = " . json_encode($checklist));
 
             $this->db->select("c_usr.clinic_institution_name");
             $this->db->from("clinic_user_info c_usr");
