@@ -1298,7 +1298,8 @@ class Inbox_model extends CI_Model {
     }
 
     public function request_missing_items_model() {
-        $this->form_validation->set_rules('dr_fax', 'Physician Fax Number', 'required|min_length[10]|numeric');
+        $this->form_validation->set_rules('dr_fax', 'Physician Fax Number', 
+                'required|min_length[10]|numeric');
 
         if ($this->form_validation->run()) {
             $data = $this->input->post();
@@ -1313,7 +1314,7 @@ class Inbox_model extends CI_Model {
             }
             log_message("error", "checklist prepared = " . json_encode($checklist));
 
-            $this->db->select("c_usr.clinic_institution_name");
+            $this->db->select("c_usr.clinic_institution_name, c_usr.srfax_number");
             $this->db->from("clinic_user_info c_usr");
             $this->db->where(array(
                 "c_usr.active" => 1,
@@ -1321,15 +1322,17 @@ class Inbox_model extends CI_Model {
             ));
             $info = $this->db->get()->result();
 
-            $file_name = "referral_missing.html";
+            $file_name = "referral_missing_from_inbox.html";
             $replace_stack = array(
                 "###clinic_name###" => $info[0]->clinic_institution_name,
-                "###referral_code###" => "#$#$#$",
-                "###time1###" => "Date",
+                "###pat_fname###" => $data["pat_fname"],
+                "###pat_lname" => $data["pat_lname"],
+                "###fax_number###" => $info[0]->srfax_number,
+                "###time1###" => "",
                 "###time2###" => ""
             );
 
-            $text2 = "<h2>Referral has been triaged and accepted</h2>";
+            $text2 = "";
             $additional_replace = array(
                 "###text2###" => $text2
             );

@@ -998,6 +998,7 @@
         $("#btn_view_request_missing_items_inbox").on("click", function () {
             $("#btn_view_request_missing_items_inbox").button("loading");
             form = $("#signupForm");
+            form.find("#id").val(global_data.efax_id);
             url = base + "inbox/missing_items_details";
             data = form.serialize();
             $.post({
