@@ -1332,7 +1332,7 @@ class Inbox_model extends CI_Model {
                 "###time2###" => ""
             );
 
-            $text2 = "";
+            $text2 = "<h2>Referral is incomplete</h2>";
             $additional_replace = array(
                 "###text2###" => $text2
             );
