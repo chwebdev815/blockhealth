@@ -1324,11 +1324,11 @@ class Inbox_model extends CI_Model {
             $file_name = "referral_missing_from_inbox.html";
             $srfax_number = $info[0]->srfax_number;
             log_message("error", "srfax = " . $srfax_number);
-            if (sizeof($srfax_number) === 10) {
+            if (strlen($srfax_number) === 10) {
                 $srfax_number = substr($srfax_number, 0, 3) . "-" .
                         substr($srfax_number, 3, 3) . "-" . substr($srfax_number, 6, 4);
                 log_message("error", " 10 = srfax = " . $srfax_number);
-            } else if (sizeof($srfax_number) === 11) {
+            } else if (strlen($srfax_number) === 11) {
                 $srfax_number = substr($srfax_number, 0, 1) . "-" . substr($srfax_number, 1, 3) . "-" .
                         substr($srfax_number, 4, 3) . "-" . substr($srfax_number, 7, 4);
                 log_message("error", " 11 = srfax = " . $srfax_number);
