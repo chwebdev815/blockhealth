@@ -8,8 +8,8 @@
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap.min.css">
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/style.css">
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/font-awesome.min.css">
-        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>
-        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+<!--        <script src="//code.jquery.com/jquery-1.11.1.min.js"></script>
+        <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.0/js/bootstrap.min.js"></script>-->
     </head>
     <body class="no-nav">
         <div class="lax lax-full lax-center">     <img src="<?php echo base_url(); ?>assets/img/IMG_1899.PNG" class="img-responsive" style="margin: 0 auto; width: 30%;">
@@ -82,7 +82,9 @@
                                         <div id="signup-first">
                                             <div class="form-group">
                                                 <div class="col-xs-12">                                    
-                                                    <input type="email" required class="form-control" id="signup-email" placeholder="Email" name="signup-email">                                
+                                                    <input type="email" required class="form-control" 
+                                                           id="signup-email" placeholder="Email" 
+                                                           name="signup-email"/> 
                                                 </div>
                                             </div>
                                             <div class="form-group">
@@ -122,8 +124,9 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-xs-12">                                    
-                                                    <button type="submit" class="btn btn-theme btn-spacious btn-full" id="signup-submit" value="signup-submit" name="signup-submit">Family
-                                                        Practice Sign In</button>                                
+                                                    <button type="submit" class="btn btn-theme btn-spacious btn-full" id="signup-submit" value="signup-submit" name="signup-submit">
+                                                        Family Practice Sign In
+                                                    </button>                                
                                                 </div>
                                             </div>
                                             <div class="error-container">                    
@@ -136,19 +139,27 @@
                                         </div>
                                         <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">                    
                                     </form>
-
-
-
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
-            </div><a href="<?php echo base_url(); ?>referral_login"><h4 style="text-align:center;color: white;">Enter Referral Tracking Code</h4></a>
+            </div>
+            <a href="<?php echo base_url(); ?>referral_login">
+                <h4 style="text-align:center;color: white;">
+                    Enter Referral Tracking Code
+                </h4>
+            </a>
         </div>
 
 
+        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->        
+        <script src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>        
+        <!-- Include all compiled plugins (below), or include individual files as needed -->        
+        <script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>        
+        <script src="<?php echo base_url(); ?>assets/js/jquery.validate.min.js"></script>    
+        <script src="<?php echo base_url(); ?>assets/js/common.js"></script>    
+        <script src="<?php echo base_url(); ?>assets/js/custom.js"></script>      
         <script>
             $(function () {
 
@@ -168,16 +179,7 @@
                 });
 
             });
-        </script>
-
-        <!-- jQuery (necessary for Bootstrap's JavaScript plugins) -->        
-        <script src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>        
-        <!-- Include all compiled plugins (below), or include individual files as needed -->        
-        <script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>        
-        <script src="<?php echo base_url(); ?>assets/js/jquery.validate.min.js"></script>    
-        <script src="<?php echo base_url(); ?>assets/js/common.js"></script>    
-        <script src="<?php echo base_url(); ?>assets/js/custom.js"></script>        
-        <script type="text/javascript">
+            
             //validation for signup form            
             $('#loginForm').validate({
                 rules: {
