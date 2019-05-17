@@ -1333,10 +1333,17 @@ class Inbox_model extends CI_Model {
                         substr($srfax_number, 4, 3) . "-" . substr($srfax_number, 7, 4);
                 log_message("error", " 11 = srfax = " . $srfax_number);
             }
+            $pat_dob = "";
+            if(!empty($data["pat_dob_day"]) && !empty($data["pat_dob_month"]) 
+                    && !empty($data["pat_dob_year"])) {
+                $pat_dob = "({$data["pat_dob_month"]}-{$data["pat_dob_day"]}-{$data["pat_dob_year"]})";
+            }
+            
             $replace_stack = array(
                 "###clinic_name###" => $info[0]->clinic_institution_name,
                 "###pat_fname###" => $data["pat_fname"],
                 "###pat_lname###" => $data["pat_lname"],
+                "###pat_dob###" => $pat_dob,
                 "###fax_number###" => $srfax_number,
                 "###time1###" => "",
                 "###time2###" => ""
