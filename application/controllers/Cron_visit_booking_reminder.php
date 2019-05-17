@@ -1090,7 +1090,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
                 $this->db->update("records_patient_visit");
                 $change_status = true;
-                log_message("error", "change (1) " . $this->db->last_query());
+//                log_message("error", "change (1) " . $this->db->last_query());
             }
             $this->db->trans_complete();
         }
