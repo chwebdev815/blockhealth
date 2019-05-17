@@ -1298,8 +1298,7 @@ class Inbox_model extends CI_Model {
     }
 
     public function request_missing_items_model() {
-        $this->form_validation->set_rules('dr_fax', 'Physician Fax Number', 
-                'required|min_length[10]|numeric');
+        $this->form_validation->set_rules('dr_fax', 'Physician Fax Number', 'required|min_length[10]|numeric');
 
         if ($this->form_validation->run()) {
             $data = $this->input->post();
@@ -1323,11 +1322,19 @@ class Inbox_model extends CI_Model {
             $info = $this->db->get()->result();
 
             $file_name = "referral_missing_from_inbox.html";
+            $srfax_number = $info[0]->srfax_number;
+            if (sizeof($srfax_number) === 10) {
+                $srfax_number = substr($srfax_number, 0, 3) . "-" .
+                        substr($srfax_number, 3, 3) . "-" . substr($srfax_number, 6, 4);
+            } else if (sizeof($srfax_number) === 11) {
+                $srfax_number = substr($srfax_number, 0, 1) . "-" . substr($srfax_number, 1, 3) . "-" .
+                        substr($srfax_number, 4, 3) . "-" . substr($srfax_number, 7, 4);
+            }
             $replace_stack = array(
                 "###clinic_name###" => $info[0]->clinic_institution_name,
                 "###pat_fname###" => $data["pat_fname"],
                 "###pat_lname###" => $data["pat_lname"],
-                "###fax_number###" => $info[0]->srfax_number,
+                "###fax_number###" => $srfax_number,
                 "###time1###" => "",
                 "###time2###" => ""
             );
