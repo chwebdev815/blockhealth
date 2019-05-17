@@ -596,7 +596,11 @@
             <div class="awsm-timeline awsm-timeline-style-8 awsm-date-opposite awsm-alternate awsm-responsive-left" style="text-align: center;font-size: 22px;float:left;border-top: 1px solid #dedede;padding-top: 0px;">
                 <h4 style="line-height: 1.7em;"> This referral was triaged by Phelix, an AI admin assistant for clinics. Visit www.phelix.ai to learn more!</h4>
             </div>
-
+        </div>
+        <div style="margin: 0 auto; text-align: center">
+            <div style="background-color: #08b5a2; width: fit-content; margin: 0 auto;">
+                <img height="50px" width="50px" src="http://35.203.47.37/assets/img/logo_white.png"/>
+            </div>
         </div>
         <script src="js/modernizr.js"></script>
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
@@ -604,14 +608,12 @@
         <script src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
         <script src="js/awsm-timeline.min.js"></script>
         <script>
-
             document.getElementById("button").onclick = function () {
                 let doc = new jsPDF('p', 'pt', 'a4');
                 doc.addHTML(document.body, function () {
                     doc.save("html.pdf");
                 });
             };
-
         </script>
     </body>
 

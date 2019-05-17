@@ -1326,7 +1326,7 @@ class Inbox_model extends CI_Model {
             $replace_stack = array(
                 "###clinic_name###" => $info[0]->clinic_institution_name,
                 "###pat_fname###" => $data["pat_fname"],
-                "###pat_lname" => $data["pat_lname"],
+                "###pat_lname###" => $data["pat_lname"],
                 "###fax_number###" => $info[0]->srfax_number,
                 "###time1###" => "",
                 "###time2###" => ""
