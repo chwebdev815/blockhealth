@@ -11,7 +11,7 @@ class Cron_appointment_reminder extends CI_Controller {
                 switch ($argv[1]) {
                     case "ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE":
                         $this->ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE();
-                        log_message("error", "Called function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE");
+//                        log_message("error", "Called function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE");
                         break;
                 }
             }
@@ -20,14 +20,14 @@ class Cron_appointment_reminder extends CI_Controller {
 
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
 
-        log_message("error", "Cron_appointment_reminder called $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
+//        log_message("error", "Cron_appointment_reminder called $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         //get all clinic and loop all
         $clinics = $this->db->select("id, visit_confirm_time")
                         ->from("clinic_user_info")->where("active", 1)->get()->result();
-        log_message("error", "Clinic users for timing = " . json_encode($clinics));
+//        log_message("error", "Clinic users for timing = " . json_encode($clinics));
         if ($clinics) {
             foreach ($clinics as $key => $clinic) {
-                log_message("error", "clinic = " . $clinic->id);
+//                log_message("error", "clinic = " . $clinic->id);
                 $hour = $clinic->visit_confirm_time;
                 $day = floor($hour / 24);
                 $hour = ($hour % 24);
@@ -56,7 +56,7 @@ class Cron_appointment_reminder extends CI_Controller {
                                 ->where("efax.to", "c_usr.id", false)
                                 ->where("c_usr.id", $clinic->id)
                                 ->get()->result();
-                log_message("error", "calculating reminder = " . $this->db->last_query());
+//                log_message("error", "calculating reminder = " . $this->db->last_query());
                 $this->init_reminder($remindable);
 //        $remindable = $this->db->select("*")->from("records_patient_visit")->where(array(
 //                    "id" => 47
@@ -67,7 +67,7 @@ class Cron_appointment_reminder extends CI_Controller {
 
     public function init_reminder($remindable) {
 
-        log_message("error", "init => " . json_encode($remindable) . "<br/><br/>");
+//        log_message("error", "init => " . json_encode($remindable) . "<br/><br/>");
 
         $this->load->model("referral_model");
         foreach ($remindable as $key => $value) {
@@ -76,8 +76,8 @@ class Cron_appointment_reminder extends CI_Controller {
             $this->db->where("id", $visit->id)->update("records_patient_visit", array(
                 "visit_confirmed" => "Awaiting Confirmation"
             ));
-            log_message("error", "update visit " . $visit->id . " before call");
-            log_message("error", "q = " . $this->db->last_query());
+//            log_message("error", "update visit " . $visit->id . " before call");
+//            log_message("error", "q = " . $this->db->last_query());
 
 
             //get clinic id for patient
@@ -105,7 +105,7 @@ class Cron_appointment_reminder extends CI_Controller {
             if ($patient_data) {
                 $patient_data = $patient_data[0];
 
-                log_message("error", "checkig for patient " . $visit->patient_id);
+//                log_message("error", "checkig for patient " . $visit->patient_id);
                 $contact_number = $patient_data->cell_phone;
                 if ($patient_data->home_phone != "") {
                     //home number
@@ -146,7 +146,7 @@ class Cron_appointment_reminder extends CI_Controller {
                             "reserved_id" => $visit->id
                         );
 
-                        log_message("error", "Call should start now");
+//                        log_message("error", "Call should start now");
                         $ch = curl_init();
                         curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                         curl_setopt($ch, CURLOPT_URL, base_url() . "cron_appointment_reminder/call");
@@ -155,15 +155,15 @@ class Cron_appointment_reminder extends CI_Controller {
                         curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
                         $resp = curl_exec($ch);
                         if (curl_errno($ch)) {
-                            log_message("error", "Call error => " . json_encode(curl_error($ch)));
+//                            log_message("error", "Call error => " . json_encode(curl_error($ch)));
                             return curl_error($ch);
                         }
                         curl_close($ch);
-                        log_message("error", "Call completed " . json_encode($resp));
+//                        log_message("error", "Call completed " . json_encode($resp));
                     }
                 }
                 if ($visit->notify_type === "sms" || 1) {
-                    log_message("error", "before sms data = " . json_encode($visit));
+//                    log_message("error", "before sms data = " . json_encode($visit));
                     if ($visit->visit_name && $visit->visit_name != "") {
                         $visit->visit_name = "'" . $visit->visit_name . "'";
                     }
@@ -261,7 +261,7 @@ class Cron_appointment_reminder extends CI_Controller {
             log_message("error", " Error – " . curl_error($res));
             return false;
         } else {
-            log_message("error", "Calling");
+//            log_message("error", "Calling");
             return true;
         }
     }

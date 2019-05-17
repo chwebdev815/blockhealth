@@ -11,7 +11,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 switch ($argv[1]) {
                     case "ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE":
                         $this->ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE();
-                        log_message("error", "Called function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE");
+//                        log_message("error", "Called function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE");
                         break;
                 }
             }
@@ -19,7 +19,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
     }
 
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
-        log_message("error", "Cron_visit_booking_reminder called");
+//        log_message("error", "Cron_visit_booking_reminder called");
 
         //get all to schedule a call
 //        $before_1_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 hour")));
@@ -32,7 +32,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
         $cur_time = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
         $before_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-5 minute")));
 
-        log_message("error", "1 hour = " . $cur_time->format("Y-m-d H:i:s") . " to " . $before_5_min->format("Y-m-d H:i:s") . "<br/>");
+//        log_message("error", "1 hour = " . $cur_time->format("Y-m-d H:i:s") . " to " . $before_5_min->format("Y-m-d H:i:s") . "<br/>");
 //        $string_plus_72_hour = $plus_72_hour->format("Y-m-d H:i:s");
 //        $plus_72_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("+3 day 5 minute")));
 //        $string_plus_72_hour_5_min = $plus_72_hour_5_min->format("Y-m-d H:i:s");
@@ -72,8 +72,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
 
 
-        log_message("error", $this->db->last_query() . "<br/><br/>");
-        log_message("error", json_encode($remindable) . "<br/><br/>");
+//        log_message("error", $this->db->last_query() . "<br/><br/>");
+//        log_message("error", json_encode($remindable) . "<br/><br/>");
 
 
         $this->load->model("referral_model");
@@ -124,7 +124,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     $allocations = $response["data"];
                 }
                 //make call with proper data
-                log_message("error", "reminder = " . $visit->reminder_type . ", ");
+//                log_message("error", "reminder = " . $visit->reminder_type . ", ");
 //                $visit->reminder_type = intval($visit->reminder_type);
                 $notification_status = $visit->notify_status;
                 $notification_status_icon = "green";
@@ -151,7 +151,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 }
 
 
-                log_message("error", "status is changing from " . $visit->notify_status . " to " . $notification_status);
+//                log_message("error", "status is changing from " . $visit->notify_status . " to " . $notification_status);
                 $update_data = array(
                     "visit_date1" => substr($allocations[0]["start_time"], 0, 10),
                     "visit_start_time1" => substr($allocations[0]["start_time"], 10),
@@ -207,7 +207,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 );
 
                 echo "post array = " . json_encode($post_arr) . "<br/>";
-                log_message("error", "Call should start now");
+//                log_message("error", "Call should start now");
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                 curl_setopt($ch, CURLOPT_URL, base_url() . "cron_visit_booking_reminder/call");
@@ -216,11 +216,11 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
                 $resp = curl_exec($ch);
                 if (curl_errno($ch)) {
-                    log_message("error", "Call error => " . json_encode(curl_error($ch)));
+//                    log_message("error", "Call error => " . json_encode(curl_error($ch)));
                     return curl_error($ch);
                 }
                 curl_close($ch);
-                log_message("error", "Call completed " . json_encode($resp));
+//                log_message("error", "Call completed " . json_encode($resp));
             }
         }
     }
@@ -296,7 +296,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
             log_message("error", " Error – " . curl_error($res));
             return false;
         } else {
-            log_message("error", "Calling");
+//            log_message("error", "Calling");
             return true;
         }
     }
@@ -465,7 +465,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "accepted_status_icon" => "blue",
                     "accepted_status_date" => date("Y-m-d H:i:s")
                 ));
-                log_message("error", "wrong number 2=> " . $this->db->last_query());
+//                log_message("error", "wrong number 2=> " . $this->db->last_query());
 
 
 
@@ -476,7 +476,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "notify_status" => "Wrong Number",
                     "notify_status_icon" => "blue"
                 ));
-                log_message("error", "all visits wrong number = > " . $this->db->last_query());
+//                log_message("error", "all visits wrong number = > " . $this->db->last_query());
 
 //                $params = array(
 //                    'data' => $_GET["Digits"],
@@ -771,9 +771,9 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "accepted_status_icon" => "yellow",
                     "accepted_status_date" => date("Y-m-d H:i:s")
                 ));
-                log_message("error", "updated for 0 with sql = $referral_id  => " . $this->db->last_query());
+//                log_message("error", "updated for 0 with sql = $referral_id  => " . $this->db->last_query());
             } elseif ($_GET['Digits'] == 4) {
-                log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
+//                log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
                 echo "<Response>";
                 echo "<Redirect method='GET'>" . $base_url . "cron_visit_booking_reminder/step_two?"
                 . "Digits=1&amp;"
@@ -1068,7 +1068,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
             $this->db->where("r_pv.patient_id", "pat.id", false);
             $result = $this->db->get()->result();
 
-            log_message("error", "webhook sql = " . $this->db->last_query());
+//            log_message("error", "webhook sql = " . $this->db->last_query());
 
             $change_status = false;
 
