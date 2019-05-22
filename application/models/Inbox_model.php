@@ -1345,7 +1345,7 @@ class Inbox_model extends CI_Model {
 
                     //new referral record added
                     log_message("error", "update status  = " . $this->db->last_query());
-
+                    $referral_id = $this->db->insert_id();
                     $ohip = $data["pat_ohip"];
                     //store patient details
                     $patient_data = array(
