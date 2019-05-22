@@ -1139,7 +1139,8 @@ class Inbox_model extends CI_Model {
         $this->db->from("clinic_referrals c_ref, referral_patient_info pat");
         $this->db->where(array(
             "c_ref.active" => 1,
-            "pat.active" => 1
+            "pat.active" => 1,
+            "c_ref.status" => "Referral Triage"
         ));
         $this->db->where("c_ref.id", "pat.referral_id", false);
         return $this->db->get()->result();
