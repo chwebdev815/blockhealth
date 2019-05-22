@@ -1040,7 +1040,7 @@
                 data += "&missing_item[]=" + a;
             });
 
-            $("div.edit_documents").find("input:unchecked").each(function (index, value) {
+            $("div.edit_documents").find("input[type='checkbox']:unchecked").each(function (index, value) {
                 a = $(value).closest("label").find(".dummy_checkbox").val();
                 data += "&missing_item[]=" + a;
             });
