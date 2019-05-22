@@ -1064,6 +1064,7 @@
                 if (IsJsonString(response)) {
                     data = JSON.parse(response);
                     if (data === true) {
+                        $(".modal").modal("hide");
                         success("Missing item request has been sent");
                     } else {
                         error(JSON.parse(response));
