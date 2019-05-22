@@ -1044,6 +1044,10 @@
                 a = $(value).closest("label").find(".dummy_checkbox").val();
                 data += "&missing_item[]=" + a;
             });
+            data += "&new_checklists=";
+            $(".input_fields_wrap").find("[name='referral_checklist[]']").each(function (index, value) {
+                data += $(value).val() + ",";
+            });
 
             $("#btn_request_missing_items_inbox").button('loading');
 

@@ -4,7 +4,7 @@ class Inbox extends CI_Controller {
     public function index() {
         if (clinic_login()) {
             $data['page_content'] = $this->load->view('inbox_master', NULL, TRUE);
-            $data['page_title'] = "Inbox";
+            $data['page_title'] = "Fax Inbox";
             $data['jquery'] = $this->load->view('scripts/inbox_script', NULL, TRUE);
             $this->load->view('main', $data);
         } else {
