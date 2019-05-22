@@ -1135,7 +1135,7 @@
         }).done(function (response) {
             if (IsJsonString(response)) {
                 data = JSON.parse(response);
-                options = "<option selected value='admin'>Unassigned</option>";
+                options = "<option selected value='0'>Select Patient</option>";
                 data.forEach(function (value, index) {
                     options += "<option value='" + value.id + "'>" + value.name + "</option>";
                 });

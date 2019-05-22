@@ -1128,16 +1128,19 @@ class Inbox_model extends CI_Model {
         $this->db->select("md5(dr.id) as id, concat(dr.first_name, ' ', dr.last_name) as name");
         $this->db->from("clinic_physician_info dr");
         $this->db->where(array(
-            "clinic_id" => $this->session->userdata("user_id")
+            "clinic_id" => $this->session->userdata("user_id"),
+            "dr.active" => 1
         ));
         return $this->db->get()->result();
     }
 
     public function get_patient_list_save_patient_model() {
-        $this->db->select("md5(dr.id) as id, concat(dr.first_name, ' ', dr.last_name) as name");
-        $this->db->from("clinic_physician_info dr");
+        $this->db->select("concat(pat.fname, ' ', pat.lname) as name, pat.id as id");
+        $this->db->from("clinic_referrals c_ref, referral_patient_info pat ");
         $this->db->where(array(
-            "clinic_id" => $this->session->userdata("user_id")
+            "clinic_id" => $this->session->userdata("user_id"),
+            "c_ref.active" => 1,
+            "pat.active" => 1
         ));
         return $this->db->get()->result();
     }
