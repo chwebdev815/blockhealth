@@ -1136,11 +1136,12 @@ class Inbox_model extends CI_Model {
 
     public function get_patient_list_save_patient_model() {
         $this->db->select("concat(pat.fname, ' ', pat.lname) as name, pat.id as id");
-        $this->db->from("clinic_referrals c_ref, referral_patient_info pat ");
+        $this->db->from("clinic_referrals c_ref, referral_patient_info pat");
         $this->db->where(array(
             "c_ref.active" => 1,
             "pat.active" => 1
         ));
+        $this->db->where("c_ref.id", "pat.referral_id", false);
         return $this->db->get()->result();
     }
     
