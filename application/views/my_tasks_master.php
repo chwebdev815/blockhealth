@@ -189,12 +189,18 @@
                                         </div>
 
                                         <div class="form-group row">
-                                            <div class="col-lg-12">
-                                                <h4 class="modal-title" id="task_h4">Task Details</h4>
-                                            </div>
                                             <div class="alert alert-danger" id="patient_error" style="display: none;"></div>
                                             <div class="alert alert-success" id="patient_success" style="display: none;"></div>
 
+                                            <div class="col-lg-12">
+                                                <label for="patient_dropdown">
+                                                    <strong>Save to Referral</strong>
+                                                </label>
+                                                <select id="patient_dropdown" 
+                                                        placeholder="Save to Referral" 
+                                                        name="patient_dropdown" class="form-control">
+                                                </select>
+                                            </div>
                                             <div class="col-lg-12">
                                                 <label for="assign_physician">
                                                     <strong>Assign Physician</strong>

@@ -126,6 +126,16 @@ class Inbox extends CI_Controller {
         echo json_encode($response);
     }
     
+    public function get_patient_list_save_patient() {
+        if (clinic_login()) {
+            $this->load->model("inbox_model");
+            $response = $this->inbox_model->get_patient_list_save_patient_model();
+        } else {
+            $response = "Sesion Expired";
+        }
+        echo json_encode($response);
+    }
+    
     public function save_referral() {
         if (clinic_login()) {
             $this->load->model("inbox_model");

@@ -1133,6 +1133,15 @@ class Inbox_model extends CI_Model {
         return $this->db->get()->result();
     }
 
+    public function get_patient_list_save_patient_model() {
+        $this->db->select("md5(dr.id) as id, concat(dr.first_name, ' ', dr.last_name) as name");
+        $this->db->from("clinic_physician_info dr");
+        $this->db->where(array(
+            "clinic_id" => $this->session->userdata("user_id")
+        ));
+        return $this->db->get()->result();
+    }
+    
     public function save_data_points_predict_model() {
         $data = $this->input->post();
         $this->db->insert("data_points_predict", $data);

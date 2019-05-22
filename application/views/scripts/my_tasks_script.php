@@ -164,6 +164,7 @@
         $("#li_my_tasks").addClass("active");
 
         get_physician_list_save_patient();
+        get_patient_list_save_patient();
 
         setInterval(function () {
 //            global_data.table_my_tasks.ajax.reload();
@@ -1121,6 +1122,24 @@
                     options += "<option value='" + value.id + "'>" + value.name + "</option>";
                 });
                 $("#form_patient_save").find("#assign_physician").html(options);
+                global_data.table_my_tasks.ajax.reload();
+            }
+        });
+    }
+    
+    function get_patient_list_save_patient() {
+        url = base + "inbox/get_patient_list_save_patient";
+        $.post({
+            url: url,
+            data: $("#sample_form").serialize()
+        }).done(function (response) {
+            if (IsJsonString(response)) {
+                data = JSON.parse(response);
+                options = "<option selected value='admin'>Unassigned</option>";
+                data.forEach(function (value, index) {
+                    options += "<option value='" + value.id + "'>" + value.name + "</option>";
+                });
+                $("#form_patient_save").find("#patient_dropdown").html(options);
                 global_data.table_my_tasks.ajax.reload();
             }
         });
