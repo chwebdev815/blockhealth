@@ -1304,68 +1304,327 @@ class Inbox_model extends CI_Model {
             $data = $this->input->post();
             //send fax to request missing items
             //Send fax in following format, with clinic name, patient name, missing item list, and referral code dynamically added
-
-            $checklist = array();
-            foreach ($data["missing_item"] as $key => $value) {
-                $checklist[] = array(
-                    "doc_name" => $value
-                );
-            }
-            log_message("error", "checklist prepared = " . json_encode($checklist));
-
-            $this->db->select("c_usr.clinic_institution_name, c_usr.srfax_number");
-            $this->db->from("clinic_user_info c_usr");
+            //check efax authenticity
+            $this->db->select("id, file_name, to");
+            $this->db->from("efax_info");
             $this->db->where(array(
-                "c_usr.active" => 1,
-                "c_usr.id" => $this->session->userdata("user_id")
+                "md5(id)" => $data["id"],
+                "to" => $this->session->userdata("user_id")
             ));
-            $info = $this->db->get()->result();
+            $result = $this->db->get()->result();
 
-            $file_name = "referral_missing_from_inbox.html";
-            $srfax_number = $info[0]->srfax_number;
-            log_message("error", "srfax = " . $srfax_number);
-            if (strlen($srfax_number) === 10) {
-                $srfax_number = substr($srfax_number, 0, 3) . "-" .
-                        substr($srfax_number, 3, 3) . "-" . substr($srfax_number, 6, 4);
-                log_message("error", " 10 = srfax = " . $srfax_number);
-            } else if (strlen($srfax_number) === 11) {
-                $srfax_number = substr($srfax_number, 0, 1) . "-" . substr($srfax_number, 1, 3) . "-" .
-                        substr($srfax_number, 4, 3) . "-" . substr($srfax_number, 7, 4);
-                log_message("error", " 11 = srfax = " . $srfax_number);
+            if ($result) {
+                try {
+                    $referral_code = $this->generate_referral_code();
+                    log_message("error", "ref code = " . $referral_code);
+                    $this->db->trans_start();
+                    //add referral
+                    $efax_id = $result[0]->id;
+                    $efax_file = $result[0]->file_name;
+                    $referral_reason = (isset($data["reasons"])) ? $data["reasons"][0] : "";
+                    // $first_status = "Admin Triage";
+                    $first_status = "Referral Triage";
+
+                    $insert_data = array(
+                        "efax_id" => $efax_id,
+                        "referral_code" => $referral_code,
+                        "referral_reason" => $referral_reason,
+                        "status" => $first_status
+                    );
+
+                    //If clinic has only 1 physician account, then assign by default 
+                    $physicians = $this->db->select("id")
+                                    ->from("clinic_physician_info")
+                                    ->where(array(
+                                        "clinic_id" => $this->session->userdata("user_id")
+                                    ))->get()->result();
+                    if ($physicians && sizeof($physicians) === 1) {
+                        $insert_data["assigned_physician"] = $physicians[0]->id;
+                    }
+                    $this->db->insert("clinic_referrals", $insert_data);
+
+                    //new referral record added
+                    log_message("error", "update status  = " . $this->db->last_query());
+
+                    $ohip = $data["pat_ohip"];
+                    //store patient details
+                    $patient_data = array(
+                        "referral_id" => $referral_id,
+                        "fname" => $data["pat_fname"],
+                        "lname" => $data["pat_lname"],
+                        "dob" => $data["pat_dob_year"] . "-" . $data["pat_dob_month"] . "-" . $data["pat_dob_day"],
+                        "ohip" => str_replace(" ", "", str_replace("-", "", $ohip)),
+                        "gender" => $data["pat_gender"],
+                        "cell_phone" => $data["pat_cell_phone"],
+                        "home_phone" => $data["pat_home_phone"],
+                        "work_phone" => $data["pat_work_phone"],
+                        "email_id" => $data["pat_email"],
+                        "address" => $data["pat_address"]
+                    );
+                    $this->db->insert("referral_patient_info", $patient_data);
+                    $patient_id = $this->db->insert_id();
+                    log_message("error", "insert patient = " . $this->db->last_query());
+
+                    $data["dr_fax"] = preg_replace("/[^0-9]/", "", $data["dr_fax"]);
+                    log_message("error", "dr_fax trimmed = " . $data["dr_fax"]);
+                    //store referring physician data linked to patient id
+                    $physician_data = array(
+                        "patient_id" => $patient_id,
+                        "fname" => $data["dr_fname"],
+                        "lname" => $data["dr_lname"],
+                        "phone" => $data["dr_phone_number"],
+                        "fax" => $data["dr_fax"],
+                        "email" => $data["dr_email"],
+                        "address" => $data["dr_address"],
+                        "billing_num" => $data["dr_billing_num"]
+                    );
+                    $this->db->insert("referral_physician_info", $physician_data);
+                    log_message("error", "insert physician  = " . $this->db->last_query());
+
+                    //store clinical triage info linked to patient id
+                    $clinical_triage_data = array(
+                        "patient_id" => $patient_id,
+                        "priority" => (!isset($data["priority"]) ||
+                        $data["priority"] == null || empty($data["priority"])) ?
+                        "not_specified" : $data["priority"]
+                    );
+                    $this->db->insert("referral_clinic_triage", $clinical_triage_data);
+                    $clinic_triage_id = $this->db->insert_id();
+                    log_message("error", "triage referral = " . $this->db->last_query());
+
+                    //store all diseases (using loop) patient diseases linked to referral_clinic_triage->id
+                    if (isset($data["diseases"])) {
+                        $diseases = $data["diseases"];
+                        foreach ($diseases as $key => $value) {
+                            if ($value != "") {
+                                //insert if not empty
+                                $this->db->insert("referral_clinic_triage_disease_info", array(
+                                    "clinic_triage_id" => $clinic_triage_id,
+                                    "disease" => $value
+                                ));
+                                log_message("error", "disease q = " . $this->db->last_query());
+                            }
+                        }
+                    }
+
+                    //store all symptoms (using loop) patient symptoms linked to referral_clinic_triage->id
+                    if (isset($data["symptoms"])) {
+                        $symptoms = $data["symptoms"];
+                        foreach ($symptoms as $key => $value) {
+                            if ($value != "") {
+                                //insert if not empty
+                                $this->db->insert("referral_clinic_triage_symptom_info", array(
+                                    "clinic_triage_id" => $clinic_triage_id,
+                                    "symptom" => $value
+                                ));
+                                log_message("error", "symptom q = " . $this->db->last_query());
+                            }
+                        }
+                    }
+
+                    //store all lab tests (using loop) patient tests linked to referral_clinic_triage->id
+                    if (isset($data["tests"])) {
+                        $tests = $data["tests"];
+                        foreach ($tests as $key => $value) {
+                            if ($value != "") {
+                                //insert if not empty
+                                $this->db->insert("referral_clinic_triage_tests_info", array(
+                                    "clinic_triage_id" => $clinic_triage_id,
+                                    "test" => $value
+                                ));
+                                log_message("error", "test q = " . $this->db->last_query());
+                            }
+                        }
+                    }
+
+                    //store all medications (using loop) patient tests linked to referral_clinic_triage->id
+                    if (isset($data["medications"])) {
+                        $drugs = $data["medications"];
+                        foreach ($drugs as $key => $value) {
+                            if ($value != "") {
+                                //insert if not empty
+                                $this->db->insert("referral_clinic_triage_drugs_info", array(
+                                    "clinic_triage_id" => $clinic_triage_id,
+                                    "drug" => $value
+                                ));
+                                log_message("error", "drug q = " . $this->db->last_query());
+                            }
+                        }
+                    }
+
+                    //store all procedure and devices (using loop) patient tests linked to referral_clinic_triage->id
+                    if (isset($data["devices"])) {
+                        $devices = $data["devices"];
+                        foreach ($devices as $key => $value) {
+                            if ($value != "") {
+                                //insert if not empty
+                                $this->db->insert("referral_clinic_triage_devices_info", array(
+                                    "clinic_triage_id" => $clinic_triage_id,
+                                    "device" => $value
+                                ));
+                                log_message("error", "device q = " . $this->db->last_query());
+                            }
+                        }
+                    }
+                    $referral_checklist = array();
+                    //insert referral checklist
+                    if (isset($data["referral_checklist"])) {
+                        $referral_checklist = $data["referral_checklist"];
+                    } else {
+                        $referral_checklist = array();
+                    }
+
+
+                    log_message("error", "checklist array = " . json_encode($referral_checklist));
+                    //insert default checklist info
+                    $this->db->select("md5(id) as id, id as plain_id");
+                    $this->db->from("clinic_referral_checklist_items");
+                    $this->db->where(array(
+                        "active" => 1,
+                        "clinic_id" => $this->session->userdata("user_id")
+                    ));
+                    $default_checklist = $this->db->get()->result();
+                    log_message("error", "checklist query = " . $this->db->last_query());
+                    log_message("error", "default checklist = " . json_encode($default_checklist));
+
+                    foreach ($default_checklist as $key => $value) {
+                        $exist = array_search($value->id, $referral_checklist);
+                        $checked = ($exist === false) ? "false" : "true";
+                        // log_message("error", "val = " . $value->id . " and ref = " . json_encode($referral_checklist));
+                        $check_type = "stored";
+                        $this->db->insert("referral_checklist", array(
+                            "patient_id" => $patient_id,
+                            "checklist_type" => $check_type,
+                            "checklist_id" => $value->plain_id,
+                            "attached" => $checked
+                        ));
+                        log_message("error", "insert for default = " . $this->db->last_query());
+                    }
+                    
+                    
+                    //insert new checlist info
+                    log_message("error", "at custome checklist");
+                    $new_checklist = explode(",", $data["new_checklists"]);
+                    foreach ($new_checklist as $key => $value) {
+                        if ($value == "")
+                            continue;
+                        $exist = array_search($value, $referral_checklist);
+                        // log_message("error", "val = " . $value . " and ref = " . json_encode($referral_checklist));
+                        $checked = ($exist === false) ? "false" : "true";
+                        $check_type = "typed";
+                        $this->db->insert("referral_checklist", array(
+                            "patient_id" => $patient_id,
+                            "checklist_type" => $check_type,
+                            "checklist_name" => $value,
+                            "attached" => $checked
+                        ));
+                        log_message("error", "insert custom = " . $this->db->last_query());
+                    }
+                    
+                    //create default clinical note
+                    $clinic_id = $result[0]->to;
+                    $source_dir = "./uploads/efax/";
+                    $file_old_name = $efax_file . ".pdf";
+                    $clinic_dir = "./uploads/clinics";
+                    if (!file_exists($clinic_dir)) {
+                        mkdir($clinic_dir);
+                    }
+                    $clinic_dir = files_dir() . "" . md5($clinic_id);
+                    if (!file_exists($clinic_dir)) {
+                        mkdir($clinic_dir);
+                    }
+                    $patient_dir = $clinic_dir . "/" . md5($patient_id);
+                    if (!file_exists($patient_dir)) {
+                        mkdir($patient_dir);
+                    }
+                    $target_dir = $patient_dir . "/";
+                    $file_new_name = $this->generate_random_string(32);
+                    //copy instead of rename
+                    copy($source_dir . $file_old_name, $target_dir . $file_new_name . ".pdf");
+                    
+                    $this->db->insert("records_clinic_notes", array(
+                        "efax_id" => $efax_id,
+                        "patient_id" => $patient_id,
+                        "record_type" => "Referral Letter",
+                        "physician" => $this->session->userdata("physician_name"),
+                        "description" => "Faxed referral package",
+                        "record_file" => $file_new_name
+                    ));
+                    log_message("error", "file copied from " . $source_dir . $file_old_name . " to " . $target_dir . $file_new_name . ".pdf");
+                    
+
+
+                    // now send fax for request missing item
+
+                    $checklist = array();
+                    foreach ($data["missing_item"] as $key => $value) {
+                        $checklist[] = array(
+                            "doc_name" => $value
+                        );
+                    }
+                    log_message("error", "checklist prepared = " . json_encode($checklist));
+
+                    $this->db->select("c_usr.clinic_institution_name, c_usr.srfax_number");
+                    $this->db->from("clinic_user_info c_usr");
+                    $this->db->where(array(
+                        "c_usr.active" => 1,
+                        "c_usr.id" => $this->session->userdata("user_id")
+                    ));
+                    $info = $this->db->get()->result();
+
+                    $file_name = "referral_missing_from_inbox.html";
+                    $srfax_number = $info[0]->srfax_number;
+                    log_message("error", "srfax = " . $srfax_number);
+                    if (strlen($srfax_number) === 10) {
+                        $srfax_number = substr($srfax_number, 0, 3) . "-" .
+                                substr($srfax_number, 3, 3) . "-" . substr($srfax_number, 6, 4);
+                        log_message("error", " 10 = srfax = " . $srfax_number);
+                    } else if (strlen($srfax_number) === 11) {
+                        $srfax_number = substr($srfax_number, 0, 1) . "-" . substr($srfax_number, 1, 3) . "-" .
+                                substr($srfax_number, 4, 3) . "-" . substr($srfax_number, 7, 4);
+                        log_message("error", " 11 = srfax = " . $srfax_number);
+                    }
+                    $pat_dob = "";
+                    if (!empty($data["pat_dob_day"]) && !empty($data["pat_dob_month"]) && !empty($data["pat_dob_year"])) {
+                        $pat_dob = "({$data["pat_dob_month"]}-{$data["pat_dob_day"]}-{$data["pat_dob_year"]})";
+                    }
+
+                    $replace_stack = array(
+                        "###clinic_name###" => $info[0]->clinic_institution_name,
+                        "###pat_fname###" => $data["pat_fname"],
+                        "###pat_lname###" => $data["pat_lname"],
+                        "###pat_dob###" => $pat_dob,
+                        "###fax_number###" => $srfax_number,
+                        "###time1###" => "",
+                        "###time2###" => ""
+                    );
+
+                    $text2 = "<h2>Referral is incomplete</h2>";
+                    $additional_replace = array(
+                        "###text2###" => $text2
+                    );
+
+                    $fax_number = $data["dr_fax"];
+                    $this->load->model("referral_model");
+                    $response = $this->referral_model->send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, "Request Missing Items", $additional_replace);
+                    log_message("error", "file sent successfully");
+
+                    //store missing item request
+                    $result = $this->db->insert("referral_missing_item_request_info", array(
+                        "patient_id" => 0,
+                        "requested_to" => 0
+                    ));
+                    
+                    $this->db->trans_complete();
+                } catch (Exception $exception) {
+                    return array(false, "SQL Exception occured");
+                }
+            } else {
+                return array(false, "Unauthorized Attempt");
             }
-            $pat_dob = "";
-            if(!empty($data["pat_dob_day"]) && !empty($data["pat_dob_month"]) 
-                    && !empty($data["pat_dob_year"])) {
-                $pat_dob = "({$data["pat_dob_month"]}-{$data["pat_dob_day"]}-{$data["pat_dob_year"]})";
-            }
+
+
             
-            $replace_stack = array(
-                "###clinic_name###" => $info[0]->clinic_institution_name,
-                "###pat_fname###" => $data["pat_fname"],
-                "###pat_lname###" => $data["pat_lname"],
-                "###pat_dob###" => $pat_dob,
-                "###fax_number###" => $srfax_number,
-                "###time1###" => "",
-                "###time2###" => ""
-            );
-
-            $text2 = "<h2>Referral is incomplete</h2>";
-            $additional_replace = array(
-                "###text2###" => $text2
-            );
-
-            $fax_number = $data["dr_fax"];
-            $this->load->model("referral_model");
-            $response = $this->referral_model->send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, "Request Missing Items", $additional_replace);
-            log_message("error", "file sent successfully");
-
-            //store missing item request
-            $result = $this->db->insert("referral_missing_item_request_info", array(
-                "patient_id" => 0,
-                "requested_to" => 0
-            ));
-
-            $this->db->trans_complete();
             if ($result) {
                 return true;
                 // return array(

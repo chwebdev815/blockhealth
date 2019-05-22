@@ -10,7 +10,7 @@ class Fax_manager extends CI_Controller {
                 switch ($argv[1]) {
                     case "hwaBoWSDmTNblPFakqzEhzASerOeKGAc":
                         $this->hwaBoWSDmTNblPFakqzEhzASerOeKGAc();
-                        log_message("error", "Called function hwaBoWSDmTNblPFakqzEhzASerOeKGAc");
+//                        log_message("error", "Called function hwaBoWSDmTNblPFakqzEhzASerOeKGAc");
                         break;
                 }
             }
@@ -18,7 +18,7 @@ class Fax_manager extends CI_Controller {
     }
 
     public function hwaBoWSDmTNblPFakqzEhzASerOeKGAc() {
-        log_message("error", "===========================> version => 1.8 at same time");
+//        log_message("error", "===========================> version => 1.8 at same time");
         //addedd 
         $system_time = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
         $before_5_mins = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-5 minute")));
@@ -30,10 +30,10 @@ class Fax_manager extends CI_Controller {
         $sEndDate = $before_5_mins->format('Ymd');
 //        $before_5_mins = $system_time->sub(new DateInterval('PT5M'));
 //        $before_10_mins = $system_time->sub(new DateInterval('PT5M'));
-        log_message("error", "start = " . $sStartDate . ", and end = " . $sEndDate);
-        log_message("error", "systime => " . json_encode($system_time));
-        log_message("error", "5 min before => " . json_encode($before_5_mins));
-        log_message("error", "10 min before => " . json_encode($before_10_mins));
+//        log_message("error", "start = " . $sStartDate . ", and end = " . $sEndDate);
+//        log_message("error", "systime => " . json_encode($system_time));
+//        log_message("error", "5 min before => " . json_encode($before_5_mins));
+//        log_message("error", "10 min before => " . json_encode($before_10_mins));
         // echo "start = " . $sStartDate . ", and end = " . $sEndDate . "<br/>";
 
 
@@ -84,17 +84,17 @@ class Fax_manager extends CI_Controller {
             }
             
             if ($faxes != null) {
-                log_message("error", "faxes = " . json_encode($faxes));
+//                log_message("error", "faxes = " . json_encode($faxes));
                 foreach ($faxes as $fax) {
-                    log_message("error", "fax = " . json_encode($fax));
+//                    log_message("error", "fax = " . json_encode($fax));
                     $fax_date = DateTime::createFromFormat('M d/y h:i a', $fax->Date);
-                    log_message("error", "fax time = " . json_encode($fax_date));
-                    log_message("error", "<5 condition = " . ($fax_date < $before_5_mins));
-                    log_message("error", ">=10 condition = " . ($fax_date >= $before_10_mins));
+//                    log_message("error", "fax time = " . json_encode($fax_date));
+//                    log_message("error", "<5 condition = " . ($fax_date < $before_5_mins));
+//                    log_message("error", ">=10 condition = " . ($fax_date >= $before_10_mins));
 //                    log_message("error", "fax time = " . json_encode($fax_date));
 
                     if ($fax_date < $before_5_mins && $fax_date >= $before_10_mins) {
-                        log_message("error", "The fax was in time");
+//                        log_message("error", "The fax was in time");
                         $fax_details_id = substr($fax->FileName, strpos($fax->FileName, "|") + 1);
                         $this->db->select("id as family_physician_id");
                         $this->db->from("physician_info");
@@ -109,19 +109,19 @@ class Fax_manager extends CI_Controller {
                         if (strlen($sender_fax) == 10) {
                             $sender_fax = "1$sender_fax";
                         }
-                        log_message("error", "fax received. detail id = " . $fax_details_id . "<br/>");
-                        echo "fax details = $fax_details_id, $from, $to, $pages, $sender_fax" . "<br/>";
+//                        log_message("error", "fax received. detail id = " . $fax_details_id . "<br/>");
+//                        echo "fax details = $fax_details_id, $from, $to, $pages, $sender_fax" . "<br/>";
                         $this->retrieve_fax($fax_details_id, $from, $to, $pages, $sender_fax, $access_id, $access_pwd);
                     } else {
-                        log_message("error", "The fax was out of time");
+//                        log_message("error", "The fax was out of time");
                     }
                 }
             }
         }
 
-        log_message("error", "=======================================================================");
-        log_message("error", "=======================================================================");
-        log_message("error", "=======================================================================");
+//        log_message("error", "=======================================================================");
+//        log_message("error", "=======================================================================");
+//        log_message("error", "=======================================================================");
     }
 
     private function retrieve_fax($fax_details_id, $from, $to, $pages, $sender_fax, $access_id, $access_pwd) {
@@ -162,10 +162,10 @@ class Fax_manager extends CI_Controller {
             //get patient id here.
             $file_path = getcwd() . "/uploads/efax/" . $pdf_fax_file_name . ".pdf";
             
-            log_message("error", "pdf saved at = " . $file_path);
+//            log_message("error", "pdf saved at = " . $file_path);
             file_put_contents($file_path, base64_decode($decodedResult["Result"]));
             curl_close($ch);
-            echo "PDF file saved" . "<br/>";
+//            echo "PDF file saved" . "<br/>";
         }
 //        download fax as tiff
         $postVariables = array(
@@ -202,7 +202,7 @@ class Fax_manager extends CI_Controller {
 //            echo "file path = " . $file_path . "<br/>";
             file_put_contents($file_path, base64_decode($decodedResult["Result"]));
             curl_close($ch);
-            log_message("error", "tiff also saved");
+//            log_message("error", "tiff also saved");
 //            echo "TIFF also saved";
         }
         if($from == "") {
@@ -218,7 +218,7 @@ class Fax_manager extends CI_Controller {
             "sender_fax_number" => $sender_fax
 //            "created_datetime" => date("Y-m-d H:i:s")
         ));
-        log_message("error", " ==================================== > saved fax files => $pdf_fax_file_name $tiff_fax_file_name");
+//        log_message("error", " ==================================== > saved fax files => $pdf_fax_file_name $tiff_fax_file_name");
         //make viewed status read
 //        $postVariables = array(
 //            "action" => "Update_Viewed_Status",
@@ -247,8 +247,8 @@ class Fax_manager extends CI_Controller {
 //            log_message("error", "Error – " . json_encode(curl_error($ch)));
 //            return;
 //        }
-        log_message("error", "view status changed");
-        echo "View status changed " . "<br/>";
+//        log_message("error", "view status changed");
+//        echo "View status changed " . "<br/>";
         $this->db->trans_complete();
     }
 
