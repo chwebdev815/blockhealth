@@ -1502,7 +1502,7 @@ class Inbox_model extends CI_Model {
                     }
                     
                     
-                    //insert new checlist info
+                    //insert new checklist info
                     log_message("error", "at custome checklist");
                     $new_checklist = explode(",", $data["new_checklists"]);
                     foreach ($new_checklist as $key => $value) {

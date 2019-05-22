@@ -1060,11 +1060,9 @@
                 if (IsJsonString(response)) {
                     data = JSON.parse(response);
                     if (data === true) {
-                        $(".modal").modal("hide");
                         success("Missing item request has been sent");
                     } else {
-                        $(".modal").modal("hide");
-                        success(JSON.parse(response));
+                        error(JSON.parse(response));
                     }
                 } else {
                     error("Unexpected Error Occured");
