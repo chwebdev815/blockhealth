@@ -211,11 +211,15 @@
                                                     <strong>Select Record Type</strong>
                                                 </label>
                                                 <select id="record_type" placeholder="Record Type" name="record_type" class="form-control">
-                                                    <option data-show=".file-upload">Referral</option>
-                                                    <option data-show=".file-upload">Consult or Imaging Report</option>
-                                                    <option data-show=".file-upload">Lab Test</option>
-                                                    <option data-show=".file-upload">Prescriptions</option>
-                                                    <option data-show=".file-upload">Notes</option>
+                                                    <option data-show=".file-upload">Referral letter</option>
+                                                    <option data-show=".file-upload">Consult note</option>
+                                                    <option data-show=".file-upload">Imaging note</option>
+                                                    <option data-show=".file-upload">Admin note</option>
+                                                    <option data-show=".file-upload">Lab test</option>
+                                                    <option data-show=".file-upload">Prescription</option>
+                                                    <option data-show=".file-upload">Insurance note</option>
+                                                    <option data-show=".file-upload">Record release</option>
+                                                    <option data-show=".file-upload">Intake form</option>
                                                     <option data-show=".file-upload">Other</option>
                                                 </select>
                                             </div>
