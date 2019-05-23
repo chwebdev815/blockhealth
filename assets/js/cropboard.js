@@ -169,7 +169,7 @@ function fileUpload(data) {
             formData.append('file', blob);
             console.log("building form data");
 //            $.ajax('http://165.227.45.30/predict', {
-            $.ajax('http://165.227.45.30/predict_form', {
+            $.ajax('http://165.227.45.30/'+global_data.predict_url, {
                 method: 'POST',
                 data: formData,
                 processData: false,

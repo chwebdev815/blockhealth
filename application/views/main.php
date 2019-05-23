@@ -249,7 +249,15 @@
             base = "<?php echo base_url(); ?>";
             global_data.referral_id = "<?php echo $this->uri->segment(3); ?>";
             global_data.clinic_id = "<?php echo md5($this->session->userdata("user_id")); ?>";
-
+            
+            <?php 
+            if($this->session->userdata("user_id") === "5") {
+                echo "global_data.predict_url = 'predict';";
+            }
+            else {
+                echo "global_data.predict_url = 'predict_form';";
+            }
+            ?>
             tableActionTO = null;
             myDropzone = null;
 
