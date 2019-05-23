@@ -95,8 +95,9 @@ class My_tasks_model extends CI_Model {
                 ));
                 
                 log_message("error", "updating = > " . $this->db->last_query());
-
+                
                 if ($inserted && $updated) {
+                    $this->db->trans_complete();
                     return array(
                         "result" => "success"
                     );
