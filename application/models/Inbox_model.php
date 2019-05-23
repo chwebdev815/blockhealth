@@ -1094,8 +1094,7 @@ class Inbox_model extends CI_Model {
                     "record_type" => $data["record_type"],
                     "description" => $data["description"],
                     "record_file" => $file_new_name
-                        )
-                );
+                ));
                 //set referred status true for efax
                 $this->db->where(array(
                     "id" => $efax_id,
@@ -1134,13 +1133,21 @@ class Inbox_model extends CI_Model {
 
     public function get_patient_list_save_patient_model() {
         $this->db->select("concat(pat.fname, ' ', pat.lname) as name, md5(pat.id) as id");
-        $this->db->from("clinic_referrals c_ref, referral_patient_info pat");
+        $this->db->from("clinic_referrals c_ref, referral_patient_info pat, "
+                . "efax_info efax, clinic_user_info c_usr");
         $this->db->where(array(
             "c_ref.active" => 1,
             "pat.active" => 1,
-            "c_ref.status" => "Referral Triage"
+            "efax.active" => 1,
+            "c_usr.active" => 1,
+            "c_ref.status" => "Referral Triage",
+            "c_usr.id" => $this->session->userdata("user_id")
         ));
         $this->db->where("c_ref.id", "pat.referral_id", false);
+        $this->db->where("efax.id", "c_ref.efax_id", false);
+        $this->db->where("c_usr.id", "efax.to", false);
+        
+        log_message("error", "get patient list = > " . $this->db->last_query());
         return $this->db->get()->result();
     }
 
