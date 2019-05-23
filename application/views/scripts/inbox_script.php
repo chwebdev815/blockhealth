@@ -1287,9 +1287,19 @@
             btn_physician_extract = $(this);
             btn_physician_extract.button("loading");
             form = $("#signupForm");
+            
+            tmp_fname = form.find("#dr_fname").val();
+            tmp_lname = form.find("#dr_lname").val();
+            
+            form.find("#dr_fname").val(tmp_fname.split(" ")[0]);
+            form.find("#dr_lname").val(tmp_lname.split(" ")[0]);
+            
             form.find("#id").val(global_data.efax_id);
             url = base + "inbox/check_physician_data";
             data = form.serialize();
+            
+            form.find("#dr_fname").val(tmp_fname);
+            form.find("#dr_lname").val(tmp_lname);
 
             $.post({
                 url: url,

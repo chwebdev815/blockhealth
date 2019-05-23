@@ -362,7 +362,8 @@
                                         <div class="pull-left">
                                             <button type="button" class="icon-prev btn-previous" style="font-size: 13px;"><i class="fa fa-angle-left fa-2x"></i></button>
                                             <button id="btnStartCrop2" type="button" class="btn btn-theme">
-                                                <span class="fa fa-crop fa-2" style="font-size: 12px;"></span>
+                                                <span class="fa fa-crop fa-2" 
+                                                      style="font-size: 12px;"></span>
                                             </button>
                                             <button id="btn_extract_physician" style="display: none" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading..." type="button" class="btn btn-theme signup-next btn-autofil"><i class="fa" aria-hidden="true"><img src="assets/img/magic-wand.png" width="16"></i>&nbsp;&nbsp;Auto Fill</button>
                                             <button id="btn_find_physician_match" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading..." type="button" class="btn btn-theme btn-autofil"><i class="fa" aria-hidden="true"><img src="assets/img/magic-wand.png" width="16"></i>&nbsp;&nbsp;Find Match</button>
