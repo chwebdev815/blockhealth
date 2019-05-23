@@ -67,7 +67,7 @@ class My_tasks_model extends CI_Model {
                 }
                 $patient_id = $task_info[0]->patient_id;
                 // delete tiff
-                unlink(files_dir() . md5($clinic_id) . "/" . ($patient_id) . "/" . 
+                unlink(files_dir() . md5($clinic_id) . "/" . md5($patient_id) . "/" . 
                         $task_info[0]->tiff_file);
                 // set pdf as doc for patient selected
 //                
