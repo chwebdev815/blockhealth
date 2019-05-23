@@ -51,7 +51,9 @@ class My_tasks_model extends CI_Model {
             $this->db->trans_start();
             $data = $this->input->post();
             $task_id = get_decrypted_id($data["task_id"], "clinic_physician_tasks");
+            log_message("error", "patient dropdown = " . $data["patient_dropdown"]);
             if ($data["patient_dropdown"] != "0") {
+                log_message("error", "inside dropdown");
                 $clinic_id = $this->session->userdata("user_id");
                 //if patient is assigned
                 $task_info = $this->db->select("patient_id, pdf_file, tiff_file")
@@ -67,24 +69,32 @@ class My_tasks_model extends CI_Model {
                 }
                 $patient_id = $task_info[0]->patient_id;
                 // delete tiff
-                unlink(files_dir() . md5($clinic_id) . "/" . md5($patient_id) . "/" . 
-                        $task_info[0]->tiff_file);
+                $tiff_file = files_dir() . md5($clinic_id) . "/" . md5($patient_id) . "/" . 
+                        $task_info[0]->tiff_file;
+                log_message("error", "deleting tiff = >" . $tiff_file);
+                unlink($tiff_file);
                 // set pdf as doc for patient selected
 //                
+                $new_patient_id = get_decrypted_id($data["patient_dropdown"], "referral_patient_info");
+                log_message("error", "new patient id = " . $new_patient_id);
                 //insert health record
                 $inserted = $this->db->insert("records_clinic_notes", array(
-                    "patient_id" => $patient_id,
+                    "patient_id" => $new_patient_id,
                     "record_type" => "Saved Referral",
                     "physician" => $data["assign_physician"],
                     "description" => $data["description"],
                     "record_file" => $task_info[0]->pdf_file
                 ));
+                
+                log_message("error", "inserting = > " . $this->db->last_query());
 
                 //remove record from fax triage
                 $updated = $this->db->where("id", $task_id)
                         ->update("clinic_physician_tasks", array(
                     "active" => 0
                 ));
+                
+                log_message("error", "updating = > " . $this->db->last_query());
 
                 if ($inserted && $updated) {
                     return array(
