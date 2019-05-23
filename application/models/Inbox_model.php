@@ -1097,12 +1097,10 @@ class Inbox_model extends CI_Model {
                         )
                 );
                 //set referred status true for efax
-                $this->db->where(
-                        array(
-                            "id" => $efax_id,
-                            "active" => 1,
-                        )
-                );
+                $this->db->where(array(
+                    "id" => $efax_id,
+                    "active" => 1
+                ));
                 $this->db->update("efax_info", array(
                     "referred" => true
                         )
@@ -1135,7 +1133,7 @@ class Inbox_model extends CI_Model {
     }
 
     public function get_patient_list_save_patient_model() {
-        $this->db->select("concat(pat.fname, ' ', pat.lname) as name, pat.id as id");
+        $this->db->select("concat(pat.fname, ' ', pat.lname) as name, md5(pat.id) as id");
         $this->db->from("clinic_referrals c_ref, referral_patient_info pat");
         $this->db->where(array(
             "c_ref.active" => 1,
@@ -1145,7 +1143,7 @@ class Inbox_model extends CI_Model {
         $this->db->where("c_ref.id", "pat.referral_id", false);
         return $this->db->get()->result();
     }
-    
+
     public function save_data_points_predict_model() {
         $data = $this->input->post();
         $this->db->insert("data_points_predict", $data);
@@ -1513,8 +1511,8 @@ class Inbox_model extends CI_Model {
                         ));
                         log_message("error", "insert for default = " . $this->db->last_query());
                     }
-                    
-                    
+
+
                     //insert new checklist info
                     log_message("error", "at custome checklist");
                     $new_checklist = explode(",", $data["new_checklists"]);
@@ -1533,7 +1531,7 @@ class Inbox_model extends CI_Model {
                         ));
                         log_message("error", "insert custom = " . $this->db->last_query());
                     }
-                    
+
                     //create default clinical note
                     $clinic_id = $result[0]->to;
                     $source_dir = "./uploads/efax/";
@@ -1554,7 +1552,7 @@ class Inbox_model extends CI_Model {
                     $file_new_name = $this->generate_random_string(32);
                     //copy instead of rename
                     copy($source_dir . $file_old_name, $target_dir . $file_new_name . ".pdf");
-                    
+
                     $this->db->insert("records_clinic_notes", array(
                         "efax_id" => $efax_id,
                         "patient_id" => $patient_id,
@@ -1564,7 +1562,7 @@ class Inbox_model extends CI_Model {
                         "record_file" => $file_new_name
                     ));
                     log_message("error", "file copied from " . $source_dir . $file_old_name . " to " . $target_dir . $file_new_name . ".pdf");
-                    
+
 
 
                     // now send fax for request missing item
@@ -1627,7 +1625,7 @@ class Inbox_model extends CI_Model {
                         "patient_id" => 0,
                         "requested_to" => 0
                     ));
-                    
+
                     $this->db->trans_complete();
                 } catch (Exception $exception) {
                     return array(false, "SQL Exception occured");
@@ -1637,7 +1635,7 @@ class Inbox_model extends CI_Model {
             }
 
 
-            
+
             if ($result) {
                 return true;
                 // return array(
