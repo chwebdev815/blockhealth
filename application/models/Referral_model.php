@@ -343,7 +343,7 @@ class Referral_model extends CI_Model {
             $authorized = $this->check_authentication($data["id"]);
             if ($authorized) {
                 $patient_id = $this->get_decrypted_id($data['id'], "referral_patient_info");
-                
+
                 $this->db->select("DATE_FORMAT(miss.create_datetime, '%l %p')  AS last_request_time," .
                         "DATE_FORMAT(miss.create_datetime, '%M %D')  AS last_request_date," .
                         "dr.fax as dr_fax," .
@@ -366,7 +366,7 @@ class Referral_model extends CI_Model {
                 if ($result) {
                     // request has been previously sent for that referral
                     $alert_data = "Missing item request was previously sent to " .
-                            $result[0]->dr_name . " at " . $result[0]->last_request_time . " on " . 
+                            $result[0]->dr_name . " at " . $result[0]->last_request_time . " on " .
                             $result[0]->last_request_date . ". " .
                             "Are you sure you would like to send a missing item request again?";
                 } else {
@@ -889,6 +889,14 @@ class Referral_model extends CI_Model {
             if (!empty($_FILES['asdqwe']['name']) && $_FILES['asdqwe']['name'][0] != "blob") {
                 $clinic_id = md5($this->session->userdata("user_id"));
                 $patient_id = $data["id"];
+                if (!file_exists("./" . files_dir() . "$clinic_id")) {
+                    log_message("error", "creating clinic folder =>" . "./" . files_dir() . "$clinic_id");
+                    mkdir("./" . files_dir() . "$clinic_id");
+                }
+                if (!file_exists("./" . files_dir() . "$clinic_id/" . md5($patient_id))) {
+                    log_message("error", "creating patient folder =>" . "./" . files_dir() . "$clinic_id/" . md5($patient_id));
+                    mkdir("./" . files_dir() . "$clinic_id/" . md5($patient_id));
+                }
                 $target_dir = "./uploads/clinics/$clinic_id/$patient_id/";
                 if (!file_exists($target_dir)) {
                     mkdir($target_dir);
@@ -1511,7 +1519,7 @@ class Referral_model extends CI_Model {
         $result = $this->db->get()->result();
         $referral_id = $result[0]->referral_id;
         log_message("error", " STEP Move referral id for update => " . $referral_id);
-        
+
         $this->db->where(array(
             "id" => $referral_id,
             "active" => 1
