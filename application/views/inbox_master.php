@@ -211,7 +211,7 @@
                                                     <strong>Select Record Type</strong>
                                                 </label>
                                                 <select id="record_type" placeholder="Record Type" name="record_type" class="form-control">
-                                                    <option data-show=".file-upload">Referral letter</option>
+                                                    <option data-show=".file-upload" selected>Referral letter</option>
                                                     <option data-show=".file-upload">Consult note</option>
                                                     <option data-show=".file-upload">Imaging note</option>
                                                     <option data-show=".file-upload">Admin note</option>
