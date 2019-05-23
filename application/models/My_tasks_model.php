@@ -67,7 +67,8 @@ class My_tasks_model extends CI_Model {
                 }
                 $patient_id = $task_info[0]->patient_id;
                 // delete tiff
-                unlink(files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $task_info[0]->tiff_file);
+                unlink(files_dir() . md5($clinic_id) . "/" . md5($patient_id) . "/" . 
+                        $task_info[0]->tiff_file);
                 // set pdf as doc for patient selected
 //                
                 //insert health record
@@ -78,19 +79,18 @@ class My_tasks_model extends CI_Model {
                     "description" => $data["description"],
                     "record_file" => $task_info[0]->pdf_file
                 ));
-                
+
                 //remove record from fax triage
                 $updated = $this->db->where("id", $task_id)
                         ->update("clinic_physician_tasks", array(
-                            "active" => 0
+                    "active" => 0
                 ));
-                
-                if($inserted && $updated) {
+
+                if ($inserted && $updated) {
                     return array(
                         "result" => "success"
                     );
-                }
-                else {
+                } else {
                     return array(
                         "result" => "error",
                         "message" => "Request not completed."
