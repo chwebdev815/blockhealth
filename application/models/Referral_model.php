@@ -281,9 +281,8 @@ class Referral_model extends CI_Model {
                     "###time2###" => date("F jS")
                 );
                 $fax_number = $result->fax;
-                log_message("error", "sending fax");
-                $this->load->model("referral_model");
-                $response = $this->referral_model->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "New Referral");
+                log_message("error", "not sending fax");
+//                $response = $this->referral_model->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "New Referral");
 
 
                 return $reply;
@@ -688,9 +687,8 @@ class Referral_model extends CI_Model {
                     "###time2###" => date("F jS")
                 );
                 $fax_number = $result->fax;
-                log_message("error", "sending fax");
-                $this->load->model("referral_model");
-                $response = $this->referral_model->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Accept Referral");
+                log_message("error", "not sending fax");
+//                $response = $this->referral_model->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Accept Referral");
 
                 $this->db->insert("count_accepted_referrals", array(
                     "referral_id" => $referral_id,
@@ -1550,7 +1548,7 @@ class Referral_model extends CI_Model {
         );
         $fax_number = $result->fax;
         log_message("error", "sending fax");
-        $response = $this->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", array(), 60, $clinic_id);
+//        $response = $this->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", array(), 60, $clinic_id);
 
         log_message("error", "Last query = " . $this->db->last_query());
     }
