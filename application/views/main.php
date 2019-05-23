@@ -252,7 +252,7 @@
             
             <?php 
             echo "console.log('" . $this->session->userdata("user_id") . "');";
-            if($this->session->userdata("user_id") === "5") {
+            if($this->session->userdata("user_id") === 5) {
                 echo "global_data.predict_url = 'predict';";
             }
             else {
