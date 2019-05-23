@@ -251,6 +251,7 @@
             global_data.clinic_id = "<?php echo md5($this->session->userdata("user_id")); ?>";
             
             <?php 
+            echo "console.log('" . $this->session->userdata("user_id") . "');";
             if($this->session->userdata("user_id") === "5") {
                 echo "global_data.predict_url = 'predict';";
             }
