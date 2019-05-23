@@ -893,14 +893,14 @@ class Referral_model extends CI_Model {
                     log_message("error", "creating clinic folder =>" . "./" . files_dir() . "$clinic_id");
                     mkdir("./" . files_dir() . "$clinic_id");
                 }
-                if (!file_exists("./" . files_dir() . "$clinic_id/" . md5($patient_id))) {
-                    log_message("error", "creating patient folder =>" . "./" . files_dir() . "$clinic_id/" . md5($patient_id));
-                    mkdir("./" . files_dir() . "$clinic_id/" . md5($patient_id));
+                if (!file_exists("./" . files_dir() . "$clinic_id/" . $patient_id)) {
+                    log_message("error", "creating patient folder =>" . "./" . files_dir() . "$clinic_id/" . $patient_id);
+                    mkdir("./" . files_dir() . "$clinic_id/" . $patient_id);
                 }
                 $target_dir = "./uploads/clinics/$clinic_id/$patient_id/";
-                if (!file_exists($target_dir)) {
-                    mkdir($target_dir);
-                }
+//                if (!file_exists($target_dir)) {
+//                    mkdir($target_dir);
+//                }
                 $config = array();
                 $config['upload_path'] = $target_dir;
                 $config['max_size'] = '10000';
