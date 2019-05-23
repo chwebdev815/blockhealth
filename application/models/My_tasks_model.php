@@ -54,7 +54,7 @@ class My_tasks_model extends CI_Model {
             if ($data["patient_dropdown"] != "0") {
                 $clinic_id = $this->session->userdata("user_id");
                 //if patient is assigned
-                $task_info = $this->db->select("md5(patient_id) as patient_id, pdf_file, tiff_file")
+                $task_info = $this->db->select("patient_id, pdf_file, tiff_file")
                                 ->from("clinic_physician_tasks")
                                 ->where(array(
                                     "id" => $task_id
@@ -67,7 +67,7 @@ class My_tasks_model extends CI_Model {
                 }
                 $patient_id = $task_info[0]->patient_id;
                 // delete tiff
-                unlink(files_dir() . md5($clinic_id) . "/" . md5($patient_id) . "/" . 
+                unlink(files_dir() . md5($clinic_id) . "/" . ($patient_id) . "/" . 
                         $task_info[0]->tiff_file);
                 // set pdf as doc for patient selected
 //                
