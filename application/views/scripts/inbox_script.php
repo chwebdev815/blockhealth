@@ -1805,7 +1805,7 @@
                                     data_points_captured.dob_year = response.predictions.DOB.Year;
                                 }
                             }
-                            debugger
+//                            debugger
                             if (response.predictions.hasOwnProperty('ICN')) {
                                 if (response.predictions.ICN.hasOwnProperty('NO')) {
                                     if (response.predictions.ICN.NO != "") {
