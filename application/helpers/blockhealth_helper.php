@@ -227,6 +227,6 @@ function convert_priority_to_display_name($db_priority) {
         case "urgent":
             return "Urgent";
         case "not_specified":
-            return "Undefined";
+            return "";
     }
 }
