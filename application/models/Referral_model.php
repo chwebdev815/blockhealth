@@ -460,7 +460,7 @@ class Referral_model extends CI_Model {
                 $this->db->where("c_ref.efax_id", "efax.id", false);
                 $info = $this->db->get()->result();
 
-                $file_name = "referral_missing.html";
+                $file_name = "referral_missing_from_inbox.html";
                 $srfax_number = $info[0]->srfax_number;
                 log_message("error", "srfax = " . $srfax_number);
                 if (strlen($srfax_number) === 10) {
