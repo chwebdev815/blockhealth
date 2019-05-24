@@ -121,11 +121,12 @@ class Inbox_model extends CI_Model {
                     log_message("error", "creating clinic folder =>" . "./" . files_dir() .  md5($clinic_id));
                     mkdir("./" . files_dir() .  md5($clinic_id));
                 }
-                log_message("error", "checking if exist = " . "./" . files_dir() .  md5($clinic_id) . md5($patient_id));
-                if (!file_exists("./" . files_dir() .  md5($clinic_id) . md5($patient_id))) {
+                log_message("error", "checking if exist = " . "./" . files_dir() 
+                        .  md5($clinic_id) . md5($new_patient_id));
+                if (!file_exists("./" . files_dir() .  md5($clinic_id) . md5($new_patient_id))) {
                     log_message("error", "creating patient folder =>" . "./" . files_dir() .  
-                            md5($clinic_id) . "/" . md5($patient_id));
-                    mkdir("./" . files_dir() .  md5($clinic_id) . "/" . md5($patient_id));
+                            md5($clinic_id) . "/" . md5($new_patient_id));
+                    mkdir("./" . files_dir() .  md5($clinic_id) . "/" . md5($new_patient_id));
                 }
                 
                 // set pdf as doc for patient selected
