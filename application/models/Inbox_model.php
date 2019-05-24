@@ -1669,7 +1669,9 @@ class Inbox_model extends CI_Model {
                     $pat_dob = "";
                     log_message("error", "pat dob set");
                     if (!empty($data["pat_dob_day"]) && !empty($data["pat_dob_month"]) && !empty($data["pat_dob_year"])) {
-                        $pat_dob = "({$data["pat_dob_month"]}-{$data["pat_dob_day"]}-{$data["pat_dob_year"]})";
+                        $date = DateTime::createFromFormat('d-m-Y', "{$data["pat_dob_month"]}-"
+                        . "{$data["pat_dob_day"]}-{$data["pat_dob_year"]}");
+                        $pat_dob = "(" . $date->format("M d, Y") . ")";
                         log_message("error", "pat dob set as = " . $pat_dob);
                     }
 
