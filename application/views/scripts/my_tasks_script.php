@@ -410,6 +410,9 @@
                         error(data.message);
                     }
                 }
+                else {
+                    error("Internal Server Error");
+                }
             });
         });
 

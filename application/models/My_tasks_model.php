@@ -173,7 +173,7 @@ class My_tasks_model extends CI_Model {
             
             $this->db->where(array(
                 "md5(id)" => $data["id"],
-                "to" => $this->session->userdata("user_id")
+                "clinic_id" => $this->session->userdata("user_id")
             ));
             $this->db->update("clinic_physician_tasks", array(
                 "active" => 0
