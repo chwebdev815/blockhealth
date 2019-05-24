@@ -433,7 +433,8 @@ class Referral_model extends CI_Model {
                 }
                 $checklist = $new_checklist;
 
-                $this->db->select("concat(pat.fname, ' ', pat.lname) as patient_name,"
+                $this->db->select("pat.fname,"
+                        . "pat.lname,"
                         . "DATE_FORMAT(pat.dob, '%b %d, %Y') as pat_dob," .
                         "c_usr.clinic_institution_name," .
                         "c_usr.srfax_number," .
@@ -474,8 +475,8 @@ class Referral_model extends CI_Model {
                 $pat_dob = $info[0]->pat_dob;
                 $replace_stack = array(
                     "###clinic_name###" => $info[0]->clinic_institution_name,
-                    "###pat_fname###" => $data["pat_fname"],
-                    "###pat_lname###" => $data["pat_lname"],
+                    "###pat_fname###" => $info[0]->fname,
+                    "###pat_lname###" => $info[0]->lname,
                     "###pat_dob###" => $pat_dob,
                     "###fax_number###" => $srfax_number,
                     "###time1###" => $info[0]->referral_triaged,
