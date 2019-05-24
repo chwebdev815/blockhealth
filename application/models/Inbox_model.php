@@ -157,7 +157,8 @@ class Inbox_model extends CI_Model {
                         $this->db->where(array(
                             "id" => $c_ref_data[0]->id
                         ))->update("clinic_referrals", array(
-                            "missing_item_status" => "Missing item received <span class=\"fc-event-dot\" "
+                            "missing_item_status" => "Items uploaded for review "
+                            . "<span class=\"fc-event-dot\" "
                             . "style=\"background-color:#88b794\"></span>"
                         ));
                         log_message("error", "referral made green => " . $this->db->last_query());
@@ -1432,7 +1433,8 @@ class Inbox_model extends CI_Model {
                         "referral_code" => $referral_code,
                         "referral_reason" => $referral_reason,
                         "status" => $first_status,
-                        "missing_item_status" => "Missing item requested <span class=\"fc-event-dot\" "
+                        "missing_item_status" => "Missing item requested "
+                        . "<span class=\"fc-event-dot\" "
                         . "style=\"background-color:#e7e92a\"></span>"
                     );
 
