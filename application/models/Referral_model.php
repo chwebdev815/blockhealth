@@ -434,7 +434,7 @@ class Referral_model extends CI_Model {
                 $checklist = $new_checklist;
 
                 $this->db->select("concat(pat.fname, ' ', pat.lname) as patient_name,"
-                        . "DATE_FORMAT(pat.dob, '%b %d, %Y') as pat_dob" .
+                        . "DATE_FORMAT(pat.dob, '%b %d, %Y') as pat_dob," .
                         "c_usr.clinic_institution_name," .
                         "c_usr.srfax_number," .
                         "c_ref.referral_code," .
