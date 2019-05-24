@@ -580,11 +580,31 @@
             }
         });
     }
+    
+    function get_patient_list_save_patient() {
+        url = base + "inbox/get_patient_list_save_patient";
+        $.post({
+            url: url,
+            data: $("#sample_form").serialize()
+        }).done(function (response) {
+            if (IsJsonString(response)) {
+                data = JSON.parse(response);
+                options = "<option selected value='0'>Select Patient</option>";
+                data.forEach(function (value, index) {
+                    options += "<option value='" + value.id + "'>" + value.name + "</option>";
+                });
+                $("#form_patient_save").find("#patient_dropdown").html(options);
+            }
+        });
+    }
 
 
     $(document).ready(function () {
+        
         get_referral_checklist();
         get_physician_list_save_patient();
+        get_patient_list_save_patient();
+        
         $("#li_inbox").addClass("active");
         $("#btn_view_print_referral").on("click", function () {
             printJS(global_data.pdf_file + ".pdf");

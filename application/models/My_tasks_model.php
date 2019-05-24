@@ -80,7 +80,7 @@ class My_tasks_model extends CI_Model {
                 //insert health record
                 $inserted = $this->db->insert("records_clinic_notes", array(
                     "patient_id" => $new_patient_id,
-                    "record_type" => "Saved Referral",
+                    "record_type" => $data["record_type"],
                     "physician" => $data["assign_physician"],
                     "description" => $data["description"],
                     "record_file" => $task_info[0]->pdf_file

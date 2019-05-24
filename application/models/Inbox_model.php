@@ -100,162 +100,208 @@ class Inbox_model extends CI_Model {
             ));
             log_message("error", "setting referred => " . $this->db->last_query());
 
-            $new_file_name = generate_random_string(32);
+            if ($data["patient_dropdown"] != "0") {
+                log_message("error", "inside dropdown");
+                $clinic_id = $this->session->userdata("user_id");
+                $new_patient_id = get_decrypted_id($data["patient_dropdown"], "referral_patient_info");
+                //if patient is assigned
+                if (!$efax_info) {
+                    return array(
+                        "result" => "error",
+                        "msg" => "Fax record info not found"
+                    );
+                }
+                // delete tiff
+                $tiff_file = "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name;
+                log_message("error", "deleting tiff = >" . $tiff_file);
+                unlink($tiff_file);
+//                
+                
+                // set pdf as doc for patient selected
+                rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./" . files_dir() . "$clinic_id/" . md5($new_patient_id) . "/" . $efax_info[0]->file_name . ".pdf");
+                log_message("error", "new patient id = " . $new_patient_id);
+                //insert health record
+                $inserted = $this->db->insert("records_clinic_notes", array(
+                    "patient_id" => $new_patient_id,
+                    "record_type" => $data["record_type"],
+                    "physician" => $data["assign_physician"],
+                    "description" => $data["description"],
+                    "record_file" => $efax_info[0]->file_name
+                ));
+                log_message("error", "inserting = > " . $this->db->last_query());
+                
+                if ($inserted) {
+                    $this->db->trans_complete();
+                    return array(
+                        "result" => "success"
+                    );
+                } else {
+                    return array(
+                        "result" => "error",
+                        "message" => "Request not completed."
+                    );
+                }
+            } else {
+
+                //if patient not assigned
+
+                $new_file_name = generate_random_string(32);
 
 //            $id = $this->get_decrypted_id($data["id"], "referral_patient_info");
-            $physician_id = ((isset($data["assign_physician"])) ?
-                    $this->get_decrypted_id($data["assign_physician"], "clinic_physician_info") : 0);
+                $physician_id = ((isset($data["assign_physician"])) ?
+                        $this->get_decrypted_id($data["assign_physician"], "clinic_physician_info") : 0);
 //            $patient_id = ((isset($data["id"])) ? ($this->get_decrypted_id($data["id"], "referral_patient_info")) : 0);
 //            $patient_id = 2;
-            $this->db->insert("referral_patient_info", array(
-                "fname" => $data["pat_fname"],
-                "lname" => $data["pat_lname"],
-                "dob" => $data["pat_dob_year"] . "-" . $data["pat_dob_month"] . "-" . $data["pat_dob_day"],
-                "ohip" => $data["pat_ohip"],
-                "gender" => $data["pat_gender"]
-            ));
-
-            $patient_id = $this->db->insert_id();
-            $clinic_id = md5($this->session->userdata("user_id"));
-
-            $inserted = $this->db->insert("clinic_physician_tasks", array(
-                "clinic_id" => $this->session->userdata("user_id"),
-                "assigned_to" => $physician_id,
-                "patient_id" => $patient_id,
-                "record_type" => $data["record_type"],
-                "notes" => $data["description"],
-                "pdf_file" => $new_file_name . ".pdf",
-                "tiff_file" => $new_file_name . ".tif",
-                "page_count" => $efax_info[0]->pages,
-                "fax_date_time" => $efax_info[0]->create_datetime,
-                "sender_fax_number" => $efax_info[0]->sender_fax_number
-            ));
-            log_message("error", "insert = " . $this->db->last_query());
-            $task_id = $this->db->insert_id();
-
-            if (!file_exists("./" . files_dir() . "$clinic_id")) {
-                log_message("error", "creating clinic folder =>" . "./" . files_dir() . "$clinic_id");
-                mkdir("./" . files_dir() . "$clinic_id");
-            }
-            if (!file_exists("./" . files_dir() . "$clinic_id/" . md5($patient_id))) {
-                log_message("error", "creating patient folder =>" . "./" . files_dir() . "$clinic_id/" . md5($patient_id));
-                mkdir("./" . files_dir() . "$clinic_id/" . md5($patient_id));
-            }
-            if ((isset($data["id"])) && $data["id"] != "") {
-
-                $inserted = $this->db->insert("records_clinic_notes", array(
-                    "patient_id" => $this->get_decrypted_id($data["id"], "referral_patient_info"),
-                    "physician" => "Admin",
-                    "record_type" => $data["record_type"],
-                    "description" => $data["description"],
-                    "record_file" => $new_file_name
+                $this->db->insert("referral_patient_info", array(
+                    "fname" => $data["pat_fname"],
+                    "lname" => $data["pat_lname"],
+                    "dob" => $data["pat_dob_year"] . "-" . $data["pat_dob_month"] . "-" . $data["pat_dob_day"],
+                    "ohip" => $data["pat_ohip"],
+                    "gender" => $data["pat_gender"]
                 ));
 
-                copy("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
-                log_message("error", "patient record => " . $efax_id . " => ./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
-            }
+                $patient_id = $this->db->insert_id();
+                $clinic_id = md5($this->session->userdata("user_id"));
+
+                $inserted = $this->db->insert("clinic_physician_tasks", array(
+                    "clinic_id" => $this->session->userdata("user_id"),
+                    "assigned_to" => $physician_id,
+                    "patient_id" => $patient_id,
+                    "record_type" => $data["record_type"],
+                    "notes" => $data["description"],
+                    "pdf_file" => $new_file_name . ".pdf",
+                    "tiff_file" => $new_file_name . ".tif",
+                    "page_count" => $efax_info[0]->pages,
+                    "fax_date_time" => $efax_info[0]->create_datetime,
+                    "sender_fax_number" => $efax_info[0]->sender_fax_number
+                ));
+                log_message("error", "insert = " . $this->db->last_query());
+                $task_id = $this->db->insert_id();
+
+                if (!file_exists("./" . files_dir() . "$clinic_id")) {
+                    log_message("error", "creating clinic folder =>" . "./" . files_dir() . "$clinic_id");
+                    mkdir("./" . files_dir() . "$clinic_id");
+                }
+                if (!file_exists("./" . files_dir() . "$clinic_id/" . md5($patient_id))) {
+                    log_message("error", "creating patient folder =>" . "./" . files_dir() . "$clinic_id/" . md5($patient_id));
+                    mkdir("./" . files_dir() . "$clinic_id/" . md5($patient_id));
+                }
+                if ((isset($data["id"])) && $data["id"] != "") {
+
+                    $inserted = $this->db->insert("records_clinic_notes", array(
+                        "patient_id" => $this->get_decrypted_id($data["id"], "referral_patient_info"),
+                        "physician" => "Admin",
+                        "record_type" => $data["record_type"],
+                        "description" => $data["description"],
+                        "record_file" => $new_file_name
+                    ));
+
+                    copy("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+                    log_message("error", "patient record => " . $efax_id . " => ./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+                }
 
 
 //            log_message("error", $efax_id . "./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
 //            log_message("error", $efax_id . "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name . " to ./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
 
-            rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
-            rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, "./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".tif");
+                rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+                rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, "./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".tif");
 
 
-            //only trigger RPA events (table entry + doc upload API) if pathway name is AccuroCitrix
-            //
+                //only trigger RPA events (table entry + doc upload API) if pathway name is AccuroCitrix
+                //
             $clinic = $this->db->select("first_name, integration_type, emr_pathway, emr_uname_1, emr_pwd_1")
-                            ->from("clinic_user_info")
-                            ->where("id", $this->session->userdata("user_id"))
-                            ->get()->result();
+                                ->from("clinic_user_info")
+                                ->where("id", $this->session->userdata("user_id"))
+                                ->get()->result();
 
-            if ($clinic) {
-                $clinic = $clinic[0];
+                if ($clinic) {
+                    $clinic = $clinic[0];
 
-                if ($clinic->emr_pathway === "OscarEMR") {
-                    //save to json file for API integration
-                    $data_object = array(
-                        "api_type" => "save",
-                        "api_num" => 3,
-                        "date" => date("Y-m-d"),
-                        "time" => date("H:i:s"),
-                        "status" => "NEW",
-                        "first_name" => $data["pat_fname"],
-                        "last_name" => $data["pat_lname"],
-                        "dob_day" => make_two_digit($data["pat_dob_day"]),
-                        "dob_month" => make_two_digit($data["pat_dob_month"]),
-                        "dob_year" => $data["pat_dob_year"],
-                        "hin" => $data["pat_ohip"],
-                        "pdf_name" => "$new_file_name.pdf",
-                        "pdf_location" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf",
-                        "pdf_type" => "Documents",
-                        "active" => 1
-                    );
-                    save_json($this->session->userdata("user_id"), $data_object);
+                    if ($clinic->emr_pathway === "OscarEMR") {
+                        //save to json file for API integration
+                        $data_object = array(
+                            "api_type" => "save",
+                            "api_num" => 3,
+                            "date" => date("Y-m-d"),
+                            "time" => date("H:i:s"),
+                            "status" => "NEW",
+                            "first_name" => $data["pat_fname"],
+                            "last_name" => $data["pat_lname"],
+                            "dob_day" => make_two_digit($data["pat_dob_day"]),
+                            "dob_month" => make_two_digit($data["pat_dob_month"]),
+                            "dob_year" => $data["pat_dob_year"],
+                            "hin" => $data["pat_ohip"],
+                            "pdf_name" => "$new_file_name.pdf",
+                            "pdf_location" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf",
+                            "pdf_type" => "Documents",
+                            "active" => 1
+                        );
+                        save_json($this->session->userdata("user_id"), $data_object);
+                    }
+                    if ($clinic->emr_pathway === "AccuroCitrix") {
+                        //save entry in rpa_integration table
+                        $this->db->insert("rpa_integration", array(
+                            "api_type" => "save",
+                            "api_num" => 3,
+                            "fk_id" => $task_id,
+                            "date" => date("Y-m-d"),
+                            "time" => date("H:i:s"),
+                            "status" => "NEW",
+                            "pathway" => $clinic->emr_pathway,
+                            "clinic_name" => $clinic->first_name,
+                            "username" => $clinic->emr_uname_1,
+                            "password" => $clinic->emr_pwd_1,
+                            "first_name" => $data["pat_fname"],
+                            "last_name" => $data["pat_lname"],
+                            "dob_day" => make_two_digit($data["pat_dob_day"]),
+                            "dob_month" => make_two_digit($data["pat_dob_month"]),
+                            "dob_year" => $data["pat_dob_year"],
+                            "hin" => $data["pat_ohip"],
+                            "pdf_name" => "$new_file_name.pdf",
+                            "pdf_location" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf",
+                            "pdf_type" => "Documents",
+                            "assigned_provider" => "Arianna Muskat",
+                            "active" => 1
+                        ));
+                        log_message("error", "inserted to rpa");
+                        log_message("error", $this->db->last_query());
+
+                        //send to RPA nitegration
+                        $request = curl_init('http://52.237.12.245/api/v1/patients/upload-documents');
+
+                        curl_setopt($request, CURLOPT_POST, true);
+                        curl_setopt($request, CURLOPT_POSTFIELDS, array(
+                            "pathwayName" => "AccuroCitrix",
+                            "username" => "hahmed",
+                            "password" => "Blockhealth19",
+                            "ClinicName" => "TCN",
+                            "source" => "remote",
+                            "PDFName" => "$new_file_name.pdf",
+                            "PDFRemote" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf"
+                        ));
+                        curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
+                        $response = curl_exec($request);
+                        curl_close($request);
+
+                        log_message("error", "curl log = " . json_encode($response));
+                    }
                 }
-                if ($clinic->emr_pathway === "AccuroCitrix") {
-                    //save entry in rpa_integration table
-                    $this->db->insert("rpa_integration", array(
-                        "api_type" => "save",
-                        "api_num" => 3,
-                        "fk_id" => $task_id,
-                        "date" => date("Y-m-d"),
-                        "time" => date("H:i:s"),
-                        "status" => "NEW",
-                        "pathway" => $clinic->emr_pathway,
-                        "clinic_name" => $clinic->first_name,
-                        "username" => $clinic->emr_uname_1,
-                        "password" => $clinic->emr_pwd_1,
-                        "first_name" => $data["pat_fname"],
-                        "last_name" => $data["pat_lname"],
-                        "dob_day" => make_two_digit($data["pat_dob_day"]),
-                        "dob_month" => make_two_digit($data["pat_dob_month"]),
-                        "dob_year" => $data["pat_dob_year"],
-                        "hin" => $data["pat_ohip"],
-                        "pdf_name" => "$new_file_name.pdf",
-                        "pdf_location" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf",
-                        "pdf_type" => "Documents",
-                        "assigned_provider" => "Arianna Muskat",
-                        "active" => 1
-                    ));
-                    log_message("error", "inserted to rpa");
-                    log_message("error", $this->db->last_query());
-
-                    //send to RPA nitegration
-                    $request = curl_init('http://52.237.12.245/api/v1/patients/upload-documents');
-
-                    curl_setopt($request, CURLOPT_POST, true);
-                    curl_setopt($request, CURLOPT_POSTFIELDS, array(
-                        "pathwayName" => "AccuroCitrix",
-                        "username" => "hahmed",
-                        "password" => "Blockhealth19",
-                        "ClinicName" => "TCN",
-                        "source" => "remote",
-                        "PDFName" => "$new_file_name.pdf",
-                        "PDFRemote" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf"
-                    ));
-                    curl_setopt($request, CURLOPT_RETURNTRANSFER, true);
-                    $response = curl_exec($request);
-                    curl_close($request);
-
-                    log_message("error", "curl log = " . json_encode($response));
-                }
-            }
 
 //            log_message("error", "insert = " . $this->db->last_query());
 
-            $this->db->trans_complete();
-            log_message("error", "transactions saved");
-            if ($inserted) {
-                return array(
-                    "result" => "success"
-                );
-            } else {
-                return array(
-                    "result" => "error",
-                    "msg" => "Failed to save patient record"
-                );
+                $this->db->trans_complete();
+                log_message("error", "transactions saved");
+                if ($inserted) {
+                    return array(
+                        "result" => "success"
+                    );
+                } else {
+                    return array(
+                        "result" => "error",
+                        "msg" => "Failed to save patient record"
+                    );
+                }
             }
         } else {
             return array(
@@ -597,7 +643,6 @@ class Inbox_model extends CI_Model {
 //            if ($result) {
 //                return array(false, "Referral already created for this fax");
 //            }
-
             //check efax authenticity
             $this->db->select("id, file_name, to");
             $this->db->from("efax_info");
@@ -1146,7 +1191,7 @@ class Inbox_model extends CI_Model {
         $this->db->where("c_ref.id", "pat.referral_id", false);
         $this->db->where("efax.id", "c_ref.efax_id", false);
         $this->db->where("c_usr.id", "efax.to", false);
-        
+
         log_message("error", "get patient list = > " . $this->db->last_query());
         return $this->db->get()->result();
     }
