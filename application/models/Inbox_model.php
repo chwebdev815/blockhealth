@@ -369,7 +369,7 @@ class Inbox_model extends CI_Model {
                     "lower(LAST_NAME) = lower('$last_name')"
             );
             $result = $db_predict->get()->result();
-
+            log_message("error", "matching physician detail with sql = " . $db_predict->last_query());
             //find doctor match for last name, along with either one of first name, phone, and fax
             $matched = false;
             $matched_data = array();
