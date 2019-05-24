@@ -401,7 +401,7 @@ class Referral_model extends CI_Model {
             return validation_errors();
         }
     }
-
+    
     public function request_missing_items_model() {
         $this->form_validation->set_rules('id', 'Patient Id', 'required');
         if ($this->form_validation->run()) {
@@ -424,8 +424,17 @@ class Referral_model extends CI_Model {
                         ->where("ref_c.checklist_type", "typed")
                         ->group_end();
                 $checklist = $this->db->get()->result();
+                
+                $new_checklist = array();
+                foreach ($checklist as $key => $value) {
+                    $new_checklist[] = array(
+                        "doc_name" => $value->doc_name
+                    );
+                } 
+                $checklist = $new_checklist;
 
-                $this->db->select("concat(pat.fname, ' ', pat.lname) as patient_name," .
+                $this->db->select("concat(pat.fname, ' ', pat.lname) as patient_name,"
+                        . "pat.dob," .
                         "c_usr.clinic_institution_name," .
                         "c_ref.referral_code," .
                         "dr.fax, dr.id as dr_id,"
@@ -433,7 +442,8 @@ class Referral_model extends CI_Model {
                         . "date_format(efax.create_datetime, '%M %D') as referral_received,"
                         . "date_format(c_ref.create_datetime, '%M %D') as referral_triaged,"
                         . "c_ref.status");
-                $this->db->from("referral_patient_info pat, clinic_user_info c_usr, clinic_referrals c_ref, efax_info efax, referral_physician_info dr");
+                $this->db->from("referral_patient_info pat, clinic_user_info c_usr, "
+                        . "clinic_referrals c_ref, efax_info efax, referral_physician_info dr");
                 $this->db->where(array(
                     "pat.active" => 1,
                     "c_usr.active" => 1,
@@ -488,10 +498,6 @@ class Referral_model extends CI_Model {
                 $this->db->trans_complete();
                 if ($result) {
                     return true;
-                    // return array(
-                    //  "sender fax" => $info[0]->fax,
-                    //  "referral_code" => $info[0]->referral_code
-                    // );
                 } else {
                     return "Operation not completed";
                 }
@@ -502,7 +508,7 @@ class Referral_model extends CI_Model {
             return validation_errors();
         }
     }
-
+    
     public function send_status_fax($file_name, $checklist, $replace_stack, $fax_number, $reason, $additional_replace = array(), $timeout = 60, $clinic_id = "") {
         log_message("error", "checklist prepared = " . json_encode($checklist));
 //        send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", $clinic_id)
