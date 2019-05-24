@@ -69,7 +69,7 @@ class My_tasks_model extends CI_Model {
                 }
                 $patient_id = $task_info[0]->patient_id;
                 // delete tiff
-                $tiff_file = files_dir() . md5($clinic_id) . "/" . md5($patient_id) . "/" . 
+                $tiff_file = files_dir() . md5($clinic_id) . "/" . md5($patient_id) . "/" .
                         $task_info[0]->tiff_file;
                 log_message("error", "deleting tiff = >" . $tiff_file);
                 unlink($tiff_file);
@@ -85,7 +85,7 @@ class My_tasks_model extends CI_Model {
                     "description" => $data["description"],
                     "record_file" => $task_info[0]->pdf_file
                 ));
-                
+
                 log_message("error", "inserting = > " . $this->db->last_query());
 
                 //remove record from fax triage
@@ -93,9 +93,9 @@ class My_tasks_model extends CI_Model {
                         ->update("clinic_physician_tasks", array(
                     "active" => 0
                 ));
-                
+
                 log_message("error", "updating = > " . $this->db->last_query());
-                
+
                 if ($inserted && $updated) {
                     $this->db->trans_complete();
                     return array(
@@ -162,6 +162,37 @@ class My_tasks_model extends CI_Model {
             return array(
                 "result" => "error",
                 "msg" => validation_errors()
+            );
+        }
+    }
+
+    public function delete_referral_model() {
+        $this->form_validation->set_rules('id', 'Record ID', 'required');
+        if ($this->form_validation->run()) {
+            $data = $this->input->post();
+            
+            $this->db->where(array(
+                "md5(id)" => $data["id"],
+                "to" => $this->session->userdata("user_id")
+            ));
+            $this->db->update("clinic_physician_tasks", array(
+                "active" => 0
+            ));
+            if($this->db->affected_rows() == 1) {
+                return array(
+                    "result" => "success"
+                );
+            }
+            else {
+                return array(
+                    "result" => "error",
+                    "message" => "Unable to Delete Efax"
+                );
+            }
+        } else {
+            return array(
+                "result" => "error",
+                "message" => validation_errors()
             );
         }
     }

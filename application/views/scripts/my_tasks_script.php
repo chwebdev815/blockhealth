@@ -388,6 +388,28 @@
                 $("#btn_save_task").button("reset");
             });
         });
+        
+        
+        $("#btn_delete_referral").on("click", function () {
+            form = $("#sample_form");
+            form.find("#id").val(global_data.efax_id);
+            url = base + "my_tasks/delete_referral";
+            data = form.serialize();
+            $.post({
+                url: url,
+                data: data
+            }).done(function (response) {
+                if (IsJsonString(response)) {
+                    data = JSON.parse(response);
+                    if (data == true) {
+                        global_data.table_my_tasks.ajax.reload();
+                        $(".modal").modal("hide");
+//                        success("Referral Successfully Deleted");
+                        get_latest_dashboard_counts();
+                    }
+                }
+            });
+        });
 
         $("#btn_save_patient_record").on("click", function () {
             //form_save_patient_record

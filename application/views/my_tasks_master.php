@@ -297,6 +297,27 @@
     </div>
 </div>
 
+
+<div id="modal_delete_referral" class="modal fade" role="dialog" style="z-index: 2056 !important;">
+    <div class="modal-dialog modal-md">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm Delete</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    Are you sure you would like to delete from Fax Triage?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_delete_referral" class="btn btn-theme btn-alt-theme" data-dismiss="modal">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <script src="https://cdn.jsdelivr.net/gh/vast-engineering/jquery-popup-overlay@2/jquery.popupoverlay.min.js"></script>
 
 

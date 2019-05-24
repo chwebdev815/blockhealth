@@ -31,6 +31,16 @@ class My_tasks extends CI_Controller {
         echo json_encode($response);
     }
     
+    public function delete_referral() {
+        if (clinic_login()) {
+            $this->load->model("my_tasks_model");
+            $response = $this->my_tasks_model->delete_referral_model();
+        } else {
+            $response = "Sesion Expired";
+        }
+        echo json_encode($response);
+    }
+    
     public function task_completed() {
         if (clinic_login()) {
             $this->load->model("my_tasks_model");
