@@ -401,7 +401,7 @@ class Referral_model extends CI_Model {
             return validation_errors();
         }
     }
-    
+
     public function request_missing_items_model() {
         $this->form_validation->set_rules('id', 'Patient Id', 'required');
         if ($this->form_validation->run()) {
@@ -424,18 +424,19 @@ class Referral_model extends CI_Model {
                         ->where("ref_c.checklist_type", "typed")
                         ->group_end();
                 $checklist = $this->db->get()->result();
-                
+
                 $new_checklist = array();
                 foreach ($checklist as $key => $value) {
                     $new_checklist[] = array(
                         "doc_name" => $value->doc_name
                     );
-                } 
+                }
                 $checklist = $new_checklist;
 
                 $this->db->select("concat(pat.fname, ' ', pat.lname) as patient_name,"
-                        . "pat.dob," .
+                        . "DATE_FORMAT(pat.dob, '%b %d, %Y') as pat_dob" .
                         "c_usr.clinic_institution_name," .
+                        "c_usr.srfax_number," .
                         "c_ref.referral_code," .
                         "dr.fax, dr.id as dr_id,"
                         . "efax.from as efax_from,"
@@ -459,9 +460,24 @@ class Referral_model extends CI_Model {
                 $info = $this->db->get()->result();
 
                 $file_name = "referral_missing.html";
+                $srfax_number = $info[0]->srfax_number;
+                log_message("error", "srfax = " . $srfax_number);
+                if (strlen($srfax_number) === 10) {
+                    $srfax_number = substr($srfax_number, 0, 3) . "-" .
+                            substr($srfax_number, 3, 3) . "-" . substr($srfax_number, 6, 4);
+                    log_message("error", " 10 = srfax = " . $srfax_number);
+                } else if (strlen($srfax_number) === 11) {
+                    $srfax_number = substr($srfax_number, 0, 1) . "-" . substr($srfax_number, 1, 3) . "-" .
+                            substr($srfax_number, 4, 3) . "-" . substr($srfax_number, 7, 4);
+                    log_message("error", " 11 = srfax = " . $srfax_number);
+                }
+                $pat_dob = $info[0]->pat_dob;
                 $replace_stack = array(
                     "###clinic_name###" => $info[0]->clinic_institution_name,
-                    "###referral_code###" => $info[0]->referral_code,
+                    "###pat_fname###" => $data["pat_fname"],
+                    "###pat_lname###" => $data["pat_lname"],
+                    "###pat_dob###" => $pat_dob,
+                    "###fax_number###" => $srfax_number,
                     "###time1###" => $info[0]->referral_triaged,
                     "###time2###" => ""
                 );
@@ -476,7 +492,7 @@ class Referral_model extends CI_Model {
 
                 $fax_number = $info[0]->fax;
 
-                $response = $this->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "Request Missing Items", $additional_replace);
+                $response = $this->send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, "Request Missing Items", $additional_replace);
                 log_message("error", "file sent successfully");
 
                 //store missing item request
@@ -508,7 +524,7 @@ class Referral_model extends CI_Model {
             return validation_errors();
         }
     }
-    
+
     public function send_status_fax($file_name, $checklist, $replace_stack, $fax_number, $reason, $additional_replace = array(), $timeout = 60, $clinic_id = "") {
         log_message("error", "checklist prepared = " . json_encode($checklist));
 //        send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", $clinic_id)
