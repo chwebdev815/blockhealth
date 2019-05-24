@@ -435,7 +435,7 @@ class Referral_model extends CI_Model {
 
                 $this->db->select("pat.fname,"
                         . "pat.lname,"
-                        . "DATE_FORMAT(pat.dob, '%b %d, %Y') as pat_dob," .
+                        . "if(pat.dob, DATE_FORMAT(pat.dob, '(%b %d, %Y)'), '') as pat_dob," .
                         "c_usr.clinic_institution_name," .
                         "c_usr.srfax_number," .
                         "c_ref.referral_code," .
