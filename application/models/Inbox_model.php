@@ -143,6 +143,25 @@ class Inbox_model extends CI_Model {
                     ));
                     log_message("error", "inserting = > " . $this->db->last_query());
 
+                    //add Missing item received status 
+                    $c_ref_data = $this->db->select("c_ref.id")
+                                    ->from("clinic_referrals c_ref, referral_patient_info pat")
+                                    ->where(array(
+                                        "c_ref.active" => 1,
+                                        "pat.active" => 1,
+                                        "pat.id" => $new_patient_id
+                                    ))->get()->result();
+
+                    if ($c_ref_data) {
+                        $this->db->where(array(
+                            "id" => $c_ref_data[0]->id
+                        ))->update("clinic_referrals", array(
+                            "missing_item_status" => "Missing item received <span class=\"fc-event-dot\" "
+                            . "style=\"background-color:#88b794\"></span>"
+                        ));
+                        log_message("error", "referral made green => " . $this->db->last_query());
+                    }
+
                     if ($inserted) {
                         $this->db->trans_complete();
                         return array(
@@ -1411,7 +1430,9 @@ class Inbox_model extends CI_Model {
                         "efax_id" => $efax_id,
                         "referral_code" => $referral_code,
                         "referral_reason" => $referral_reason,
-                        "status" => $first_status
+                        "status" => $first_status,
+                        "missing_item_status" => "Missing item requested <span class=\"fc-event-dot\" "
+                        . "style=\"background-color:#e7e92a\"></span>"
                     );
 
                     //If clinic has only 1 physician account, then assign by default 
@@ -1670,7 +1691,7 @@ class Inbox_model extends CI_Model {
                     log_message("error", "pat dob set");
                     if (!empty($data["pat_dob_day"]) && !empty($data["pat_dob_month"]) && !empty($data["pat_dob_year"])) {
                         $date = DateTime::createFromFormat('d-m-Y', "{$data["pat_dob_month"]}-"
-                        . "{$data["pat_dob_day"]}-{$data["pat_dob_year"]}");
+                                        . "{$data["pat_dob_day"]}-{$data["pat_dob_year"]}");
                         $pat_dob = "(" . $date->format("M d, Y") . ")";
                         log_message("error", "pat dob set as = " . $pat_dob);
                     }
