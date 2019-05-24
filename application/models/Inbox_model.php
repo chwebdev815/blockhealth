@@ -115,7 +115,17 @@ class Inbox_model extends CI_Model {
                 $tiff_file = "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name;
                 log_message("error", "deleting tiff = >" . $tiff_file);
                 unlink($tiff_file);
-//                
+                
+                if (!file_exists("./" . files_dir() . md5($clinic_id))) {
+                    log_message("error", "creating clinic folder =>" . "./" . files_dir() .  md5($clinic_id));
+                    mkdir("./" . files_dir() .  md5($clinic_id));
+                }
+                if (!file_exists("./" . files_dir() .  md5($clinic_id) . md5($patient_id))) {
+                    log_message("error", "creating patient folder =>" . "./" . files_dir() .  
+                            md5($clinic_id) . "/" . md5($patient_id));
+                    mkdir("./" . files_dir() .  md5($clinic_id) . "/" . md5($patient_id));
+                }
+                
                 // set pdf as doc for patient selected
                 $rename_success = rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./" . files_dir() . md5($clinic_id) . "/" . md5($new_patient_id) . "/" . $efax_info[0]->file_name . ".pdf");
                 log_message("error", "new patient id = " . $new_patient_id);
