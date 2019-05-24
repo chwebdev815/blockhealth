@@ -1231,9 +1231,9 @@ class Inbox_model extends CI_Model {
         $this->db->where("c_ref.id", "pat.referral_id", false);
         $this->db->where("efax.id", "c_ref.efax_id", false);
         $this->db->where("c_usr.id", "efax.to", false);
-
+        $result = $this->db->get()->result();
         log_message("error", "get patient list = > " . $this->db->last_query());
-        return $this->db->get()->result();
+        return $result;
     }
 
     public function save_data_points_predict_model() {
