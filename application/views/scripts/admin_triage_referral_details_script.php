@@ -30,7 +30,7 @@
             if (IsJsonString(response)) {
                 response = JSON.parse(response);
                 data = response.dash_info[0];
-                $("#page_header").html(data.pat_fname + ' ' + data.pat_lname + data.pat_dob);
+                $("#page_header").html(data.pat_fname + ' ' + data.pat_lname + data.pat_dob2);
                 root = $(".referral_header");
                 //set status miss
                 $("#miss_status").html(data.miss_status);
