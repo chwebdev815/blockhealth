@@ -515,7 +515,7 @@
 
     function task_complete(id) {
         $("#sample_form").find("#id").val(id);
-
+        debugger 
         url = base + "my_tasks/task_completed";
         $.post({
             url: url,
@@ -527,6 +527,7 @@
                 if (data.result == "success") {
                     success("Task completed successfully");
                     global_data.table_my_tasks.ajax.reload();
+                    get_latest_dashboard_counts();
                 } else {
                     error(data.msg);
                 }
@@ -547,7 +548,7 @@
         $(row).attr("data-date", datetime);
 //        $(row).attr("data-time", time);
         $(row).addClass("my_tasks_row");
-        return "<button class='btn btn-success btn_task_done' data-id='" + id + " data-patient-id='" + patient_id + "'><span class='fa fa-check'></span></button>";
+        return "<button class='btn btn-success btn_task_done' data-id='" + id + "' data-patient-id='" + patient_id + "'><span class='fa fa-check'></span></button>";
     }
 
     function fetch_task_details(id) {
@@ -964,12 +965,6 @@
 //              .data().fileTif
 //            image_data = global_data.preview_images[$(this).parent().data("preview-index")];
 //            console.log("setting image for " + $(this).parent().data("preview-index"));
-        });
-
-        $('table#table_my_tasks .db-table-link-row').click(function () {
-            let id = $(this).data('id');
-            console.log("clicked", id);
-//            location.href = "patients/patient_info/" + id;
         });
 
         $('table#table_my_tasks .db-table-link-row').mouseenter(function () {
