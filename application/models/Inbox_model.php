@@ -1223,7 +1223,7 @@ class Inbox_model extends CI_Model {
         $this->db->where(array(
             "c_ref.active" => 1,
             "pat.active" => 1,
-            "efax.active" => 1,
+//            "efax.active" => 1,
             "c_usr.active" => 1,
             "c_ref.status" => "Referral Triage",
             "c_usr.id" => $this->session->userdata("user_id")
