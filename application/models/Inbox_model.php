@@ -118,7 +118,7 @@ class Inbox_model extends CI_Model {
 //                
                 
                 // set pdf as doc for patient selected
-                rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./" . files_dir() . "$clinic_id/" . md5($new_patient_id) . "/" . $efax_info[0]->file_name . ".pdf");
+                rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./" . files_dir() . md5($clinic_id) . "/" . md5($new_patient_id) . "/" . $efax_info[0]->file_name . ".pdf");
                 log_message("error", "new patient id = " . $new_patient_id);
                 //insert health record
                 $inserted = $this->db->insert("records_clinic_notes", array(
