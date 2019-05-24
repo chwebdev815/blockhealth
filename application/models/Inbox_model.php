@@ -116,29 +116,35 @@ class Inbox_model extends CI_Model {
                 log_message("error", "deleting tiff = >" . $tiff_file);
                 unlink($tiff_file);
 //                
-                
                 // set pdf as doc for patient selected
-                rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./" . files_dir() . md5($clinic_id) . "/" . md5($new_patient_id) . "/" . $efax_info[0]->file_name . ".pdf");
+                $rename_success = rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./" . files_dir() . md5($clinic_id) . "/" . md5($new_patient_id) . "/" . $efax_info[0]->file_name . ".pdf");
                 log_message("error", "new patient id = " . $new_patient_id);
-                //insert health record
-                $inserted = $this->db->insert("records_clinic_notes", array(
-                    "patient_id" => $new_patient_id,
-                    "record_type" => $data["record_type"],
-                    "physician" => $data["assign_physician"],
-                    "description" => $data["description"],
-                    "record_file" => $efax_info[0]->file_name
-                ));
-                log_message("error", "inserting = > " . $this->db->last_query());
-                
-                if ($inserted) {
-                    $this->db->trans_complete();
-                    return array(
-                        "result" => "success"
-                    );
+                if ($rename_success) {
+                    //insert health record
+                    $inserted = $this->db->insert("records_clinic_notes", array(
+                        "patient_id" => $new_patient_id,
+                        "record_type" => $data["record_type"],
+                        "physician" => $data["assign_physician"],
+                        "description" => $data["description"],
+                        "record_file" => $efax_info[0]->file_name
+                    ));
+                    log_message("error", "inserting = > " . $this->db->last_query());
+
+                    if ($inserted) {
+                        $this->db->trans_complete();
+                        return array(
+                            "result" => "success"
+                        );
+                    } else {
+                        return array(
+                            "result" => "error",
+                            "message" => "Request not completed."
+                        );
+                    }
                 } else {
                     return array(
                         "result" => "error",
-                        "message" => "Request not completed."
+                        "message" => "Internal Server Error."
                     );
                 }
             } else {
