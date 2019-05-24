@@ -159,7 +159,7 @@ class Inbox_model extends CI_Model {
                         ))->update("clinic_referrals", array(
                             "missing_item_status" => "<span class=\"fc-event-dot\" "
                             . "style=\"background-color:#88b794\"></span> "
-                            . "Items uploaded for review"
+                            . "Items uploaded for review "
                         ));
                         log_message("error", "referral made green => " . $this->db->last_query());
                     }
@@ -1436,7 +1436,7 @@ class Inbox_model extends CI_Model {
                         "missing_item_status" => 
                          "<span class=\"fc-event-dot\" "
                         . "style=\"background-color:#e7e92a\"></span> "
-                        . "Missing item requested"
+                        . "Missing item requested "
                     );
 
                     //If clinic has only 1 physician account, then assign by default 
