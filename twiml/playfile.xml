@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<Response>
-    <Gather  NumDigits="1" action="https://weighty-volt-205620.appspot.com/bh_fax/twiml/response.php" method="GET">
-        <Say>
-            Hi Hassaan Ahmed, Please enter  1 to confirm your booking,
-        </Say>
-    </Gather>
-    
-</Response>

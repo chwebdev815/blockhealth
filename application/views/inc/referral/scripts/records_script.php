@@ -5,8 +5,8 @@
         $(row).addClass('db-table-link-row');
         $(row).addClass(row_class);
     }
-    
-	$(document).ready(function() {
+
+    $(document).ready(function () {
 
         //*******************************************
         // script for records
@@ -29,11 +29,11 @@
 
 
         $('#modal_add_health_record').on('hidden.bs.modal', function () {
-            if(myDropzone != undefined) {
+            if (myDropzone != undefined) {
                 myDropzone.removeAllFiles();
             }
         });
-        
+
         $('#modal_add_health_record').on('shown.bs.modal', function () {
             //Simple Dropzonejs 
             myDropzone = new Dropzone("#dropzone_health_record", {

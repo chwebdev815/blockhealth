@@ -100,37 +100,42 @@ function get_pdf_page_count($filepath) {
     return $max;
 }
 
-function add_fax_count($sender, $receiver, $clinic_id, $fax_type) {
+function add_fax_count($sender, $receiver, $clinic_id, $fax_type, $login_role = "") {
     $CI = & get_instance();
+    if (!$login_role || $login_role == "") {
+        $login_role = $CI->session->userdata("login_role");
+    }
+    if ($sender === NULL) {
+        $sender = "123";
+    }
     $CI->db->insert("count_sent_fax", array(
         "sender" => $sender,
         "receiver" => $receiver,
         "login_user_id" => $clinic_id,
-        "login_role" => $CI->session->userdata("login_role"),
+        "login_role" => $login_role,
         "fax_type" => $fax_type
     ));
 }
 
 function send_mail($from, $from_name, $to, $to_name, $subject, $content, $attachment = "", $file_name = "attachment.pdf") {
     log_message("error", "SENDGRID - sending mail to $to");
-    
-    if($from == "") {
+    if ($from == "") {
         $from = "alerts@blockhealth.co";
     }
-    if($to_name == "") {
+    if ($to_name == "") {
         $to_name = $to;
     }
-    
+
     require 'vendor/sendgrid-php/vendor/autoload.php';
     $email = new \SendGrid\Mail\Mail();
-    
+
     $email->setFrom($from, $from_name);
     $email->setSubject($subject);
     $email->addTo($to, $to_name);
 //    $email->addContent("text/plain", "and easy to do anywhere, even with PHP");
     $email->addContent("text/html", $content);
     $sendgrid = new \SendGrid('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');
-    
+
     try {
         $response = $sendgrid->send($email);
         return true;
@@ -143,19 +148,85 @@ function send_mail($from, $from_name, $to, $to_name, $subject, $content, $attach
     }
 }
 
-// function get_pdf_page_count($file) 
-// {
-//     if(!file_exists($file))return null;
-//     if (!$fp = @fopen($file,"r"))return null;
-//     $max=0;
-//     while(!feof($fp)) {
-//             $line = fgets($fp,255);
-//             if (preg_match('/\/Count [0-9]+/', $line, $matches)){
-//                     preg_match('/[0-9]+/',$matches[0], $matches2);
-//                     if ($max<$matches2[0]) $max=$matches2[0];
-//             }
-//     }
-//     fclose($fp);
-//     return (int)$max;
+function make_two_digit($digit) {
+    //check if number
+    try {
+        $digit = (int) $digit;
+        if ($digit < 10) {
+            return "0" . $digit;
+        } else {
+            return "" . $digit;
+        }
+    } catch (Exception $ex) {
+        log_message("error", "error while converting to two digit from $digit");
+        return "00";
+    }
+}
 
-// }
+function files_dir() {
+//    return "/var/emrsftp/clinics/";
+    return "uploads/clinics/";
+}
+
+function get_metadata_path($md5_clinic_id) {
+    return "/var/emrsftp/clinics/$md5_clinic_id/metadata.json";
+}
+
+function save_json($clinic_id, $data_object) {
+    $clinic_dir = "uploads/clinics/" . md5($clinic_id);
+    $arr_data = array(); // create empty array
+    try {
+        $myFile = $clinic_dir."/metadata.json";
+        if(!file_exists($clinic_dir)) {
+            mkdir($clinic_dir);
+        }
+        if(!file_exists($myFile)) {
+            $file_object = fopen($myFile, "w");
+            fwrite($file_object, "[]");
+            fclose($file_object);
+        }
+        
+        //Get data from existing json file
+        $jsondata = file_get_contents($myFile);
+
+        // converts json data into array
+        $arr_data = json_decode($jsondata, true);
+
+        // Push user data to array
+        array_push($arr_data, $data_object);
+
+        //Convert updated array to JSON
+        $jsondata = json_encode($arr_data, JSON_PRETTY_PRINT);
+
+        //write json data into data.json file
+        if (file_put_contents($myFile, $jsondata)) {
+            return array(
+                "result" => "success"
+            );
+        } else {
+            return array(
+                "result" => "error",
+                "message" => "Failed to save data"
+            );
+        }
+//            echo "error";
+    } catch (Exception $e) {
+        return array(
+            "result" => "error",
+            "message" => $e->getMessage()
+        );
+    }
+}
+
+function convert_priority_to_display_name($db_priority) {
+    switch($db_priority) {
+        case "routine":
+            return "Routine";
+        case "sub_urgent":
+            return "Sub Urgent";
+        case "urgent":
+            return "Urgent";
+        case "not_specified":
+            return "";
+    }
+}

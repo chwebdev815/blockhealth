@@ -30,8 +30,7 @@
             if (IsJsonString(response)) {
                 response = JSON.parse(response);
                 data = response.dash_info[0];
-                $("#page_header").html(data.pat_fname + ' ' + data.pat_lname +
-                        " (" + (data.pat_age) + " year old " + data.pat_gender + ")");
+                $("#page_header").html(data.pat_fname + ' ' + data.pat_lname + data.pat_dob2);
                 root = $(".referral_header");
                 //set status miss
                 $("#miss_status").html(data.miss_status);
@@ -69,25 +68,25 @@
                 root.find("#pat_email_id").val(data.pat_email_id);
                 root.find("#pat_ohip").val(data.pat_ohip);
                 root.find("#pat_address").val(data.pat_address);
-                    //set Priority Label
-                    $(".priority_label").find("span.not-specified").removeClass("urgent-tag");
-                    $(".priority_label").find("span.not-specified").removeClass("sub-urgent-tag");
-                    $(".priority_label").find("span.not-specified").removeClass("routine-tag");
+                //set Priority Label
+                $(".priority_label").find("span.not-specified").removeClass("urgent-tag");
+                $(".priority_label").find("span.not-specified").removeClass("sub-urgent-tag");
+                $(".priority_label").find("span.not-specified").removeClass("routine-tag");
 
-                    if(data.priority == "") 
-                        $("select#priority").val("not_specified");
-                    else 
-                        $("select#priority").val(data.priority);
+                if (data.priority == "")
+                    $("select#priority").val("not_specified");
+                else
+                    $("select#priority").val(data.priority);
 
-                    if (data.priority == "not_specified") {
-                        $(".priority_label").find("span.not-specified").html("");
-                    } else if (data.priority == "urgent") {
-                        $(".priority_label").find("span.not-specified").html("Urgent").addClass("urgent-tag");
-                    } else if (data.priority == "sub_urgent") {
-                        $(".priority_label").find("span.not-specified").html("Sub Urgent").addClass("sub-urgent-tag");
-                    } else if (data.priority == "routine") {
-                        $(".priority_label").find("span.not-specified").html("Routine").addClass("routine-tag");
-                    }
+                if (data.priority == "not_specified") {
+                    $(".priority_label").find("span.not-specified").html("");
+                } else if (data.priority == "urgent") {
+                    $(".priority_label").find("span.not-specified").html("Urgent").addClass("urgent-tag");
+                } else if (data.priority == "sub_urgent") {
+                    $(".priority_label").find("span.not-specified").html("Sub Urgent").addClass("sub-urgent-tag");
+                } else if (data.priority == "routine") {
+                    $(".priority_label").find("span.not-specified").html("Routine").addClass("routine-tag");
+                }
 
                 if (data.assigned_physician != 'empty' && data.assigned_physician != 'Not Assigned')
                     $("#assigned_physician").val(data.assigned_physician);
@@ -178,7 +177,7 @@
     $(document).ready(function () {
         $("#li_admin_triage").addClass("active");
         get_clinic_physicians();
-        
+
         $("#checklist_div").on("change", '.checked', function () {
             form = $("#sample_form");
             form.find("#target").val(this.value);
@@ -194,7 +193,7 @@
                 $("#items_checked").html($("#checklist_div").find(":checked").length);
             });
         });
-        
+
         $("#form_add_patient_visit").on("change", "input[name='cell_phone_voice']", function () {
             if ($(this).prop("checked") && !global_data.sms_notification_allowed) {
                 $(this).prop("checked", false);
@@ -213,7 +212,7 @@
                 error("Please add email-id for patient first.");
             }
         });
-        
+
         $("#btn_assign_physician").on("click", function () {
             form = $("#assign_physician_form");
             form.find("#id").val(global_data.referral_id);
@@ -238,7 +237,7 @@
             });
         });
 
-        
+
         $("#btn_cancel").on("click", function () {
             $("#btn_cancel").button("loading");
             form = $("#sample_form");
@@ -277,7 +276,7 @@
                 if (IsJsonString(response)) {
                     data = JSON.parse(response);
                     if (data == true) {
-                        location.href = base + "physician_triage/referral_details/" + global_data.referral_id;
+                        location.href = base + "referral_triage/referral_details/" + global_data.referral_id;
                     } else {
                         error(data);
                     }

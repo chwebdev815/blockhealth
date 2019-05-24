@@ -1,5 +1,5 @@
 <script>
-    $(document).ready(function() {
+    $(document).ready(function () {
         $.dobPicker({
             daySelector: '#dobday', /* Required */
             monthSelector: '#dobmonth', /* Required */

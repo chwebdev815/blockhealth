@@ -1,22 +1,46 @@
+<style>
+    .popup_content {
+        margin: 10px;
+        padding: 0 10px;
+        max-width: 100%;
+        background: white;
+        -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    }
+    .popup_wrapper{
+        top: 10%!important;
+    }
+    .popup_background{
+        z-index: 0!important;
+    }
+</style>
 
-<div class="preview-image-container">
-     <img id="hover-img-preview"> 
-</div>
+<section id="popup2">
+    <img id="image_for_preview" width="" height="500" src="" />
+</section>
+<!--<div class="preview-image-container">
+    <img id="hover-img-preview"> 
+</div>-->
 
 <div class="db-content-inside">
     <div id="table-action" class="btn-group" role="group" data-patient-id="0">
-        <button type="button" id="table-hover-view-trigger" class="btn btn-default"><i class="fa fa-eye"></i></button>
-        <button type="button" id="table-hover-edit-trigger" class="btn btn-default"><i class="fa fa-edit"></i></button>
-        <a href="javascript:void(0)" download id="table-hover-delete-trigger" class="btn btn-default"><i class="fa fa-download"></i></a>
+        <button type="button" id="" class="btn btn-default popup2_open">
+            <i class="fa fa-eye"></i>
+        </button>
+        <button type="button" id="table-hover-edit-trigger" class="btn btn-default">
+            <i class="fa fa-edit"></i>
+        </button>
+        <a href="javascript:void(0)" download id="table-hover-delete-trigger" class="btn btn-default">
+            <i class="fa fa-download"></i>
+        </a>
     </div>
     <table class="table table-hover db-table" id="table_my_tasks">
         <thead>
             <tr>
                 <th>Patient Name</th>
                 <th>Record Type</th>
-                <th>Details</th>
-                <th>Days</th>
-                <th>Pages</th>
+                <th>Notes</th>
+                <th>Status</th>
                 <th>&nbsp;</th>
             </tr>
         </thead>
@@ -103,46 +127,80 @@
 
                     <!-- Sidebar -->
                     <div id="sidebar-wrapper">
-                        <input type="hidden" name="id" id="id" />
-                        <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                         <fieldset>
                             <form id="form_patient_save" class="form-horizontal patients-details-form" autocomplete="off">
+                                <input type="hidden" name="id" id="id" />
+                                <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                                 <div class="form-bottom">
-                                    <div class="form-group row  left-padd-20px right-padd-5px">
-                                        <h4 class="modal-title">Select Patient</h4>
-                                        <br/>
+
+                                    <div class="form-group row left-padd-20px right-padd-5px">
+                                        <div class="">
+                                            <h4 class="modal-title" id="myModalLabel">Select Patient</h4>
+                                            <br/>
+                                        </div>
                                         <div class="pull-left">
                                             <button id="btnStartPatientCrop" type="button" class="btn btn-theme">
                                                 <span class="fa fa-crop fa-2"></span>
                                             </button>
-                                            <!--<button id="btn_search_patient" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading..." type="button" class="btn btn-theme btn-alt-theme"><i class="fa" aria-hidden="true"><img src="assets/img/magic-wand.png" width="16"></i>&nbsp;&nbsp;Search</button>-->
-                                            <button id="btn_extract_patient" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading..." type="button" class="btn btn-theme btn-alt-theme btn-autofil"><i class="fa" aria-hidden="true"><img src="assets/img/magic-wand.png" width="16"></i>&nbsp;&nbsp;Auto Fill</button>
+                                            <button id="btn_extract_patient" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading..." type="button" class="btn btn-theme btn-alt-theme btn-autofil">
+                                                <i class="fa" aria-hidden="true"><img src="assets/img/magic-wand.png" width="16"></i>&nbsp;&nbsp;Auto Fill
+                                            </button>
                                         </div>
                                     </div>
                                     <div class="form-group left-padd-20px right-padd-5px">
-                                        <div class="alert alert-danger" id="patient_error" style="display: none;"></div>
-                                        <div class="form-group row">
-                                            <div class="col-lg-12 col-sm-12 col-xs-12">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                                                    <input id="pat_search_by_name" type="text" class="form-control" name="pat_search_by_name" placeholder="Enter a patient name to start search">
+
+                                        <div class="form-group col-lg-12">
+                                            <div class="form-group row">
+                                                <div class="col-md-12">
+                                                    <label for="new-patient-name">Full Name *</label>
+                                                </div>
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <input type="text" class="form-control required" name="pat_fname" id="new-patient-firstname" placeholder="First Name" autocomplete="off">
+                                                </div>
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <input type="text" class="form-control required" name="pat_lname" id="new-patient-lastname" placeholder="Last Name" autocomplete="off">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-4 col-xs-12">
+                                                    <select name="pat_dob_day" id="pat_dob_day" class=""></select>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-12 no-left-right-padd">
+                                                    <select name="pat_dob_month" id="pat_dob_month" class=""></select>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-12">                    
+                                                    <select name="pat_dob_year" id="pat_dob_year" class=""></select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <input style="width: 100%;" type="text" class="" name="pat_ohip" id="new-patient-ohip" placeholder="1234-123-123-AB" autocomplete="off">
+                                                </div>
+
+
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <select style="width: 100%;" name="pat_gender" id="pat_gender" class="required">
+                                                        <option value="unassigned" selected>Unassigned</option>
+                                                        <option value="male">Male</option>
+                                                        <option value="female">Female</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
 
                                         <div class="form-group row">
-                                            <div class="col-lg-12">
-                                                <h4 class="modal-title" id="task_h4">Task Details</h4>
-                                            </div>
                                             <div class="alert alert-danger" id="patient_error" style="display: none;"></div>
                                             <div class="alert alert-success" id="patient_success" style="display: none;"></div>
-                                            <input type="hidden" id="id" name="id" />
-                                            <input type="hidden" id="pat_ohip" name="pat_ohip" />
-                                            <input type="hidden" id="pat_dob_day" name="pat_dob_day" />
-                                            <input type="hidden" id="pat_dob_month" name="pat_dob_month" />
-                                            <input type="hidden" id="pat_dob_year" name="pat_dob_year" />
-                                            <input type="hidden" id="pat_lname" name="pat_lname" />
 
+                                            <div class="col-lg-12">
+                                                <label for="patient_dropdown">
+                                                    <strong>Save to Referral</strong>
+                                                </label>
+                                                <select id="patient_dropdown" 
+                                                        placeholder="Save to Referral" 
+                                                        name="patient_dropdown" class="form-control">
+                                                </select>
+                                            </div>
                                             <div class="col-lg-12">
                                                 <label for="assign_physician">
                                                     <strong>Assign Physician</strong>
@@ -155,17 +213,20 @@
                                                     <strong>Select Record Type</strong>
                                                 </label>
                                                 <select id="record_type" placeholder="Record Type" name="record_type" class="form-control">
-                                                    <option>Referral</option>
-                                                    <option>Consult or Imaging Report</option>
-                                                    <option>Lab Test</option>
-                                                    <option>Prescriptions</option>
-                                                    <option>Notes</option>
-                                                    <option>Other</option>
+                                                    <option data-show=".file-upload" selected>Referral letter</option>
+                                                    <option data-show=".file-upload">Consult note</option>
+                                                    <option data-show=".file-upload">Imaging note</option>
+                                                    <option data-show=".file-upload">Admin note</option>
+                                                    <option data-show=".file-upload">Lab test</option>
+                                                    <option data-show=".file-upload">Prescription</option>
+                                                    <option data-show=".file-upload">Insurance note</option>
+                                                    <option data-show=".file-upload">Record release</option>
+                                                    <option data-show=".file-upload">Intake form</option>
+                                                    <option data-show=".file-upload">Other</option>
                                                 </select>
                                             </div>
-                                            
                                             <div class="col-lg-12 cl-t-listing wrapper_div">
-                                                <label for="new-patient-ohip">
+                                                <label for="assign_physician">
                                                     <strong>Enter Details/Notes</strong>
                                                 </label>
                                                 <div>
@@ -173,14 +234,21 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <button type="button" id="btn_save_task" class="btn btn-theme">Save</button>
+
                                         <div class="form-group row">
                                             <div class="col-lg-12 cl-t-listing wrapper_div">
-                                                <div id="patient_success_display" class="success-icon pull-right">
-                                                    <span class="fa fa-check"></span>
-                                                </div>
+                                                <button type="button" id="btn_save_task" class="btn btn-theme">Save</button>
                                             </div>
                                         </div>
+                                        <div class="form-group row">
+                                            <div class="col-lg-12 cl-t-listing wrapper_div">
+                                                <div id="patient_success_display" class="success-icon pull-right menu">
+                                                    <span class="fa fa-check tick-icon"></span>
+                                                </div>
+                                            </div>
+                                        </div> 
+                                        <!--<div class="alert alert-success"><p>Patient Match Found</p></div>-->
+
                                     </div>
                                 </div>
                             </form>
@@ -228,3 +296,40 @@
         </div>
     </div>
 </div>
+
+
+<div id="modal_delete_referral" class="modal fade" role="dialog" style="z-index: 2056 !important;">
+    <div class="modal-dialog modal-md">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm Delete</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    Are you sure you would like to delete from Fax Triage?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_delete_referral" class="btn btn-theme btn-alt-theme" data-dismiss="modal">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/gh/vast-engineering/jquery-popup-overlay@2/jquery.popupoverlay.min.js"></script>
+
+
+<script>
+    $('#popup2, #popup3').popup({
+        pagecontainer: '#page',
+        type: 'tooltip',
+        background: true,
+        color: '#fff',
+        escape: true,
+        horizontal: 'left',
+        vertical: 'middle'
+
+    });
+</script>	

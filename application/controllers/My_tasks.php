@@ -4,7 +4,7 @@ class My_tasks extends CI_Controller {
     public function index() {
         if (clinic_login()) {
             $data['page_content'] = $this->load->view('my_tasks_master', NULL, TRUE);
-            $data['page_title'] = "My Tasks";
+            $data['page_title'] = "Fax Triage";
             $data['jquery'] = $this->load->view('scripts/my_tasks_script', NULL, TRUE);
             $this->load->view('main', $data);
         } else {
@@ -25,6 +25,16 @@ class My_tasks extends CI_Controller {
         if (clinic_login()) {
             $this->load->model("my_tasks_model");
             $response = $this->my_tasks_model->update_task_model();
+        } else {
+            $response = "Sesion Expired";
+        }
+        echo json_encode($response);
+    }
+    
+    public function delete_referral() {
+        if (clinic_login()) {
+            $this->load->model("my_tasks_model");
+            $response = $this->my_tasks_model->delete_referral_model();
         } else {
             $response = "Sesion Expired";
         }

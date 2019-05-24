@@ -32,7 +32,7 @@ a, a:hover{
     display: none;
 }
 
- 
+
 .gear-switcher-container{
     padding-right: 18px;
     text-align: right;
@@ -1298,10 +1298,10 @@ input.db-nav-search-input{
     width: 80px;
 }
 
-.vector-logo {
-    width: 60px;
+.vector-logo {    
+    width: 55px;
     position: absolute;
-    left: 10px;
+    left: 25px;
     top: 5px;
     transition: all .4s;
 }
@@ -2674,4 +2674,56 @@ form.patients-details-form fieldset {
     font-size: 25px;
     line-height: 1.42857;
     color: #fff;
+}
+
+/* hiren css 18-02-2019 */
+.model_title{
+    font-size: 14px;
+    padding: 15px 0px;
+    color: rgb(8, 181, 162);
+    text-align: center;
+    border: none;
+}
+.model_input{
+    height: 30px !important;
+}
+.model_bg{
+    background: rgb(232, 248, 247) !important;
+}
+.model_footer_btn{
+    border: none;
+    text-align: center;
+    padding: 0px 0px 20px;
+}
+
+/* End hiren css */
+
+.dot {
+    height: 10px;
+    width: 10px;
+    background-color: #bbb;
+    border-radius: 50%;
+    display: inline-block;
+}
+.dot-success {
+    background-color: #88b794;
+}
+.dot-danger {
+    background-color: #f74444;
+}
+.dot-info {
+    background-color: #9da1c3;
+}
+.dot-disabled {
+    background-color: #40e040;
+}
+.dot-yellow {
+    background-color: #e7e92a;
+}
+
+
+/*fax triage table*/ 
+span.small-case {
+    font-size: 10px;
+    color: #c49898;
 }

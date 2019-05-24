@@ -2,21 +2,19 @@
 
 class Login_model extends CI_Model {
 
-    public function verify_login_model() { 
+    public function verify_login_model() {
         $this->form_validation->set_rules('signup-email', 'Email', 'required|valid_email');
         $this->form_validation->set_rules('signup-pw', 'Password', 'required');
         if ($this->form_validation->run()) {
             $data = $this->input->post();
 
             if ($data["login_type"] == "c") {
-                $this->db->select("id, concat(first_name, ' ', last_name) as name, password");
+                $this->db->select("id, concat(first_name, ' ', last_name) as name, password, emr_pathway");
                 $this->db->from("clinic_user_info");
-                $this->db->where(
-                        array(
-                            "email_id" => $data["signup-email"],
-                            "active" => 1
-                        )
-                );
+                $this->db->where(array(
+                    "email_id" => $data["signup-email"],
+                    "active" => 1
+                ));
                 $result = $this->db->get()->result();
                 // log_message("error", "mail res = " . json_encode($result));
                 if ($result) {
@@ -30,18 +28,21 @@ class Login_model extends CI_Model {
                         $this->session->set_userdata("physician_name", $name);
                         $this->session->set_userdata("login_role", "clinic_admin");
                         // log_message("error", "clinic admin ".$id.",".$name." logged in");
+                        //set emr pathway
+                        $this->session->set_userdata("emr_pathway", 
+                                ($result[0]->emr_pathway === "AccuroCitrix")?"true":"false");
+
                         return true;
                     }
                 }
                 //look in specialist 
-                $this->db->select("id, concat(first_name, ' ', last_name) as name, password, clinic_id");
+                $this->db->select("id, concat(first_name, ' ', last_name) as name, password, clinic_id, ");
                 $this->db->from("clinic_physician_info");
-                $this->db->where(
-                        array(
-                            "email_id" => $data["signup-email"],
-                            "active" => 1
-                        )
-                );
+                $this->db->where(array(
+                    "email_id" => $data["signup-email"],
+                    "active" => 1
+                ));
+
                 $result = $this->db->get()->result();
                 // log_message("error", "mail res2 = " . json_encode($result));
                 if ($result) {
@@ -197,18 +198,18 @@ class Login_model extends CI_Model {
             if ($result) {
                 //referral code exist
                 $sender_fax_number = $result[0]->fax;
-                    
+
                 $this->session->set_userdata("fax_number", $sender_fax_number);
                 log_message("error", "session fax_number = " . $sender_fax_number);
                 // $physician_id = $result[0]->id;
                 // $physician_name = $result[0]->physician_name;
 
                 $rp_result = $this->db->select("concat(r_dr.first_name, ' ', r_dr.last_name) as physician_name, r_dr.id")
-                    ->from("referring_physicians r_dr")
-                    ->where(array(
-                        "fax_number" => $sender_fax_number
-                    )
-                )->get()->result();
+                                ->from("referring_physicians r_dr")
+                                ->where(array(
+                                    "fax_number" => $sender_fax_number
+                                        )
+                                )->get()->result();
 
 
                 if ($rp_result) {

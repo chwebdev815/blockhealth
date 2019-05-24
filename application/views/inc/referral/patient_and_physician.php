@@ -1,30 +1,29 @@
-    <div class="db-content-gutter no-left-right-padd no-bottom-padd">
-        <div class="row referral_header">
-            <div class="col-sm-6">
-                <div class="well well-lg patient-details-well clearfix">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="fancy-collapse-panel">
-                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" role="tab" id="headingThree">
-                                        <h3 class="panel-title">                      
-                                            <a aria-expanded="true" role="button" data-toggle="collapse" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">                      
-                                                Patient Contact Details                      
-                                            </a>                    
-                                        </h3>
-                                    </div>
-                                    <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                <div class="col-md-3 col-sm-3 col-xs-12 hidden-sm hidden-xs"> <span class="fa fa-user pull-left"></span> </div>
-                                                <div class="col-md-9 col-sm-9 col-xs-12">
-                                                    <div class="panel-body details-labels">
-                                                        <p>Cell Phone: <span id="pat_cell_phone"></span></p>
-                                                        <p>Email: <span id="pat_email"></span></p>
-                                                        <p>OHIP #: <span id="pat_ohip"></span></p>
-                                                        <p>Address: <span id="pat_address"></span></p>
-                                                        <p><a class="update" data-toggle="modal" data-target="#edit-patient-modal" href="#">Update</a></p>
-                                                    </div>
+<div class="db-content-gutter no-left-right-padd no-bottom-padd">
+    <div class="row referral_header">
+        <div class="col-sm-6">
+            <div class="well well-lg patient-details-well clearfix">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="fancy-collapse-panel">
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingThree">
+                                    <h3 class="panel-title">                      
+                                        <a aria-expanded="true" role="button" data-toggle="collapse" href="#collapseThree" aria-expanded="true" aria-controls="collapseThree">                      
+                                            Patient Contact Details                      
+                                        </a>                    
+                                    </h3>
+                                </div>
+                                <div id="collapseThree" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingThree">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-3 col-sm-3 col-xs-12 hidden-sm hidden-xs"> <span class="fa fa-user pull-left"></span> </div>
+                                            <div class="col-md-9 col-sm-9 col-xs-12">
+                                                <div class="panel-body details-labels">
+                                                    <p>Cell Phone: <span id="pat_cell_phone"></span></p>
+                                                    <p>Email: <span id="pat_email"></span></p>
+                                                    <p>OHIP #: <span id="pat_ohip"></span></p>
+                                                    <p>Address: <span id="pat_address"></span></p>
+                                                    <p><a class="update" data-toggle="modal" data-target="#edit-patient-modal" href="#">Update</a></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -35,31 +34,31 @@
                     </div>
                 </div>
             </div>
-            <div class="col-sm-6">
-                <div class="well well-lg patient-details-well clearfix">
-                    <div class="col-md-12 col-sm-12 col-xs-12">
-                        <div class="fancy-collapse-panel">
-                            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                                <div class="panel panel-default">
-                                    <div class="panel-heading" role="tab" id="headingThree">
-                                        <h3 class="panel-title">                      
-                                            <a aria-expanded="true" role="button" data-toggle="collapse" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">                      
-                                                Referring Physician Details                      
-                                            </a>                    
-                                        </h3>
-                                    </div>
-                                    <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour">
-                                        <div class="panel-body">
-                                            <div class="row">
-                                                <div class="col-md-12 col-sm-12 col-xs-12">
-                                                    <div class="panel-body details-labels">
-                                                        <p><span id="dr_name"></span></p>
-                                                        <p>Fax: <span id="dr_fax"></span></p>
-                                                        <p>Office Phone #: <span id="dr_phone"></span></p>
-                                                        <p>Billing #: <span id="dr_billing_num"></span></p>
-                                                        <p>Address: <span id="dr_address"></span></p>
-                                                        <p><a class="update" data-toggle="modal" data-target="#edit-physician-modal" href="#">Update</a></p>
-                                                    </div>
+        </div>
+        <div class="col-sm-6">
+            <div class="well well-lg patient-details-well clearfix">
+                <div class="col-md-12 col-sm-12 col-xs-12">
+                    <div class="fancy-collapse-panel">
+                        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                            <div class="panel panel-default">
+                                <div class="panel-heading" role="tab" id="headingThree">
+                                    <h3 class="panel-title">                      
+                                        <a aria-expanded="true" role="button" data-toggle="collapse" href="#collapseFour" aria-expanded="true" aria-controls="collapseFour">                      
+                                            Referring Physician Details                      
+                                        </a>                    
+                                    </h3>
+                                </div>
+                                <div id="collapseFour" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingFour">
+                                    <div class="panel-body">
+                                        <div class="row">
+                                            <div class="col-md-12 col-sm-12 col-xs-12">
+                                                <div class="panel-body details-labels">
+                                                    <p><span id="dr_name"></span></p>
+                                                    <p>Fax: <span id="dr_fax"></span></p>
+                                                    <p>Office Phone #: <span id="dr_phone"></span></p>
+                                                    <p>Billing #: <span id="dr_billing_num"></span></p>
+                                                    <p>Address: <span id="dr_address"></span></p>
+                                                    <p><a class="update" data-toggle="modal" data-target="#edit-physician-modal" href="#">Update</a></p>
                                                 </div>
                                             </div>
                                         </div>
@@ -72,11 +71,12 @@
             </div>
         </div>
     </div>
+</div>
 
 
 
-    <!-- modals -->
-    <!-- Edit Patient Contact Details Modal -->
+<!-- modals -->
+<!-- Edit Patient Contact Details Modal -->
 <div class="modal fade" id="edit-patient-modal" tabindex="-1" role="dialog" aria-labelledby="add-patient-label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">

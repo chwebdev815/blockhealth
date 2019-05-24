@@ -1,44 +1,56 @@
 <style>
-.popup_content {
-  margin: 10px;
-  padding: 0 10px;
-  max-width: 100%;
-  background: white;
--webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
-box-shadow: 0 5px 15px rgba(0,0,0,.5);
-}
+    .popup_content {
+        margin: 10px;
+        padding: 0 10px;
+        max-width: 100%;
+        background: white;
+        -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    }
+    .popup_wrapper{
+        top: 10%!important;
+    }
+    .popup_background{
+        z-index: 0!important;
+    }
 
-.popup_wrapper{
-	
-	top: 10%!important;
-}
-
-.popup_background{
-	z-index: 0!important;
-}
-
+    .clr-lg-padd{
+        padding-right: 0px;
+    }	
+    div.checkbox > label {
+        width: 90%;
+    }
+    div.checkbox > label > input{
+        width: 90%;
+    }
 </style>
 
-      <!-- <button class="popup2_open">Click me 2!</button>
-	  
-	  <button class="popup3_open">Click me 2!</button> -->
+<!-- <button class="popup2_open">Click me 2!</button>
+    
+    <button class="popup3_open">Click me 2!</button> -->
 
-	  
+
 <section id="popup2">
- <img id="image_for_preview" width="" height="500" src="" />
+    <img id="image_for_preview" width="" height="500" src="" />
 </section>
 
 
-	<!--   
- <div class="preview-image-container">
-    <img id="hover-img-preview" class="imggy-preview">
+<!--   
+<div class="preview-image-container">
+<img id="hover-img-preview" class="imggy-preview">
 </div> 
- -->
+-->
 <div class="db-content-inside">
     <div id="table-action" class="btn-group" role="group" data-patient-id="0">
-        <button type="button" id="" class="btn btn-default popup2_open"><i class="fa fa-eye"></i></button>
-        <button type="button" id="table-hover-edit-trigger" class="btn btn-default"><i class="fa fa-edit"></i></button>
-        <a href="javascript:void(0)" download id="table-hover-delete-trigger" class="btn btn-default"><i class="fa fa-download"></i></a>
+        <button type="button" id="" class="btn btn-default popup2_open">
+            <i class="fa fa-eye"></i>
+        </button>
+        <button type="button" id="table-hover-edit-trigger" class="btn btn-default">
+            <i class="fa fa-edit"></i>
+        </button>
+        <a href="javascript:void(0)" download id="table-hover-delete-trigger" class="btn btn-default">
+            <i class="fa fa-download"></i>
+        </a>
     </div>
     <table class="table table-hover db-table" id="table_inbox">
         <thead>
@@ -51,22 +63,6 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         </thead>
     </table>
 </div>
-
-
-<!--<div class="modal fade" id="modal_preview" tabindex="-1" role="dialog">
-    <div class="modal-dialog modal-lg" role="document">
-        <div class="modal-content">            
-            <div class="modal-body">
-                <div class="row">
-                    <div class="col-lg-12">
-                        <img id="hover-img-preview" width="300" height="300">
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>-->
-
 
 <div id="modal_delete_referral" class="modal fade" role="dialog" style="z-index: 2056 !important;">
     <div class="modal-dialog modal-md">
@@ -111,14 +107,14 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <div class="col-md-6 marg-top-10px">
+                <div class="col-md-4 marg-top-10px">
                     <button type="button" class="btn btn-link db-nav-more-trigger back-link" data-toggle="modal" data-target="#add-referral-modal" data-dismiss="modal">
                         <i class="fa fa-angle-left fa-2x"></i>
                     </button>
                     <span id="file_info"></span>
                 </div>
-                <div class="col-md-6">
-                    <span class="eFax-bar-actions col-md-offset-3 marg-top-10px">
+                <div class="col-md-8 text-right">
+                    <span class="eFax-bar-actions marg-top-10px">
                         <a href="javascript:void(0)" id="btn_view_print_referral">Print </a> &nbsp;
                         <a href="javascript:void(0)" id="btn_view_delete_referral">Delete </a> &nbsp;
                         <a href="javascript:void(0)" id="btn_download_referral" download>Download </a>
@@ -139,7 +135,6 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                         <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                         <fieldset>
                             <form id="form_patient_save" class="form-horizontal patients-details-form" autocomplete="off">
-
                                 <div class="form-bottom">
 
                                     <div class="form-group row left-padd-20px right-padd-5px">
@@ -158,26 +153,57 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                     </div>
                                     <div class="form-group left-padd-20px right-padd-5px">
 
-                                        <div class="form-group row">
-                                            <div class="col-lg-12 col-sm-12 col-xs-12">
-                                                <div class="input-group">
-                                                    <span class="input-group-addon"><i class="glyphicon glyphicon-search"></i></span>
-                                                    <input id="pat_search_by_name" type="text" class="form-control" name="pat_search_by_name" placeholder="Enter a patient name to start search">
+                                        <div class="form-group col-lg-12">
+                                            <div class="form-group row">
+                                                <div class="col-md-12">
+                                                    <label for="new-patient-name">Full Name *</label>
+                                                </div>
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <input type="text" class="form-control required" name="pat_fname" id="new-patient-firstname" placeholder="First Name" autocomplete="off">
+                                                </div>
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <input type="text" class="form-control required" name="pat_lname" id="new-patient-lastname" placeholder="Last Name" autocomplete="off">
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-4 col-xs-12">
+                                                    <select name="pat_dob_day" id="pat_dob_day" class=""></select>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-12 no-left-right-padd">
+                                                    <select name="pat_dob_month" id="pat_dob_month" class=""></select>
+                                                </div>
+                                                <div class="col-sm-4 col-xs-12">                    
+                                                    <select name="pat_dob_year" id="pat_dob_year" class=""></select>
+                                                </div>
+                                            </div>
+                                            <div class="form-group row">
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <input style="width: 100%;" type="text" class="" name="pat_ohip" id="new-patient-ohip" placeholder="1234-123-123-AB" autocomplete="off">
+                                                </div>
+
+
+                                                <div class="col-sm-6 col-xs-12">
+                                                    <select style="width: 100%;" name="pat_gender" id="pat_gender" class="required">
+                                                        <option value="unassigned" selected>Unassigned</option>
+                                                        <option value="male">Male</option>
+                                                        <option value="female">Female</option>
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="form-group row">
                                             <div class="col-lg-12">
-                                                <h4 class="modal-title" id="task_h4">Task Details</h4>
+                                                <label for="patient_dropdown">
+                                                    <strong>Save to Referral</strong>
+                                                </label>
+                                                <select id="patient_dropdown" 
+                                                        placeholder="Save to Referral" 
+                                                        name="patient_dropdown" class="form-control">
+                                                </select>
                                             </div>
                                             <div class="alert alert-danger" id="patient_error" style="display: none;"></div>
                                             <div class="alert alert-success" id="patient_success" style="display: none;"></div>
-                                            <input type="hidden" id="id" name="id" />
-                                            <input type="hidden" id="pat_ohip" name="pat_ohip" />
-                                            <input type="hidden" id="pat_dob_day" name="pat_dob_day" />
-                                            <input type="hidden" id="pat_dob_month" name="pat_dob_month" />
-                                            <input type="hidden" id="pat_dob_year" name="pat_dob_year" />
-                                            <input type="hidden" id="pat_lname" name="pat_lname" />
 
                                             <div class="col-lg-12">
                                                 <label for="assign_physician">
@@ -191,11 +217,15 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                                     <strong>Select Record Type</strong>
                                                 </label>
                                                 <select id="record_type" placeholder="Record Type" name="record_type" class="form-control">
-                                                    <option data-show=".file-upload">Referral</option>
-                                                    <option data-show=".file-upload">Consult or Imaging Report</option>
-                                                    <option data-show=".file-upload">Lab Test</option>
-                                                    <option data-show=".file-upload">Prescriptions</option>
-                                                    <option data-show=".file-upload">Notes</option>
+                                                    <option data-show=".file-upload" selected>Referral letter</option>
+                                                    <option data-show=".file-upload">Consult note</option>
+                                                    <option data-show=".file-upload">Imaging note</option>
+                                                    <option data-show=".file-upload">Admin note</option>
+                                                    <option data-show=".file-upload">Lab test</option>
+                                                    <option data-show=".file-upload">Prescription</option>
+                                                    <option data-show=".file-upload">Insurance note</option>
+                                                    <option data-show=".file-upload">Record release</option>
+                                                    <option data-show=".file-upload">Intake form</option>
                                                     <option data-show=".file-upload">Other</option>
                                                 </select>
                                             </div>
@@ -208,6 +238,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                                 </div>
                                             </div>
                                         </div>
+
                                         <div class="form-group row">
                                             <div class="col-lg-12 cl-t-listing wrapper_div">
                                                 <button type="button" id="btn_save_task" class="btn btn-theme">Save</button>
@@ -220,7 +251,8 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                                 </div>
                                             </div>
                                         </div> 
-                                        
+                                        <!--<div class="alert alert-success"><p>Patient Match Found</p></div>-->
+
                                     </div>
                                 </div>
                             </form>
@@ -265,13 +297,13 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                                 </label>
                                             </div>
                                             <div class="col-sm-4 col-xs-12">
-                                                <select name="pat_dob_day" id="pat_dob_day" class="required"></select>
+                                                <select name="pat_dob_day" id="pat_dob_day" class=""></select>
                                             </div>
                                             <div class="col-sm-4 col-xs-12 no-left-right-padd">
-                                                <select name="pat_dob_month" id="pat_dob_month" class="required"></select>
+                                                <select name="pat_dob_month" id="pat_dob_month" class=""></select>
                                             </div>
                                             <div class="col-sm-4 col-xs-12">                    
-                                                <select name="pat_dob_year" id="pat_dob_year" class="required"></select>
+                                                <select name="pat_dob_year" id="pat_dob_year" class=""></select>
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -288,19 +320,27 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                                     Sex
                                                 </label>
                                                 <select name="pat_gender" id="pat_gender" class="required">
-                                                    <option value="male" selected>Male</option>
+                                                    <option value="unassigned" selected>Unassigned</option>
+                                                    <option value="male">Male</option>
                                                     <option value="female">Female</option>
                                                 </select>
                                             </div>
                                         </div>
+
                                         <div class="form-group row">
                                             <div class="col-lg-12">
                                                 <label for="">
-                                                    Cell Phone
+                                                    Phone
                                                 </label>
                                             </div>
-                                            <div class="col-lg-12">
-                                                <input type="text" class="form-control" name="pat_cell_phone" id="patient-cell-phone" placeholder="Mobile Number" autocomplete="off">
+                                            <div class="col-lg-4">
+                                                <input type="text" class="form-control" name="pat_home_phone" id="patient-home-phone" placeholder="Home Phone" autocomplete="off">
+                                            </div>
+                                            <div class="col-lg-4" style="padding-left: 0px; padding-right: 0px;">
+                                                <input type="text" class="form-control" name="pat_cell_phone" id="patient-cell-phone" placeholder="Cell Phone" autocomplete="off">
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <input type="text" class="form-control" name="pat_work_phone" id="patient-work-phone" placeholder="Work Phone" autocomplete="off">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -332,7 +372,8 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                         <div class="pull-left">
                                             <button type="button" class="icon-prev btn-previous" style="font-size: 13px;"><i class="fa fa-angle-left fa-2x"></i></button>
                                             <button id="btnStartCrop2" type="button" class="btn btn-theme">
-                                                <span class="fa fa-crop fa-2" style="font-size: 12px;"></span>
+                                                <span class="fa fa-crop fa-2" 
+                                                      style="font-size: 12px;"></span>
                                             </button>
                                             <button id="btn_extract_physician" style="display: none" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading..." type="button" class="btn btn-theme signup-next btn-autofil"><i class="fa" aria-hidden="true"><img src="assets/img/magic-wand.png" width="16"></i>&nbsp;&nbsp;Auto Fill</button>
                                             <button id="btn_find_physician_match" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading..." type="button" class="btn btn-theme btn-autofil"><i class="fa" aria-hidden="true"><img src="assets/img/magic-wand.png" width="16"></i>&nbsp;&nbsp;Find Match</button>
@@ -350,10 +391,10 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                                 <label for="new-patient-name">Full Name *</label>
                                             </div>
                                             <div class="col-sm-6 col-xs-12">
-                                                <input type="text" class="form-control required" name="dr_fname" id="dr_fname" placeholder="First Name">
+                                                <input type="text" class="form-control" name="dr_fname" id="dr_fname" placeholder="First Name">
                                             </div>
                                             <div class="col-sm-6 col-xs-12">
-                                                <input type="text" class="form-control required" name="dr_lname" id="dr_lname" placeholder="Last Name">
+                                                <input type="text" class="form-control" name="dr_lname" id="dr_lname" placeholder="Last Name">
                                             </div>
                                         </div>
                                         <div class="form-group row">
@@ -540,6 +581,10 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                             <div class="input_fields_wrap edit_documents"></div>
                                             <button type="button" id="btn_add_documents" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Add Checklist Item</button>
                                         </div>
+                                        <a class="btn btn-theme btn-alt-theme" href="javascript:void(0)" 
+                                           id="btn_view_request_missing_items_inbox" 
+                                           data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i>
+                                           Processing...">Request missing items</a>
                                     </div>
                                 </div>
                             </fieldset>
@@ -560,6 +605,8 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                     <label  id ="currentPage" class="pageInf"></label>
                                     <label  id ="clippedData" class="pageInf"></label>
                                     <div class="btn-group" role="group" style="float:right;">
+                                        <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-left" title="Rotate Left"><span class="fa fa-rotate-left"></span></button>
+                                        <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-right" title="Rotate Right"><span class="fa fa-rotate-right"></span></button>
                                         <button id="btnPrevPage" type="button" class="btn btn-secondary" title="Prev Page"><span class="glyphicon glyphicon-menu-left"></span></button>
                                         <button id="btnNextPage" type="button" class="btn btn-secondary" title="Next Page"><span class="glyphicon glyphicon-menu-right"></span></button>
                                     </div>
@@ -588,59 +635,27 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
     </div>
 </div>
 <!--<div class="modal-footer">  </div> -->
-<!-- Save eFax Modal Modal //-->
-<!--<div class="modal fade" id="add_health_record" tabindex="-1" role="dialog" aria-labelledby="add-record-label">
-    <div class="modal-dialog" role="document">
+
+<!--Modal for request missing items-->
+<div id="modal_missing_items" class="modal fade" role="dialog" style="z-index: 2056 !important;">
+    <div class="modal-dialog modal-md">
+        <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                <h4 class="modal-title" id="myModalLabel"> Add Health Record</h4>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Request Missing Items</h4>
             </div>
             <div class="modal-body">
-                <form id="form_health_record">
-                    <input type="hidden" name="id" id="id" />
-                    <input type="hidden" name="target" id="target" />
-                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
-                    <div class="form-group row">
-                        <div class="col-lg-12">
-                            <label for="new-patient-birthdate">
-                                Select Record
-                            </label>
-                        </div>
-                        <div class="col-lg-12">
-                            <select name="record_type" id="signup-speciality" class="div-toggle" data-target=".my-info-1" placeholder="Speciality" name="signup-speciality" class="form-control">
-                                <option value="Referral Form" data-show=".file-upload">Referral Form</option>
-                                <option value="Clinical Notes" data-show=".file-upload">Clinical Notes</option>
-                                <option value="Lab Results" data-show=".file-upload">Lab Results</option>
-                                <option value="Diagnosis and Reason for Referral" data-show=".reason-referral">Diagnosis and Reason for Referral</option>
-                                <option value="Surgical Notes" data-show=".file-upload">Surgical Notes</option>
-                                <option value="Prescriptions &amp; medications" data-show=".file-upload">Prescriptions &amp; medications</option>
-                            </select>
-                        </div>
-                    </div>
-                    <div class="my-info-1_">
-                        <div class="form-group row">
-                            <div class="col-lg-12">
-                                <label for="new-patient-ohip">
-                                    Description
-                                </label>
-                            </div>
-                            <div class="col-lg-12">
-                                <textarea name="description" style="height: 100px" class="form-control" placeholder="Enter Record Details" id="referral-note"></textarea>
-                            </div>
-                        </div>
-                    </div>
-                </form>
+                <div class="alert alert-info content"> </div>
             </div>
             <div class="modal-footer">
-                <a id="btn_save_health_record" href="#" class="btn btn-theme">
-                    <i class="fa fa-plus-circle"></i>&nbsp;&nbsp;Add Health Record
-                </a>
-                <button type="button" class="btn btn-theme btn-alt-theme" data-dismiss="modal">Close</button>
+                <button type="button" class="btn btn-theme btn-success" id="btn_request_missing_items_inbox" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading...">Send Request Fax</button>
             </div>
         </div>
     </div>
-</div>-->
+</div>
+
+<!--save efax modal-->
 <div class="modal fade" id="save-efax-modal" tabindex="-1" role="dialog" aria-labelledby="add-referral-label">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -682,14 +697,14 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
 
 
 <script>
-$('#popup2, #popup3').popup({
-  pagecontainer: '#page',
-  type: 'tooltip',
-  background: true,
-color: '#fff',
-  escape: true,
-  horizontal: 'left',
-  vertical: 'middle'
+    $('#popup2, #popup3').popup({
+        pagecontainer: '#page',
+        type: 'tooltip',
+        background: true,
+        color: '#fff',
+        escape: true,
+        horizontal: 'left',
+        vertical: 'middle'
 
-});
+    });
 </script>	

@@ -22,20 +22,20 @@
                             <p>
                                 <img src="assets/img/icon-admin-triage.png" />
                             </p>
-                            <p>Tasks to-do</p></div>
+                            <p>In Fax Triage</p></div>
                         <div class="count" id="tasks_count"></div>
                     </div>
                 </div>
             </a>
-            <a href="<?php echo base_url(); ?>physician_triage">
+            <a href="<?php echo base_url(); ?>referral_triage">
                 <div class="col-lg-3 col-md-3 col-sm-6 col-xs-12">
                     <div class="tile-stats clearfix">
                         <div class="icon">
                             <p>
                                 <i class="fa fa-stethoscope"></i>
                             </p>
-                            <p>In Physician Triage</p></div>
-                        <div class="count" id="physician_triage_count"></div>
+                            <p>In Referral Triage</p></div>
+                        <div class="count" id="referral_triage_count"></div>
                     </div>
                 </div>
             </a>
@@ -46,7 +46,7 @@
                             <p>
                                 <i class="fa fa-calendar-o"></i>
                             </p>
-                            <p>To Assign or Schedule</p></div>
+                            <p>To Schedule</p></div>
                         <div class="count" id="accepted_count"></div>
                     </div>
                 </div>

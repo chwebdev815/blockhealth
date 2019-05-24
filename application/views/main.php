@@ -17,17 +17,14 @@
         <!-- <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/croppie.css"> -->
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/simple-sidebar.css">
         <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/bootstrap-datetimepicker.css">
-        
+
         <style>
             .dataTables_length {
                 float: left;
             }
-            
             table tr {
                 cursor: pointer;
             }
-
-            
             .fc-event-dot {
                 display: inline-block;
                 width: 10px;
@@ -35,8 +32,6 @@
                 border-radius: 5px;
             }
         </style>
-
-        
         <script src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
         <script src="<?php echo base_url(); ?>assets/js/bootstrap.min.js"></script>
@@ -71,27 +66,18 @@
                 <li id="li_inbox" data-toggle="tooltip" data-placement="right" title="Fax Inbox">
                     <a class="clearfix" href="<?php echo base_url(); ?>inbox"><span>Fax Inbox</span><i class="numb-notifies" id="count_inbox">&nbsp;</i></a>
                 </li>
-                <li id="li_my_tasks" data-toggle="tooltip" data-placement="right" title="My Tasks">
-                    <a class="clearfix" href="<?php echo base_url(); ?>my_tasks"><span>My Tasks</span><i class="numb-notifies" id="count_my_tasks">&nbsp;</i></a>
+                <li id="li_my_tasks" data-toggle="tooltip" data-placement="right" title="Fax Triage">
+                    <a class="clearfix" href="<?php echo base_url(); ?>my_tasks"><span>Fax Triage</span><i class="numb-notifies" id="count_my_tasks">&nbsp;</i></a>
                 </li>
-                <!-- <li id="li_admin_triage" data-toggle="tooltip" data-placement="right" title="Admin Triage">
-                    <a class="clearfix" href="<?php echo base_url(); ?>admin_triage"><span>Admin Triage</span><i class="numb-notifies" id="count_admin">&nbsp;</i></a>
-                </li> -->
-                <li id="li_physician_triage" data-toggle="tooltip" data-placement="right" title="Physician Triage">
-                    <a class="clearfix" href="<?php echo base_url(); ?>physician_triage"><span>Physician Triage</span><i class="numb-notifies" id="count_physician">&nbsp;</i></a>
+                <li id="li_referral_triage" data-toggle="tooltip" data-placement="right" title="Referral Triage">
+                    <a class="clearfix" href="<?php echo base_url(); ?>referral_triage"><span>Referral Triage</span><i class="numb-notifies" id="count_physician">&nbsp;</i></a>
                 </li>
-                <li id="li_accepted" data-toggle="tooltip" data-placement="right" title="Accepted">
-                    <a class="clearfix" href="<?php echo base_url(); ?>accepted"><span>Accepted</span><i class="numb-notifies" id="count_accepted"></i>&nbsp;</a>
+                <li id="li_accepted" data-toggle="tooltip" data-placement="right" title="Booking">
+                    <a class="clearfix" href="<?php echo base_url(); ?>accepted"><span>Booking</span><i class="numb-notifies" id="count_accepted"></i>&nbsp;</a>
                 </li>
                 <li id="li_scheduled" data-toggle="tooltip" data-placement="right" title="Scheduled">
                     <a class="clearfix" href="<?php echo base_url(); ?>scheduled"><span>Scheduled</span><i class="numb-notifies" id="count_scheduled_stopped">&nbsp;</i></a>
                 </li>
-                <!--                <li id="li_confirmed" data-toggle="tooltip" data-placement="right" title="Confirmed">
-                                    <a class="clearfix" href="<?php echo base_url(); ?>confirmed"><span>Confirmed</span><i class="numb-notifies" id="count_confirmed">&nbsp;</i></a>
-                                </li>-->
-                <!--                <li id="li_completed" data-toggle="tooltip" data-placement="right" title="Completed">
-                                    <a class="clearfix" href="<?php echo base_url(); ?>completed"><span>Completed</span><i class="numb-notifies" id="count_completed">&nbsp;</i></a>
-                                </li>-->
             </ul>
             <ul class="db-sidebar-items list-unstyled" id="second_menu_list" style="display:none">
                 <li class="top-items-wrap">
@@ -104,13 +90,16 @@
                 <li id="li_analytics_dashboard" data-toggle="tooltip" data-placement="right" title="Analytics Dashboard">
                     <a class="clearfix" href="<?php echo base_url(); ?>analytics"><span>Analytics Dashboard</span><img src="<?php echo base_url(); ?>assets/img/dashboard.png" /></a>
                 </li>
+                <li id="li_schedule_settings" data-toggle="tooltip" data-placement="right" title="" data-original-title="Schedule Settings">
+                    <a class="clearfix" href="<?php echo base_url(); ?>schedule_settings"><span>Schedule Settings</span><img src="<?php echo base_url(); ?>assets/img/dashboard.png"></a>
+                </li>				
                 <li id="li_all_patient_records" data-toggle="tooltip" data-placement="right" title="All Patient Records">
                     <a class="clearfix" href="<?php echo base_url(); ?>completed"><span>All Patient Records</span><i class="fa fa-user" aria-hidden="true"></i></a>
                 </li>
                 <li id="li_completed_tasks" data-toggle="tooltip" data-placement="right" title="Completed Tasks">
                     <a class="clearfix" href="<?php echo base_url(); ?>completed_tasks"><span>Completed Tasks</span>
-                    	<i class="fa fa-check" aria-hidden="true"></i>
-                    	<!-- <i class="numb-notifies" id="count_completed_tasks">&nbsp;</i> -->
+                        <i class="fa fa-check" aria-hidden="true"></i>
+                        <!-- <i class="numb-notifies" id="count_completed_tasks">&nbsp;</i> -->
                     </a>
                 </li>
                 <li id="li_manage_physician" data-toggle="tooltip" data-placement="right" title="Manage Physicians">
@@ -130,6 +119,17 @@
                 </button>
                 <h1 id="page_header">
                     <?php echo $page_title; ?> <!-- ===========page title here=========== -->
+                    <?php
+                    if ($this->uri->segment(1) === "accepted" && $this->uri->segment(2) !== "referral_details") {
+                        ?>
+                        &nbsp; &nbsp; 
+                        <button id="btn_view_add_new_patient" type="button" class="btn btn-theme pull-right bttn-circle btn-theme btn-alt-theme">
+                            <i class="fa fa-plus-circle"></i>&nbsp;&nbsp;
+                            <span>New Patient</span>
+                        </button>
+                        <?php
+                    }
+                    ?>
                     <small class="nav-patient-name" id="sub_header"></small>
                 </h1>
             </div>
@@ -248,7 +248,17 @@
 
             base = "<?php echo base_url(); ?>";
             global_data.referral_id = "<?php echo $this->uri->segment(3); ?>";
-
+            global_data.clinic_id = "<?php echo md5($this->session->userdata("user_id")); ?>";
+            
+            <?php 
+            echo "console.log('" . $this->session->userdata("user_id") . "');";
+            if($this->session->userdata("user_id") === 5) {
+                echo "global_data.predict_url = 'predict';";
+            }
+            else {
+                echo "global_data.predict_url = 'predict_form';";
+            }
+            ?>
             tableActionTO = null;
             myDropzone = null;
 
@@ -261,25 +271,36 @@
                 return true;
             }
 
-            
+
             function get_dom_plan() {
                 return '<"wrapper"tlp>';
             }
-            
+
             function get_records_dom_plan() {
                 return '<"wrapper"tp>';
             }
-            
+
             function success(msg, header = "Operation Successfull") {
                 $("#modal_success").find(".alert-success").html(msg);
                 $("#modal_success").find(".modal-title").html(header);
                 view("modal_success");
             }
+            
             function error(msg, header = "Operation Failed") {
                 $("#modal_error").find(".alert-danger").html(msg);
                 $("#modal_error").find(".modal-title").html(header);
                 view("modal_error");
             }
+            
+            function handle_ajax_error(response) {
+                if(response.status === 404) {
+                    error("Error 404: Request target not found");
+                }
+                else {
+                    error("Error 501: Internal server error");
+                }
+            }
+            
             function view(modal_id) {
                 setTimeout(function () {
                     $("#" + modal_id).modal("show");
@@ -316,6 +337,25 @@
                 });
             }
 
+
+            function set_visit_status(status, dot) {
+                console.log(status, dot);
+                if (dot == "red") {
+                    return '<span class="fc-event-dot" style="background-color:#f74444"></span>  ' + status;
+                } else if (dot == "green") {
+                    return '<span class="fc-event-dot" style="background-color:#88b794"></span>  ' + status;
+                } else if (dot == "yellow") {
+                    return '<span class="fc-event-dot" style="background-color:#9da1c3"></span>  ' + status;
+                } else if (dot == "blue") {
+                    return '<span class="fc-event-dot" style="background-color:#e7e92a"></span>  ' + status;
+                } else {
+                    console.log("empty color");
+                    console.log(status, dot);
+                    return status;
+                }
+            }
+
+
             Dropzone.autoDiscover = false;
 
             $(document).ready(function () {
@@ -336,33 +376,40 @@
                         location.href = base + (ui.item.value) + "/referral_details/" + ui.item.id;
                     }
                 });
-                
+
 
                 $("#btn_view_request_missing_items").on("click", function () {
-                     $("#btn_view_request_missing_items").button("loading");
+                    $("#btn_view_request_missing_items").button("loading");
                     form = $("#sample_form");
                     form.find("#id").val(global_data.referral_id);
                     url = base + "referral/missing_items_details";
                     data = form.serialize();
                     $.post({
                         url: url,
-                        data: data
-                    }).done(function (response) {
-                        $("#btn_view_request_missing_items").button("reset");
-                        if (IsJsonString(response)) {
-                            data = JSON.parse(response);
-                            if (data.hasOwnProperty("result")) {
-                                if (data.result === "success") {
-                                    $("#modal_missing_items").find(".content").html(data.data);
-                                    view("modal_missing_items");
+                        data: data,
+                        success: function (response) {
+                            if (IsJsonString(response)) {
+                                data = JSON.parse(response);
+                                if (data.hasOwnProperty("result")) {
+                                    if (data.result === "success") {
+                                        $("#modal_missing_items").find(".content").html(data.data);
+                                        view("modal_missing_items");
+                                    } else {
+                                        error("Unexpected Error Occured");
+                                    }
                                 } else {
-                                    error("Unexpected Error Occured");
+                                    error("Something went wrong");
                                 }
                             } else {
-                                error("Something went wrong");
+                                error("Unexpected Error Occured");
                             }
-                        } else
-                            error("Unexpected Error Occured");
+                        },
+                        error: function (response) {
+                            handle_ajax_error(response);
+                        },
+                        complete: function () {
+                            $("#btn_view_request_missing_items").button("reset");
+                        }
                     });
                 });
 
@@ -374,27 +421,30 @@
                     $("#btn_request_missing_items").button('loading');
                     $.post({
                         url: url,
-                        data: data
+                        data: data,
+                        complete: function (response) {
+                            $("#btn_request_missing_items").button('reset');
+                        },
+                        error: function (response) {
+                            handle_ajax_error(response); 
+                        }
                     }).done(function (response) {
                         if (IsJsonString(response)) {
                             data = JSON.parse(response);
-                            if(data === true) {
+                            if (data === true) {
                                 $(".modal").modal("hide");
                                 success("Missing item request has been sent");
-                            }
-                            else {
+                            } else {
                                 $(".modal").modal("hide");
                                 success(response);
                             }
                         } else {
                             error("Unexpected Error Occured");
                         }
-                    }).complete(function() {
-                        $("#btn_request_missing_items").button('reset');
                     });
                 });
 
-                
+
             });
 
         </script>

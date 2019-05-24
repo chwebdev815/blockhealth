@@ -69,7 +69,7 @@ class Referral extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function missing_items_details() {
         if (clinic_login()) {
             $this->load->model("referral_model");
@@ -79,7 +79,7 @@ class Referral extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function request_missing_items() {
         if (clinic_login()) {
             $this->load->model("referral_model");
@@ -264,10 +264,30 @@ class Referral extends CI_Controller {
         echo json_encode($response);
     }
 
+    public function get_visit_allocation_for_manual_visit() {
+        if (clinic_login()) {
+            $this->load->model("referral_model");
+            $response = $this->referral_model->get_visit_allocation_for_manual_visit_model();
+        } else {
+            $response = "Session Expired";
+        }
+        echo json_encode($response);
+    }
+    
     public function confirm_referral() {
         if (clinic_login()) {
             $this->load->model("referral_model");
             $response = $this->referral_model->confirm_referral_model();
+        } else {
+            $response = "Session Expired";
+        }
+        echo json_encode($response);
+    }
+    
+    public function is_patient_scheduled() {
+        if (clinic_login()) {
+            $this->load->model("referral_model");
+            $response = $this->referral_model->is_patient_scheduled_model();
         } else {
             $response = "Session Expired";
         }

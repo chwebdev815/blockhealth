@@ -4,7 +4,7 @@ class Inbox extends CI_Controller {
     public function index() {
         if (clinic_login()) {
             $data['page_content'] = $this->load->view('inbox_master', NULL, TRUE);
-            $data['page_title'] = "Inbox";
+            $data['page_title'] = "Fax Inbox";
             $data['jquery'] = $this->load->view('scripts/inbox_script', NULL, TRUE);
             $this->load->view('main', $data);
         } else {
@@ -75,6 +75,27 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
+    
+    public function missing_items_details() {
+        if (clinic_login()) {
+            $this->load->model("inbox_model");
+            $response = $this->inbox_model->missing_items_details_model();
+        } else {
+            $response = "Session Expired";
+        }
+        echo json_encode($response);
+    }
+
+    public function request_missing_items() {
+        if (clinic_login()) {
+            $this->load->model("inbox_model");
+            $response = $this->inbox_model->request_missing_items_model();
+        } else {
+            $response = "Session Expired";
+        }
+        echo json_encode($response);
+    }
+    
     public function delete_referral() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -84,6 +105,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
+    
     public function get_clinic_patients() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -98,6 +120,16 @@ class Inbox extends CI_Controller {
         if (clinic_login()) {
             $this->load->model("inbox_model");
             $response = $this->inbox_model->get_physician_list_save_patient_model();
+        } else {
+            $response = "Sesion Expired";
+        }
+        echo json_encode($response);
+    }
+    
+    public function get_patient_list_save_patient() {
+        if (clinic_login()) {
+            $this->load->model("inbox_model");
+            $response = $this->inbox_model->get_patient_list_save_patient_model();
         } else {
             $response = "Sesion Expired";
         }

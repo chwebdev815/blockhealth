@@ -23,42 +23,42 @@
 
 <style>
 
-#modal_preview{
-     background: rgba(255,255,255,0.5) !important;
- }
+    #modal_preview{
+        background: rgba(255,255,255,0.5) !important;
+    }
 
-.imggy-preview::before{
-    background:rgba(255,255,255,0.5);
-    position: absolute;
-    width: 100%;
-    height: 100%;
-}
-
-
-#hover-img-preview {
-    left: 75%!important;
-    top: 50%;
-    z-index:1000!important;
-}
+    .imggy-preview::before{
+        background:rgba(255,255,255,0.5);
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
 
 
-.popup_content {
-  margin: 10px;
-  padding: 0 10px;
-  max-width: 100%;
-  background: white;
--webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
-box-shadow: 0 5px 15px rgba(0,0,0,.5);
-}
+    #hover-img-preview {
+        left: 75%!important;
+        top: 50%;
+        z-index:1000!important;
+    }
 
-.popup_wrapper{
-    
-    top: 10%!important;
-}
 
-.popup_background{
-    z-index: 0!important;
-}
+    .popup_content {
+        margin: 10px;
+        padding: 0 10px;
+        max-width: 100%;
+        background: white;
+        -webkit-box-shadow: 0 5px 15px rgba(0,0,0,.5);
+        box-shadow: 0 5px 15px rgba(0,0,0,.5);
+    }
+
+    .popup_wrapper{
+
+        top: 10%!important;
+    }
+
+    .popup_background{
+        z-index: 0!important;
+    }
 
 </style>
 
@@ -86,7 +86,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         content:"X";
     }   
 
-    
+
     #form_patient_save .col-lg-12 {
         margin-top: 10px;
     }
@@ -106,7 +106,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         background:url('assets/img/check-mark.png') no-repeat 98% center;
         background-color: #f9f9f9 !important;
     }
-    
+
     /*#preview_image_container{
         position: absolute;
         left: 0;
@@ -290,6 +290,11 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                 });
                 image.setDirectory(0);
                 temp_canvas = image.toCanvas();
+                $("#image_for_preview").attr("src", temp_canvas.toDataURL());
+//                return temp_canvas.toDataURL();
+
+//                setTimeout(function() {
+//                }, 1000);
                 global_data.preview_images.push(temp_canvas.toDataURL());
                 // clearTimeout(global_data.previewTimeout);
                 // $("#hover-img-preview").hide();
@@ -317,6 +322,10 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         // x_reason = 0;
         // x_documents = 0;
         // x_devices = 0;
+        if (cropper != null) {
+            cropper.destroy();
+            cropper_activated = false;
+        }
 
         if (typeof $("#eFax-modal").find("form")[0] != "undefined") {
             $("#eFax-modal").find("form")[0].reset();
@@ -337,6 +346,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         $("#wrap-container").removeClass("toggled");
         $("#patient_success_display").hide();
         $("#overlay_image").attr("src", "").hide();
+        $("#eFax-modal").find(".updated_mode").removeClass("updated_mode");
 
 
         $("#btn_save_task").attr("disabled", false);
@@ -379,7 +389,8 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                     checklists +=
                             '<div class="checkbox">' +
                             '<label>' +
-                            '<input type="checkbox" value="' + value.id + '" name="referral_checklist[]">' +
+                            '<input type="checkbox" value="' + value.id + '" name="referral_checklist[]" ' +
+                            'data-name="' + value.name + '">' +
                             '<span class="cr"><i class="cr-icon fa fa-check"></i></span>' +
                             value.name +
                             '</label>' +
@@ -569,11 +580,31 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
             }
         });
     }
+    
+    function get_patient_list_save_patient() {
+        url = base + "inbox/get_patient_list_save_patient";
+        $.post({
+            url: url,
+            data: $("#sample_form").serialize()
+        }).done(function (response) {
+            if (IsJsonString(response)) {
+                data = JSON.parse(response);
+                options = "<option selected value='0'>Select Patient</option>";
+                data.forEach(function (value, index) {
+                    options += "<option value='" + value.id + "'>" + value.name + "</option>";
+                });
+                $("#form_patient_save").find("#patient_dropdown").html(options);
+            }
+        });
+    }
 
 
     $(document).ready(function () {
+        
         get_referral_checklist();
         get_physician_list_save_patient();
+        get_patient_list_save_patient();
+        
         $("#li_inbox").addClass("active");
         $("#btn_view_print_referral").on("click", function () {
             printJS(global_data.pdf_file + ".pdf");
@@ -631,13 +662,10 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         });
 
         $("#save-patient-wrapper").find("#btnStartPatientCrop").on("click", function () {
-            if (cropper) {
-                cropper.destroy();
+            if (!cropper_activated) {
+                createCropper();
             }
             $(".toolbar").show();
-            createCropper();
-//            $("#save-patient-container").find("#btn_search_patient").hide("slow");
-//            $("#save-patient-container").find("#btn_extract_patient").show("slow");
         });
 
         $("#save-patient-wrapper").find("#btn_extract_patient").on("click", function () {
@@ -663,7 +691,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                 url: url,
                 data: data
             }).success(function (response) {
-                debugger
+//                debugger
                 if (IsJsonString(response)) {
                     response = JSON.parse(response);
                     if (response.result == "success") {
@@ -831,6 +859,11 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
 
 
         $('.patients-details-form .btn-next').on('click', function () {
+            if (typeof ("cropper_activated") !== "undefined" && cropper_activated) {
+                global_data.crop_data = cropper.getCropBoxData();
+                global_data.crop_rotate = cropper.getData().rotate;
+            }
+
             var parent_fieldset = $(this).parents('fieldset');
             var next_step = true;
             parent_fieldset.find('.required').each(function () {
@@ -856,9 +889,14 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                     $(this).next().fadeIn();
                     $(".toolbar").hide();
                 });
-                if (cropper) {
-                    cropper.destroy();
-                }
+//                if (cropper) {
+//                    cropper.destroy();
+//                    createCropper();
+//                    setTimeout(function () {
+////                        cropper.setCropBoxData(global_data.crop_data);
+//                        cropper.rotate(global_data.crop_rotate);
+//                    }, 100);
+//                }
             }
         });
 
@@ -973,8 +1011,90 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
             $(this).closest("div.checkbox").remove();
             x_documents--;
         });
-
         // add fields code completed.
+
+
+
+        $("#btn_view_request_missing_items_inbox").on("click", function () {
+            $("#btn_view_request_missing_items_inbox").button("loading");
+            form = $("#signupForm");
+            form.find("#id").val(global_data.efax_id);
+            url = base + "inbox/missing_items_details";
+            data = form.serialize();
+            $.post({
+                url: url,
+                data: data,
+                success: function (response) {
+                    if (IsJsonString(response)) {
+                        data = JSON.parse(response);
+                        if (data.hasOwnProperty("result")) {
+                            if (data.result === "success") {
+                                $("#modal_missing_items").find(".content").html(data.data);
+                                view("modal_missing_items");
+                            } else {
+                                error("Unexpected Error Occured");
+                            }
+                        } else {
+                            error("Something went wrong");
+                        }
+                    } else {
+                        error("Unexpected Error Occured");
+                    }
+                },
+                error: function (response) {
+                    handle_ajax_error(response);
+                },
+                complete: function () {
+                    $("#btn_view_request_missing_items_inbox").button("reset");
+                }
+            });
+        });
+
+        $("#btn_request_missing_items_inbox").on("click", function () {
+            form = $("#signupForm");
+            url = base + "inbox/request_missing_items";
+            data = form.serialize();
+
+            $("#referral_checklist").find("input:unchecked").each(function (index, value) {
+                a = $(value).closest("label").text();
+                data += "&missing_item[]=" + a;
+            });
+
+            $("div.edit_documents").find("input[type='checkbox']:unchecked").each(function (index, value) {
+                a = $(value).closest("label").find(".dummy_checkbox").val();
+                data += "&missing_item[]=" + a;
+            });
+            data += "&new_checklists=";
+            $(".input_fields_wrap").find("[name='referral_checklist[]']").each(function (index, value) {
+                data += $(value).val() + ",";
+            });
+
+            $("#btn_request_missing_items_inbox").button('loading');
+
+            $.post({
+                url: url,
+                data: data,
+                error: function (response) {
+                    handle_ajax_error(response);
+                },
+                complete: function () {
+                    $("#btn_request_missing_items_inbox").button('reset');
+                }
+            }).done(function (response) {
+                if (IsJsonString(response)) {
+                    data = JSON.parse(response);
+                    if (data === true) {
+                        $(".modal").modal("hide");
+                        success("Missing item request has been sent");
+                    } else {
+                        error(JSON.parse(response));
+                    }
+                } else {
+                    error("Unexpected Error Occured");
+                }
+            });
+        });
+
 
         $("#btn_add_referral").on("click", function () {
             //new referral
@@ -1055,6 +1175,10 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                 $(value).show();
         });
         $(".btn-toggle-referral").on("click", function () {
+            setTimeout(function () {
+                createCropper();
+            }, 1000);
+
             if ($("#wrap-container").hasClass("toggled") && $("#wrap-container").find("#save-patient-wrapper").css("display") === "block") {
             } else {
                 $("#wrap-container").toggleClass("toggled");
@@ -1071,6 +1195,8 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                     $(value).show();
             });
         });
+
+
         $.dobPicker({
             daySelector: '#signupForm #pat_dob_day', /* Required */
             monthSelector: '#signupForm #pat_dob_month', /* Required */
@@ -1081,6 +1207,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
             minimumAge: 0, /* Optional */
             maximumAge: 120 /* Optional */
         });
+
         $.dobPicker({
             daySelector: '#form_patient_save #pat_dob_day', /* Required */
             monthSelector: '#form_patient_save #pat_dob_month', /* Required */
@@ -1091,6 +1218,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
             minimumAge: 0, /* Optional */
             maximumAge: 120 /* Optional */
         });
+
         $('#new_referral_form').on('click', '.btn-next', function () {
             var parent_fieldset = $(this).parents('fieldset');
             var next_step = true;
@@ -1130,19 +1258,18 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         });
 
         $("#btnStartCrop").on("click", function () {
-            if (cropper) {
-                cropper.destroy();
+            console.log("method btnStartCrop click");
+            if (!cropper_activated) {
+                createCropper();
             }
-            createCropper();
             $(".toolbar").show();
         });
 
         $("#btn_labtest_autofill").on("click", function () {
             console.log("method btn_labtest_autofill click");
-            if (cropper) {
-                cropper.destroy();
+            if (!cropper_activated) {
+                createCropper();
             }
-            createCropper();
             setTimeout(execute_file_upload_labtest, 1000);
         });
 
@@ -1157,11 +1284,10 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
 
 
         $("#btnStartCrop2").on("click", function () {
-            if (cropper) {
-                cropper.destroy();
+            if (!cropper_activated) {
+                createCropper();
             }
             $(".toolbar").show();
-            createCropper();
             $("#btn_find_physician_match").hide("slow");
             $("#btn_extract_physician").show("slow");
         });
@@ -1181,9 +1307,19 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
             btn_physician_extract = $(this);
             btn_physician_extract.button("loading");
             form = $("#signupForm");
+            
+            tmp_fname = form.find("#dr_fname").val();
+            tmp_lname = form.find("#dr_lname").val();
+            
+            form.find("#dr_fname").val(tmp_fname.trim().split(" ")[0]);
+            form.find("#dr_lname").val(tmp_lname.trim().split(" ")[0]);
+            
             form.find("#id").val(global_data.efax_id);
             url = base + "inbox/check_physician_data";
             data = form.serialize();
+            
+            form.find("#dr_fname").val(tmp_fname);
+            form.find("#dr_lname").val(tmp_lname);
 
             $.post({
                 url: url,
@@ -1227,6 +1363,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
             "processing": true,
             "serverSide": true,
             "autoWidth": false,
+            "pageLength": 50,
             "language": {
                 "emptyTable": "Inbox is empty",
                 "info": "Showing _START_ to _END_ of _TOTAL_ " + global_data.table_inbox_title,
@@ -1316,10 +1453,11 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         pagelength = datas.length;
         global_data.preview_images = [];
 
-        for (i = 0; i < pagelength; i++) {
-            tiff_file = base + "uploads/efax_tiff/" + datas[i][5];
-            get_first_page_from_tif(tiff_file);
-        }
+//        for (i = 0; i < pagelength; i++) {
+//            tiff_file = base + "uploads/efax_tiff/" + datas[i][5];
+//            get_first_page_from_tif(tiff_file);
+//              .data().fileTif
+//        }
 
         $('#table-action').hover(function () {
             clearTimeout(tableActionTO);
@@ -1367,6 +1505,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
             }, 500);
         });
 
+
         // $("#image1").on("click", function () {
         //     // $("#preview_image_container").hide();
         //     $("#image1").attr("src", "").hide();
@@ -1377,9 +1516,15 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         $('button.popup2_open').click(function () {
             console.log("this should be called");
             $(this).attr("id", "table-hover-view-trigger-disabled");
-            image_data = global_data.preview_images[$(this).parent().data("preview-index")];
-            console.log("setting image for " + $(this).parent().data("preview-index"));
-            $("#image_for_preview").attr("src", image_data);
+
+            let tiff_file_name = $(this).parent().data("file-tif");
+
+            tiff_file = base + "uploads/efax_tiff/" + tiff_file_name;
+            $("#image_for_preview").attr("src", "");
+            get_first_page_from_tif(tiff_file);
+//              .data().fileTif
+//            image_data = global_data.preview_images[$(this).parent().data("preview-index")];
+//            console.log("setting image for " + $(this).parent().data("preview-index"));
         });
 
 
@@ -1396,7 +1541,7 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         // });
 
 
-        
+
         $('#table-hover-edit-trigger').click(function () {
             let id = $(this).parent().data("id");
             let tiff = $(this).parent().data("file-tif");
@@ -1617,12 +1762,14 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                 // global_data.api_phy_extract = "running";
                 $("#btn_extract_patient").button("loading");
                 // $.ajax('http://159.89.127.142/phy_extract', {
-                $.ajax('http://165.227.45.30/predict', {
+                $.ajax('http://165.227.45.30/'+global_data.predict_url, {
                     method: 'POST',
                     data: formData,
                     processData: false,
                     contentType: false,
                     success: function (response) {
+                        console.log(response);
+//                        debugger
                         tmp_selector = "#anything_fake";
                         root = $("#form_patient_save");
                         data_points = 0;
@@ -1634,7 +1781,10 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                         data_points_captured.dob_month = "";
                         data_points_captured.dob_year = "";
                         data_points_captured.icn = "";
-                        data_points_captured.phone = "";
+                        data_points_captured.phone = {};
+                        data_points_captured.phone.phone = "";
+                        data_points_captured.phone.cell = "";
+                        data_points_captured.phone.work = "";
                         data_points_captured.email = "";
                         data_points_captured.gender = "";
                         data_points_captured.address = "";
@@ -1685,20 +1835,65 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                     data_points_captured.dob_year = response.predictions.DOB.Year;
                                 }
                             }
+//                            debugger
                             if (response.predictions.hasOwnProperty('ICN')) {
-                                if (response.predictions.ICN != "") {
-                                    root.find("#new-patient-ohip").val(response.predictions.ICN);
-                                    data_points_captured.icn = response.predictions.ICN;
-                                    tmp_selector += ', #new-patient-ohip';
-                                    data_points += 1;
+                                if (response.predictions.ICN.hasOwnProperty('NO')) {
+                                    if (response.predictions.ICN.NO != "") {
+                                        root.find("#new-patient-ohip").val(response.predictions.ICN.NO);
+                                        data_points_captured.icn = response.predictions.ICN.NO;
+                                        tmp_selector += ', #new-patient-ohip';
+                                        data_points += 1;
+                                    }
                                 }
                             }
                             if (response.predictions.hasOwnProperty('phone')) {
-                                if (response.predictions.phone != "") {
-                                    root.find("#patient-cell-phone").val(response.predictions.phone);
-                                    data_points_captured.phone = response.predictions.phone;
-                                    tmp_selector += ', #patient-cell-phone';
-                                    data_points += 1;
+                                if (response.predictions.phone.hasOwnProperty('phone')) {
+                                    if (response.predictions.phone.phone != "") {
+                                        root.find("#patient-cell-phone").val(response.predictions.phone.phone);
+                                        data_points_captured.phone.phone = response.predictions.phone.phone;
+                                        tmp_selector += ', #patient-cell-phone';
+                                        data_points += 1;
+                                    }
+                                }
+                                if (response.predictions.phone.hasOwnProperty('phone')) {
+                                    if (response.predictions.phone.phone != "") {
+                                        root.find("#patient-cell-phone").val(response.predictions.phone.phone);
+                                        data_points_captured.phone.phone = response.predictions.phone.phone;
+                                        tmp_selector += ', #patient-cell-phone';
+                                        data_points += 1;
+                                    }
+                                }
+                                if (response.predictions.phone.hasOwnProperty('cell')) {
+                                    if (response.predictions.cell != "") {
+                                        root.find("#patient-cell-phone").val(response.predictions.phone.cell);
+                                        data_points_captured.phone.cell = response.predictions.phone.cell;
+                                        tmp_selector += ', #patient-cell-phone';
+                                        data_points += 1;
+                                    }
+                                }
+                                if (response.predictions.phone.hasOwnProperty('home')) {
+                                    if (response.predictions.phone.home != "") {
+                                        root.find("#patient-home-phone").val(response.predictions.phone.home);
+                                        data_points_captured.phone.home = response.predictions.phone.home;
+                                        tmp_selector += ', #patient-home-phone';
+                                        data_points += 1;
+                                    }
+                                }
+                                if (response.predictions.phone.hasOwnProperty('work')) {
+                                    if (response.predictions.phone.work != "") {
+                                        root.find("#patient-work-phone").val(response.predictions.phone.work);
+                                        data_points_captured.phone.work = response.predictions.phone.work;
+                                        tmp_selector += ', #patient-work-phone';
+                                        data_points += 1;
+                                    }
+                                }
+                                if (response.predictions.phone.hasOwnProperty('business')) {
+                                    if (response.predictions.phone.business != "") {
+                                        root.find("#patient-work-phone").val(response.predictions.phone.business);
+                                        data_points_captured.phone.business = response.predictions.phone.business;
+                                        tmp_selector += ', #patient-work-phone';
+                                        data_points += 1;
+                                    }
                                 }
                             }
                             if (response.predictions.hasOwnProperty('email')) {
@@ -1709,14 +1904,27 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                                     data_points += 1;
                                 }
                             }
-                            if (response.predictions.hasOwnProperty('gender')) {
-                                if (response.predictions.gender != "") {
-                                    root.find("#pat_gender").val(response.predictions.gender);
-                                    data_points_captured.gender = response.predictions.gender;
-                                    tmp_selector += ', #pat_gender';
-                                    data_points += 1;
-                                }
-                            }
+//                            if (response.predictions.hasOwnProperty('gender')) {
+//                                if (response.predictions.gender != "") {
+//                                    gender = response.predictions.gender.toLowerCase();
+//                                    select = "";
+//                                    selected = false;
+//                                    if (gender == "m" || gender == "male") {
+//                                        select = "male";
+//                                        selected = true;
+//                                    } else if (gender == "f" || gender == "female") {
+//                                        select = "female";
+//                                        selected = true;
+//                                    }
+//
+//                                    if (selected) {
+//                                        root.find("#pat_gender").val(select);
+//                                        data_points_captured.gender = select;
+//                                        tmp_selector += ', #pat_gender';
+//                                        data_points += 1;
+//                                    }
+//                                }
+//                            }
                             if (response.predictions.hasOwnProperty('address')) {
                                 if (response.predictions.address != "") {
                                     root.find("#pat_geocomplete").val(response.predictions.address);
@@ -1747,7 +1955,8 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
                     complete: function () {
                         console.log("completed");
                         uploadingFile = false;
-                        match_patient_data();
+//                        match_patient_data();
+                        $("#btn_extract_patient").button('reset');
                     }
                 }).done(function () {
                     uploadingFile = false;
@@ -1809,10 +2018,10 @@ box-shadow: 0 5px 15px rgba(0,0,0,.5);
         horizontal: 'left',
         vertical: 'middle',
 
-          onopen: function() {
+        onopen: function () {
             $('button.popup2_open').attr("disabled", true);
-          },
-        closetransitionend: function() {
+        },
+        closetransitionend: function () {
             $('button.popup2_open').attr("disabled", false);
         }
     });

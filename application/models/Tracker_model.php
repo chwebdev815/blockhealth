@@ -95,9 +95,9 @@ class Tracker_model extends CI_Model {
             $stage1 = "Referral has been received";
 
             //stage 2
-            $this->db->select("if((c_ref.status = 'Physician Triage' OR c_ref.status = 'Admin Triage') and miss.id,"
+            $this->db->select("if((c_ref.status = 'Referral Triage') and miss.id,"
                     . "'Referral has been triaged and missing items have been requested',"
-                    . "if(c_ref.status = 'Physician Triage' OR c_ref.status = 'Admin Triage',"
+                    . "if(c_ref.status = 'Referral Triage' OR c_ref.status = 'Admin Triage',"
                     . "'Referral is being triaged',"
                     . "if(c_ref.status = 'Cancelled' or c_ref.status = 'Declined',"
                     . "'Referral has been declined and returned',"
@@ -142,7 +142,7 @@ class Tracker_model extends CI_Model {
                         $this->db->select("if(c_ref.status='Scheduled',if(r_pv.id, 'Visit has been confirmed', 'Waiting for patient confirmation'), '') as stage4");
                         $this->db->from("clinic_referrals c_ref");
                         $this->db->join("referral_patient_info pat", "pat.referral_id = c_ref.id");
-                        $this->db->join("records_patient_visit r_pv", "r_pv.patient_id = pat.id and r_pv.visit_confirmed = 'Confirmed' and r_pv.active = 1", "left");
+                        $this->db->join("records_patient_visit r_pv", "r_pv.patient_id = pat.id and r_pv.visit_confirmed = 'Awaiting Confirmation' and r_pv.active = 1", "left");
                         $this->db->where(array(
                             "c_ref.referral_code" => $ref_code,
                             "c_ref.active" => 1,
@@ -310,7 +310,9 @@ class Tracker_model extends CI_Model {
                         "id" => $referral_id
                     ));
                     $this->db->update("clinic_referrals", array(
-                        "missing_item_status" => "Items uploaded for review"
+                        "missing_item_status" => "<span class=\"fc-event-dot\" "
+                            . "style=\"background-color:#88b794\"></span> "
+                            . "Items uploaded for review "
                     ));
                 }
                 $this->db->trans_complete();
