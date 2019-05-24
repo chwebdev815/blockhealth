@@ -310,7 +310,9 @@ class Tracker_model extends CI_Model {
                         "id" => $referral_id
                     ));
                     $this->db->update("clinic_referrals", array(
-                        "missing_item_status" => "Items uploaded for review"
+                        "missing_item_status" => "<span class=\"fc-event-dot\" "
+                            . "style=\"background-color:#88b794\"></span> "
+                            . "Items uploaded for review "
                     ));
                 }
                 $this->db->trans_complete();

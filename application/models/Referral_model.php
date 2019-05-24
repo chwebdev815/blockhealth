@@ -509,7 +509,9 @@ class Referral_model extends CI_Model {
                     "id" => $referral_id
                 ));
                 $this->db->update("clinic_referrals", array(
-                    "missing_item_status" => "Missing item requested"
+                    "missing_item_status" => "<span class=\"fc-event-dot\" "
+                        . "style=\"background-color:#e7e92a\"></span> "
+                        . "Missing item requested "
                 ));
 
                 $this->db->trans_complete();
