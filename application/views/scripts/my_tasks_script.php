@@ -401,11 +401,13 @@
             }).done(function (response) {
                 if (IsJsonString(response)) {
                     data = JSON.parse(response);
-                    if (data == true) {
+                    if (data.result === "success") {
                         global_data.table_my_tasks.ajax.reload();
                         $(".modal").modal("hide");
-//                        success("Referral Successfully Deleted");
                         get_latest_dashboard_counts();
+                    }
+                    else {
+                        error(data.message);
                     }
                 }
             });
