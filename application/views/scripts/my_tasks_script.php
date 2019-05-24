@@ -392,7 +392,7 @@
         
         $("#btn_delete_referral").on("click", function () {
             form = $("#sample_form");
-            form.find("#id").val(global_data.efax_id);
+            form.find("#id").val(global_data.task_id);
             url = base + "my_tasks/delete_referral";
             data = form.serialize();
             $.post({
