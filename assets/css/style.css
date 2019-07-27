@@ -2727,3 +2727,108 @@ span.small-case {
     font-size: 10px;
     color: #c49898;
 }
+
+/************** Schedule page css start ****************/
+.btn-green-light {
+    background-color: #08b5a2;
+    color: white;
+    text-transform: uppercase;
+    border-radius: unset;
+}
+.btn-maroom-dark {
+    background-color: #b12328;
+    color: white;
+    border-radius: unset;
+    text-transform: uppercase;
+}
+.ptb25 {
+    padding-top: 25px;
+    padding-bottom: 25px;
+}
+.maroom-label {
+    display: block;
+    color: #cd282e;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+form#form_physician_weekdays label.maroom-label {
+    margin-bottom: 5px;
+}
+.x_title {
+    margin-bottom: 0;
+}
+.pt34 {
+    padding-top: 34px;
+}
+.btn-med-width{
+    width: 47%;
+}
+textarea, select, input[type], textarea.form-control, select.form-control, input[type].form-control {
+    height: 35px;
+}
+.checkbox .cr{
+    width: 1.2em;
+    height: 1.2em;
+    border-radius: .20em;
+}
+.checkbox .cr .cr-icon{
+    top: 51%;
+    left: 15%;
+}
+@media only screen and (min-width: 768px){
+    .pl0 {
+        padding-left: 0;
+    }
+    .pmainsec{
+        padding-bottom: 30px;
+    }
+}
+@media only screen and (max-width: 767px){
+    .mob-no-padding{
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .pdinput{
+        padding-bottom: 15px;
+    }
+    .pmainsec{
+        padding-bottom: 20px;
+    }
+    .pl25 {
+        padding-left: 15px !important;
+    }
+}
+.pt12 {
+    padding-top: 12px;
+}
+.mb15{
+    margin-bottom: 15px;
+}
+.p15 {
+    padding-top: 15px;
+}
+.blocked-time-ttl {
+    color: #08b5a2;
+    font-weight: 600;
+    font-size: 16px;
+    padding: 15px 0 0;
+}
+.pt20 {
+    padding: 20px 0;
+}
+.blocked-time-close {
+    color: #08b5a2;
+    font-size: 16px;
+    font-weight: 600;
+    margin: 6px 0 0;
+}
+.pl25 {
+    padding-left: 25px;
+}
+.bold-txt{
+    font-weight: 600;
+}
+p.blk-div {
+    margin: 8px 0 0;
+}

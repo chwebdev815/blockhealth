@@ -543,7 +543,9 @@
 
         <div class="awsm-container">
             <div class="awsm-timeline awsm-timeline-style-8 awsm-date-opposite awsm-alternate awsm-responsive-left" style="text-align: center;margin-bottom: 50px;border-bottom: 1px solid #dedede;padding-bottom: 30px;width: 100%;float: left;">
-                <h1 style="font-size: 2.5em;font-weight: 100;margin-bottom:0px;">###clinic_name### has declined a referral </h1>
+                <h1 style="font-size: 2.5em;font-weight: 100;margin-bottom:0px;">
+                    ###clinic_name### has declined a referral
+                </h1>
 
                 <!-- <p style="line-height: 1.7em;letter-spacing: 1px;"> Follow these steps to review and upload missing items for <br> <strong> &lt;Patient Name&gt; </strong> </p> -->
             </div>
@@ -553,11 +555,12 @@
 
                 <div style="display:inline-block;vertical-align:top;width:50%;float:left;">
                     <div style="">
-                        <h3 style="color: black;font-weight: 100; font-size: 22px;" > 1)&nbsp;Visit: </h3>
-                        <h3 style="margin-bottom: 1.5em;  font-size: 25px;"> www.blockhealth.co/status</h3>
-                        <h3 style="color: black;font-weight: 100; font-size: 22px;"> 2)&nbsp;Enter the following 6-digit code: </h3>
-                        <h3 style="margin-bottom: 1.5em;  font-size: 25px;"> ###referral_code### </h3>
-                        <h3 style="color: black;font-weight: 100; font-size: 22px;"> 3) Signup and check the latest referral status</h3>
+                        <h3 style="color: black;font-weight: 100; font-size: 22px;"> 
+                            <span style="margin-bottom: 0em; margin-top: 0em;  font-size: 16px; font-weight: bold">
+                                Patient Name: <br/>###pat_fname### ###pat_lname### ###pat_dob###<br/>
+                                
+                            </span>
+                        </h3>
                     </div>
                 </div>
 
@@ -585,7 +588,7 @@
                         <div class="awsm-timeline-content">
                             <div class="awsm-timeline-content-inner" id="new">
                                 <p style="margin: 0 0;margin-bottom: 1em;font-size: 18px;">###time2###</p>
-                                <h2> Referral has been declined and returned</h2>
+                                Referral has been declined
                             </div>
                         </div>
                     </div>		
@@ -594,26 +597,30 @@
             <!-- .awsm-start-label -->
 
             <div class="awsm-timeline awsm-timeline-style-8 awsm-date-opposite awsm-alternate awsm-responsive-left" style="text-align: center;font-size: 22px;float:left;border-top: 1px solid #dedede;padding-top: 0px;">
-                <h4 style="line-height: 1.7em;"> You only need to follow these steps once, and all future referrals to ###clinic_name### will appear in your BlockHealth portal</h4>
+                <h4 style="line-height: 1.7em;"> 
+                    This referral was triaged by Phelix, an AI admin assistant for clinics. <br/>
+                    Visit www.phelix.ai to learn more!
+                </h4>
             </div>
-
         </div>
-
+        <div style="margin: 0 auto; text-align: center">
+            <div style="width: fit-content; margin: 0 auto; text-align: center;">
+                <img height="50" width="200" src="http://35.203.47.37/assets/img/phelix_wide.png" alt="Phelix Logo"/>
+            </div>
+        </div>
+        <script src="js/modernizr.js"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
+        <script src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
+        <script src="js/awsm-timeline.min.js"></script>
+        <script>
+            document.getElementById("button").onclick = function () {
+                let doc = new jsPDF('p', 'pt', 'a4');
+                doc.addHTML(document.body, function () {
+                    doc.save("html.pdf");
+                });
+            };
+        </script>
     </body>
-    <script src="js/modernizr.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.js"></script>
-    <script src = "https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.0.272/jspdf.debug.js"></script>
-    <script src="js/awsm-timeline.min.js"></script>
-    <script>
 
-        document.getElementById("button").onclick = function () {
-            let doc = new jsPDF('p', 'pt', 'a4');
-            doc.addHTML(document.body, function () {
-                doc.save("html.pdf");
-            })
-
-        };
-
-    </script>
 </html>

@@ -169,14 +169,14 @@ function fileUpload(data) {
             formData.append('file', blob);
             console.log("building form data");
 //            $.ajax('http://165.227.45.30/predict', {
-            $.ajax('http://165.227.45.30/'+global_data.predict_url, {
+            $.ajax('http://165.227.45.30/' + global_data.predict_url, {
                 method: 'POST',
                 data: formData,
                 processData: false,
                 contentType: false,
                 success: function (response) {
                     tmp_selector = "#anything_fake";
-                    root = $("#signupForm");
+                    root = $("form#signupForm, form#form_patient_save");
                     data_points = 0;
 
                     data_points_captured = {};
@@ -243,8 +243,15 @@ function fileUpload(data) {
                         if (response.predictions.hasOwnProperty('ICN')) {
                             if (response.predictions.ICN.hasOwnProperty('NO')) {
                                 if (response.predictions.ICN.NO != "") {
-                                    root.find("#new-patient-ohip").val(response.predictions.ICN.NO);
-                                    data_points_captured.icn = response.predictions.ICN.NO;
+                                    root.find("#new-patient-ohip").val(response.predictions.ICN.NO.replace(/\D/g,''));
+                                    data_points_captured.icn = response.predictions.ICN.NO.replace(/\D/g,'');
+                                    tmp_selector += ', #new-patient-ohip';
+                                    data_points += 1;
+                                }
+                            } else {
+                                if (response.predictions.ICN != "") {
+                                    root.find("#new-patient-ohip").val(response.predictions.ICN.replace(/\D/g,''));
+                                    data_points_captured.icn = response.predictions.ICN.replace(/\D/g,'');
                                     tmp_selector += ', #new-patient-ohip';
                                     data_points += 1;
                                 }
@@ -338,9 +345,10 @@ function fileUpload(data) {
                         }
 
                         //mark updated animation
-                        $(tmp_selector).toggleClass("updated_mode");
+                        root.find(".updated_mode").removeClass("updated_mode");
+                        root.find(tmp_selector).addClass("updated_mode");
                         setTimeout(function () {
-                            $(tmp_selector).toggleClass("updated_mode");
+                            root.find(tmp_selector).removeClass("updated_mode");
                         }, 3000);
                         log_data_points(data_points, global_data.efax_id, "predict");
                         // save_predict_data_points(data_points_captured);
@@ -561,7 +569,7 @@ function file_upload_triage(data) {
 
                         if (response.predictions.hasOwnProperty('pharmacologic_substance')) {
                             tmp = response.predictions.pharmacologic_substance;
-                            debugger
+                            
                             if (tmp != "No Match Found" && tmp.length != 0) {
                                 for (i = 0; i < tmp.length; i++) {
                                     elem = {};
@@ -578,7 +586,7 @@ function file_upload_triage(data) {
                                                 suffix_array = [];
                                                 for (attr_index = 0; attr_index < attrs.length; attr_index++) {
                                                     cur_attr = attrs[attr_index];
-                                                    if(typeof(cur_attr.Type) !== "undefined" && typeof(cur_attr.Text) !== "undefined" ) {
+                                                    if (typeof (cur_attr.Type) !== "undefined" && typeof (cur_attr.Text) !== "undefined") {
                                                         tmp_type = cur_attr.Type.substring(0, 3).toLowerCase();
                                                         suffix_array.push(tmp_type + ": " + cur_attr.Text);
                                                     }

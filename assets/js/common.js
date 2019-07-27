@@ -48,27 +48,25 @@ $(document).ready(function () {
 });
 
 function set_val(field, value) {
-    if(value != undefined && value != null && value!="NULL") {
-        if($(field).val() == "")
+    if (value != undefined && value != null && value != "NULL") {
+        if ($(field).val() == "")
             $(field).val(value);
     }
 }
 
 function make_number(rough_number) {
-    real_number = rough_number.replace(/-/g,"");
-    real_number = real_number.replace(/ /g,"");
+    real_number = rough_number.replace(/-/g, "");
+    real_number = real_number.replace(/ /g, "");
     return real_number;
 }
 
 
 function set_missing_status(status) {
-    if(status == "Missing item requested") {
+    if (status === "Missing item requested") {
         return '<span class="fc-event-dot" style="background-color:#f74444"></span>  ' + status;
-    }
-    else if(status == "Items uploaded for review") {
+    } else if (status === "Items uploaded for review") {
         return '<span class="fc-event-dot" style="background-color:#88b794"></span>  ' + status;
-    }
-    else {
+    } else {
         return status;
     }
 }
