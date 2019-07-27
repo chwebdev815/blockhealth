@@ -39,6 +39,12 @@
         <script src="<?php echo base_url(); ?>assets/js/dataTables.bootstrap.min.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/jquery-ui.js"></script>
         <script src="<?php echo base_url(); ?>assets/js/jquery.validate.min.js"></script>
+        <script>
+            base = "<?php echo base_url(); ?>";
+            global_data = {};
+            global_data.referral_id = "<?php echo $this->uri->segment(3); ?>";
+            global_data.clinic_id = "<?php echo md5($this->session->userdata("user_id")); ?>";
+        </script>
     </head>
     <body class="bg-white">
         <div class="db-sidebar bg-theme-light sf">
@@ -61,22 +67,41 @@
                     <div class="clinic-greeting hidden-xs">Workflow</div>
                 </li>
                 <li id="li_workflow" data-toggle="tooltip" data-placement="right" title="Workflow Summary">
-                    <a class="clearfix" href="<?php echo base_url(); ?>workflow_dash"><span>Workflow Dashboard</span><i class="numb-notifies">&nbsp;</i></a>
+                    <a class="clearfix" href="<?php echo base_url(); ?>workflow_dash">
+                        <span>Workflow Dashboard</span><i class="numb-notifies">&nbsp;</i>
+                    </a>
                 </li>
+                <?php if($this->session->userdata("user_id") === 8) { ?>
+                <li id="li_call_center" data-toggle="tooltip" data-placement="right" title="Call Center">
+                    <a class="clearfix" href="<?php echo base_url(); ?>call_center">
+                        <span>Call Center</span><i class="numb-notifies">4</i>
+                    </a>
+                </li>
+                <?php } ?>
                 <li id="li_inbox" data-toggle="tooltip" data-placement="right" title="Fax Inbox">
-                    <a class="clearfix" href="<?php echo base_url(); ?>inbox"><span>Fax Inbox</span><i class="numb-notifies" id="count_inbox">&nbsp;</i></a>
+                    <a class="clearfix" href="<?php echo base_url(); ?>inbox">
+                        <span>Fax Inbox</span><i class="numb-notifies" id="count_inbox">&nbsp;</i>
+                    </a>
                 </li>
                 <li id="li_my_tasks" data-toggle="tooltip" data-placement="right" title="Fax Triage">
-                    <a class="clearfix" href="<?php echo base_url(); ?>my_tasks"><span>Fax Triage</span><i class="numb-notifies" id="count_my_tasks">&nbsp;</i></a>
+                    <a class="clearfix" href="<?php echo base_url(); ?>my_tasks">
+                        <span>Fax Triage</span><i class="numb-notifies" id="count_my_tasks">&nbsp;</i>
+                    </a>
                 </li>
                 <li id="li_referral_triage" data-toggle="tooltip" data-placement="right" title="Referral Triage">
-                    <a class="clearfix" href="<?php echo base_url(); ?>referral_triage"><span>Referral Triage</span><i class="numb-notifies" id="count_physician">&nbsp;</i></a>
+                    <a class="clearfix" href="<?php echo base_url(); ?>referral_triage">
+                        <span>Referral Triage</span><i class="numb-notifies" id="count_physician">&nbsp;</i>
+                    </a>
                 </li>
                 <li id="li_accepted" data-toggle="tooltip" data-placement="right" title="Booking">
-                    <a class="clearfix" href="<?php echo base_url(); ?>accepted"><span>Booking</span><i class="numb-notifies" id="count_accepted"></i>&nbsp;</a>
+                    <a class="clearfix" href="<?php echo base_url(); ?>accepted">
+                        <span>Booking</span><i class="numb-notifies" id="count_accepted"></i>&nbsp;
+                    </a>
                 </li>
                 <li id="li_scheduled" data-toggle="tooltip" data-placement="right" title="Scheduled">
-                    <a class="clearfix" href="<?php echo base_url(); ?>scheduled"><span>Scheduled</span><i class="numb-notifies" id="count_scheduled_stopped">&nbsp;</i></a>
+                    <a class="clearfix" href="<?php echo base_url(); ?>scheduled">
+                        <span>Scheduled</span><i class="numb-notifies" id="count_scheduled_stopped">&nbsp;</i>
+                    </a>
                 </li>
             </ul>
             <ul class="db-sidebar-items list-unstyled" id="second_menu_list" style="display:none">
@@ -91,7 +116,7 @@
                     <a class="clearfix" href="<?php echo base_url(); ?>analytics"><span>Analytics Dashboard</span><img src="<?php echo base_url(); ?>assets/img/dashboard.png" /></a>
                 </li>
                 <li id="li_schedule_settings" data-toggle="tooltip" data-placement="right" title="" data-original-title="Schedule Settings">
-                    <a class="clearfix" href="<?php echo base_url(); ?>schedule_settings"><span>Schedule Settings</span><img src="<?php echo base_url(); ?>assets/img/dashboard.png"></a>
+                    <a class="clearfix" href="<?php echo base_url(); ?>schedule_settings"><span>Schedule Settings</span><img src="<?php echo base_url(); ?>assets/img/calendar.png"></a>
                 </li>				
                 <li id="li_all_patient_records" data-toggle="tooltip" data-placement="right" title="All Patient Records">
                     <a class="clearfix" href="<?php echo base_url(); ?>completed"><span>All Patient Records</span><i class="fa fa-user" aria-hidden="true"></i></a>
@@ -99,7 +124,6 @@
                 <li id="li_completed_tasks" data-toggle="tooltip" data-placement="right" title="Completed Tasks">
                     <a class="clearfix" href="<?php echo base_url(); ?>completed_tasks"><span>Completed Tasks</span>
                         <i class="fa fa-check" aria-hidden="true"></i>
-                        <!-- <i class="numb-notifies" id="count_completed_tasks">&nbsp;</i> -->
                     </a>
                 </li>
                 <li id="li_manage_physician" data-toggle="tooltip" data-placement="right" title="Manage Physicians">
@@ -244,21 +268,14 @@
 
         <script>
 
-            global_data = {};
-
-            base = "<?php echo base_url(); ?>";
-            global_data.referral_id = "<?php echo $this->uri->segment(3); ?>";
-            global_data.clinic_id = "<?php echo md5($this->session->userdata("user_id")); ?>";
-            
-            <?php 
-            echo "console.log('" . $this->session->userdata("user_id") . "');";
-            if($this->session->userdata("user_id") === 5) {
-                echo "global_data.predict_url = 'predict';";
-            }
-            else {
-                echo "global_data.predict_url = 'predict_form';";
-            }
-            ?>
+<?php
+echo "console.log('" . $this->session->userdata("user_id") . "');";
+//if ($this->session->userdata("user_id") === 5) {
+//    echo "global_data.predict_url = 'predict';";
+//} else {
+echo "global_data.predict_url = 'aws_predict';";
+//}
+?>
             tableActionTO = null;
             myDropzone = null;
 
@@ -280,40 +297,37 @@
                 return '<"wrapper"tp>';
             }
 
-            function success(msg, header = "Operation Successfull") {
+            function success(msg, header) {
+                if (header === void 0) {
+                    header = "Operation Successfull";
+                }
+
                 $("#modal_success").find(".alert-success").html(msg);
                 $("#modal_success").find(".modal-title").html(header);
                 view("modal_success");
             }
-            
-            function error(msg, header = "Operation Failed") {
+            function error(msg, header) {
+                if (header === void 0) {
+                    header = "Operation Failed";
+                }
+
                 $("#modal_error").find(".alert-danger").html(msg);
                 $("#modal_error").find(".modal-title").html(header);
                 view("modal_error");
             }
-            
+
             function handle_ajax_error(response) {
-                if(response.status === 404) {
+                if (response.status === 404) {
                     error("Error 404: Request target not found");
-                }
-                else {
+                } else {
                     error("Error 501: Internal server error");
                 }
             }
-            
+
             function view(modal_id) {
                 setTimeout(function () {
                     $("#" + modal_id).modal("show");
                 }, 500);
-            }
-
-            function IsJsonString(str) {
-                try {
-                    JSON.parse(str);
-                } catch (e) {
-                    return false;
-                }
-                return true;
             }
 
             function get_latest_dashboard_counts() {
@@ -426,7 +440,7 @@
                             $("#btn_request_missing_items").button('reset');
                         },
                         error: function (response) {
-                            handle_ajax_error(response); 
+                            handle_ajax_error(response);
                         }
                     }).done(function (response) {
                         if (IsJsonString(response)) {
@@ -444,7 +458,27 @@
                     });
                 });
 
-
+                $("#next_visit").on("change", function () {
+                    form = $("#sample_form");
+                    form.find("#param").val(this.value);
+                    url = base + "referral/set_next_visit";
+                    data = form.serialize();
+                    $.post({
+                        url: url,
+                        data: data
+                    }).done(function (response) {
+                        if (IsJsonString(response)) {
+                            response = JSON.parse(response);
+                            if (response.result === "success") {
+                                get_referral_details();
+                            } else if (response.result === "error") {
+                                error(result.message);
+                            }
+                        } else {
+                            error("Unexpected Error Occured");
+                        }
+                    });
+                });
             });
 
         </script>

@@ -202,13 +202,6 @@
                                                 </select>
                                             </div>
                                             <div class="col-lg-12">
-                                                <label for="assign_physician">
-                                                    <strong>Assign Physician</strong>
-                                                </label>
-                                                <select id="assign_physician" placeholder="Assign Physician" name="assign_physician" class="form-control">
-                                                </select>
-                                            </div>
-                                            <div class="col-lg-12">
                                                 <label for="new-patient-ohip">
                                                     <strong>Select Record Type</strong>
                                                 </label>
@@ -223,6 +216,14 @@
                                                     <option data-show=".file-upload">Record release</option>
                                                     <option data-show=".file-upload">Intake form</option>
                                                     <option data-show=".file-upload">Other</option>
+                                                </select>
+                                            </div>
+                                            
+                                            <div class="col-lg-12">
+                                                <label for="assign_physician">
+                                                    <strong>Assign Physician</strong>
+                                                </label>
+                                                <select id="assign_physician" placeholder="Assign Physician" name="assign_physician" class="form-control">
                                                 </select>
                                             </div>
                                             <div class="col-lg-12 cl-t-listing wrapper_div">

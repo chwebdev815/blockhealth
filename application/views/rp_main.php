@@ -235,12 +235,20 @@
                 return '<"wrapper"tlp>';
             }
 
-            function success(msg, header = "Operation Successfull") {
+            function success(msg, header) {
+                if (header === void 0) {
+                    header = "Operation Successfull";
+                }
+
                 $("#modal_success").find(".alert-success").html(msg);
                 $("#modal_success").find(".modal-title").html(header);
                 view("modal_success");
             }
-            function error(msg, header = "Operation Failed") {
+            function error(msg, header) {
+                if (header === void 0) {
+                    header = "Operation Failed";
+                }
+
                 $("#modal_error").find(".alert-danger").html(msg);
                 $("#modal_error").find(".modal-title").html(header);
                 view("modal_error");

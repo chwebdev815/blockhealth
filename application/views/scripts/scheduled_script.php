@@ -71,7 +71,7 @@
                 if (IsJsonString(response)) {
                     data = JSON.parse(response);
                     a = new Date();
-                    cur_date = a.getFullYear() + '-' + (a.getMonth() + 1) + '-' + a.getDate();
+                    cur_date = new moment(a);
                     div = $(cur_collapse_link).closest(".x_panel").find(".my_calender");
                     $(div).fullCalendar({
                         header: {

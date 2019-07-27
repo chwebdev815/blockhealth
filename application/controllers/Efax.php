@@ -6,13 +6,40 @@ if (!defined('BASEPATH'))
 class Efax extends CI_Controller {
 
     public function check() {
-        $pos = strpos($value, ",");
-        $value = ($pos) ? substr($value, 0, $pos) . ")" : $value;
+        $time1 = "2019-07-04 11:00:00";
+        $time2 = "2019-07-04 12:30:00";
+        $new_visit_duration = 60;
+        
+        
+        $datetime1 = DateTime::createFromFormat('Y-m-d H:i:s', $time1);
+        $datetime2 = DateTime::createFromFormat('Y-m-d H:i:s', $time2);
+        echo("<br/> for weekloop start at " . $datetime1->format("Y-m-d H:i:s"));
+        echo("<br/> for weekloop end at " . $datetime2->format("Y-m-d H:i:s"));
+        
+        $tmp1 = DateTime::createFromFormat('Y-m-d H:i:s', $datetime1->format("Y-m-d H:i:s"));
+        $tmp2 = DateTime::createFromFormat('Y-m-d H:i:s', $datetime1->format("Y-m-d H:i:s"));
+        $tmp2->add(new DateInterval("PT{$new_visit_duration}M"));
+        echo("<br/> tmp end is set to " . $tmp2->format("Y-m-d H:i:s"));
 
-        echo $value . "<br/><br/>";
-        //only send the first attribute
-        //in the rpa_integration table
-        //gliclazide (dos: 30mg)
+        $response = array();
+        $counter = 0;
+        while ($tmp2->format("Y-m-d H:i:s") <= $datetime2->format("Y-m-d H:i:s")) {
+            $counter++;
+            echo "<br/> looping";
+            $response[$counter] = [
+                "start_time" => $tmp1->format("Y-m-d H:i:s"),
+                "end_time" => $tmp2->format("Y-m-d H:i:s")
+            ];
+//            echo("<br/> before tmp1 = " . $tmp1->format("Y-m-d H:i:s") . " and "
+//                    . "tmp2 = " . $tmp2->format("Y-m-d H:i:s"));
+            $tmp1 = DateTime::createFromFormat('Y-m-d H:i:s', $tmp2->format("Y-m-d H:i:s"));
+            $tmp2 = $tmp2->add(new DateInterval("PT{$new_visit_duration}M"));
+//            echo("<br/> after tmp1 = " . $tmp1->format("Y-m-d H:i:s") . " and "
+//                    . "tmp2 = " . $tmp2->format("Y-m-d H:i:s"));
+//            echo("<br/> added something");
+        }
+        echo("<br/> time slots for this block => " . json_encode($response));
+//        echo json_encode($response);
     }
 
     public function get_images() {

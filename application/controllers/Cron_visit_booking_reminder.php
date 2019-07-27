@@ -3,6 +3,7 @@
 defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Cron_visit_booking_reminder extends CI_Controller {
+
 //Booking reminder for 1h, 24h, 48h post of visit created
 
     public function index() {
@@ -20,7 +21,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
 //        log_message("error", "Cron_visit_booking_reminder called");
-
         //get all to schedule a call
 //        $before_1_hour = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 hour")));
 //        $before_1_hour_5_min = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-1 hour 5 minute")));
@@ -69,9 +69,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
 ////                    "id" => 10
 //                    "id" => 80
 //                ))->get()->result();
-
-
-
 //        log_message("error", $this->db->last_query() . "<br/><br/>");
 //        log_message("error", json_encode($remindable) . "<br/><br/>");
 
@@ -86,18 +83,24 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     . 'THEN "false" ELSE "true" END AS allow_sms,' .
                     'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") '
                     . 'THEN "false" ELSE "true" END AS allow_email, ' .
-                    "admin.address," .
+                    "c_loc.address," .
                     "pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, " .
-                    "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
-            $this->db->from("clinic_referrals c_ref, referral_patient_info pat, "
-                    . "efax_info efax, clinic_user_info admin");
+                    "pat.fname, pat.lname, admin.clinic_institution_name, c_loc.call_address");
+            $this->db->from("clinic_referrals c_ref, "
+                    . "referral_patient_info pat, "
+                    . "efax_info efax, "
+                    . "clinic_user_info admin,"
+                    . "clinic_locations c_loc");
             $this->db->where(array(
                 "efax.active" => 1,
                 "admin.active" => 1,
                 "c_ref.active" => 1,
                 "pat.active" => 1,
+                "c_loc.active" => 1,
                 "pat.id" => $visit->patient_id
             ));
+            $this->db->where("c_loc.clinic_id", "admin.id", false);
+            $this->db->where("pat.location_id", "c_loc.id", false);
             $this->db->where("pat.referral_id", "c_ref.id", false);
             $this->db->where("efax.to", "admin.id", false);
             $this->db->where("c_ref.efax_id", "efax.id", false);
@@ -114,10 +117,10 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     //work number
                     $contact_number = $patient_data->work_phone;
                 }
-                $new_visit_duration = 30;
 
+                $clinic_id = $patient_data->id;
                 //find asignable slots
-                $response = $this->referral_model->assign_slots($new_visit_duration, $visit->patient_id);
+                $response = $this->referral_model->assign_slots($clinic_id, $visit->patient_id);
                 if ($response["result"] === "error") {
                     continue;
                 } else if ($response["result"] === "success") {
@@ -162,7 +165,8 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "visit_date3" => substr($allocations[2]["start_time"], 0, 10),
                     "visit_start_time3" => substr($allocations[2]["start_time"], 10),
                     "visit_end_time3" => substr($allocations[2]["end_time"], 10),
-                    "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
+                    "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))
+                            ->add(new DateInterval("PT10M"))->format("Y-m-d H:i:s"),
                     "notify_status" => $notification_status,
                     "notify_status_icon" => $notification_status_icon
                 );
@@ -261,7 +265,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 //        $to_number = "+917201907712";
 
 
-        $url = "http://35.203.47.37/" . "cron_visit_booking_reminder/callhandle?"
+        $url = base_url() . "cron_visit_booking_reminder/callhandle?"
                 . "pname=" . urlencode($pname) . "&"
                 . "patient_lname=" . urlencode($patient_lname) . "&"
                 . "pvname=" . urlencode($pvname) . "&"
@@ -305,7 +309,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
         $address = $_GET['address'];
         $dataarray = http_build_query($_GET);
-        $base_url = "http://35.203.47.37/";
+        $base_url = base_url();
 
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         echo "<Response>
@@ -372,7 +376,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
         $time3 = date('g:i a', strtotime($reserved_data->visit_date3 . " " . $reserved_data->visit_start_time3));
 
         if (isset($_GET["Digits"])) {
-            $base_url = "http://35.203.47.37/";
+            $base_url = base_url();
             if ($_GET['Digits'] == 1) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
@@ -466,9 +470,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "accepted_status_date" => date("Y-m-d H:i:s")
                 ));
 //                log_message("error", "wrong number 2=> " . $this->db->last_query());
-
-
-
                 //all visits book status changed to wrong number
                 $this->db->where(array(
                     "patient_id" => $_GET["patient_id"]
@@ -477,7 +478,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "notify_status_icon" => "blue"
                 ));
 //                log_message("error", "all visits wrong number = > " . $this->db->last_query());
-
 //                $params = array(
 //                    'data' => $_GET["Digits"],
 //                    'to' => $_GET['To'],
@@ -539,11 +539,12 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
 
         if (isset($_GET["Digits"])) {
-            $base_url = "http://35.203.47.37/";
+            $base_url = base_url();
             if ($_GET['Digits'] == 1) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
-                echo "<Gather  timeout='3' numDigits='1' action='" . $base_url . "cron_visit_booking_reminder/step_four?"
+                echo "<Gather  timeout='3' numDigits='1' "
+                . "action='" . $base_url . "cron_visit_booking_reminder/step_four?"
                 . "pname=" . urlencode($_GET['pname']) . "&amp;"
                 . "patient_lname=" . urlencode($_GET['patient_lname']) . "&amp;"
                 . "pvname=" . urlencode($_GET['pvname']) . "&amp;"
@@ -746,6 +747,14 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 );
                 $this->db->insert("records_patient_visit", $insert_data);
 
+                $appointment_id = $this->db->insert_id();
+                patient_visit_integration("insert", $get["patient_id"], $appointment_id);
+
+                //set follow up if initial visit
+                $this->load->model("referral_model");
+                $this->referral_model->set_next_visit_follow_up($get["patient_id"]);
+
+
                 //disable from reserved table
                 $this->db->where(array(
                     "id" => $reserved_id
@@ -824,7 +833,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
         $time3 = $_GET["time3"];
 
         if (isset($_GET["Digits"])) {
-            $base_url = "http://35.203.47.37/";
+            $base_url = base_url();
             if ($_GET['Digits'] == 2) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
@@ -900,31 +909,20 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 $num = $_GET['selected_slot'];
                 if ($num == 1 || $num == 2 || $num == 3) {
                     $reserved_id = $_GET["reserved_id"];
-                    $reserved_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
-                                "id" => $reserved_id
-                            ))->get()->result_array()[0];
+                    $reserved_data = $this->db->select("*")
+                                    ->from("records_patient_visit_reserved")
+                                    ->where(array(
+                                        "id" => $reserved_id
+                                    ))->get()->result_array()[0];
 
                     $visit_date = $reserved_data["visit_date" . $num];
                     $visit_time = $reserved_data["visit_start_time" . $num];
                     $visit_end_time = $reserved_data["visit_end_time" . $num];
 
                     $get = $_GET;
-                    
+
                     //static NA
                     $visit_confirmed = "N/A";
-                    //dynamic status 
-//                    $visit_confirmed = "Awaiting Confirmation";
-//                    $current_date = new DateTime(date("Y-m-d H:i:s"));
-//                    $current_date->add(new DateInterval('P2D'));
-//                    log_message("error", "compare <br/>" . $current_date->format("Y-m-d H:i:s") . "<br/>" .
-//                            $visit_date . " " . $visit_time . "<br/>");
-//                    if ($current_date->format("Y-m-d H:i:s") < ($visit_date . " " . $visit_time)) {
-//                        log_message("error", "more than 48h so N/A");
-//                        $visit_confirmed = "N/A";
-//                    }
-//                    else {
-//                        log_message("error", "less than 48h so Aw.. Conf..");
-//                    }
 
                     $insert_data = array(
                         "patient_id" => $get["patient_id"],
@@ -942,6 +940,13 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     );
                     //insert in scheduled visit
                     $this->db->insert("records_patient_visit", $insert_data);
+                    $appointment_id = $this->db->insert_id();
+                    patient_visit_integration("insert", $get["patient_id"], $appointment_id);
+
+                    //set follow up if initial visit
+                    $this->load->model("referral_model");
+                    $this->referral_model->set_next_visit_follow_up($get["patient_id"]);
+
 
                     $this->db->where(array(
                         "id" => $reserved_id
@@ -970,6 +975,64 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     ));
 
                     $this->load->model("referral_model");
+
+                    // send fax code start
+                    log_message("error", "code for fax send on call is started");
+                    $patient_id = $get["patient_id"];
+                    $clinic_id = $this->session->userdata("user_id");
+
+                    $fax_data = $this->db
+                                    ->select("pat.fname, pat.lname, c_usr.clinic_institution_name, "
+                                            . "if(pat.dob, DATE_FORMAT(pat.dob, '(%b %d, %Y)'), '') "
+                                            . "as pat_dob,"
+                                            . "dr.fax, c_usr.email_address")
+                                    ->from("clinic_user_info c_usr, referral_patient_info pat, "
+                                            . "referral_physician_info dr")
+                                    ->where(array(
+                                        "pat.active" => 1,
+                                        "c_usr.active" => 1,
+                                        "pat.id" => $patient_id,
+                                        "c_usr.id" => $clinic_id,
+                                        "dr.patient_id" => $patient_id
+                                    ))->get()->result();
+
+                    $visit_date = DateTime::createFromFormat("Y-m-d", $visit_date);
+                    $visit_date = $visit_date->format("F d, Y");
+
+                    $visit_time = DateTime::createFromFormat("H:i:s", $visit_time);
+                    $visit_time = $visit_time->format("H:i");
+
+                    log_message("error", "fax info q = " . $this->db->last_query());
+                    if ($fax_data) {
+                        $replace_stack = array(
+                            "###clinic_name###" => $fax_data[0]->clinic_institution_name,
+                            "###pat_fname###" => $fax_data[0]->fname,
+                            "###pat_lname###" => $fax_data[0]->lname,
+                            "###pat_dob###" => $fax_data[0]->pat_dob,
+                            "###time1###" => "",
+                            "###time2###" => "",
+                            "###book_date###" => $visit_date,
+                            "###book_time###" => $visit_time,
+                            "###book_address###" => $fax_data[0]->email_address
+                        );
+
+                        $text2 = "<h2>Referral has been booked</h2>";
+                        $additional_replace = array(
+                            "###text2###" => $text2
+                        );
+                        $checklist = array();
+                        $file_name = "referral_booking.html";
+
+                        $fax_number = $fax_data[0]->fax;
+                        $response = $this->referral_model->send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, "Booking Appintment", $additional_replace);
+                        log_message("error", "booking fax sent to " . $fax_number);
+                        log_message("error", "fax sent code completed");
+                    } else {
+                        log_message("error", "Issue fetching fax data");
+                        log_message("error", "sql = > " . $this->db->last_query());
+                    }
+                    //send fax code is sent
+//                    $this->load->model("referral_model");
                     $this->referral_model->move_from_accepted_to_scheduled($get["patient_id"], $clinic_id);
                 }
             } else {
@@ -1008,7 +1071,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
         //if(isset($_GET['pname'])){
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         echo "<Response>";
-        echo "<Gather  NumDigits='1' action='" . "http://35.203.47.37/" . "cron_visit_booking_reminder/call_resp_handle/' method='GET'>";
+        echo "<Gather  NumDigits='1' action='" . base_url() . "cron_visit_booking_reminder/call_resp_handle/' method='GET'>";
         echo "<Say>";
         echo "Hello         " . $_GET['pname'] . "
                 Your      appointment   " . $_GET['pvname'] . "    with    " . $_GET['cname'] . "    has been booked for " . $_GET['aDate'] . "    at    " . $_GET['aDate'] . "    .The    address    is:    " . $_GET['address'] . "    Please     type    1    to    confirm    this    booking.    If    this    date    does   not     work,    please   type   2    to    alert    the    clinic    staff";
@@ -1031,14 +1094,6 @@ class Cron_visit_booking_reminder extends CI_Controller {
             print_r($_REQUEST);
             echo "<pre>";
         }
-    }
-
-    public function test() {
-        $this->load->model("referral_model");
-        $data = $this->referral_model->assign_slots(30, 1);
-        echo "<pre>";
-        print_r($data);
-        echo "<pre>";
     }
 
     //for wrong number

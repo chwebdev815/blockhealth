@@ -4,8 +4,13 @@ class My_tasks_model extends CI_Model {
 
     public function ssp_my_tasks_model() {
         $table = "view_my_tasks";
-        if ($this->session->userdata("emr_pathway") === "true") {
-            $table = "view_my_tasks_emr";
+        if ($this->session->userdata("emr_pathway") === "AccuroCitrix") {
+            $table = "view_my_tasks_rpa";
+            log_message("error", "loading rpa view_my_tasks_rpa");
+        }
+        if ($this->session->userdata("emr_pathway") === "OscarEMR") {
+            $table = "view_my_tasks_oscar";
+            log_message("error", "loading oscar view_my_tasks_oscar");
         }
         $primaryKey = "id";
         $columns = array(
@@ -29,7 +34,7 @@ class My_tasks_model extends CI_Model {
         );
         $where = "";
         if (clinic_admin_login()) {
-            $where = "assigned_to = 0 and clinic_id =" . $this->session->userdata("user_id");
+            $where = "clinic_id =" . $this->session->userdata("user_id");
         } else if (clinic_physician_login()) {
             $where = "assigned_to <> 0 and assigned_to = " . $this->session->userdata("user_id");
         }

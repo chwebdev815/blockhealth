@@ -1,6 +1,6 @@
 
 <script>
-    $.getScript("http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBqFG28QSw6XAtKYjO6xFEMNgkxMiV9FKM", function (data, textStatus, jqxhr) {
+    $.getScript("https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBqFG28QSw6XAtKYjO6xFEMNgkxMiV9FKM", function (data, textStatus, jqxhr) {
         $.getScript("<?php echo base_url(); ?>assets/js/jquery.geocomplete.js", function () {
             $(document).ready(function () {
                 $(".geo_complete").geocomplete();
@@ -388,8 +388,8 @@
                 $("#btn_save_task").button("reset");
             });
         });
-        
-        
+
+
         $("#btn_delete_referral").on("click", function () {
             form = $("#sample_form");
             form.find("#id").val(global_data.task_id);
@@ -405,12 +405,10 @@
                         global_data.table_my_tasks.ajax.reload();
                         $(".modal").modal("hide");
                         get_latest_dashboard_counts();
-                    }
-                    else {
+                    } else {
                         error(data.message);
                     }
-                }
-                else {
+                } else {
                     error("Internal Server Error");
                 }
             });
@@ -515,7 +513,7 @@
 
     function task_complete(id) {
         $("#sample_form").find("#id").val(id);
-        debugger 
+        
         url = base + "my_tasks/task_completed";
         $.post({
             url: url,
@@ -625,7 +623,7 @@
         $("#btn_save_task").removeClass("btn-disabled").attr("disabled", false);
         $("#overlay_image").attr("src", "").hide();
         $("#patient_success_display").hide();
-        
+
         root = $("#form_patient_save");
         root.find("#id").val(patient_id);
 
@@ -712,7 +710,7 @@
                 // global_data.api_phy_extract = "running";
                 $("#btn_extract_patient").button("loading");
                 // $.ajax('http://159.89.127.142/phy_extract', {
-                $.ajax('http://165.227.45.30/'+global_data.predict_url, {
+                $.ajax('http://165.227.45.30/' + global_data.predict_url, {
                     method: 'POST',
                     data: formData,
                     processData: false,
@@ -788,8 +786,15 @@
                             if (response.predictions.hasOwnProperty('ICN')) {
                                 if (response.predictions.ICN.hasOwnProperty('NO')) {
                                     if (response.predictions.ICN.NO != "") {
-                                        root.find("#new-patient-ohip").val(response.predictions.ICN.NO);
-                                        data_points_captured.icn = response.predictions.ICN.NO;
+                                        root.find("#new-patient-ohip").val(response.predictions.ICN.NO.replace(/\D/g,''));
+                                        data_points_captured.icn = response.predictions.ICN.NO.replace(/\D/g,'');
+                                        tmp_selector += ', #new-patient-ohip';
+                                        data_points += 1;
+                                    }
+                                } else {
+                                    if (response.predictions.ICN != "") {
+                                        root.find("#new-patient-ohip").val(response.predictions.ICN.replace(/\D/g,''));
+                                        data_points_captured.icn = response.predictions.ICN.replace(/\D/g,'');
                                         tmp_selector += ', #new-patient-ohip';
                                         data_points += 1;
                                     }
@@ -1147,7 +1152,7 @@
             }
         });
     }
-    
+
     function get_patient_list_save_patient() {
         url = base + "inbox/get_patient_list_save_patient";
         $.post({

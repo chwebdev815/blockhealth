@@ -27,6 +27,7 @@ class Manage_physician_model extends CI_Model {
         require('ssp.class.php');
         return json_encode(SSP::complex($_GET, $sql_details, $table, $primaryKey, $columns, null, $where));
     }
+    
     public function add_physician_model() {
         $this->form_validation->set_rules('first_name', 'First Name', 'required');
         $this->form_validation->set_rules('last_name', 'Last Name', 'required');
@@ -48,9 +49,15 @@ class Manage_physician_model extends CI_Model {
                     "phone_number" => $data["office_phone"],
                     "login_key" => $login_key,
                     "password" => password_hash($password, PASSWORD_BCRYPT),
-                    "active" => 0
+                    "active" => 1
                         )
                 );
+                $physician_id = $this->db->insert_id();
+                //create schedule entry for appointment management
+                $this->db->insert("schedule_visit_settings", array(
+                    "type" => "physician",
+                    "clinic_physician_id" => $physician_id
+                ));
 
                 $this->db->select("clinic_institution_name");
                 $this->db->from("clinic_user_info");

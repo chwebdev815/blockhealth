@@ -1,6 +1,6 @@
 
 <script>
-    $.getScript("http://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBqFG28QSw6XAtKYjO6xFEMNgkxMiV9FKM", function (data, textStatus, jqxhr) {
+    $.getScript("https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBqFG28QSw6XAtKYjO6xFEMNgkxMiV9FKM", function (data, textStatus, jqxhr) {
         $.getScript("<?php echo base_url(); ?>assets/js/jquery.geocomplete.js", function () {
             $(document).ready(function () {
                 $(".geo_complete").geocomplete();
@@ -11,12 +11,8 @@
 
 </script>
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/cropboard.css">
-<!-- <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/font-awesome-site.css"> -->
 <link rel="stylesheet" href="<?php echo base_url(); ?>assets/css/cropper.css">
 <script src="https://fengyuanchen.github.io/js/common.js"></script>
-<!--
-<script src="<?php echo base_url(); ?>assets/js/app.js"></script>
--->
 <script src='<?php echo base_url(); ?>assets/js/tiff.js'></script>
 <script src='<?php echo base_url(); ?>assets/js/cropper.js'></script>
 <script src="<?php echo base_url(); ?>assets/js/cropboard.js"></script>
@@ -107,23 +103,6 @@
         background-color: #f9f9f9 !important;
     }
 
-    /*#preview_image_container{
-        position: absolute;
-        left: 0;
-        top: 0; 
-        margin-left: 0px;
-        margin-top: 0px;
-        text-align:center;
-        background-color: white;
-        box-shadow: 0 1px 50px rgba(34, 25, 25, 0.4);
-        -moz-box-shadow: 0 1px 50px rgba(34,25,25,0.4);
-        -webkit-box-shadow: 0 1px 50px rgba(34, 25, 25, 0.4);
-        width: 100%;
-        height: 100%;
-        z-index: 999;
-    }*/
-
-
     /* preview image css */
     #hover-img-preview {
         /*display: none;*/
@@ -200,45 +179,9 @@
 
 
     .btn-disabled {
-        background-color: #675e67ab !important;
+        background-color: #675e67 !important;
         border-bottom: 3px solid #7c8584 !important;
     }
-
-
-    /*    @media (min-width: 768px) {
-            #save-patient-container.toggled #save-patient-wrapper {
-                width: 380px;
-                padding: 30px;
-                border-radius: 0px 0px 0px 0px;
-            }
-            #save-patient-container.toggled #save-patient-wrapper {
-                width: 250px;
-            }
-            #save-patient-container.toggled #save-patient-wrapper {
-                overflow-y: visible;
-                height: 670px;
-            }
-        }*/
-    /*    @media (min-width: 768px) {
-                #save-patient-wrapper {
-                    width: 0;
-                }
-            #save-patient-wrapper {
-                z-index: 1000;
-                position: absolute;
-                right: 0px;
-                width: 0;
-                top: 20px;
-                height: 652px;
-                margin-right: 0px;
-                overflow: hidden;
-                background: #e8f8f7;
-                -webkit-transition: all 0.5s ease;
-                -moz-transition: all 0.5s ease;
-                -o-transition: all 0.5s ease;
-                transition: all 0.5s ease;
-            }
-        }*/
 </style>
 <script>
 
@@ -291,20 +234,7 @@
                 image.setDirectory(0);
                 temp_canvas = image.toCanvas();
                 $("#image_for_preview").attr("src", temp_canvas.toDataURL());
-//                return temp_canvas.toDataURL();
-
-//                setTimeout(function() {
-//                }, 1000);
                 global_data.preview_images.push(temp_canvas.toDataURL());
-                // clearTimeout(global_data.previewTimeout);
-                // $("#hover-img-preview").hide();
-                // setTimeout(function () {
-                //     $("#hover-img-preview").attr("src", temp_canvas.toDataURL()).show();
-                //     global_data.previewTimeout = setTimeout(function () {
-                //         $("#hover-img-preview").fadeOut("slow");
-                //     }, 3000);
-                // }, 10);
-
             };
             reader.readAsArrayBuffer(xhr.response);
         };
@@ -315,25 +245,18 @@
 
 
     function open_efax(id, tiff_file_name, pdf_file_name, date, time, fax) {
-        // x_medications = 0;
-        // x_diseases = 0;
-        // x_symptoms = 0;
-        // x_tests = 0;
-        // x_reason = 0;
-        // x_documents = 0;
-        // x_devices = 0;
-        if (cropper != null) {
+        if (cropper !== null) {
             cropper.destroy();
             cropper_activated = false;
         }
 
-        if (typeof $("#eFax-modal").find("form")[0] != "undefined") {
+        if (typeof $("#eFax-modal").find("form")[0] !== "undefined") {
             $("#eFax-modal").find("form")[0].reset();
         }
-        if (typeof $("#eFax-modal").find("form")[1] != "undefined") {
+        if (typeof $("#eFax-modal").find("form")[1] !== "undefined") {
             $("#eFax-modal").find("form")[1].reset();
         }
-        if (typeof $("#eFax-modal").find("form")[2] != "undefined") {
+        if (typeof $("#eFax-modal").find("form")[2] !== "undefined") {
             $("#eFax-modal").find("form")[2].reset();
         }
         // $("#eFax-modal").find("[name='dr_fax']").val(fax);
@@ -359,9 +282,9 @@
         date = date_parts[2] + "/" + date_parts[1] + "/" + date_parts[0];
         time = ((date_parts[3] < 12) ? date_parts[3] : date_parts[3] - 12) + ":" + date_parts[4] + ((date_parts[3] < 12) ? "am" : "pm");
         fax = fax + "";
-        if (fax.length == 10) {
+        if (fax.length === 10) {
             fax = fax.substr(0, 3) + "-" + fax.substr(3, 3) + "-" + fax.substr(6);
-        } else if (fax.length == 11) {
+        } else if (fax.length === 11) {
             fax = fax.substr(0, 1) + "-" + fax.substr(1, 3) + "-" + fax.substr(4, 3) + "-" + fax.substr(7);
         }
         modal.find("#file_info").html(fax + " ( " + date + " - " + time + " ) ");
@@ -580,7 +503,7 @@
             }
         });
     }
-    
+
     function get_patient_list_save_patient() {
         url = base + "inbox/get_patient_list_save_patient";
         $.post({
@@ -598,13 +521,50 @@
         });
     }
 
+    function get_location_and_custom() {
+        url = base + "referral/get_location_and_custom";
+        $.post({
+            url: url,
+            data: $("#sample_form").serialize()
+        }).done(function (response) {
+            if (IsJsonString(response)) {
+                response = JSON.parse(response);
+                if (response.result === "success") {
+                    data = response.data;
+                    //patient location
+                    options = "<option disabled>Select Patient Location</option>";
+                    data.locations.forEach(function (value, index) {
+                        options += "<option value='" + value.id + "'>" + value.name + "</option>";
+                    });
+                    $("#signupForm").find("#patient_location").html(options);
+                    //if only one then select it by default
+//                    if(data.locations.length >= 1) {
+//                        $("#signupForm").find("#patient_location").val(data.locations[0].id);
+//                    }
 
+                    //custom
+                    options = "<option selected disabled>Custom Fields</option>";
+                    data.customs.forEach(function (value, index) {
+                        options += "<option value='" + value.id + "'>" + value.name + "</option>";
+                    });
+                    $("#signupForm").find("#custom").html(options);
+                } else {
+                    error("Error getting locations and customs");
+                }
+            } else {
+                error("Error getting locations and customs");
+            }
+        });
+    }
+    
     $(document).ready(function () {
-        
+
         get_referral_checklist();
         get_physician_list_save_patient();
         get_patient_list_save_patient();
-        
+        get_location_and_custom();
+        get_clinic_physicians();
+
         $("#li_inbox").addClass("active");
         $("#btn_view_print_referral").on("click", function () {
             printJS(global_data.pdf_file + ".pdf");
@@ -612,12 +572,15 @@
         $("#btn_view_delete_referral").on("click", function () {
             view("modal_delete_referral");
         });
-        $("#btn_view_save_referral").on("click", function () {
-//            view("save-efax-modal");
+
+        $("#pat_geocomplete").on("input propertychange paste", function () {
+            let address_prefix = "Patient address:<br/>";
+            $("#show_pat_address").html(address_prefix + $(this).val());
         });
 
         $("#btn_view_save_referral").on("click", function () {
-            if ($("#wrap-container").hasClass("toggled") && $("#wrap-container").find("#sidebar-wrapper").css("display") === "block") {
+            if ($("#wrap-container").hasClass("toggled") &&
+                    $("#wrap-container").find("#sidebar-wrapper").css("display") === "block") {
 
             } else {
                 $("#wrap-container").toggleClass("toggled");
@@ -633,7 +596,7 @@
                     $(value).show();
             });
 
-            $("#save-patient-wrapper").find("form")[0].reset();
+//            $("#save-patient-wrapper").find("form")[0].reset();
             $(".input_fields_wrap").find(".remove_field").click();
         });
         //btn_extract_patient, btn_search_patient
@@ -859,6 +822,11 @@
 
 
         $('.patients-details-form .btn-next').on('click', function () {
+            //set patient address
+            let address_prefix = "Patient address:<br/>";
+            $("#show_pat_address").html(address_prefix + $("#pat_geocomplete").val());
+            
+            //move next process
             if (typeof ("cropper_activated") !== "undefined" && cropper_activated) {
                 global_data.crop_data = cropper.getCropBoxData();
                 global_data.crop_rotate = cropper.getData().rotate;
@@ -867,7 +835,7 @@
             var parent_fieldset = $(this).parents('fieldset');
             var next_step = true;
             parent_fieldset.find('.required').each(function () {
-                if ($(this).val() == "") {
+                if ($(this).val() === "") {
                     $(this).addClass('input-error');
                     next_step = false;
                 } else {
@@ -1307,17 +1275,17 @@
             btn_physician_extract = $(this);
             btn_physician_extract.button("loading");
             form = $("#signupForm");
-            
+
             tmp_fname = form.find("#dr_fname").val();
             tmp_lname = form.find("#dr_lname").val();
-            
+
             form.find("#dr_fname").val(tmp_fname.trim().split(" ")[0]);
             form.find("#dr_lname").val(tmp_lname.trim().split(" ")[0]);
-            
+
             form.find("#id").val(global_data.efax_id);
             url = base + "inbox/check_physician_data";
             data = form.serialize();
-            
+
             form.find("#dr_fname").val(tmp_fname);
             form.find("#dr_lname").val(tmp_lname);
 
@@ -1476,7 +1444,6 @@
 
         $('table#table_inbox .db-table-link-row').click(function () {
             let id = $(this).data('id');
-            console.log("clicked", id);
 //            location.href = "patients/patient_info/" + id;
         });
 
@@ -1514,7 +1481,6 @@
         // $("#image1").css("display", "none");
 
         $('button.popup2_open').click(function () {
-            console.log("this should be called");
             $(this).attr("id", "table-hover-view-trigger-disabled");
 
             let tiff_file_name = $(this).parent().data("file-tif");
@@ -1522,24 +1488,7 @@
             tiff_file = base + "uploads/efax_tiff/" + tiff_file_name;
             $("#image_for_preview").attr("src", "");
             get_first_page_from_tif(tiff_file);
-//              .data().fileTif
-//            image_data = global_data.preview_images[$(this).parent().data("preview-index")];
-//            console.log("setting image for " + $(this).parent().data("preview-index"));
         });
-
-
-
-
-        // $(document).not("#dummy").click(function() {
-        //     if($("#hover-img-preview").css("display") != "none") {
-        //         $("#hover-img-preview").attr("src", "").hide();
-        //     }
-        // });
-
-        // $("body").on("click", '#table-hover-view-trigger-disabled', function () {
-        //     $(this).attr("id", "table-hover-view-trigger");
-        // });
-
 
 
         $('#table-hover-edit-trigger').click(function () {
@@ -1549,7 +1498,6 @@
             let date = $(this).parent().data("date");
             let time = $(this).parent().data("time");
             let fax = $(this).parent().data("sender-fax-number");
-            console.log("edit clicked", id);
             open_efax(id, tiff, pdf, date, time, fax);
         });
     }
@@ -1586,7 +1534,6 @@
                 if (response.result == "success") {
                     data = response.data;
                     root = $("#save-patient-wrapper");
-                    console.log("Patient search -> ", response);
 
                     matches = JSON.parse(data);
                     if (matches.length == 1) {
@@ -1743,7 +1690,7 @@
     function file_upload_extract_patient(data) {
         console.log("method file_upload_extract_patient triage called");
         if (uploadingFile) {
-            error("We are already started fetching data. Please wait");
+            error("We already started fetching data. Please wait");
             return;
         }
         var canvas;
@@ -1762,7 +1709,7 @@
                 // global_data.api_phy_extract = "running";
                 $("#btn_extract_patient").button("loading");
                 // $.ajax('http://159.89.127.142/phy_extract', {
-                $.ajax('http://165.227.45.30/'+global_data.predict_url, {
+                $.ajax('http://165.227.45.30/' + global_data.predict_url, {
                     method: 'POST',
                     data: formData,
                     processData: false,
@@ -1771,7 +1718,7 @@
                         console.log(response);
 //                        debugger
                         tmp_selector = "#anything_fake";
-                        root = $("#form_patient_save");
+                        root = $("form#signupForm, form#form_patient_save");
                         data_points = 0;
 
                         data_points_captured = {};
@@ -1792,7 +1739,7 @@
 
                         if (response.success) {
                             if (response.predictions.name.hasOwnProperty('first_name')) {
-                                if (response.predictions.name.first_name != "") {
+                                if (response.predictions.name.first_name !== "") {
                                     root.find("#new-patient-firstname").val(response.predictions.name.first_name);
                                     tmp_selector += ', #new-patient-firstname';
                                     data_points += 1;
@@ -1800,7 +1747,7 @@
                                 }
                             }
                             if (response.predictions.name.hasOwnProperty('last_name')) {
-                                if (response.predictions.name.last_name != "") {
+                                if (response.predictions.name.last_name !== "") {
                                     root.find("#new-patient-lastname").val(response.predictions.name.last_name);
                                     tmp_selector += ', #new-patient-lastname';
                                     data_points += 1;
@@ -1811,7 +1758,7 @@
                                 if (response.predictions.DOB.Day <= 9) {
                                     response.predictions.DOB.Day = "0" + response.predictions.DOB.Day;
                                 }
-                                if (response.predictions.DOB.Day != "") {
+                                if (response.predictions.DOB.Day !== "") {
                                     root.find("#pat_dob_day").val(response.predictions.DOB.Day);
                                     tmp_selector += ', #pat_dob_day';
                                     data_points += 1;
@@ -1822,25 +1769,32 @@
                                 if (response.predictions.DOB.Month <= 9) {
                                     response.predictions.DOB.Month = "0" + response.predictions.DOB.Month;
                                 }
-                                if (response.predictions.DOB.Month != "") {
+                                if (response.predictions.DOB.Month !== "") {
                                     root.find("#pat_dob_month").val(response.predictions.DOB.Month);
                                     tmp_selector += ', #pat_dob_month';
                                     data_points_captured.dob_month = response.predictions.DOB.Month;
                                 }
                             }
                             if (response.predictions.DOB.hasOwnProperty('Year')) {
-                                if (response.predictions.DOB.Year != "") {
+                                if (response.predictions.DOB.Year !== "") {
                                     root.find("#pat_dob_year").val(response.predictions.DOB.Year);
                                     tmp_selector += ', #pat_dob_year';
                                     data_points_captured.dob_year = response.predictions.DOB.Year;
                                 }
                             }
-//                            debugger
+
                             if (response.predictions.hasOwnProperty('ICN')) {
                                 if (response.predictions.ICN.hasOwnProperty('NO')) {
-                                    if (response.predictions.ICN.NO != "") {
-                                        root.find("#new-patient-ohip").val(response.predictions.ICN.NO);
-                                        data_points_captured.icn = response.predictions.ICN.NO;
+                                    if (response.predictions.ICN.NO !== "") {
+                                        root.find("#new-patient-ohip").val(response.predictions.ICN.NO.replace(/\D/g, ''));
+                                        data_points_captured.icn = response.predictions.ICN.NO.replace(/\D/g, '');
+                                        tmp_selector += ', #new-patient-ohip';
+                                        data_points += 1;
+                                    }
+                                } else {
+                                    if (response.predictions.ICN !== "") {
+                                        root.find("#new-patient-ohip").val(response.predictions.ICN.replace(/\D/g, ''));
+                                        data_points_captured.icn = response.predictions.ICN.replace(/\D/g, '');
                                         tmp_selector += ', #new-patient-ohip';
                                         data_points += 1;
                                     }
@@ -1848,7 +1802,7 @@
                             }
                             if (response.predictions.hasOwnProperty('phone')) {
                                 if (response.predictions.phone.hasOwnProperty('phone')) {
-                                    if (response.predictions.phone.phone != "") {
+                                    if (response.predictions.phone.phone !== "") {
                                         root.find("#patient-cell-phone").val(response.predictions.phone.phone);
                                         data_points_captured.phone.phone = response.predictions.phone.phone;
                                         tmp_selector += ', #patient-cell-phone';
@@ -1856,7 +1810,7 @@
                                     }
                                 }
                                 if (response.predictions.phone.hasOwnProperty('phone')) {
-                                    if (response.predictions.phone.phone != "") {
+                                    if (response.predictions.phone.phone !== "") {
                                         root.find("#patient-cell-phone").val(response.predictions.phone.phone);
                                         data_points_captured.phone.phone = response.predictions.phone.phone;
                                         tmp_selector += ', #patient-cell-phone';
@@ -1864,7 +1818,7 @@
                                     }
                                 }
                                 if (response.predictions.phone.hasOwnProperty('cell')) {
-                                    if (response.predictions.cell != "") {
+                                    if (response.predictions.cell !== "") {
                                         root.find("#patient-cell-phone").val(response.predictions.phone.cell);
                                         data_points_captured.phone.cell = response.predictions.phone.cell;
                                         tmp_selector += ', #patient-cell-phone';
@@ -1872,7 +1826,7 @@
                                     }
                                 }
                                 if (response.predictions.phone.hasOwnProperty('home')) {
-                                    if (response.predictions.phone.home != "") {
+                                    if (response.predictions.phone.home !== "") {
                                         root.find("#patient-home-phone").val(response.predictions.phone.home);
                                         data_points_captured.phone.home = response.predictions.phone.home;
                                         tmp_selector += ', #patient-home-phone';
@@ -1880,7 +1834,7 @@
                                     }
                                 }
                                 if (response.predictions.phone.hasOwnProperty('work')) {
-                                    if (response.predictions.phone.work != "") {
+                                    if (response.predictions.phone.work !== "") {
                                         root.find("#patient-work-phone").val(response.predictions.phone.work);
                                         data_points_captured.phone.work = response.predictions.phone.work;
                                         tmp_selector += ', #patient-work-phone';
@@ -1888,7 +1842,7 @@
                                     }
                                 }
                                 if (response.predictions.phone.hasOwnProperty('business')) {
-                                    if (response.predictions.phone.business != "") {
+                                    if (response.predictions.phone.business !== "") {
                                         root.find("#patient-work-phone").val(response.predictions.phone.business);
                                         data_points_captured.phone.business = response.predictions.phone.business;
                                         tmp_selector += ', #patient-work-phone';
@@ -1897,36 +1851,16 @@
                                 }
                             }
                             if (response.predictions.hasOwnProperty('email')) {
-                                if (response.predictions.email != "") {
+                                if (response.predictions.email !== "") {
                                     root.find("#patient-email-id").val(response.predictions.email);
                                     data_points_captured.email = response.predictions.email;
                                     tmp_selector += ', #patient-email-id';
                                     data_points += 1;
                                 }
                             }
-//                            if (response.predictions.hasOwnProperty('gender')) {
-//                                if (response.predictions.gender != "") {
-//                                    gender = response.predictions.gender.toLowerCase();
-//                                    select = "";
-//                                    selected = false;
-//                                    if (gender == "m" || gender == "male") {
-//                                        select = "male";
-//                                        selected = true;
-//                                    } else if (gender == "f" || gender == "female") {
-//                                        select = "female";
-//                                        selected = true;
-//                                    }
-//
-//                                    if (selected) {
-//                                        root.find("#pat_gender").val(select);
-//                                        data_points_captured.gender = select;
-//                                        tmp_selector += ', #pat_gender';
-//                                        data_points += 1;
-//                                    }
-//                                }
-//                            }
+                            
                             if (response.predictions.hasOwnProperty('address')) {
-                                if (response.predictions.address != "") {
+                                if (response.predictions.address !== "") {
                                     root.find("#pat_geocomplete").val(response.predictions.address);
                                     data_points_captured.address = response.predictions.address;
                                     tmp_selector += ', #pat_geocomplete';
@@ -1935,9 +1869,10 @@
                             }
 
                             //mark updated animation
-                            $(root).find(tmp_selector).toggleClass("updated_mode");
+                            root.find(".updated_mode").removeClass("updated_mode");
+                            root.find(tmp_selector).addClass("updated_mode");
                             setTimeout(function () {
-                                $(tmp_selector).toggleClass("updated_mode");
+                                root.find(tmp_selector).removeClass("updated_mode");
                             }, 3000);
                             log_data_points(data_points, global_data.efax_id, "predict");
                             // save_predict_data_points(data_points_captured);
@@ -1963,6 +1898,25 @@
                 });
             });
         }
+    }
+    
+    function get_clinic_physicians() {
+        form = $("#sample_form");
+        url = base + "referral/get_clinic_physicians";
+        data = form.serialize();
+        $.post({
+            url: url,
+            data: data
+        }).done(function (response) {
+            if (IsJsonString(response)) {
+                data = JSON.parse(response);
+                options = "<option value='unassign'>Unassigned</option>";
+                for (i = 0; i < data.length; i++) {
+                    options += "<option value='" + data[i].id + "'>" + data[i].physician_name + "</option>";
+                }
+                $("form#signupForm").find("#assigned_physician").html(options);
+            }
+        });
     }
 
     function save_predict_data_points(data_points_captured) {
@@ -2005,7 +1959,7 @@
     }
 </script> 
 
-<script src="https://cdn.jsdelivr.net/gh/vast-engineering/jquery-popup-overlay@2/jquery.popupoverlay.min.js"></script>
+<script src="<?php echo base_url(); ?>assets/libraries/popup-overlay/jquery.popupoverlay.min.js"></script>
 
 
 <script>

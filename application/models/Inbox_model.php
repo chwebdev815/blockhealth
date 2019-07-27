@@ -262,22 +262,24 @@ class Inbox_model extends CI_Model {
                         //save to json file for API integration
                         $data_object = array(
                             "api_type" => "save",
-                            "api_num" => 3,
-                            "date" => date("Y-m-d"),
-                            "time" => date("H:i:s"),
+                            "fk_id" => $task_id,
+                            "rec_date" => date("Y-m-d"),
+                            "rec_time" => date("H:i:s"),
                             "status" => "NEW",
                             "first_name" => $data["pat_fname"],
                             "last_name" => $data["pat_lname"],
-                            "dob_day" => make_two_digit($data["pat_dob_day"]),
-                            "dob_month" => make_two_digit($data["pat_dob_month"]),
-                            "dob_year" => $data["pat_dob_year"],
                             "hin" => $data["pat_ohip"],
+                            "dob_month" => make_two_digit($data["pat_dob_month"]),
+                            "dob_day" => make_two_digit($data["pat_dob_day"]),
+                            "dob_year" => $data["pat_dob_year"],
                             "pdf_name" => "$new_file_name.pdf",
-                            "pdf_location" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf",
-                            "pdf_type" => "Documents",
-                            "active" => 1
+                            "pdf_location" => "uploads/clinics/$clinic_id/" .
+                            md5($patient_id) . "/" . $new_file_name . ".pdf",
+                            "pdf_type" => $data["record_type"]
+//                            "active" => 1
                         );
-                        save_json($this->session->userdata("user_id"), $data_object);
+                        $this->db->insert("oscar_integration", $data_object);
+//                        save_json($this->session->userdata("user_id"), $data_object);
                     }
                     if ($clinic->emr_pathway === "AccuroCitrix") {
                         //save entry in rpa_integration table
@@ -672,17 +674,7 @@ class Inbox_model extends CI_Model {
         $this->form_validation->set_rules('dr_email', 'Physician Email', 'valid_email');
         if ($this->form_validation->run()) {
             $data = $this->input->post();
-            //check if referral already created for this fax. 
-//            $result = $this->db->select("c_ref.id")
-//                            ->from("clinic_referrals c_ref, efax_info efax")
-//                            ->where(array(
-//                                "efax.active" => 1,
-//                                "c_ref.active" => 1,
-//                                "md5(efax.id)" => $data["id"]
-//                            ))->where("c_ref.efax_id", "efax.id", false)->get()->result();
-//            if ($result) {
-//                return array(false, "Referral already created for this fax");
-//            }
+
             //check efax authenticity
             $this->db->select("id, file_name, to");
             $this->db->from("efax_info");
@@ -695,11 +687,17 @@ class Inbox_model extends CI_Model {
                 try {
                     $referral_code = $this->generate_referral_code();
                     log_message("error", "ref code = " . $referral_code);
+                    $location_id = $this->get_decrypted_id($data["patient_location"], "clinic_locations");
+                    $custom_id = (isset($data["custom"]))?
+                        get_decrypted_id($data["custom"], "clinic_custom"):0;
+
                     $this->db->trans_start();
                     //add referral
                     $efax_id = $result[0]->id;
                     $efax_file = $result[0]->file_name;
                     $referral_reason = (isset($data["reasons"])) ? $data["reasons"][0] : "";
+                    $assigned_physician_id = $this->get_decrypted_id($data["assigned_physician"], 
+                            "clinic_physician_info");
                     // $first_status = "Admin Triage";
                     $first_status = "Referral Triage";
                     $this->db->set("last_updated", "now()", false);
@@ -708,7 +706,8 @@ class Inbox_model extends CI_Model {
                         "efax_id" => $efax_id,
                         "referral_code" => $referral_code,
                         "referral_reason" => $referral_reason,
-                        "status" => $first_status
+                        "status" => $first_status,
+                        "assigned_physician" => $assigned_physician_id
                     );
                     //If clinic has only 1 physician account, then assign by default 
                     $physicians = $this->db->select("id")
@@ -716,6 +715,7 @@ class Inbox_model extends CI_Model {
                                     ->where(array(
                                         "clinic_id" => $this->session->userdata("user_id")
                                     ))->get()->result();
+                    
                     if ($physicians && sizeof($physicians) === 1) {
                         $insert_data["assigned_physician"] = $physicians[0]->id;
                     }
@@ -740,14 +740,19 @@ class Inbox_model extends CI_Model {
                         "referral_id" => $referral_id,
                         "fname" => $data["pat_fname"],
                         "lname" => $data["pat_lname"],
-                        "dob" => $data["pat_dob_year"] . "-" . $data["pat_dob_month"] . "-" . $data["pat_dob_day"],
+                        "dob" => filter_only_numbers($data["pat_dob_year"])
+                        . "-" . filter_only_numbers($data["pat_dob_month"])
+                        . "-" . filter_only_numbers($data["pat_dob_day"]),
                         "ohip" => str_replace(" ", "", str_replace("-", "", $ohip)),
                         "gender" => $data["pat_gender"],
-                        "cell_phone" => $data["pat_cell_phone"],
-                        "home_phone" => $data["pat_home_phone"],
-                        "work_phone" => $data["pat_work_phone"],
+                        "cell_phone" => filter_only_numbers($data["pat_cell_phone"]),
+                        "home_phone" => filter_only_numbers($data["pat_home_phone"]),
+                        "work_phone" => filter_only_numbers($data["pat_work_phone"]),
                         "email_id" => $data["pat_email"],
-                        "address" => $data["pat_address"]
+                        "address" => $data["pat_address"],
+                        "next_visit" => "Initial consult",
+                        "location_id" => $location_id,
+                        "custom_id" => $custom_id
                     );
                     $this->db->insert("referral_patient_info", $patient_data);
                     $patient_id = $this->db->insert_id();
@@ -987,10 +992,10 @@ class Inbox_model extends CI_Model {
                     );
                     $fax_number = $result->fax;
 
-                    log_message("error", "sending fax");
-                    $this->load->model("referral_model");
-                    log_message("error", "$file_name, checklist, replace, $fax_number");
-                    $response = $this->referral_model->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "New Referral");
+                    log_message("error", "not sending fax");
+//                    $this->load->model("referral_model");
+//                    log_message("error", "$file_name, checklist, replace, $fax_number");
+//                    $response = $this->referral_model->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "New Referral");
 
                     log_message("error", "completed fax send");
 
@@ -1011,11 +1016,11 @@ class Inbox_model extends CI_Model {
                         if ($clinic->emr_pathway === "OscarEMR") {
                             //save to json file for API integration
                             $data_object = array(
-                                "patient_id" => md5($patient_id),
+//                                "patient_id" => md5($patient_id),
                                 "api_type" => "new referral",
-                                "api_num" => 2,
-                                "date" => date("Y-m-d"),
-                                "time" => date("H:i:s"),
+                                "fk_id" => $referral_id,
+                                "rec_date" => date("Y-m-d"),
+                                "rec_time" => date("H:i:s"),
                                 "status" => "NEW",
                                 "first_name" => $data["pat_fname"],
                                 "last_name" => $data["pat_lname"],
@@ -1023,18 +1028,18 @@ class Inbox_model extends CI_Model {
                                 "dob_month" => make_two_digit($data["pat_dob_month"]),
                                 "dob_year" => $data["pat_dob_year"],
                                 "hin" => $ohip,
-                                "email_id" => $data["pat_email"],
+                                "email" => $data["pat_email"],
                                 "cell_phone" => $data["pat_cell_phone"],
                                 "home_phone" => $data["pat_home_phone"],
                                 "work_phone" => $data["pat_work_phone"],
                                 "address" => $data["pat_address"],
-                                "pdf_location" => base_url() . "uploads/clinics/" .
+                                "pdf_location" => "uploads/clinics/" .
                                 md5($clinic_id) . "/" . md5($patient_id) . "/" . $file_new_name . ".pdf",
                                 "pdf_name" => "$file_new_name.pdf",
-                                "pdf_type" => "Documents",
-                                "active" => 1
+                                "pdf_type" => "Document"
                             );
-                            save_json($this->session->userdata("user_id"), $data_object);
+                            $this->db->insert("oscar_integration", $data_object);
+//                            save_json($this->session->userdata("user_id"), $data_object);
                         }
                         if ($clinic->emr_pathway === "AccuroCitrix") {
                             //save entry in rpa_integration table
@@ -1136,8 +1141,7 @@ class Inbox_model extends CI_Model {
                     "efax_id" => $efax,
                     "patient_id" => $patient,
                     "status" => "Admin Triage"
-                        )
-                );
+                ));
                 return $result;
             } else
                 return "Unauthorized Attempt";
@@ -1213,11 +1217,14 @@ class Inbox_model extends CI_Model {
             "clinic_id" => $this->session->userdata("user_id"),
             "dr.active" => 1
         ));
-        return $this->db->get()->result();
+        $result = $this->db->get()->result();
+        log_message("error", "get physician list = > " . $this->db->last_query());
+        return $result;
     }
 
     public function get_patient_list_save_patient_model() {
-        $this->db->select("concat(pat.fname, ' ', pat.lname) as name, md5(pat.id) as id");
+        $this->db->select("concat(pat.fname, ' ', pat.lname, 
+            if(pat.dob, concat(' (',DATE_FORMAT(pat.dob, '%b %d, %Y'),')'), '')) as name, md5(pat.id) as id");
         $this->db->from("clinic_referrals c_ref, referral_patient_info pat, "
                 . "efax_info efax, clinic_user_info c_usr");
         $this->db->where(array(
@@ -1433,8 +1440,8 @@ class Inbox_model extends CI_Model {
                         "referral_code" => $referral_code,
                         "referral_reason" => $referral_reason,
                         "status" => $first_status,
-                        "missing_item_status" => 
-                         "<span class=\"fc-event-dot\" "
+                        "missing_item_status" =>
+                        "<span class=\"fc-event-dot\" "
                         . "style=\"background-color:#e7e92a\"></span> "
                         . "Missing item requested "
                     );
@@ -1466,7 +1473,8 @@ class Inbox_model extends CI_Model {
                         "home_phone" => $data["pat_home_phone"],
                         "work_phone" => $data["pat_work_phone"],
                         "email_id" => $data["pat_email"],
-                        "address" => $data["pat_address"]
+                        "address" => $data["pat_address"],
+                        "next_visit" => "Initial consult"
                     );
                     $this->db->insert("referral_patient_info", $patient_data);
                     $patient_id = $this->db->insert_id();

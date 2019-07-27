@@ -55,7 +55,7 @@ class Call_view extends CI_Controller {
 //        $to_number = "+917201907712";
 
 
-        $url = "http://35.203.47.37/" . "call_view/callhandle?"
+        $url = base_url() . "call_view/callhandle?"
                 . "pname=" . urlencode($pname) . "&"
                 . "patient_lname=" . urlencode($patient_lname) . "&"
                 . "pvname=" . urlencode($pvname) . "&"
@@ -103,7 +103,7 @@ class Call_view extends CI_Controller {
         log_message("error", "at callhandle from call_view");
         $address = $_GET['address'];
         $dataarray = http_build_query($_GET);
-        $base_url = "http://35.203.47.37/";
+        $base_url = base_url();
 
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         echo "<Response>
@@ -175,7 +175,7 @@ class Call_view extends CI_Controller {
         $time3 = date('g:i a', strtotime($reserved_data->visit_date3 . " " . $reserved_data->visit_start_time3));
 
         if (isset($_GET["Digits"])) {
-            $base_url = "http://35.203.47.37/";
+            $base_url = base_url();
             if ($_GET['Digits'] == 1) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
@@ -259,7 +259,16 @@ class Call_view extends CI_Controller {
                     "notify_status_icon" => "blue"
                 );
                 $this->db->insert("records_patient_visit", $insert_data);
+                $appointment_id = $this->db->insert_id();
+                patient_visit_integration("insert", $get["patient_id"], $appointment_id);
+
                 log_message("error", "wrong number is set with " . $this->db->last_query());
+
+                //integraate scheduling data
+                //set follow up if initial visit
+                $this->load->model("referral_model");
+                $this->referral_model->set_next_visit_follow_up($get["patient_id"]);
+
                 //disable from reserved table
                 $this->db->where(array(
                     "id" => $reserved_id
@@ -359,7 +368,7 @@ class Call_view extends CI_Controller {
 
 
         if (isset($_GET["Digits"])) {
-            $base_url = "http://35.203.47.37/";
+            $base_url = base_url();
             if ($_GET['Digits'] == 1) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
@@ -565,6 +574,13 @@ class Call_view extends CI_Controller {
                     "notify_status_icon" => "yellow"
                 );
                 $this->db->insert("records_patient_visit", $insert_data);
+                $appointment_id = $this->db->insert_id();
+                //no its not an appointment
+//                patient_visit_integration("insert", $get["patient_id"], $appointment_id);
+
+                //set follow up if initial visit
+                $this->load->model("referral_model");
+                $this->referral_model->set_next_visit_follow_up($get["patient_id"]);
 
                 //disable from reserved table
                 $this->db->where(array(
@@ -625,6 +641,77 @@ class Call_view extends CI_Controller {
                 echo "<Response><Say voice='Polly.Joanna' >You entered wrong digit</Say></Response>";
             }
 
+            if ($_GET["Digits"] === 1 || $_GET["Digits"] === 2 || $_GET["Digits"] === 3) {
+                $digit = $_GET["Digits"];
+
+                $visit_date = $_GET["date{$digit}"];
+                $visit_time = $_GET["time{$digit}"];
+
+
+                // send fax code start
+                log_message("error", "code for fax send on call is started");
+                $patient_id = $_GET["patient_id"];
+                $clinic_id = $_GET["clinic_id"];
+
+                $fax_data = $this->db
+                                ->select("pat.fname, pat.lname, c_usr.clinic_institution_name, "
+                                        . "if(pat.dob, DATE_FORMAT(pat.dob, '(%b %d, %Y)'), '') "
+                                        . "as pat_dob,"
+                                        . "dr.fax, c_loc.email_address")
+                                ->from("clinic_user_info c_usr, referral_patient_info pat, "
+                                        . "referral_physician_info dr, clinic_locations c_loc")
+                                ->where(array(
+                                    "pat.active" => 1,
+                                    "c_usr.active" => 1,
+                                    "dr.active" => 1,
+                                    "c_loc.active" => 1,
+                                    "pat.id" => $patient_id,
+                                    "c_usr.id" => $clinic_id,
+                                    "dr.patient_id" => $patient_id,
+                                    "c_loc.clinic_id" => $clinic_id
+                                ))
+                                ->where("c_loc.id", "pat.location_id", false)
+                                ->where("c_loc.clinic_id", "admin.id", false)
+                                ->get()->result();
+
+                $visit_date = DateTime::createFromFormat("Y-m-d", $visit_date);
+                $visit_date = $visit_date->format("F d, Y");
+
+                $visit_time = DateTime::createFromFormat("H:i:s", $visit_time);
+                $visit_time = $visit_time->format("H:i");
+
+                log_message("error", "fax info q = " . $this->db->last_query());
+                if ($fax_data) {
+                    $replace_stack = array(
+                        "###clinic_name###" => $fax_data[0]->clinic_institution_name,
+                        "###pat_fname###" => $fax_data[0]->fname,
+                        "###pat_lname###" => $fax_data[0]->lname,
+                        "###pat_dob###" => $fax_data[0]->pat_dob,
+                        "###time1###" => "",
+                        "###time2###" => "",
+                        "###book_date###" => $visit_date,
+                        "###book_time###" => $visit_time,
+                        "###book_address###" => $fax_data[0]->email_address
+                    );
+
+                    $text2 = "<h2>Referral has been booked</h2>";
+                    $additional_replace = array(
+                        "###text2###" => $text2
+                    );
+                    $checklist = array();
+                    $file_name = "referral_booking.html";
+
+                    $fax_number = $fax_data[0]->fax;
+                    $response = $this->referral_model->send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, "Booking Appintment", $additional_replace);
+                    log_message("error", "booking fax sent to " . $fax_number);
+                    log_message("error", "fax sent code completed");
+                } else {
+                    log_message("error", "Issue fetching fax data");
+                    log_message("error", "sql = > " . $this->db->last_query());
+                }
+                //send fax code is sent
+            }
+
 
             try {
 
@@ -665,7 +752,7 @@ class Call_view extends CI_Controller {
         $time3 = $_GET["time3"];
 
         if (isset($_GET["Digits"])) {
-            $base_url = "http://35.203.47.37/";
+            $base_url = base_url();
             if ($_GET['Digits'] == 2) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
@@ -760,7 +847,7 @@ class Call_view extends CI_Controller {
                     log_message("error", "data after = " . json_encode($reserved_data));
                     //static status 
                     $visit_confirmed = "N/A";
-                    
+
                     //dynamic status 
 //                    $visit_confirmed = "Awaiting Confirmation";
 //                    $current_date = new DateTime(date("Y-m-d H:i:s"));
@@ -790,11 +877,17 @@ class Call_view extends CI_Controller {
                     );
                     //insert in scheduled visit
                     $this->db->insert("records_patient_visit", $insert_data);
+                    log_message("error", "inserted with " . $this->db->last_query());
+                    $appointment_id = $this->db->insert_id();
+                    patient_visit_integration("insert", $get["patient_id"], $appointment_id);
+
+                    //set follow up if initial visit
+                    $this->load->model("referral_model");
+                    $this->referral_model->set_next_visit_follow_up($get["patient_id"]);
 
                     $this->db->where(array(
                         "id" => $reserved_id
                     ));
-                    log_message("error", "inserted with " . $this->db->last_query());
                     $this->db->update("records_patient_visit_reserved", array(
                         "active" => 0,
                         "visit_confirmed" => "Booked"
@@ -863,7 +956,7 @@ class Call_view extends CI_Controller {
         //if(isset($_GET['pname'])){
         echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
         echo "<Response>";
-        echo "<Gather  NumDigits='1' action='" . "http://35.203.47.37/" . "call_view/call_resp_handle/' method='GET'>";
+        echo "<Gather  NumDigits='1' action='" . base_url() . "call_view/call_resp_handle/' method='GET'>";
         echo "<Say>";
         echo "Hello         " . $_GET['pname'] . "
                 Your      appointment   " . $_GET['pvname'] . "    with    " . $_GET['cname'] . "    has been booked for " . $_GET['aDate'] . "    at    " . $_GET['aDate'] . "    .The    address    is:    " . $_GET['address'] . "    Please     type    1    to    confirm    this    booking.    If    this    date    does   not     work,    please   type   2    to    alert    the    clinic    staff";
@@ -886,14 +979,6 @@ class Call_view extends CI_Controller {
             print_r($_REQUEST);
             echo "<pre>";
         }
-    }
-
-    public function test() {
-        $this->load->model("referral_model");
-        $data = $this->referral_model->assign_slots(30, 1);
-        echo "<pre>";
-        print_r($data);
-        echo "<pre>";
     }
 
     //for wrong number

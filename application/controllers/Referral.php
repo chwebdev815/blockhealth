@@ -15,7 +15,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->search_patient_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -25,7 +25,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->update_patient_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -35,7 +35,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->update_physician_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -45,7 +45,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->cancel_referral_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -55,7 +55,17 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->decline_referral_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
+        }
+        echo json_encode($response);
+    }
+
+    public function set_next_visit() {
+        if (clinic_login()) {
+            $this->load->model("referral_model");
+            $response = $this->referral_model->set_next_visit_model();
+        } else {
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -65,7 +75,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->accept_admin_referral_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -75,7 +85,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->missing_items_details_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -85,7 +95,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->request_missing_items_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -95,7 +105,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->accept_physician_referral_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -105,7 +115,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->complete_referral_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -115,7 +125,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->get_clinic_physicians_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -125,7 +135,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->assign_physician_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -135,7 +145,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->set_priority_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -148,7 +158,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->update_checklist_item_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -158,7 +168,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->add_health_record_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -168,7 +178,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->add_admin_note_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -178,7 +188,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->add_patient_visit_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -188,7 +198,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->update_patient_visit_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -198,7 +208,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->cancel_patient_visit_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -239,7 +249,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->get_health_record_info_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -249,7 +259,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->get_admin_notes_info_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -259,7 +269,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->get_patient_visit_info_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -269,7 +279,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->get_visit_allocation_for_manual_visit_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -279,7 +289,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->confirm_referral_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
@@ -289,10 +299,62 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->is_patient_scheduled_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }
+    
+    public function get_patient_visit_calendar_month_view() {
+        if (clinic_login()) {
+            $this->load->model("referral_model");
+            $response = $this->referral_model->get_patient_visit_calendar_month_view_model();
+        } else {
+            $response = session_expired();
+        }
+        echo json_encode($response);
+    }
+    
+    public function get_patient_visit_calendar_week_view() {
+        if (clinic_login()) {
+            $this->load->model("referral_model");
+            $response = $this->referral_model->get_patient_visit_calendar_week_view_model();
+        } else {
+            $response = session_expired();
+        }
+        echo json_encode($response);
+    }
+    
+    public function get_location_and_custom() {
+        if (clinic_login()) {
+            $this->load->model("referral_model");
+            $response = $this->referral_model->get_location_and_custom_model();
+        } else {
+            $response = session_expired();
+        }
+        echo json_encode($response);
+    }
+    
+    public function set_patient_location() {
+        if (clinic_login()) {
+            $this->load->model("referral_model");
+            $response = $this->referral_model->set_patient_location_model();
+        } else {
+            $response = session_expired();
+        }
+        echo json_encode($response);
+    }
+    
+    public function set_custom() {
+        if (clinic_login()) {
+            $this->load->model("referral_model");
+            $response = $this->referral_model->set_custom_model();
+        } else {
+            $response = session_expired();
+        }
+        echo json_encode($response);
+    }
+    
+    
 
     public function confirm_visit_key() {
         $this->load->model("referral_model");
@@ -304,7 +366,7 @@ class Referral extends CI_Controller {
             $this->load->model("referral_model");
             $response = $this->referral_model->log_data_points_model();
         } else {
-            $response = "Session Expired";
+            $response = session_expired();
         }
         echo json_encode($response);
     }

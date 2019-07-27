@@ -23,6 +23,9 @@
     div.checkbox > label > input{
         width: 90%;
     }
+    .mb-7 {
+        margin-bottom: 7px !important;
+    }
 </style>
 
 <!-- <button class="popup2_open">Click me 2!</button>
@@ -137,7 +140,7 @@
                             <form id="form_patient_save" class="form-horizontal patients-details-form" autocomplete="off">
                                 <div class="form-bottom">
 
-                                    <div class="form-group row left-padd-20px right-padd-5px">
+                                    <div class="form-group mb-7 row left-padd-20px right-padd-5px">
                                         <div class="">
                                             <h4 class="modal-title" id="myModalLabel">Select Patient</h4>
                                             <br/>
@@ -151,13 +154,10 @@
                                             </button>
                                         </div>
                                     </div>
-                                    <div class="form-group left-padd-20px right-padd-5px">
+                                    <div class="form-group mb-7 left-padd-20px right-padd-5px">
 
-                                        <div class="form-group col-lg-12">
-                                            <div class="form-group row">
-                                                <div class="col-md-12">
-                                                    <label for="new-patient-name">Full Name *</label>
-                                                </div>
+                                        <div class="form-group mb-7 col-lg-12">
+                                            <div class="form-group mb-7 row">
                                                 <div class="col-sm-6 col-xs-12">
                                                     <input type="text" class="form-control required" name="pat_fname" id="new-patient-firstname" placeholder="First Name" autocomplete="off">
                                                 </div>
@@ -165,7 +165,7 @@
                                                     <input type="text" class="form-control required" name="pat_lname" id="new-patient-lastname" placeholder="Last Name" autocomplete="off">
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
+                                            <div class="form-group mb-7 row">
                                                 <div class="col-sm-4 col-xs-12">
                                                     <select name="pat_dob_day" id="pat_dob_day" class=""></select>
                                                 </div>
@@ -176,7 +176,7 @@
                                                     <select name="pat_dob_year" id="pat_dob_year" class=""></select>
                                                 </div>
                                             </div>
-                                            <div class="form-group row">
+                                            <div class="form-group mb-7 row">
                                                 <div class="col-sm-6 col-xs-12">
                                                     <input style="width: 100%;" type="text" class="" name="pat_ohip" id="new-patient-ohip" placeholder="1234-123-123-AB" autocomplete="off">
                                                 </div>
@@ -190,9 +190,27 @@
                                                     </select>
                                                 </div>
                                             </div>
+
+                                            <div class="form-group mb-7 row">
+                                                <div class="col-lg-4">
+                                                    <input type="text" class="form-control" name="pat_home_phone" id="patient-home-phone" placeholder="Home Phone" autocomplete="off">
+                                                </div>
+                                                <div class="col-lg-4" style="padding-left: 0px; padding-right: 0px;">
+                                                    <input type="text" class="form-control" name="pat_cell_phone" id="patient-cell-phone" placeholder="Cell Phone" autocomplete="off">
+                                                </div>
+                                                <div class="col-lg-4">
+                                                    <input type="text" class="form-control" name="pat_work_phone" id="patient-work-phone" placeholder="Work Phone" autocomplete="off">
+                                                </div>
+                                            </div>
+                                            <div class="form-group mb-7 row">
+                                                <div class="col-sm-12 col-xs-12">
+                                                    <input  style="width: 100%;" type="email" class="valid_email" name="pat_email" id="patient-email-id" placeholder="Email" autocomplete="off">
+                                                </div>
+                                            </div>
+
                                         </div>
 
-                                        <div class="form-group row">
+                                        <div class="form-group mb-7 row">
                                             <div class="col-lg-12">
                                                 <label for="patient_dropdown">
                                                     <strong>Save to Referral</strong>
@@ -205,13 +223,6 @@
                                             <div class="alert alert-danger" id="patient_error" style="display: none;"></div>
                                             <div class="alert alert-success" id="patient_success" style="display: none;"></div>
 
-                                            <div class="col-lg-12">
-                                                <label for="assign_physician">
-                                                    <strong>Assign Physician</strong>
-                                                </label>
-                                                <select id="assign_physician" placeholder="Assign Physician" name="assign_physician" class="form-control">
-                                                </select>
-                                            </div>
                                             <div class="col-lg-12">
                                                 <label for="new-patient-ohip">
                                                     <strong>Select Record Type</strong>
@@ -229,6 +240,14 @@
                                                     <option data-show=".file-upload">Other</option>
                                                 </select>
                                             </div>
+
+                                            <div class="col-lg-12">
+                                                <label for="assign_physician">
+                                                    <strong>Assign Physician</strong>
+                                                </label>
+                                                <select id="assign_physician" placeholder="Assign Physician" name="assign_physician" class="form-control">
+                                                </select>
+                                            </div>
                                             <div class="col-lg-12 cl-t-listing wrapper_div">
                                                 <label for="assign_physician">
                                                     <strong>Enter Details/Notes</strong>
@@ -239,12 +258,12 @@
                                             </div>
                                         </div>
 
-                                        <div class="form-group row">
+                                        <div class="form-group mb-7 row">
                                             <div class="col-lg-12 cl-t-listing wrapper_div">
                                                 <button type="button" id="btn_save_task" class="btn btn-theme">Save</button>
                                             </div>
                                         </div>
-                                        <div class="form-group row">
+                                        <div class="form-group mb-7 row">
                                             <div class="col-lg-12 cl-t-listing wrapper_div">
                                                 <div id="patient_success_display" class="success-icon pull-right menu">
                                                     <span class="fa fa-check tick-icon"></span>
@@ -263,7 +282,8 @@
                     <div id="sidebar-wrapper">
                         <form id="signupForm" class="form-horizontal patients-details-form" method="post" action="" enctype="multipart/form-data" autocomplete="off">
                             <input type="hidden" name="id" id="id" />
-                            <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                            <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" 
+                                   value="<?php echo $this->security->get_csrf_hash(); ?>">
                             <fieldset>
                                 <div class="form-bottom">
                                     <div class="form-group row left-padd-20px right-padd-5px">
@@ -471,10 +491,9 @@
                                     </div>
                                     <div class="col-lg-12">
                                         <select id="priority" placeholder="Priority" name="priority" class="form-control">
-                                            <option disabled selected>Select Priority</option>
                                             <option value="urgent">Urgent (less than 1 week)</option>
                                             <option value="sub_urgent">Sub-urgent (less than 2 weeks)</option>
-                                            <option value="routine">Routine (next available date)</option>
+                                            <option value="routine" selected>Routine (next available date)</option>
                                         </select>
                                     </div>
                                 </div>
@@ -496,7 +515,7 @@
                                 <div class="form-group row">
                                     <div class="col-lg-12 cl-t-listing wrapper_div">
                                         <ul>
-                                            <li><strong>Disease or Syndrome</strong></li>
+                                            <li><strong>Conditions</strong></li>
                                         </ul>
 
                                         <div>
@@ -510,7 +529,7 @@
                                 <div class="form-group row">
                                     <div class="col-lg-12 cl-t-listing wrapper_div">
                                         <ul>
-                                            <li><strong>Sign or Symptoms</strong></li>
+                                            <li><strong>Symptoms</strong></li>
                                         </ul>
                                         <div>
                                             <div class="input_fields_wrap edit_symptoms"></div>
@@ -523,7 +542,7 @@
                                 <div class="form-group row">
                                     <div class="col-lg-12 cl-t-listing wrapper_div">
                                         <ul>
-                                            <li><strong>Procedures and devices</strong></li>
+                                            <li><strong>Procedures</strong></li>
                                         </ul>
                                         <div>
                                             <div class="input_fields_wrap edit_devices"></div>
@@ -547,7 +566,7 @@
                                 </div>        
 
 
-                                <div class="form-group row">
+                                <div class="form-group row hidden">
                                     <div class="col-lg-12 cl-t-listing wrapper_div">
                                         <ul>
                                             <li>
@@ -570,6 +589,49 @@
                                     </div>
                                     <div class="col-sm-6 col-xs-12">
                                         <button type="button" id="btn_add_referral" class="btn btn-theme pull-right" data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Processing...">Add Referral</button>
+                                    </div>
+                                </div>
+                                <h4 class="modal-title" id="myModalLabel">Referral Details</h4>
+                                <div class="form-group row">
+                                    <div class="col-lg-12">
+                                        <label for="patient_location">
+                                            <span id="show_pat_address"></span>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <label for="patient_location">
+                                            Select location:<br/>
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <select id="patient_location" name="patient_location" class="form-control">
+                                            <option selected disabled>Select Patient Location</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-12">
+                                        <label for="custom">
+                                            Assigned:
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <select id="assigned_physician" name="assigned_physician" 
+                                                class="form-control">
+                                            <option>Not yet assigned</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-lg-12">
+                                        <label for="custom">
+                                            Custom:
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <select id="custom" name="custom" class="form-control">
+                                            <option selected disabled>Custom Fields</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <h4 class="modal-title" id="myModalLabel">Referral Checklist</h4>

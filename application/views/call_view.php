@@ -21,7 +21,8 @@
         <div class="lax lax-full lax-center">
             <div class="lax-content text-center center-block bg-white" style="max-width: 600px">
                 <div style="padding: 20px; padding-bottom: 40px">
-                    <form name ="userinput" class="text-center border border-light p-5" id="zipsForm" action="http://35.203.47.37/call_view/call" method="POST">
+                    <form name ="userinput" class="text-center border border-light p-5" id="zipsForm" 
+                          action="<?php echo base_url(); ?>call_view/call" method="POST">
                         <p class="h4 mb-4">Add Key</p>
                         <div class="form-group">
                             <input type="text" name="patient_name" class="form-control mb-4" placeholder="Name" >

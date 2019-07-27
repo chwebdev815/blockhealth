@@ -29,8 +29,7 @@ class Login_model extends CI_Model {
                         $this->session->set_userdata("login_role", "clinic_admin");
                         // log_message("error", "clinic admin ".$id.",".$name." logged in");
                         //set emr pathway
-                        $this->session->set_userdata("emr_pathway", 
-                                ($result[0]->emr_pathway === "AccuroCitrix")?"true":"false");
+                        $this->session->set_userdata("emr_pathway",$result[0]->emr_pathway);
 
                         return true;
                     }
