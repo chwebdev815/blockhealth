@@ -2346,9 +2346,13 @@ class Referral_model extends CI_Model {
     public function send_sms($cell_phone_number, $msg) {
         //us country code automation
         $cell_phone_number = "+1" . $cell_phone_number;
-        $ac_sid = "AC2da3b84b65b63ccf4f05c27ac1713060";
-        $auth_token = "342a214ee959d16bf97ea87579016762";
-        $twilio_number = "+16475607989"; //(365) 800-0973
+//        $ac_sid = "";
+//        $auth_token = "";
+//        $twilio_number = "+"; //(365) 800-0973
+        
+        $ac_sid = get_twilio_sid();
+        $auth_token = get_twilio_token();
+        $twilio_number = get_twilio_phone_number();
 
         $msgarr = array(
             'To' => $cell_phone_number,
@@ -2447,39 +2451,6 @@ class Referral_model extends CI_Model {
             echo "clinic id = " . $clinic_id;
         }
     }
-
-    /* Code added by ARUN */
-    /* public function call_confirm($to_number,$pname,$pvname,$cname,$aDate,$aTime,$address) {
-
-      $sid = 'AC2da3b84b65b63ccf4f05c27ac1713060';
-      $token = '342a214ee959d16bf97ea87579016762';
-      $twilio_number = "+16475607989";
-      $to_number = "+919876907251";
-      $url = "http://dev.blockhealth.co/adi-dev/bh_fax/twiml/callhandle.php?pname=".$pname."&pvname=".$pvname."&cname=".$cname."&aDate=".$aDate."&aTime=".$aTime."&address=".$address
-      $uri = 'https://api.twilio.com/2010-04-01/Accounts/' . $sid . '/Calls.json';
-      $auth = $sid . ':' . $token;
-      $fields =
-      '&Url=' .  urlencode( $url ) .
-      '&To=' . urlencode( $to_number ) .
-      '&From=' . urlencode( $twilio_number );
-      $res = curl_init();
-      curl_setopt( $res, CURLOPT_URL, $uri );
-      curl_setopt( $res, CURLOPT_POST, 3 );
-      curl_setopt( $res, CURLOPT_POSTFIELDS, $fields );
-      curl_setopt( $res, CURLOPT_USERPWD, $auth );
-      curl_setopt( $res, CURLOPT_RETURNTRANSFER, true );
-      $result = curl_exec( $res );
-      $resp = json_decode($result);
-      $status = curl_getinfo($res, CURLINFO_HTTP_CODE);
-
-      if (curl_errno($res)) {
-      log_message("error", " Error – " . curl_error($res));
-      return false;
-      } else {
-      log_message("error", "Calling");
-      return true;
-      }
-      } */
 
     private function filter_reserved($unfiltered_visits, $next_day) {
 //        echo "filtering now <br/>";

@@ -226,9 +226,9 @@ class Cron_appointment_reminder extends CI_Controller {
 
     public function call_confirm($reserved_id, $clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $to_number, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address) {
 
-        $sid = 'AC2da3b84b65b63ccf4f05c27ac1713060';
-        $token = '342a214ee959d16bf97ea87579016762';
-        $twilio_number = "+16475607989";
+        $sid = get_twilio_sid();
+        $token = get_twilio_token();
+        $twilio_number = get_twilio_phone_number();
         //$to = "+919876907251";  
 //        $to_number = "+917201907712";
 

@@ -179,6 +179,18 @@ function get_metadata_path($md5_clinic_id) {
     return "/var/emrsftp/clinics/$md5_clinic_id/metadata.json";
 }
 
+function get_twilio_phone_number() {
+    return "+16478002169";
+}
+
+function get_twilio_sid() {
+    return "PN55a893f38c9ee1d313c37cc714bd1693";
+}
+
+function get_twilio_token() {
+    return "342a214ee959d16bf97ea87579016762";
+}
+
 function save_json($clinic_id, $data_object) {
     $clinic_dir = "uploads/clinics/" . md5($clinic_id);
     $arr_data = array(); // create empty array
