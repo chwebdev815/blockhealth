@@ -188,7 +188,7 @@ function get_twilio_sid() {
 }
 
 function get_twilio_token() {
-    return "342a214ee959d16bf97ea87579016762";
+    return "AC2da3b84b65b63ccf4f05c27ac1713060";
 }
 
 function save_json($clinic_id, $data_object) {
