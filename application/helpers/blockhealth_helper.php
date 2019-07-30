@@ -184,11 +184,11 @@ function get_twilio_phone_number() {
 }
 
 function get_twilio_sid() {
-    return "PN55a893f38c9ee1d313c37cc714bd1693";
+    return "AC2da3b84b65b63ccf4f05c27ac1713060";
 }
 
 function get_twilio_token() {
-    return "AC2da3b84b65b63ccf4f05c27ac1713060";
+    return "342a214ee959d16bf97ea87579016762";
 }
 
 function save_json($clinic_id, $data_object) {
