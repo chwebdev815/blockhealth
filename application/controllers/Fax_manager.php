@@ -18,7 +18,7 @@ class Fax_manager extends CI_Controller {
     }
 
     public function hwaBoWSDmTNblPFakqzEhzASerOeKGAc() {
-//        log_message("error", "===========================> version => 1.8 at same time");
+        log_message("error", "===========================> Fax manager cron");
         //addedd 
         $system_time = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s'));
         $before_5_mins = DateTime::createFromFormat('Y-m-d H:i:s', date('Y-m-d H:i:s', strtotime("-5 minute")));
