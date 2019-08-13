@@ -1,6 +1,9 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
+
 class My_tasks extends CI_Controller {
+
     public function index() {
         if (clinic_login()) {
             $data['page_content'] = $this->load->view('my_tasks_master', NULL, TRUE);
@@ -11,6 +14,7 @@ class My_tasks extends CI_Controller {
             redirect("/");
         }
     }
+
     public function ssp_my_tasks() {
         if (clinic_login()) {
             $this->load->model("my_tasks_model");
@@ -20,7 +24,7 @@ class My_tasks extends CI_Controller {
             echo false;
         }
     }
-    
+
     public function update_task() {
         if (clinic_login()) {
             $this->load->model("my_tasks_model");
@@ -30,7 +34,7 @@ class My_tasks extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function delete_referral() {
         if (clinic_login()) {
             $this->load->model("my_tasks_model");
@@ -40,7 +44,7 @@ class My_tasks extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function task_completed() {
         if (clinic_login()) {
             $this->load->model("my_tasks_model");
@@ -50,7 +54,7 @@ class My_tasks extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function fetch_task_details() {
         if (clinic_login()) {
             $this->load->model("my_tasks_model");
@@ -60,5 +64,5 @@ class My_tasks extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
 }

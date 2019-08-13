@@ -116,6 +116,8 @@
         });
 
         $("#btn_update_physician_weekday").on("click", function () {
+            set_calendar_retrieve();
+            
             $("form#form_physician_weekdays").find("#id").val($("select#physicians").val());
             data = $("form#form_physician_weekdays").serialize();
             url = base + "schedule_settings/update_physician_weekdays";
@@ -151,8 +153,19 @@
         });
 
         $("#btn_update_weekday_timing").on("click", function () {
-            $("form#form_physician_timing").find("#id").val($("select#physicians").val());
-            data = $("form#form_physician_timing").serialize();
+            form = $("#form_physician_timing");
+            global_data.calendar_retrieve = {};
+            global_data.calendar_retrieve.weekday = form.find("#weekday").val();
+            global_data.calendar_retrieve.calendar_start_date =
+                    availability_calendar.fullCalendar('getView').start.format("YYYY-MM-DD");
+            global_data.calendar_retrieve.calendar_end_date =
+                    availability_calendar.fullCalendar('getView').end.format("YYYY-MM-DD");
+            global_data.calendar_retrieve.calendar_view =
+                    availability_calendar.fullCalendar('getView').name;
+            console.log("sending data = ", global_data.calendar_retrieve);
+
+            form.find("#id").val($("select#physicians").val());
+            data = form.serialize();
             url = base + "schedule_settings/update_weekday_timing";
             $.post({
                 url: url,
@@ -161,15 +174,14 @@
                     if (IsJsonString(response)) {
                         response = JSON.parse(response);
                         if (response.result === "success") {
-                            form = $("#form_physician_timing");
-                            global_data.calendar_retrieve = {};
-                            global_data.calendar_retrieve.weekday = form.find("weekday").val();
-                            global_data.calendar_retrieve.calendar_start_date = 
-                                    availability_calendar.fullCalendar('getView').start.format("YYYY-MM-DD");
-                            global_data.calendar_retrieve.calendar_end_date = 
-                                    availability_calendar.fullCalendar('getView').end.format("YYYY-MM-DD");
-                            global_data.calendar_retrieve.calendar_view = 
-                                    availability_calendar.fullCalendar('getView').name;
+                            if (global_data.calendar_retrieve) {
+//                                availability_calendar.fullCalendar("changeView", "agendaDay", "2017-06-01");
+//                                availability_calendar.fullCalendar('option', 'visibleRange', {
+//                                    "start": '01-04-2019',
+//                                    "end": '05-04-2019'
+//                                });
+
+                            }
                             get_physician_weekdays();
 //                            success("Timing for selected day is updated");
                         } else {
@@ -184,8 +196,10 @@
         });
 
         $("#btn_update_weekday_timing_all").on("click", function () {
-            $("form#form_physician_timing").find("#id").val($("select#physicians").val());
-            data = $("form#form_physician_timing").serialize();
+            set_calendar_retrieve();
+            form = $("#form_physician_timing");
+            form.find("#id").val($("select#physicians").val());
+            data = form.serialize();
             url = base + "schedule_settings/update_weekday_timing_all";
             $.post({
                 url: url,
@@ -216,6 +230,8 @@
         });
 
         $("#btn_apply_blocked_time_for_day").on("click", function () {
+            set_calendar_retrieve();
+            
             form = $("form#form_day_specific_blocking");
             form.find("#id").val($("select#physicians").val());
             form.find("#type").val("timeblock");
@@ -242,6 +258,8 @@
         });
 
         $("#btn_block_day").on("click", function () {
+            set_calendar_retrieve();
+            
             form = $("form#form_day_specific_blocking");
             form.find("#id").val($("select#physicians").val());
             form.find("#type").val("dayblock");
@@ -288,6 +306,19 @@
         $(".lbl_weekday_block_counter").each(function (index, element) {
             $(element).html(index + 1);
         });
+    }
+
+    function set_calendar_retrieve() {
+        form = $("#form_physician_timing");
+        global_data.calendar_retrieve = {};
+        global_data.calendar_retrieve.weekday = form.find("#weekday").val();
+        global_data.calendar_retrieve.calendar_start_date =
+                availability_calendar.fullCalendar('getView').start.format("YYYY-MM-DD");
+        global_data.calendar_retrieve.calendar_end_date =
+                availability_calendar.fullCalendar('getView').end.format("YYYY-MM-DD");
+        global_data.calendar_retrieve.calendar_view =
+                availability_calendar.fullCalendar('getView').name;
+        console.log("sending data = ", global_data.calendar_retrieve);
     }
 
     global_data.weekdays = ["sun", "mon", "tue", "wed", "thu", "fri", "sat"];
@@ -845,8 +876,17 @@
                         options += (data.sat === "yes") ? "<option value='sat'>Saturday</option>" : "";
                         options += (data.sun === "yes") ? "<option value='sun'>Sunday</option>" : "";
 
-                        $("#form_physician_timing").find("#weekday").html(options);
-                        $("#form_physician_timing").find("#id").val(data.id);
+                        form = $("#form_physician_timing");
+                        form.find("#weekday").html(options);
+                        form.find("#id").val(data.id);
+
+                        if (global_data.calendar_retrieve && global_data.calendar_retrieve.weekday) {
+                            tmp_weekday = global_data.calendar_retrieve.weekday;
+                            if ($("#weekday").find('option[value="' + tmp_weekday + '"]').length === 1) {
+                                form.find("#weekday").val(tmp_weekday);
+                            }
+                        }
+                        global_data.calendar_retrieve = null;
 
                         get_weekday_timing();
                         set_availability_calendar();

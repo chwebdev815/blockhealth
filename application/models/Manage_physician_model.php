@@ -1,5 +1,7 @@
 <?php
+
 class Manage_physician_model extends CI_Model {
+
     public function ssp_clinic_physician_model() {
         $table = "manage_physician_dash";
         $primaryKey = "id";
@@ -27,13 +29,11 @@ class Manage_physician_model extends CI_Model {
         require('ssp.class.php');
         return json_encode(SSP::complex($_GET, $sql_details, $table, $primaryKey, $columns, null, $where));
     }
-    
+
     public function add_physician_model() {
         $this->form_validation->set_rules('first_name', 'First Name', 'required');
         $this->form_validation->set_rules('last_name', 'Last Name', 'required');
         $this->form_validation->set_rules('email', 'Email Id', 'required|is_unique[clinic_physician_info.email_id]');
-//        $this->form_validation->set_rules('fax_number', 'Fax Number', 'required');
-//        $this->form_validation->set_rules('office_phone', 'Office Phone', 'required');
 
         if ($this->form_validation->run()) {
             $data = $this->input->post();
@@ -49,9 +49,9 @@ class Manage_physician_model extends CI_Model {
                     "phone_number" => $data["office_phone"],
                     "login_key" => $login_key,
                     "password" => password_hash($password, PASSWORD_BCRYPT),
-                    "active" => 1
-                        )
-                );
+                    "status" => "Sent",
+                    "active" => 0
+                ));
                 $physician_id = $this->db->insert_id();
                 //create schedule entry for appointment management
                 $this->db->insert("schedule_visit_settings", array(
@@ -70,28 +70,17 @@ class Manage_physician_model extends CI_Model {
                 $clinic_name = $this->db->get()->result()[0]->clinic_institution_name;
 
                 // login_key
+                $verify_link = base_url() . "login/verify_new_physician_account/" . $login_key;
                 //template implement starts
                 $template = file_get_contents("assets/templates/physician_invite.html");
                 $template = str_replace("<drFirstName></drFirstName>", $data["first_name"], $template);
                 $template = str_replace("<drLastName></drLastName>", $data["last_name"], $template);
                 $template = str_replace("<clinicName></clinicName>", $clinic_name, $template);
-                $template = str_replace("verify_link", base_url() . "login/verify_new_physician_account/" .
-                        $login_key, $template);
-                //template implement ends
-                // 	"Email Id : " . $data["email"] . "<br/>".
-                // 	"Password : " . $password;
+                $template = str_replace("verify_link", $verify_link, $template);
+                log_message("error", "verify link = $verify_link");
 
-                //send mail informing ticket raised
-                // old mail code starts
-//                $this->load->library('email');
-//                $this->email->from($this->email->smtp_user , "BlockHealth");
-//                $this->email->to($data["email"]);
-//                $this->email->subject("BlockHealth Invite");
-//                $this->email->message($template);
-//                $this->email->send();
-                // old mail code ends
                 $response = send_mail("", "BlockHealth", $data["email"], "", "BlockHealth Invite", $template);
-            
+
 
                 return true;
             } else {
@@ -100,6 +89,81 @@ class Manage_physician_model extends CI_Model {
         } else
             return validation_errors();
     }
+
+    public function resend_invitation_link_model() {
+        $this->form_validation->set_rules('id', 'Physician ID', 'required');
+
+        if ($this->form_validation->run()) {
+            $data = $this->input->post();
+            if ($this->session->userdata("login_role") == "clinic_admin") {
+                //check if physician eligible for resend
+                $dr = $this->db->select("id, first_name, last_name, email")
+                                ->from("clinic_physician_info")
+                                ->where(array(
+                                    "md5(id)" => $data["id"],
+                                    "active" => 0,
+                                    "status" => "Expired",
+                                    "clinic_id" => $this->session->userdata("user_id")
+                                ))->get()->result();
+
+                $this->db->select("clinic_institution_name");
+                $this->db->from("clinic_user_info");
+                $this->db->where(array(
+                    "active" => 1,
+                    "id" => $this->session->userdata("user_id")
+                ));
+                $clinic_info = $this->db->get()->result()[0];
+
+                if ($dr && $clinic_info) {
+                    $dr = $dr[0];
+                    $clinic_info = $clinic_info[0];
+
+                    $clinic_name = $clinic_info->clinic_institution_name;
+                    $login_key = $this->generate_random_string(60);
+
+                    $this->db->where(array(
+                        "md5(id)" => $data["id"]
+                    ))->update("clinic_physician_info", array(
+                        "login_key" => $login_key,
+                        "active" => 0
+                    ));
+
+                    //prepare and send mail
+                    // login_key
+                    $verify_link = base_url() . "login/verify_new_physician_account/" . $login_key;
+                    //template implement starts
+                    $template = file_get_contents("assets/templates/physician_invite.html");
+                    $template = str_replace("<drFirstName></drFirstName>", $dr->first_name, $template);
+                    $template = str_replace("<drLastName></drLastName>", $dr->last_name, $template);
+                    $template = str_replace("<clinicName></clinicName>", $clinic_name, $template);
+                    $template = str_replace("verify_link", $verify_link, $template);
+                    log_message("error", "resent verify link = $verify_link");
+
+                    $response = send_mail("", "BlockHealth", $dr->email, "", "BlockHealth Invite", $template);
+
+                    return array(
+                        "result" => "success"
+                    );
+                } else {
+                    return array(
+                        "result" => "error",
+                        "message" => "Physician not eligible for invite resend"
+                    );
+                }
+            } else {
+                return array(
+                    "result" => "error",
+                    "message" => "Operation is allowed for clinic admins only"
+                );
+            }
+        } else {
+            return array(
+                "result" => "error",
+                "message" => validation_errors()
+            );
+        }
+    }
+
     private function generate_random_string($length = 32) {
         $timestamp = time();
 
@@ -111,4 +175,5 @@ class Manage_physician_model extends CI_Model {
         }
         return $timestamp . "_" . $randomString;
     }
+
 }

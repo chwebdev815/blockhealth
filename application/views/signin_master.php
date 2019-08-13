@@ -65,12 +65,12 @@
                     <div class="panel panel-login">
                         <div class="panel-heading">
                             <div class="row">
-                                <div class="col-xs-6">
+<!--                                <div class="col-xs-6">
                                     <a href="#" class="active" id="login-form-link">Speciality Clinic</a>
-                                </div>
-                                <div class="col-xs-6">
+                                </div>-->
+<!--                                <div class="col-xs-6">
                                     <a href="#" id="register-form-link">Referring Physician</a>
-                                </div>
+                                </div>-->
                             </div>
                             <hr>
                         </div>
@@ -95,7 +95,8 @@
                                             </div>
                                             <div class="form-group">
                                                 <div class="col-xs-12">                                 
-                                                    <button type="submit" class="btn btn-theme btn-spacious btn-full" id="signup-submit" value="signup-submit" name="signup-submit">Speciality Clinic Sign In</button>                                
+                                                    <button type="submit" class="btn btn-theme btn-spacious btn-full" id="signup-submit" value="signup-submit" name="signup-submit">Sign In</button> 
+<!--                                                    <button type="submit" class="btn btn-theme btn-spacious btn-full" id="signup-submit" value="signup-submit" name="signup-submit">Speciality Clinic Sign In</button>                                -->
                                                 </div>
                                             </div>
                                             <div class="error-container">                    
@@ -146,11 +147,11 @@
                     </div>
                 </div>
             </div>
-            <a href="<?php echo base_url(); ?>referral_login">
+<!--            <a href="<?php echo base_url(); ?>referral_login">
                 <h4 style="text-align:center;color: white;">
                     Enter Referral Tracking Code
                 </h4>
-            </a>
+            </a>-->
         </div>
 
 

@@ -29,7 +29,7 @@ class Login_model extends CI_Model {
                         $this->session->set_userdata("login_role", "clinic_admin");
                         // log_message("error", "clinic admin ".$id.",".$name." logged in");
                         //set emr pathway
-                        $this->session->set_userdata("emr_pathway",$result[0]->emr_pathway);
+                        $this->session->set_userdata("emr_pathway", $result[0]->emr_pathway);
 
                         return true;
                     }
@@ -101,50 +101,74 @@ class Login_model extends CI_Model {
 
     public function verify_new_physician_account_model() {
         $login_key = $this->uri->segment(3);
-        $this->db->select("id");
-        $this->db->from("clinic_physician_info");
-        $this->db->where(
-                array(
-                    "login_key" => $login_key,
-                    "active" => 0
-                )
-        );
-        $result = $this->db->get()->result();
-        log_message("error", "choose dr active = " . $this->db->last_query());
-        if ($result) {
-            $this->db->select("DATE_FORMAT(CURDATE(), 'Active (%b %D %Y)') as status");
-            $status = $this->db->get()->result()[0]->status;
-            $this->db->where(
-                    array(
-                        "id" => $result[0]->id,
-                        "active" => 0
-                    )
-            );
-            $this->db->update("clinic_physician_info", array(
-                "active" => 1,
-                "status" => $status
-                    )
-            );
-            log_message("error", "make dr active = " . $this->db->last_query());
-        }
-
-        $this->db->select("email_id, id, concat(first_name, ' ', last_name) as physician_name, clinic_id");
+        $this->db->select("id, create_datetime, active");
         $this->db->from("clinic_physician_info");
         $this->db->where(array(
-            "login_key" => $login_key,
-            "active" => 1
+            "login_key" => $login_key
         ));
         $result = $this->db->get()->result();
+        log_message("error", "choose dr active = " . $this->db->last_query());
+        log_message("error", "result = " . json_encode($result));
+        log_message("error", "active = " . $result[0]->active);
+        
         if ($result) {
-            $this->session->set_userdata("email", $result[0]->email_id);
-            $this->session->set_userdata("physician_id", $result[0]->id);
-            $this->session->set_userdata("physician_name", "Dr. " . $result[0]->physician_name);
-            $this->session->set_userdata("login_role", "verify_clinic_physician");
-            $this->session->set_userdata("user_id", $result[0]->clinic_id);
-            log_message("error", "new physician login data = " . json_encode($result));
-            redirect("login/new_physician");
+            log_message("error", "inside if");
+            log_message("error", "active = " . $result[0]->active);
+            //check if time is out (1 day)
+            $created_at = DateTime::createFromFormat('Y-m-d H:i:s', $result[0]->create_datetime);
+//            $expire_time = $created_at->add(new DateInterval('P1D'))->format("Y-m-d H:i:s");
+            $expire_time = $created_at->add(new DateInterval('PT5M'))->format("Y-m-d H:i:s");
+            $current_time = date("Y-m-d H:i:s");
+            if ($expire_time < $current_time) {
+                //link is expired, need to resend it
+                log_message("error", "link is expired - $expire_time comp $current_time");
+                show_error("This link is no longer active", 200, "This link is no longer active");
+                exit();
+            }//
+            //check if link is already activated or used
+            if ($result[0]->active === "1") {
+                //link is used
+                log_message("error", "link is used , " . json_encode($result));
+                show_error("This link is no longer active", 200, "This link is no longer active");
+                exit();
+            }
+
+            log_message("error", "going for activation of physician");
+
+//            $this->db->select("DATE_FORMAT(CURDATE(), 'Active (%b %D %Y)') as status");
+//            $status = $this->db->get()->result()[0]->status;
+            $status = "Expired"; // till the password is not set
+            $this->db->where(array(
+                "id" => $result[0]->id,
+                "active" => 0
+            ));
+            $this->db->update("clinic_physician_info", array(
+                "status" => $status
+            ));
+            log_message("error", "make dr active = " . $this->db->last_query());
+
+            $this->db->select("email_id, id, concat(first_name, ' ', last_name) as physician_name, clinic_id");
+            $this->db->from("clinic_physician_info");
+            $this->db->where(array(
+                "login_key" => $login_key,
+                "active" => 0
+            ));
+            $result = $this->db->get()->result();
+            if ($result) {
+                $this->session->set_userdata("email", $result[0]->email_id);
+                $this->session->set_userdata("physician_id", $result[0]->id);
+                $this->session->set_userdata("physician_name", "Dr. " . $result[0]->physician_name);
+                $this->session->set_userdata("login_role", "verify_clinic_physician");
+                $this->session->set_userdata("user_id", $result[0]->clinic_id);
+                log_message("error", "new physician login data = " . json_encode($result));
+                redirect("login/new_physician");
+            } else {
+                redirect("login");
+            }
         } else {
-            redirect("login");
+            log_message("error", "Invalid link");
+            show_error("This link is not valid", 200, "This link is not valid");
+            exit();
         }
     }
 
@@ -153,13 +177,21 @@ class Login_model extends CI_Model {
         $this->form_validation->set_rules('repeat_new_password', 'Confirm Password', 'required|matches[new_password]');
         if ($this->form_validation->run()) {
             $data = $this->input->post();
-
+            
+            //status field 
+            $this->db->select("DATE_FORMAT(CURDATE(), 'Active (%b %D %Y)') as status");
+            $status = $this->db->get()->result()[0]->status;
+            
+            //set activation data
             $this->db->where(array(
                 "id" => $this->session->userdata("physician_id"),
-                "active" => 1
+                "active" => 0,
+                "status" => "Expired"
             ));
             $this->db->update("clinic_physician_info", array(
-                "password" => password_hash($data["new_password"], PASSWORD_BCRYPT)
+                "password" => password_hash($data["new_password"], PASSWORD_BCRYPT),
+                "active" => 1,
+                "status" => $status
             ));
             if ($this->db->affected_rows() > 0) {
                 $this->session->set_userdata("login_role", "clinic_physician");

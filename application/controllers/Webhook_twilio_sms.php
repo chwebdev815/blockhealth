@@ -303,7 +303,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                     $response = $this->referral_model->assign_slots($clinic_id, $visit->patient_id);
                                     log_message("error", "prepared slots = " . json_encode($response));
                                     if ($response["result"] === "error") {
-                                        $msg = "501 - Internal server error.";
+                                        $msg = "I’m sorry, Unable to schedule appointment for now.";
                                     } else if ($response["result"] === "success") {
                                         $allocations = $response["data"];
                                         //make call with proper data
@@ -490,7 +490,7 @@ class Webhook_twilio_sms extends CI_Controller {
         } catch (Exception $e) {
             log_message("error", "error to msg response = " . json_encode($e));
         }
-        echo "<Response><Sms>" . "501 Internal Server Error" . "</Sms></Response>";
+        echo "<Response><Sms>" . "I’m sorry, I didn’t catch that. Please try again" . "</Sms></Response>";
     }
 
 }

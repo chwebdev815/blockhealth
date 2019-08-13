@@ -31,6 +31,87 @@
                 height: 10px;
                 border-radius: 5px;
             }
+
+            /*************** CSS for search result start **************/
+            .db-nav-search.search_result
+            {
+                border-bottom-left-radius: 0px !important;
+                border-bottom-right-radius: 0px !important;    
+            }
+            .db-nav-search
+            {
+                background: #fff;
+                border: 1px solid #dfe1e5;
+                border-radius: 24px;
+                border-color: rgba(223,225,229,0);
+                box-shadow: 0 1px 6px 0 rgba(32,33,36,0.28);
+            }
+            .db-nav-search input[type]
+            {
+                border: none;
+                box-shadow: none;
+            }
+            ul#ui-id-1
+            {
+                display: block;
+                position: relative;
+                top: -1223.83px;
+                left: 1005.05px !important;
+                background: rgb(255, 255, 255);
+                border: 0px;
+                border-radius: 0px 0px 24px 24px;
+                box-shadow: rgba(32, 33, 36, 0.28) 0px 4px 6px 0px;
+                padding-bottom: 4px;
+                overflow: hidden;
+                width: 280px !important;
+                list-style: none;
+            }
+
+            @media only screen and (min-width: 768px) and (max-width: 991px){
+                .db-nav-title h1 {
+                    font-size: 16px;
+                }
+            }
+            @media screen and (min-width: 767px){
+                .db-nav-elements {
+                    width: 50%;
+                }
+                .db-nav-search > input.db-nav-search-input {
+                    padding-left: 15px;
+                    border-radius: 15px;
+                    width: 90%;
+                }
+                .db-nav-search > i {
+                    left: 10px;
+                }
+                .db-nav-search {
+                    width: 70% !important;
+                }
+                .db-nav-elements > .db-nav-elements-right {
+                    width: 400px !important;
+                }
+                .db-nav-elements
+                {
+                    display: inline-block;
+                    padding: 20px 5px;
+                    text-align: right;
+                    float: right;
+                }
+                .db-nav-search
+                {
+                    position: relative;
+                }
+                ul#ui-id-1
+                {
+                    position: absolute;
+                    top: 58px !important;
+                    left: auto !important;
+                    right: 110px !important;
+                    padding: 10px;
+                }
+            }			
+
+            /*************** CSS for search result end **************/
         </style>
         <script src="<?php echo base_url(); ?>assets/js/jquery.min.js"></script>
         <!-- Include all compiled plugins (below), or include individual files as needed -->
@@ -71,12 +152,12 @@
                         <span>Workflow Dashboard</span><i class="numb-notifies">&nbsp;</i>
                     </a>
                 </li>
-                <?php if($this->session->userdata("user_id") === 8) { ?>
-                <li id="li_call_center" data-toggle="tooltip" data-placement="right" title="Call Center">
-                    <a class="clearfix" href="<?php echo base_url(); ?>call_center">
-                        <span>Call Center</span><i class="numb-notifies">4</i>
-                    </a>
-                </li>
+                <?php if ($this->session->userdata("user_id") === 8) { ?>
+                    <li id="li_call_center" data-toggle="tooltip" data-placement="right" title="Call Center">
+                        <a class="clearfix" href="<?php echo base_url(); ?>call_center">
+                            <span>Call Center</span><i class="numb-notifies">4</i>
+                        </a>
+                    </li>
                 <?php } ?>
                 <li id="li_inbox" data-toggle="tooltip" data-placement="right" title="Fax Inbox">
                     <a class="clearfix" href="<?php echo base_url(); ?>inbox">
@@ -273,7 +354,7 @@ echo "console.log('" . $this->session->userdata("user_id") . "');";
 //if ($this->session->userdata("user_id") === 5) {
 //    echo "global_data.predict_url = 'predict';";
 //} else {
-echo "global_data.predict_url = 'aws_predict';";
+echo "global_data.predict_url = '".$this->config->item("PREDICTION_API")."';";
 //}
 ?>
             tableActionTO = null;
@@ -579,7 +660,24 @@ echo "global_data.predict_url = 'aws_predict';";
                         }
                     });
                 }
-            })(jQuery, window, document);</script>              
+            })(jQuery, window, document);</script>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                //js for header search result start
+                window.setInterval(function ()
+                {
+                    if ($('#ui-id-1').is(':visible'))
+                    {
+                        $(".db-nav-search").addClass("search_result");
+                    } else
+                    {
+                        $(".db-nav-search").removeClass("search_result");
+                    }
+                }, 100);
+                //js for header search result end
+            });
+        </script>               
 
         <!-- ===========add scripts for respective views here=========== -->
         <?php echo $jquery; ?>

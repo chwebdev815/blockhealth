@@ -323,6 +323,65 @@
             }
         });
     }
+    
+    function set_weekly_calendar2() {
+
+        view_mode = selection_calendar_weekmode.fullCalendar('getView');
+        start = view_mode.start.format("YYYY-MM-DD");
+        end = view_mode.end.format("YYYY-MM-DD");
+
+
+        //fetch and plot events
+        form = $("form#sample_form");
+        form.find("#id").val($("select#physicians").val());
+        form.find("#target").val(start);
+        form.find("#param").val(end);
+        form.find("#id").val(global_data.referral_id);
+
+        data = form.serialize();
+        url = base + "referral/get_patient_visit_calendar_week_view";
+
+        $.post({
+            url: url,
+            data: data,
+            success: function (response) {
+                if (IsJsonString(response)) {
+                    response = JSON.parse(response);
+                    if (response.result === "success") {
+                        $("#btn_back_to_month_view").show();
+                        data = response.data;
+                        selection_calendar_weekmode.fullCalendar("removeEvents");
+                        global_data.events = [];
+                        for (i = 0; i < data.length; i++) {
+                            event_date = data[i].start_time.substr(0, 10);
+                            event_start = data[i].start_time.substr(11, 8);
+                            event_end = data[i].end_time.substr(11, 8);
+
+                            event = {
+                                title: "",
+                                start: event_date + "T" + event_start,
+                                end: event_date + "T" + event_end,
+                                allDay: false,
+                                className: ["event", "bg-color-greenLight"]
+                            };
+                            global_data.events.push(event);
+                        }
+                        for (i = 0; i < global_data.events.length; i++) {
+                            selection_calendar_weekmode.fullCalendar('renderEvent', global_data.events[i]);
+                        }
+                        setTimeout(function () {
+                            $("#selection_calendar_weekmode .fc-today-button").on("click", function () {
+                                set_weekly_calendar2();
+                            });
+                        }, 1000);
+                    }
+                }
+            },
+            error: function () {
+                error("Internal server error");
+            }
+        });
+    }
 
     $(document).ready(function () {
         $('#modal_add_patient_visit').on('hidden.bs.modal', function () {
@@ -479,6 +538,14 @@
                 });
                 set_blocks_in_calendar();
             }, 1000);
+        });
+        
+        $("#selection_calendar_monthmode").on("click", ".fc-button", function () {
+            set_blocks_in_calendar();
+        });
+        
+        $("#selection_calendar_weekmode").on("click", ".fc-button", function () {
+            set_weekly_calendar2();
         });
     });
 

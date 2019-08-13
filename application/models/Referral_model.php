@@ -6,7 +6,7 @@ class Referral_model extends CI_Model {
         $match = "";
         $col = "";
         $clinic_id = $this->session->userdata("user_id");
-
+        $where_for_task_count = null;
         if ($this->session->userdata("login_role") == "clinic_admin") {
             $match = $this->session->userdata("user_id");
             $col = "clinic_admin";
@@ -63,21 +63,31 @@ class Referral_model extends CI_Model {
     }
 
     public function search_patient_model() {
-        // $term = $this->input->get("term");
-        // $this->db->select("concat(pat_fname, ' ', pat_lname, ' (', date_format(pat_dob,'%b %D, %Y'), ')' ) as label," .
-        //         "md5(id) as id, " .
-        //         "REPLACE(LOWER(status),' ','_') as value");
-        // $this->db->from("clinic_referrals");
-        // $this->db->where(
-        //         array(
-        //             "active" => 1
-        //         )
-        // );
-        // $this->db->like("pat_fname", $term);
-        // $this->db->or_like("pat_lname", $term);
-        // $result = $this->db->get()->result();
-        // return $result;
-        return array();
+        $term = $this->input->get("term");
+        //date_format(pat.dob,'%b %D, %Y')
+        $this->db->select("concat(pat.fname, ' ', pat.lname, "
+                        . "if(pat.ohip <> '', concat(' (', pat.ohip, ')'), '') "
+                        . ") as label," .
+                        "md5(pat.id) as id, " .
+                        "REPLACE(LOWER(status),' ','_') as value")
+                ->from("referral_patient_info pat, clinic_referrals c_ref, efax_info efax")
+                ->where(array(
+                    "pat.active" => 1,
+                    "c_ref.active" => 1,
+                    "efax.active" => 1,
+                    "efax.to" => $this->session->userdata("user_id")
+                ))
+                ->where("pat.referral_id", "c_ref.id", false)
+                ->where("c_ref.efax_id", "efax.id", false)
+                ->group_start()
+                ->like("pat.fname", $term)
+                ->or_like("pat.lname", $term)
+                ->or_like("pat.ohip", $term)
+                ->group_end();
+        $result = $this->db->get()->result();
+        log_message("error", "Patient search q = " . $this->db->last_query());
+        return $result;
+//        return array();
     }
 
     public function get_location_and_custom_model() {
@@ -2114,7 +2124,9 @@ class Referral_model extends CI_Model {
 
     public function ssp_patient_visits_model() {
         $patient_id = $this->uri->segment(3);
-        $table = "patient_visit_dash";
+        $table = ($this->session->userdata("user_id") === "7") ?
+                "patient_visit_dash" : "view_patient_visit_emr";
+        log_message("error", "patient visit = " . $table);
         $primaryKey = "id";
         $columns = array(
             array('db' => 'visit_name', 'dt' => 0),
@@ -2349,7 +2361,7 @@ class Referral_model extends CI_Model {
 //        $ac_sid = "";
 //        $auth_token = "";
 //        $twilio_number = "+"; //(365) 800-0973
-        
+
         $ac_sid = get_twilio_sid();
         $auth_token = get_twilio_token();
         $twilio_number = get_twilio_phone_number();

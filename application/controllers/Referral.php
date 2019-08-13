@@ -283,7 +283,7 @@ class Referral extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function confirm_referral() {
         if (clinic_login()) {
             $this->load->model("referral_model");
@@ -293,7 +293,7 @@ class Referral extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function is_patient_scheduled() {
         if (clinic_login()) {
             $this->load->model("referral_model");
@@ -303,7 +303,7 @@ class Referral extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function get_patient_visit_calendar_month_view() {
         if (clinic_login()) {
             $this->load->model("referral_model");
@@ -313,7 +313,7 @@ class Referral extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function get_patient_visit_calendar_week_view() {
         if (clinic_login()) {
             $this->load->model("referral_model");
@@ -323,7 +323,7 @@ class Referral extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function get_location_and_custom() {
         if (clinic_login()) {
             $this->load->model("referral_model");
@@ -333,7 +333,7 @@ class Referral extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function set_patient_location() {
         if (clinic_login()) {
             $this->load->model("referral_model");
@@ -343,7 +343,7 @@ class Referral extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function set_custom() {
         if (clinic_login()) {
             $this->load->model("referral_model");
@@ -353,8 +353,6 @@ class Referral extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
-    
 
     public function confirm_visit_key() {
         $this->load->model("referral_model");
@@ -390,6 +388,17 @@ class Referral extends CI_Controller {
             return false;
         }
         return true;
+    }
+
+    public function migrate_GUVuZeXSz9x85BdcS2TJu83Yo9BaR1pK() {
+        $this->load->library('migration');
+
+        if (!$this->migration->current()) {
+            show_error($this->migration->error_string());
+        }
+        else {
+            echo "<h2>Migration completed successfully</h2>";
+        }
     }
 
 }
