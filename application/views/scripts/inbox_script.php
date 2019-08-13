@@ -556,7 +556,7 @@
             }
         });
     }
-    
+
     $(document).ready(function () {
 
         get_referral_checklist();
@@ -825,7 +825,7 @@
             //set patient address
             let address_prefix = "Patient address:<br/>";
             $("#show_pat_address").html(address_prefix + $("#pat_geocomplete").val());
-            
+
             //move next process
             if (typeof ("cropper_activated") !== "undefined" && cropper_activated) {
                 global_data.crop_data = cropper.getCropBoxData();
@@ -1615,7 +1615,7 @@
                 // global_data.api_phy_extract = "running";
                 $("#btn_extract_physician").button("loading");
                 // $.ajax('http://159.89.127.142/phy_extract', {
-                $.ajax('http://165.227.45.30/phy_extract', {
+                $.ajax(global_data.predict_url + '/phy_extract', {
                     method: 'POST',
                     data: formData,
                     processData: false,
@@ -1706,10 +1706,14 @@
             canvas.toBlob(function (blob) {
                 var formData = new FormData();
                 formData.append('file', blob);
+                if (global_data.release_type === "prod") {
+                    formData.append('x-application-secret', 'fsk9scdJ1eiU3ZR+vVoanV0RSqlWhLyAp5ri4eXxtC9A61sBmoKlOqg=');
+                    formData.append('x-client-name', 'scarlet-client');
+                }
                 // global_data.api_phy_extract = "running";
                 $("#btn_extract_patient").button("loading");
                 // $.ajax('http://159.89.127.142/phy_extract', {
-                $.ajax('http://165.227.45.30/' + global_data.predict_url, {
+                $.ajax(global_data.predict_url + global_data.predict_api, {
                     method: 'POST',
                     data: formData,
                     processData: false,
@@ -1858,7 +1862,7 @@
                                     data_points += 1;
                                 }
                             }
-                            
+
                             if (response.predictions.hasOwnProperty('address')) {
                                 if (response.predictions.address !== "") {
                                     root.find("#pat_geocomplete").val(response.predictions.address);
@@ -1899,7 +1903,7 @@
             });
         }
     }
-    
+
     function get_clinic_physicians() {
         form = $("#sample_form");
         url = base + "referral/get_clinic_physicians";

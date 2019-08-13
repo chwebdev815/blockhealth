@@ -167,9 +167,13 @@ function fileUpload(data) {
         canvas.toBlob(function (blob) {
             var formData = new FormData();
             formData.append('file', blob);
+            if (global_data.release_type === "prod") {
+                formData.append('x-application-secret', 'fsk9scdJ1eiU3ZR+vVoanV0RSqlWhLyAp5ri4eXxtC9A61sBmoKlOqg=');
+                formData.append('x-client-name', 'scarlet-client');
+            }
             console.log("building form data");
 //            $.ajax('http://165.227.45.30/predict', {
-            $.ajax('http://165.227.45.30/' + global_data.predict_url, {
+            $.ajax(global_data.predict_url + global_data.predict_api, {
                 method: 'POST',
                 data: formData,
                 processData: false,
@@ -243,15 +247,15 @@ function fileUpload(data) {
                         if (response.predictions.hasOwnProperty('ICN')) {
                             if (response.predictions.ICN.hasOwnProperty('NO')) {
                                 if (response.predictions.ICN.NO != "") {
-                                    root.find("#new-patient-ohip").val(response.predictions.ICN.NO.replace(/\D/g,''));
-                                    data_points_captured.icn = response.predictions.ICN.NO.replace(/\D/g,'');
+                                    root.find("#new-patient-ohip").val(response.predictions.ICN.NO.replace(/\D/g, ''));
+                                    data_points_captured.icn = response.predictions.ICN.NO.replace(/\D/g, '');
                                     tmp_selector += ', #new-patient-ohip';
                                     data_points += 1;
                                 }
                             } else {
                                 if (response.predictions.ICN != "") {
-                                    root.find("#new-patient-ohip").val(response.predictions.ICN.replace(/\D/g,''));
-                                    data_points_captured.icn = response.predictions.ICN.replace(/\D/g,'');
+                                    root.find("#new-patient-ohip").val(response.predictions.ICN.replace(/\D/g, ''));
+                                    data_points_captured.icn = response.predictions.ICN.replace(/\D/g, '');
                                     tmp_selector += ', #new-patient-ohip';
                                     data_points += 1;
                                 }
@@ -391,11 +395,15 @@ function file_upload_triage(data) {
         canvas.toBlob(function (blob) {
             var formData = new FormData();
             formData.append('file', blob);
+            if (global_data.release_type === "prod") {
+                formData.append('x-application-secret', 'fsk9scdJ1eiU3ZR+vVoanV0RSqlWhLyAp5ri4eXxtC9A61sBmoKlOqg=');
+                formData.append('x-client-name', 'scarlet-client');
+            }
             console.log("building form data");
             global_data.api_drug_test = "running";
             // $.ajax('http://159.89.127.142/drug', {
 //            $.ajax('http://165.227.45.30/drug', {
-            $.ajax('http://165.227.45.30:8000/extMedications', {
+            $.ajax(global_data.predict_url + ':8000/extMedications', {
 
                 method: 'POST',
                 data: formData,
@@ -569,7 +577,7 @@ function file_upload_triage(data) {
 
                         if (response.predictions.hasOwnProperty('pharmacologic_substance')) {
                             tmp = response.predictions.pharmacologic_substance;
-                            
+
                             if (tmp != "No Match Found" && tmp.length != 0) {
                                 for (i = 0; i < tmp.length; i++) {
                                     elem = {};

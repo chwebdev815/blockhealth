@@ -350,11 +350,13 @@
         <script>
 
 <?php
-echo "console.log('" . $this->session->userdata("user_id") . "');";
+//echo "console.log('" . $this->session->userdata("user_id") . "');";
 //if ($this->session->userdata("user_id") === 5) {
 //    echo "global_data.predict_url = 'predict';";
 //} else {
-echo "global_data.predict_url = '".$this->config->item("PREDICTION_API")."';";
+echo "global_data.predict_url = '" . $this->config->item("PREDICTION_URL") . "';";
+echo "global_data.predict_api = '" . $this->config->item("PREDICTION_API") . "';";
+echo "global_data.release_type = '" . $this->config->item("RELEASE_TYPE") . "';";
 //}
 ?>
             tableActionTO = null;
