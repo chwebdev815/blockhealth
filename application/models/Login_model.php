@@ -110,7 +110,7 @@ class Login_model extends CI_Model {
         log_message("error", "choose dr active = " . $this->db->last_query());
         log_message("error", "result = " . json_encode($result));
         log_message("error", "active = " . $result[0]->active);
-        
+
         if ($result) {
             log_message("error", "inside if");
             log_message("error", "active = " . $result[0]->active);
@@ -119,16 +119,26 @@ class Login_model extends CI_Model {
 //            $expire_time = $created_at->add(new DateInterval('P1D'))->format("Y-m-d H:i:s");
             $expire_time = $created_at->add(new DateInterval('PT5M'))->format("Y-m-d H:i:s");
             $current_time = date("Y-m-d H:i:s");
-            if ($expire_time < $current_time) {
-                //link is expired, need to resend it
-                log_message("error", "link is expired - $expire_time comp $current_time");
-                show_error("This link is no longer active", 200, "This link is no longer active");
-                exit();
-            }//
+            log_message("error", "comparing time = " . $current_time . " with " . $expire_time);
+            
             //check if link is already activated or used
             if ($result[0]->active === "1") {
                 //link is used
                 log_message("error", "link is used , " . json_encode($result));
+                show_error("This link is no longer active", 200, "This link is no longer active");
+                exit();
+            }
+            
+            if ($expire_time < $current_time) {
+                //link is expired, need to resend it
+                //make status expired
+
+                $this->db->where(array(
+                    "login_key" => $login_key
+                ))->update("clinic_physician_info", array(
+                    "status" => "Expired"
+                ));
+                log_message("error", "link is expired - $expire_time ");
                 show_error("This link is no longer active", 200, "This link is no longer active");
                 exit();
             }
@@ -177,11 +187,11 @@ class Login_model extends CI_Model {
         $this->form_validation->set_rules('repeat_new_password', 'Confirm Password', 'required|matches[new_password]');
         if ($this->form_validation->run()) {
             $data = $this->input->post();
-            
+
             //status field 
             $this->db->select("DATE_FORMAT(CURDATE(), 'Active (%b %D %Y)') as status");
             $status = $this->db->get()->result()[0]->status;
-            
+
             //set activation data
             $this->db->where(array(
                 "id" => $this->session->userdata("physician_id"),

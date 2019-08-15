@@ -1516,12 +1516,6 @@ class Referral_model extends CI_Model {
 
         //validate notifications if allowed or not
         $this->db->select('admin.id as clinic_id, c_ref.id as referral_id,'
-                . 'CASE WHEN ('
-                . '(pat.cell_phone = NULL OR pat.cell_phone = "") OR '
-                . '(pat.work_phone = NULL OR pat.work_phone = "") OR '
-                . '(pat.home_phone = NULL OR pat.home_phone = "")'
-                . ') THEN "false" ELSE "true" END AS allow_sms,'
-                . 'CASE WHEN (pat.email_id = NULL OR pat.email_id = "") THEN "false" ELSE "true" END AS allow_email, '
                 . "admin.address, pat.email_id, pat.cell_phone, pat.home_phone, pat.work_phone, "
                 . "pat.fname, pat.lname, admin.clinic_institution_name, admin.call_address");
         $this->db->from("clinic_referrals c_ref, referral_patient_info pat, efax_info efax, clinic_user_info admin");
@@ -1540,17 +1534,6 @@ class Referral_model extends CI_Model {
         log_message("error", "Add patient visit => " . json_encode($result));
         log_message("error", "sql for patient info = " . $this->db->last_query());
         if ($result) {
-
-            $allow_sms = $result[0]->allow_sms;
-            $allow_email = $result[0]->allow_email;
-//                if (!(isset($data["cell_phone"]) || isset($data["cell_phone_voice"])) && $allow_sms == "false") {
-//                    return "Please add phone number for patient first.";
-//                }
-//                if (isset($data["email"]) && $allow_email == "false") {
-//                    return "Please add email-id for patient first.";
-//                }
-
-
             $msg_data = $result[0];
             $confirm_visit_key = generate_random_string(120);
 //                    $weekdays = array("Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday");
@@ -1559,7 +1542,7 @@ class Referral_model extends CI_Model {
             if ($response["result"] === "error") {
                 $response = false;
             } else if ($response["result"] === "success") {
-                log_message("error", "Error on success => " . json_encode($response));
+                log_message("error", "Result on success => " . json_encode($response));
                 $allocations = $response["data"];
 //                    echo "<br/> ****************** <br/>" . "slots assigned = " . json_encode($allocations) . "<br/><br/>";
 //                    exit();
@@ -1603,8 +1586,9 @@ class Referral_model extends CI_Model {
                     "time" => $start_time3->format("g:ia")
                 );
                 //insert for temp storage for 60 min sms response
-                log_message("error", "Expire time scheduled after $expire_minutes minutes to => " . (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s"));
-
+                $visit_expire_time = (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s");
+                log_message("error", "Expire time scheduled after $expire_minutes minutes to => " 
+                        . $visit_expire_time);
                 $insert_data = array(
                     "patient_id" => $patient_id,
                     "visit_name" => $visit_name,
@@ -1617,7 +1601,7 @@ class Referral_model extends CI_Model {
                     "visit_date3" => $start_time3->format("Y-m-d"),
                     "visit_start_time3" => $start_time3->format("H:i:s"),
                     "visit_end_time3" => $end_time3->format("H:i:s"),
-                    "visit_expire_time" => (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s"),
+                    "visit_expire_time" => $visit_expire_time,
                     "notify_type" => ($call_immediately) ? "call" : "sms",
                     "notify_voice" => 1,
                     "notify_sms" => 1,
@@ -2364,7 +2348,7 @@ class Referral_model extends CI_Model {
 
         $ac_sid = get_twilio_sid();
         $auth_token = get_twilio_token();
-        $twilio_number = get_twilio_phone_number();
+        $twilio_number = $this->config->item("TWILIO_PHONE_NUMBER");
 
         $msgarr = array(
             'To' => $cell_phone_number,

@@ -50,6 +50,7 @@ class Manage_physician_model extends CI_Model {
                     "login_key" => $login_key,
                     "password" => password_hash($password, PASSWORD_BCRYPT),
                     "status" => "Sent",
+                    "create_datetime" => date("Y-m-d H:i:s"),
                     "active" => 0
                 ));
                 $physician_id = $this->db->insert_id();
@@ -97,7 +98,7 @@ class Manage_physician_model extends CI_Model {
             $data = $this->input->post();
             if ($this->session->userdata("login_role") == "clinic_admin") {
                 //check if physician eligible for resend
-                $dr = $this->db->select("id, first_name, last_name, email")
+                $dr = $this->db->select("id, first_name, last_name, email_id")
                                 ->from("clinic_physician_info")
                                 ->where(array(
                                     "md5(id)" => $data["id"],
@@ -112,7 +113,7 @@ class Manage_physician_model extends CI_Model {
                     "active" => 1,
                     "id" => $this->session->userdata("user_id")
                 ));
-                $clinic_info = $this->db->get()->result()[0];
+                $clinic_info = $this->db->get()->result();
 
                 if ($dr && $clinic_info) {
                     $dr = $dr[0];
@@ -125,7 +126,9 @@ class Manage_physician_model extends CI_Model {
                         "md5(id)" => $data["id"]
                     ))->update("clinic_physician_info", array(
                         "login_key" => $login_key,
-                        "active" => 0
+                        "active" => 0,
+                        "status" => "Sent",
+                        "create_datetime" => date("Y-m-d H:i:s")
                     ));
 
                     //prepare and send mail
@@ -139,7 +142,7 @@ class Manage_physician_model extends CI_Model {
                     $template = str_replace("verify_link", $verify_link, $template);
                     log_message("error", "resent verify link = $verify_link");
 
-                    $response = send_mail("", "BlockHealth", $dr->email, "", "BlockHealth Invite", $template);
+                    $response = send_mail("", "BlockHealth", $dr->email_id, "", "BlockHealth Invite", $template);
 
                     return array(
                         "result" => "success"

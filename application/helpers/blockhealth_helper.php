@@ -179,10 +179,6 @@ function get_metadata_path($md5_clinic_id) {
     return "/var/emrsftp/clinics/$md5_clinic_id/metadata.json";
 }
 
-function get_twilio_phone_number() {
-    return "+16475607989";
-}
-
 function get_twilio_sid() {
     return "AC2da3b84b65b63ccf4f05c27ac1713060";
 }

@@ -19,6 +19,17 @@ class Cron_emr_visit_integration extends CI_Controller {
 //    }
 
     public function ujEtsjgFvRIJZOtbOhidSXqaUxFSltiE() {
+        log_message("error", "Cron for expired links");
+        $current_time = new DateTime(date("Y-m-d H:i:s"));
+        $expire_time = $current_time->sub(new DateInterval('PT5M'))->format("Y-m-d H:i:s");
+        $this->db->where(array(
+            "status" => "Sent",
+            "active" => 0,
+            "create_datetime <" => $expire_time
+        ))->update("clinic_physician_info", array(
+            "status" => "Expired"
+        ));
+        log_message("error", "expire q = " . $this->db->last_query());
 
         log_message("error", "Cron_emr_visit_integration called $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         //get all clinic and loop all

@@ -260,7 +260,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
         $sid = get_twilio_sid();
         $token = get_twilio_token();
-        $twilio_number = get_twilio_phone_number();
+        $twilio_number = $this->config->item("TWILIO_PHONE_NUMBER");
         //$to = "+919876907251";  
 //        $to_number = "+917201907712";
 
