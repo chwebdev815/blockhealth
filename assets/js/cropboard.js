@@ -167,9 +167,13 @@ function fileUpload(data) {
         canvas.toBlob(function (blob) {
             var formData = new FormData();
             formData.append('file', blob);
+
+            header = {};
             if (global_data.release_type === "prod") {
-                formData.append('x-application-secret', 'fsk9scdJ1eiU3ZR+vVoanV0RSqlWhLyAp5ri4eXxtC9A61sBmoKlOqg=');
-                formData.append('x-client-name', 'scarlet-client');
+                header = {
+                    "x-application-secret": "fsk9scdJ1eiU3ZR+vVoanV0RSqlWhLyAp5ri4eXxtC9A61sBmoKlOqg=",
+                    "x-client-name": "scarlet-client"
+                };
             }
             console.log("building form data");
 //            $.ajax('http://165.227.45.30/predict', {
@@ -178,6 +182,7 @@ function fileUpload(data) {
                 data: formData,
                 processData: false,
                 contentType: false,
+                header: header,
                 success: function (response) {
                     tmp_selector = "#anything_fake";
                     root = $("form#signupForm, form#form_patient_save");
@@ -395,9 +400,13 @@ function file_upload_triage(data) {
         canvas.toBlob(function (blob) {
             var formData = new FormData();
             formData.append('file', blob);
+
+            header = {};
             if (global_data.release_type === "prod") {
-                formData.append('x-application-secret', 'fsk9scdJ1eiU3ZR+vVoanV0RSqlWhLyAp5ri4eXxtC9A61sBmoKlOqg=');
-                formData.append('x-client-name', 'scarlet-client');
+                header = {
+                    "x-application-secret": "fsk9scdJ1eiU3ZR+vVoanV0RSqlWhLyAp5ri4eXxtC9A61sBmoKlOqg=",
+                    "x-client-name": "scarlet-client"
+                };
             }
             console.log("building form data");
             global_data.api_drug_test = "running";
@@ -409,6 +418,7 @@ function file_upload_triage(data) {
                 data: formData,
                 processData: false,
                 contentType: false,
+                header: header,
                 success: function (response) {
                     global_data.api_drug_test = "completed";
                     tmp_selector = "#anything_fake";
