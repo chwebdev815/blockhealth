@@ -175,6 +175,7 @@ function fileUpload(data) {
                     "x-client-name": "scarlet-client"
                 };
             }
+            console.log("sending header = ", header);
             console.log("building form data");
 //            $.ajax('http://165.227.45.30/predict', {
             $.ajax(global_data.predict_url + global_data.predict_api, {
