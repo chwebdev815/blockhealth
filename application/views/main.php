@@ -357,6 +357,8 @@
 echo "global_data.predict_url = '" . $this->config->item("PREDICTION_URL") . "';";
 echo "global_data.predict_api = '" . $this->config->item("PREDICTION_API") . "';";
 echo "global_data.release_type = '" . $this->config->item("RELEASE_TYPE") . "';";
+echo "global_data.medication_api = '" . $this->config->item("PREDICT_MEDICATION") . "';";
+
 //}
 ?>
             tableActionTO = null;
