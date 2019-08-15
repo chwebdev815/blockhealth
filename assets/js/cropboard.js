@@ -183,7 +183,7 @@ function fileUpload(data) {
                 data: formData,
                 processData: false,
                 contentType: false,
-                header: header,
+                headers: header,
                 success: function (response) {
                     tmp_selector = "#anything_fake";
                     root = $("form#signupForm, form#form_patient_save");
@@ -419,7 +419,7 @@ function file_upload_triage(data) {
                 data: formData,
                 processData: false,
                 contentType: false,
-                header: header,
+                headers: header,
                 success: function (response) {
                     global_data.api_drug_test = "completed";
                     tmp_selector = "#anything_fake";

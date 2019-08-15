@@ -1721,7 +1721,7 @@
                     data: formData,
                     processData: false,
                     contentType: false,
-                    header: header,
+                    headers: header,
                     success: function (response) {
                         console.log(response);
 //                        debugger
