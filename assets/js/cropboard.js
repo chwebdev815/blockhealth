@@ -413,7 +413,7 @@ function file_upload_triage(data) {
             global_data.api_drug_test = "running";
             // $.ajax('http://159.89.127.142/drug', {
 //            $.ajax('http://165.227.45.30/drug', {
-            $.ajax(global_data.predict_url + ':8000/' + global_data.medication_api, {
+            $.ajax(global_data.predict_url + global_data.medication_api, {
 
                 method: 'POST',
                 data: formData,
