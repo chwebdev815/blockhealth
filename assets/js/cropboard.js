@@ -423,6 +423,7 @@ function file_upload_triage(data) {
                 headers: header,
                 success: function (response) {
                     $('#btnAutofillTriage').button("reset");
+                    uploadingFile = false;
                     global_data.api_drug_test = "completed";
                     tmp_selector = "#anything_fake";
                     root = $("#signupForm");
@@ -663,6 +664,7 @@ function file_upload_triage(data) {
         });
     } else {
         $('#btnAutofillTriage').button("reset");
+        uploadingFile = false;
     }
 }
 
