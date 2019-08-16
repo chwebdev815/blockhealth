@@ -162,7 +162,7 @@ class Fax_manager extends CI_Controller {
             //get patient id here.
             $file_path = getcwd() . "/uploads/efax/" . $pdf_fax_file_name . ".pdf";
             
-//            log_message("error", "pdf saved at = " . $file_path);
+            log_message("error", "pdf saved at = " . $file_path);
             file_put_contents($file_path, base64_decode($decodedResult["Result"]));
             curl_close($ch);
 //            echo "PDF file saved" . "<br/>";
@@ -202,7 +202,7 @@ class Fax_manager extends CI_Controller {
 //            echo "file path = " . $file_path . "<br/>";
             file_put_contents($file_path, base64_decode($decodedResult["Result"]));
             curl_close($ch);
-//            log_message("error", "tiff also saved");
+            log_message("error", "tiff also saved to" . $file_path);
 //            echo "TIFF also saved";
         }
         if($from == "") {
