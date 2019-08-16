@@ -384,6 +384,7 @@ function file_upload_triage(data) {
     console.log("method fileUpload triage called");
     if (uploadingFile) {
         error("We are already started fetching data. Please wait");
+        $('#btnAutofillTriage').button("reset");
         return;
     }
     var canvas;
@@ -421,6 +422,7 @@ function file_upload_triage(data) {
                 contentType: false,
                 headers: header,
                 success: function (response) {
+                    $('#btnAutofillTriage').button("reset");
                     global_data.api_drug_test = "completed";
                     tmp_selector = "#anything_fake";
                     root = $("#signupForm");
@@ -640,8 +642,7 @@ function file_upload_triage(data) {
                         log_data_points(data_points, global_data.efax_id, "drug");
                         save_drug_data_points(data_points_captured);
                     }
-                    if (global_data.api_medication_test == "completed") {
-                        btn_autofill.button('reset');
+                    if (global_data.api_medication_test === "completed") {
                         uploadingFile = false;
                     }
                 },
@@ -649,75 +650,19 @@ function file_upload_triage(data) {
                     global_data.api_drug_test = "completed";
                     console.log("error");
                     console.log(response);
+                    error("Operation not completed");
                 },
                 complete: function () {
+                    $('#btnAutofillTriage').button("reset");
                     global_data.api_drug_test = "completed";
-                    if (global_data.api_medication_test == "completed") {
-                        btn_autofill.button('reset');
-                        uploadingFile = false;
-                    }
+                    uploadingFile = false;
                     console.log("completed");
                 }
             });
-
-
             global_data.api_medication_test = "completed";
-            // $.ajax('http://159.89.127.142/medication_test', {
-            //     method: 'POST',
-            //     data: formData,
-            //     processData: false,
-            //     contentType: false,
-            //     success: function (response) {
-            //         global_data.api_medication_test = "completed";
-            //         console.log(response);
-
-            //         tmp_selector = "#anything_fake";
-            //         root = $("#signupForm");
-            //         if (response.success) {
-
-            //             if (response.predictions.hasOwnProperty('medications')) {
-            //                 tmp = response.predictions.medications;
-            //                 if (tmp.hasOwnProperty('pharmacologic_substance')) {
-            //                     tmp = tmp.pharmacologic_substance;
-            //                     debugger
-            //                     tmp = Object.keys(tmp[0]);
-            //                     if (tmp != "No Match Found" && tmp.length != 0) {
-            //                         for (i = 0; i < tmp.length; i++) {
-            //                             if (tmp[i] != "source" && tmp[i] != "source_count") {
-            //                                 add_medications(tmp[i]);
-            //                             }
-            //                         }
-            //                     }
-            //                 }
-            //             }
-
-            //             //mark updated animation
-            //             $(tmp_selector).toggleClass("updated_mode");
-            //             setTimeout(function () {
-            //                 $(tmp_selector).toggleClass("updated_mode");
-            //             }, 3000);
-            //         }
-            //         if (global_data.api_drug_test == "completed") {
-            //             btn_autofill.button('reset');
-            //             uploadingFile = false;
-            //         }
-            //     },
-            //     error: function (response) {
-            //         if (global_data.api_drug_test == "completed") {
-            //             btn_autofill.button('reset');
-            //             uploadingFile = false;
-            //         }
-            //         console.log("Error");
-            //         console.log(response);
-            //     },
-            //     complete: function () {
-            //         if (global_data.api_drug_test == "completed") {
-            //             btn_autofill.button('reset');
-            //             uploadingFile = false;
-            //         }
-            //     }
-            // });
         });
+    } else {
+        $('#btnAutofillTriage').button("reset");
     }
 }
 
@@ -785,8 +730,6 @@ $(document).ready(function () {
         //start loading
         btn_autofill = $(this);
         btn_autofill.button('loading');
-
-
     });
 
     function execute_file_upload() {

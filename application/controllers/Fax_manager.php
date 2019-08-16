@@ -109,7 +109,7 @@ class Fax_manager extends CI_Controller {
                         if (strlen($sender_fax) == 10) {
                             $sender_fax = "1$sender_fax";
                         }
-//                        log_message("error", "fax received. detail id = " . $fax_details_id . "<br/>");
+                        log_message("error", "fax received. detail id = " . $fax_details_id . "<br/>");
 //                        echo "fax details = $fax_details_id, $from, $to, $pages, $sender_fax" . "<br/>";
                         $this->retrieve_fax($fax_details_id, $from, $to, $pages, $sender_fax, $access_id, $access_pwd);
                     } else {
