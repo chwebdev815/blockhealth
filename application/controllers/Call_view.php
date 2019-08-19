@@ -35,7 +35,7 @@ class Call_view extends CI_Controller {
         $type = $this->input->post("type");
         $reserved_id = $this->input->post("reserved_id");
 
-        log_message("error", "call function post = " . json_encode($this->input->post()));
+        //log_message("error", "call function post = " . json_encode($this->input->post()));
 
         if (!empty($mob)) {
             $dataNew = $this->call_confirm($reserved_id, $clinic_id, $patient_id, $notify_voice, $notify_sms, $notify_email, $type, $mob, $pname, $patient_lname, $pvname, $cname, $aDate, $aTime, $address);
@@ -93,7 +93,7 @@ class Call_view extends CI_Controller {
             log_message("error", " Error – " . curl_error($res));
             return false;
         } else {
-            log_message("error", "Calling" . "response = " . json_encode($resp));
+            //log_message("error", "Calling" . "response = " . json_encode($resp));
             return true;
         }
     }
@@ -262,7 +262,7 @@ class Call_view extends CI_Controller {
                 $appointment_id = $this->db->insert_id();
                 patient_visit_integration("insert", $get["patient_id"], $appointment_id);
 
-                log_message("error", "wrong number is set with " . $this->db->last_query());
+                //log_message("error", "wrong number is set with " . $this->db->last_query());
 
                 //integraate scheduling data
                 //set follow up if initial visit
@@ -295,7 +295,7 @@ class Call_view extends CI_Controller {
                     "accepted_status" => "Wrong Number",
                     "accepted_status_icon" => "blue"
                 ));
-                log_message("error", "second wrong number is set with " . $this->db->last_query());
+                //log_message("error", "second wrong number is set with " . $this->db->last_query());
 
                 //all visits book status changed to wrong number
                 $this->db->where(array(
@@ -304,7 +304,7 @@ class Call_view extends CI_Controller {
                     "notify_status" => "Wrong Number",
                     "notify_status_icon" => "blue"
                 ));
-                log_message("error", "all visits wrong number = > " . $this->db->last_query());
+                //log_message("error", "all visits wrong number = > " . $this->db->last_query());
 
 //                $params = array(
 //                    'data' => $_GET["Digits"],
@@ -608,7 +608,7 @@ class Call_view extends CI_Controller {
                     "accepted_status_date" => date("Y-m-d H:i:s")
                 ));
             } elseif ($_GET['Digits'] == 4) {
-                log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
+                //log_message("error", "for 44444 =>.>>> " . json_encode($_GET));
                 echo "<Response>";
                 echo "<Redirect method='GET'>" . $base_url . "call_view/step_two?"
                 . "Digits=1&amp;"
@@ -680,7 +680,7 @@ class Call_view extends CI_Controller {
                 $visit_time = DateTime::createFromFormat("H:i:s", $visit_time);
                 $visit_time = $visit_time->format("H:i");
 
-                log_message("error", "fax info q = " . $this->db->last_query());
+                //log_message("error", "fax info q = " . $this->db->last_query());
                 if ($fax_data) {
                     $replace_stack = array(
                         "###clinic_name###" => $fax_data[0]->clinic_institution_name,
@@ -707,7 +707,7 @@ class Call_view extends CI_Controller {
                     log_message("error", "fax sent code completed");
                 } else {
                     log_message("error", "Issue fetching fax data");
-                    log_message("error", "sql = > " . $this->db->last_query());
+                    //log_message("error", "sql = > " . $this->db->last_query());
                 }
                 //send fax code is sent
             }
@@ -834,7 +834,7 @@ class Call_view extends CI_Controller {
                                 "id" => $reserved_id
                             ))->get()->result_array()[0];
 
-                    log_message("error", "data after = " . json_encode($reserved_data));
+                    //log_message("error", "data after = " . json_encode($reserved_data));
 
                     //[{"id":"0","patient_id":"2","visit_name":"visit check","visit_date1":"2019-02-08","visit_start_time1":"09:00:00","visit_end_time1":"09:30:00","visit_date2":"2019-02-11","visit_start_time2":"09:00:00","visit_end_time2":"09:30:00","visit_date3":"2019-02-12","visit_start_time3":"09:00:00","visit_end_time3":"09:30:00","visit_expire_time":"2019-02-07 11:21:53","reminder_1h":null,"reminder_24h":"2019-02-08 10:21:53","reminder_48h":"2019-02-09 10:21:53","reminder_72h":"2019-02-10 10:21:53","confirm_key":"1","notify_type":"call","notify_voice":"1","notify_sms":"1","notify_email":"1","confirm_visit_key":"1549552913_SphROVHWj3RuNDJpfkv0GkMy4N7Q5tJYT_PGUvBdyrHl3qLjKgjqA5YES5tYzbWrbK65eIiN9_8dpTw98PzJUxmMCQKb1FCcoJiDqAqzzyNZri7A6Gi0cFNP","visit_confirmed":"Awaiting Confirmation","create_datetime":"2019-02-07 15:21:53","active":"1"}]
 
@@ -844,7 +844,7 @@ class Call_view extends CI_Controller {
 
                     $get = $_GET;
 
-                    log_message("error", "data after = " . json_encode($reserved_data));
+                    //log_message("error", "data after = " . json_encode($reserved_data));
                     //static status 
                     $visit_confirmed = "N/A";
 
@@ -877,7 +877,7 @@ class Call_view extends CI_Controller {
                     );
                     //insert in scheduled visit
                     $this->db->insert("records_patient_visit", $insert_data);
-                    log_message("error", "inserted with " . $this->db->last_query());
+                    //log_message("error", "inserted with " . $this->db->last_query());
                     $appointment_id = $this->db->insert_id();
                     patient_visit_integration("insert", $get["patient_id"], $appointment_id);
 
@@ -892,7 +892,7 @@ class Call_view extends CI_Controller {
                         "active" => 0,
                         "visit_confirmed" => "Booked"
                     ));
-                    log_message("error", "updated with " . $this->db->last_query());
+                    //log_message("error", "updated with " . $this->db->last_query());
 
 
                     //set status in accepted_status
@@ -904,7 +904,7 @@ class Call_view extends CI_Controller {
                                     ->where("c_ref.id", "pat.referral_id", false)
                                     ->get()->result()[0]->id;
 
-                    log_message("error", "accepted fetch " . $this->db->last_query());
+                    //log_message("error", "accepted fetch " . $this->db->last_query());
 
                     $this->db->set("accepted_status_date", $reserved_data["create_datetime"]);
                     $this->db->where(array(
@@ -913,7 +913,7 @@ class Call_view extends CI_Controller {
                         "accepted_status" => "Confirmed",
                         "accepted_status_icon" => "green"
                     ));
-                    log_message("error", "update 2 with " . $this->db->last_query());
+                    //log_message("error", "update 2 with " . $this->db->last_query());
 
                     $this->load->model("referral_model");
                     $this->referral_model->move_from_accepted_to_scheduled($get["patient_id"], $clinic_id);
@@ -1012,7 +1012,7 @@ class Call_view extends CI_Controller {
             $this->db->where("r_pv.patient_id", "pat.id", false);
             $result = $this->db->get()->result();
 
-            log_message("error", "webhook sql = " . $this->db->last_query());
+            //log_message("error", "webhook sql = " . $this->db->last_query());
 
             $change_status = false;
 
@@ -1034,7 +1034,7 @@ class Call_view extends CI_Controller {
 
                 $this->db->update("records_patient_visit");
                 $change_status = true;
-                log_message("error", "change (1) " . $this->db->last_query());
+                //log_message("error", "change (1) " . $this->db->last_query());
             }
             $this->db->trans_complete();
         }

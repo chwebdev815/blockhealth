@@ -78,7 +78,7 @@ class Manage_physician_model extends CI_Model {
                 $template = str_replace("<drLastName></drLastName>", $data["last_name"], $template);
                 $template = str_replace("<clinicName></clinicName>", $clinic_name, $template);
                 $template = str_replace("verify_link", $verify_link, $template);
-                log_message("error", "verify link = $verify_link");
+                //log_message("error", "verify link = $verify_link");
 
                 $response = send_mail("", "BlockHealth", $data["email"], "", "BlockHealth Invite", $template);
 
@@ -140,7 +140,7 @@ class Manage_physician_model extends CI_Model {
                     $template = str_replace("<drLastName></drLastName>", $dr->last_name, $template);
                     $template = str_replace("<clinicName></clinicName>", $clinic_name, $template);
                     $template = str_replace("verify_link", $verify_link, $template);
-                    log_message("error", "resent verify link = $verify_link");
+                    //log_message("error", "resent verify link = $verify_link");
 
                     $response = send_mail("", "BlockHealth", $dr->email_id, "", "BlockHealth Invite", $template);
 

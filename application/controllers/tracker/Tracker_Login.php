@@ -26,8 +26,8 @@ class Login extends CI_Controller {
 
     public function logout() {
         if (!$this->session->userdata('username')) {
-            log_message("debug", $this->session->userdata("username") . " logged out." .
-                    " id = " . $this->session->userdata("user_id"));
+            //log_message("debug", $this->session->userdata("username") . " logged out." .
+                   // " id = " . $this->session->userdata("user_id"));
         }
         $this->session->sess_destroy();
         redirect("dashboard");

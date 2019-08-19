@@ -8,7 +8,7 @@ class Rp_model extends CI_Model {
         $id = $data["id"];
         $target = $data["target"];
 
-        log_message("error", "fax = " . $fax);
+        //log_message("error", "fax = " . $fax);
 //                $this->check_referral_access($data["id"]);
         $this->db->select("md5(c_usr.id) as id, c_usr.clinic_institution_name");
         $this->db->from("clinic_user_info c_usr, referral_physician_info dr, referral_patient_info pat, clinic_referrals c_ref, efax_info efax");
@@ -26,7 +26,7 @@ class Rp_model extends CI_Model {
         $this->db->group_by("c_usr.id");
         $clinics = $this->db->get()->result();
 
-        log_message("error", "clinic inbox = " . $this->db->last_query());
+        //log_message("error", "clinic inbox = " . $this->db->last_query());
 
         if ($id && $target == "clinic") {
             $clinic_code = $id;
@@ -38,7 +38,7 @@ class Rp_model extends CI_Model {
             ));
             $active_clinic = $this->db->get()->result()[0];
             $header = $active_clinic->clinic_institution_name;
-            log_message("error", "clinic get info query = " . $this->db->last_query());
+            //log_message("error", "clinic get info query = " . $this->db->last_query());
             
 
             return array(
@@ -69,8 +69,8 @@ class Rp_model extends CI_Model {
             $header = "$patient_info->name ( $patient_info->age year old $patient_info->gender )";
             $id = $patient_info->clinic_id;
             //data.patient.name + " (" + data.patient.age + " year old " + data.patient.gender + ")"
-            log_message("error", "pat info = " . json_encode($patient_info));
-            log_message("error", "pat info = " . $this->db->last_query());
+            //log_message("error", "pat info = " . json_encode($patient_info));
+            //log_message("error", "pat info = " . $this->db->last_query());
             
             
             

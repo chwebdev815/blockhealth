@@ -453,7 +453,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     "notify_status_icon" => "blue"
                 ));
 
-                log_message("error", "wrong number 1 => " . $this->db->last_query());
+                //log_message("error", "wrong number 1 => " . $this->db->last_query());
 
                 //set status in accepted_status
                 $referral_id = $this->db->select("c_ref.id")
@@ -1002,7 +1002,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                     $visit_time = DateTime::createFromFormat("H:i:s", $visit_time);
                     $visit_time = $visit_time->format("H:i");
 
-                    log_message("error", "fax info q = " . $this->db->last_query());
+                    //log_message("error", "fax info q = " . $this->db->last_query());
                     if ($fax_data) {
                         $replace_stack = array(
                             "###clinic_name###" => $fax_data[0]->clinic_institution_name,
@@ -1029,7 +1029,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
                         log_message("error", "fax sent code completed");
                     } else {
                         log_message("error", "Issue fetching fax data");
-                        log_message("error", "sql = > " . $this->db->last_query());
+                        //log_message("error", "sql = > " . $this->db->last_query());
                     }
                     //send fax code is sent
 //                    $this->load->model("referral_model");
@@ -1123,7 +1123,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
             $this->db->where("r_pv.patient_id", "pat.id", false);
             $result = $this->db->get()->result();
 
-//            log_message("error", "webhook sql = " . $this->db->last_query());
+//            //log_message("error", "webhook sql = " . $this->db->last_query());
 
             $change_status = false;
 
@@ -1145,7 +1145,7 @@ class Cron_visit_booking_reminder extends CI_Controller {
 
                 $this->db->update("records_patient_visit");
                 $change_status = true;
-//                log_message("error", "change (1) " . $this->db->last_query());
+//                //log_message("error", "change (1) " . $this->db->last_query());
             }
             $this->db->trans_complete();
         }

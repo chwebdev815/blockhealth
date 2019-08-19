@@ -61,7 +61,7 @@ function get_decrypted_id($md5_id, $table_name) {
     $CI->db->from($table_name);
     $CI->db->where(array("md5(id)" => $md5_id));
     $result = $CI->db->get()->result();
-    log_message("error", "get decrypted sql = " . $CI->db->last_query());
+    //log_message("error", "get decrypted sql = " . $CI->db->last_query());
     return ($result) ? $result[0]->id : 0;
 }
 
@@ -81,26 +81,26 @@ function generate_random_string($length = 32) {
 }
 
 function get_pdf_page_count($filepath) {
-    log_message("error", "function get_pdf_page_count");
+    //log_message("error", "function get_pdf_page_count");
     $fp = @fopen(preg_replace("/\[(.*?)\]/i", "", $filepath), "r");
     $max = 0;
     if (!$fp) {
-        log_message("error", "not fp");
+        //log_message("error", "not fp");
         return 0;
     } else {
         while (!@feof($fp)) {
-            // log_message("error", "while loop ");
+            // //log_message("error", "while loop ");
             $line = @fgets($fp, 255);
             if (preg_match('/\/Count [0-9]+/', $line, $matches)) {
-                log_message("error", "if yes");
+                //log_message("error", "if yes");
                 preg_match('/[0-9]+/', $matches[0], $matches2);
                 if ($max < $matches2[0]) {
-                    log_message("error", "if yes 2");
+                    //log_message("error", "if yes 2");
                     $max = trim($matches2[0]);
                     break;
                 }
             }
-            // log_message("error", "current max = $max");
+            // //log_message("error", "current max = $max");
         }
         @fclose($fp);
     }
@@ -125,7 +125,7 @@ function add_fax_count($sender, $receiver, $clinic_id, $fax_type, $login_role = 
 }
 
 function send_mail($from, $from_name, $to, $to_name, $subject, $content, $attachment = "", $file_name = "attachment.pdf") {
-    log_message("error", "SENDGRID - sending mail to $to");
+    //log_message("error", "SENDGRID - sending mail to $to");
     if (empty($from)) {
         $from = "alerts@blockhealth.co";
     }
@@ -146,11 +146,11 @@ function send_mail($from, $from_name, $to, $to_name, $subject, $content, $attach
     try {
         $response = $sendgrid->send($email);
         return true;
-        log_message("error", "mail status code = " . json_encode($response->statusCode()));
-        log_message("error", "mail header code = " . json_encode($response->headers()));
-        log_message("error", "mail body code = " . json_encode($response->body()));
+        //log_message("error", "mail status code = " . json_encode($response->statusCode()));
+        //log_message("error", "mail header code = " . json_encode($response->headers()));
+        //log_message("error", "mail body code = " . json_encode($response->body()));
     } catch (Exception $e) {
-        log_message("error", "Error while mail - " . $e->getMessage());
+        //log_message("error", "Error while mail - " . $e->getMessage());
         return false;
     }
 }
@@ -165,7 +165,7 @@ function make_two_digit($digit) {
             return "" . $digit;
         }
     } catch (Exception $ex) {
-        log_message("error", "error while converting to two digit from $digit");
+        //log_message("error", "error while converting to two digit from $digit");
         return "00";
     }
 }
@@ -299,8 +299,8 @@ function patient_visit_integration($type, $patient_id, $appointment_id, $update_
             $clinic_id = $clinic_data[0]->id;
         }
         else {
-            log_message("error", "INTEGRATION DATA NOT SAVED");
-            log_message("error", "false q = " . $CI->db->last_query());
+            //log_message("error", "INTEGRATION DATA NOT SAVED");
+            //log_message("error", "false q = " . $CI->db->last_query());
             return;
         }
 
@@ -382,8 +382,8 @@ function patient_visit_integration($type, $patient_id, $appointment_id, $update_
                 "operation_type" => "NEW",
                 "status" => ($clinic_data->emr_pathway === "OscarEMR") ? "NEW" : ""
             ));
-            log_message("error", "schedule integration data inserted => " .
-                    $CI->db->last_query());
+            //log_message("error", "schedule integration data inserted => " .
+                    //$CI->db->last_query());
         }
     }
 }

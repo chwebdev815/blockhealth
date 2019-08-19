@@ -6,11 +6,11 @@ class My_tasks_model extends CI_Model {
         $table = "view_my_tasks";
         if ($this->session->userdata("emr_pathway") === "AccuroCitrix") {
             $table = "view_my_tasks_rpa";
-            log_message("error", "loading rpa view_my_tasks_rpa");
+            //log_message("error", "loading rpa view_my_tasks_rpa");
         }
         if ($this->session->userdata("emr_pathway") === "OscarEMR") {
             $table = "view_my_tasks_oscar";
-            log_message("error", "loading oscar view_my_tasks_oscar");
+            //log_message("error", "loading oscar view_my_tasks_oscar");
         }
         $primaryKey = "id";
         $columns = array(
@@ -46,7 +46,7 @@ class My_tasks_model extends CI_Model {
     }
 
     public function update_task_model() {
-        log_message("error", "updating task");
+        //log_message("error", "updating task");
         $this->form_validation->set_rules('id', 'Patient ID', 'required');
         $this->form_validation->set_rules('task_id', 'Task ID', 'required');
         $this->form_validation->set_rules('record_type', 'Record Type', 'required');
@@ -56,9 +56,9 @@ class My_tasks_model extends CI_Model {
             $this->db->trans_start();
             $data = $this->input->post();
             $task_id = get_decrypted_id($data["task_id"], "clinic_physician_tasks");
-            log_message("error", "patient dropdown = " . $data["patient_dropdown"]);
+            //log_message("error", "patient dropdown = " . $data["patient_dropdown"]);
             if ($data["patient_dropdown"] != "0") {
-                log_message("error", "inside dropdown");
+                //log_message("error", "inside dropdown");
                 $clinic_id = $this->session->userdata("user_id");
                 //if patient is assigned
                 $task_info = $this->db->select("patient_id, pdf_file, tiff_file")
@@ -76,12 +76,12 @@ class My_tasks_model extends CI_Model {
                 // delete tiff
                 $tiff_file = files_dir() . md5($clinic_id) . "/" . md5($patient_id) . "/" .
                         $task_info[0]->tiff_file;
-                log_message("error", "deleting tiff = >" . $tiff_file);
+                //log_message("error", "deleting tiff = >" . $tiff_file);
                 unlink($tiff_file);
                 // set pdf as doc for patient selected
 //                
                 $new_patient_id = get_decrypted_id($data["patient_dropdown"], "referral_patient_info");
-                log_message("error", "new patient id = " . $new_patient_id);
+                //log_message("error", "new patient id = " . $new_patient_id);
                 //insert health record
                 $inserted = $this->db->insert("records_clinic_notes", array(
                     "patient_id" => $new_patient_id,
@@ -91,7 +91,7 @@ class My_tasks_model extends CI_Model {
                     "record_file" => $task_info[0]->pdf_file
                 ));
 
-                log_message("error", "inserting = > " . $this->db->last_query());
+                //log_message("error", "inserting = > " . $this->db->last_query());
 
                 //remove record from fax triage
                 $updated = $this->db->where("id", $task_id)
@@ -99,7 +99,7 @@ class My_tasks_model extends CI_Model {
                     "active" => 0
                 ));
 
-                log_message("error", "updating = > " . $this->db->last_query());
+                //log_message("error", "updating = > " . $this->db->last_query());
 
                 if ($inserted && $updated) {
                     $this->db->trans_complete();
@@ -136,7 +136,7 @@ class My_tasks_model extends CI_Model {
                     "record_type" => $data["record_type"],
                     "notes" => $data["description"]
                 ));
-                log_message("error", "update = " . $this->db->last_query());
+                //log_message("error", "update = " . $this->db->last_query());
 
                 if ((isset($data["id"])) && $data["id"] != "") {
 //                $new_file_name = generate_random_string(32);
@@ -148,7 +148,7 @@ class My_tasks_model extends CI_Model {
                         "record_file" => $task_info[0]->pdf_file
                     ));
 //                copy(files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $task_info[0]->pdf_file, "./uploads/health_records/" . $new_file_name . ".pdf");
-//                log_message("error", "task record => " . $task_id . " => ./uploads/physician_tasks/pdf" . $task_info[0]->pdf_file ." to ./uploads/health_records/" . $new_file_name . ".pdf");
+//                //log_message("error", "task record => " . $task_id . " => ./uploads/physician_tasks/pdf" . $task_info[0]->pdf_file ." to ./uploads/health_records/" . $new_file_name . ".pdf");
                 }
 
                 $this->db->trans_complete();
@@ -203,7 +203,7 @@ class My_tasks_model extends CI_Model {
     }
 
     public function task_completed_model() {
-        log_message("error", "updating task");
+        //log_message("error", "updating task");
         $this->form_validation->set_rules('id', 'Task ID', 'required');
         if ($this->form_validation->run()) {
             $this->db->trans_start();
@@ -216,7 +216,7 @@ class My_tasks_model extends CI_Model {
                 "active" => 0
             ));
             $this->db->trans_complete();
-            log_message("error", "remove tasks => " . $this->db->last_query());
+            //log_message("error", "remove tasks => " . $this->db->last_query());
             if ($updated) {
                 return array(
                     "result" => "success"
@@ -236,7 +236,7 @@ class My_tasks_model extends CI_Model {
     }
 
     public function fetch_task_details_model() {
-        log_message("error", "fetch_task_details_model");
+        //log_message("error", "fetch_task_details_model");
         $this->form_validation->set_rules('id', 'Task ID', 'required');
         if ($this->form_validation->run()) {
 
@@ -252,7 +252,7 @@ class My_tasks_model extends CI_Model {
                                 "tsk.active" => 1
                             ))->get()->result();
 
-            log_message("error", "remove tasks => " . $this->db->last_query());
+            //log_message("error", "remove tasks => " . $this->db->last_query());
             if ($task_data) {
                 return array(
                     "result" => "success",

@@ -21,7 +21,7 @@ class Clinic_model extends CI_Model {
         );
         
         $where = "clinic_id = '".$this->uri->segment(3)."' and sender_fax_number = '".$this->session->userdata("fax_number")."'";
-        log_message("error", "where = " . $this->db->last_query());
+        //log_message("error", "where = " . $this->db->last_query());
         require('ssp.class.php');
         return json_encode(SSP::complex($_GET, $sql_details, $table, $primaryKey, $columns, null, $where));
     }   

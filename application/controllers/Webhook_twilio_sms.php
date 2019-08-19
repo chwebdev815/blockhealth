@@ -11,11 +11,11 @@ class Webhook_twilio_sms extends CI_Controller {
             echo '<?xml version="1.0" encoding="UTF-8"?>' . "\n";
             $data = $_REQUEST;
 //        $data = $this->input->get();
-            log_message("error", "webhook incoming sms = " . json_encode($data));
+            //log_message("error", "webhook incoming sms = " . json_encode($data));
             $on_start = $this->db->select("*")->from("records_patient_visit_reserved")
                             ->order_by("id", "desc")
                             ->limit("2")->get()->result();
-            log_message("error", "At First = " . json_encode($on_start));
+            //log_message("error", "At First = " . json_encode($on_start));
 
             if (isset($data["Body"])) {
                 $Body = strtoupper(trim($data["Body"]));
@@ -34,8 +34,8 @@ class Webhook_twilio_sms extends CI_Controller {
                                     ->group_end()
                                     ->get()->result();
 
-                    log_message("error", "sql for find patient = " . $this->db->last_query());
-                    log_message("error", "patient ids found = " . json_encode($patients));
+                    //log_message("error", "sql for find patient = " . $this->db->last_query());
+                    //log_message("error", "patient ids found = " . json_encode($patients));
                     $possible_patients = array();
                     foreach ($patients as $key => $value) {
                         $possible_patients[] = $value->id;
@@ -49,7 +49,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                         ->where("active", 1)
                                         ->order_by("id", "desc")
                                         ->limit(1)->get()->result();
-                        log_message("error", "sql for find reserved = " . $this->db->last_query());
+                        //log_message("error", "sql for find reserved = " . $this->db->last_query());
 //                        log_message("error", "reserved ids found = " . json_encode($reserved));
 
                         $scheduled = $this->db->select("*")
@@ -58,7 +58,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                         ->where("active", 1)
                                         ->order_by("id", "desc")
                                         ->limit(1)->get()->result();
-                        log_message("error", "sql for find scheduled = " . $this->db->last_query());
+                        //log_message("error", "sql for find scheduled = " . $this->db->last_query());
 //                        log_message("error", "scheduled ids found = " . json_encode($scheduled));
 
 
@@ -75,23 +75,23 @@ class Webhook_twilio_sms extends CI_Controller {
                                 log_message("error", "admin reserved");
                                 $visit = $reserved[0];
                             }
-                            log_message("error", "from both selected to 1 = " . json_encode($visit));
-                            log_message("error", "compared ' " . $scheduled[0]->create_datetime .
-                                    " with " . $reserved[0]->create_datetime);
+                            //log_message("error", "from both selected to 1 = " . json_encode($visit));
+                            //log_message("error", "compared ' " . $scheduled[0]->create_datetime .
+                                    //" with " . $reserved[0]->create_datetime);
                         } else if ($scheduled) {
                             $visit = $scheduled[0];
                             $treating_visit_from = "scheduled";
-                            log_message("error", "from both selected scheduled = " . json_encode($visit));
+                            //log_message("error", "from both selected scheduled = " . json_encode($visit));
                         } else if ($reserved) {
                             $visit = $reserved[0];
-                            log_message("error", "from both selected reserved = " . json_encode($visit));
+                            //log_message("error", "from both selected reserved = " . json_encode($visit));
                         } else {
-                            log_message("error", "nothing at all = " . json_encode($visit));
+                            //log_message("error", "nothing at all = " . json_encode($visit));
                             return;
                         }
 
                         $msg = "";
-                        log_message("error", "visit = " . json_encode($visit));
+                        //log_message("error", "visit = " . json_encode($visit));
 
                         if ($treating_visit_from === "reserved") {
                             log_message("error", " STEP 1.1.1.1 ===> in visit = NA");
@@ -100,8 +100,8 @@ class Webhook_twilio_sms extends CI_Controller {
                             $reserved = $visit;
                             if ($reserved->visit_expire_time > date("Y-m-d H:i:s")) {
                                 log_message("error", " STEP 1.1.1.1.1 => visit expire time is less");
-                                log_message("error", "alive visit_expire_time : " . $reserved->visit_expire_time
-                                        . " > " . date("Y-m-d H:i:s"));
+                                //log_message("error", "alive visit_expire_time : " . $reserved->visit_expire_time
+                                        //. " > " . date("Y-m-d H:i:s"));
 
                                 if ($Body === "0") {
                                     log_message("error", " STEP 1.1.1.1.1.1 => body 0");
@@ -143,12 +143,12 @@ class Webhook_twilio_sms extends CI_Controller {
                                         "accepted_status_date" => date("Y-m-d H:i:s")
                                     ));
 
-                                    log_message("error", " STEP 1.1.1.1.1.1 => update = " . $this->db->last_query());
+                                    //log_message("error", " STEP 1.1.1.1.1.1 => update = " . $this->db->last_query());
                                 }
 
                                 if ($Body === "1" || $Body === "2" || $Body === "3") {
                                     log_message("error", " STEP 1.1.1.1.1.2 => Body = 1,2,3");
-                                    log_message("error", "body $Body");
+                                    //log_message("error", "body $Body");
                                     $insert_data = array(
                                         "visit_name" => $reserved->visit_name,
                                         "patient_id" => $reserved->patient_id,
@@ -177,8 +177,8 @@ class Webhook_twilio_sms extends CI_Controller {
                                         $insert_data["visit_end_time"] = $reserved->visit_end_time3;
                                     }
                                     $this->db->insert("records_patient_visit", $insert_data);
-                                    log_message("error", " STEP 1.1.1.1.1.2 => inserted visit = " .
-                                            $this->db->last_query());
+                                    //log_message("error", " STEP 1.1.1.1.1.2 => inserted visit = " .
+                                            //$this->db->last_query());
 
                                     $appointment_id = $this->db->insert_id();
                                     patient_visit_integration("insert", $reserved->patient_id, $appointment_id);
@@ -209,8 +209,8 @@ class Webhook_twilio_sms extends CI_Controller {
                                     $this->db->where("c_ref.efax_id", "efax.id", false);
                                     $this->db->where("efax.to", "c_usr.id", false);
                                     $clinic = $this->db->get()->result();
-                                    log_message("error", "q for SMS SEND LOCATION ADDRESS => " .
-                                            $this->db->last_query());
+                                    //log_message("error", "q for SMS SEND LOCATION ADDRESS => " .
+                                            //$this->db->last_query());
                                     $address = "";
                                     if ($clinic) {
                                         $address = $clinic[0]->sms_address;
@@ -249,11 +249,11 @@ class Webhook_twilio_sms extends CI_Controller {
                                         "accepted_status_icon" => "green"
                                     ));
 
-                                    log_message("error", " STEP 1.1.1.1.1.2 => update accepted table = " . $this->db->last_query());
+                                    //log_message("error", " STEP 1.1.1.1.1.2 => update accepted table = " . $this->db->last_query());
                                     //aa
 
                                     $this->load->model("referral_model");
-                                    log_message("error", " STEP 1.1.1.1.1.2 => going to = move with " . $reserved->patient_id . "," . $clinic[0]->id);
+                                    //log_message("error", " STEP 1.1.1.1.1.2 => going to = move with " . $reserved->patient_id . "," . $clinic[0]->id);
                                     $this->referral_model->move_from_accepted_to_scheduled($reserved->patient_id, $clinic[0]->id);
                                 }
                                 if ($Body === "1" || $Body === "2" || $Body === "3" || $Body === "0") {
@@ -265,7 +265,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                         "visit_confirmed" => "Booked"
                                     ));
 
-                                    log_message("error", "reserved is deactivated with " . $this->db->last_query());
+                                    //log_message("error", "reserved is deactivated with " . $this->db->last_query());
                                 }
                             } else {
                                 log_message("error", "STEP 1,2,3,0");
@@ -295,13 +295,13 @@ class Webhook_twilio_sms extends CI_Controller {
                                 $patient_data = $this->db->get()->result();
 
                                 if ($patient_data) {
-                                    log_message("error", "patient data found = " . json_encode($patient_data));
+                                    //log_message("error", "patient data found = " . json_encode($patient_data));
                                     $patient_data = $patient_data[0];
                                     $clinic_id = $patient_data->id;
                                     //find asignable slots
                                     $this->load->model("referral_model");
                                     $response = $this->referral_model->assign_slots($clinic_id, $visit->patient_id);
-                                    log_message("error", "prepared slots = " . json_encode($response));
+                                    //log_message("error", "prepared slots = " . json_encode($response));
                                     if ($response["result"] === "error") {
                                         $msg = "I’m sorry, Unable to schedule appointment for now.";
                                     } else if ($response["result"] === "success") {
@@ -379,7 +379,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                                         ->where("c_ref.id", "pat.referral_id", false)
                                                         ->get()->result()[0]->id;
 
-                                        log_message("error", "reserved is set to = " . json_encode($reserved));
+                                        //log_message("error", "reserved is set to = " . json_encode($reserved));
                                         $this->db->set("accepted_status_date", $reserved->create_datetime);
                                         $this->db->where(array(
                                             "id" => $referral_id
@@ -387,7 +387,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                             "accepted_status" => "SMS",
                                             "accepted_status_icon" => "green"
                                         ));
-                                        log_message("error", "update status with = " . $this->db->last_query());
+                                        //log_message("error", "update status with = " . $this->db->last_query());
                                     }
                                 }
                             }
@@ -423,7 +423,7 @@ class Webhook_twilio_sms extends CI_Controller {
                                     $this->db->where("efax.to", "admin.id", false);
                                     $this->db->where("c_ref.efax_id", "efax.id", false);
                                     $patient_data = $this->db->get()->result();
-                                    log_message("error", "patient data = " . json_encode($patient_data));
+                                    //log_message("error", "patient data = " . json_encode($patient_data));
                                     log_message("error", "with q = " . $this->db->last_query());
 
                                     $this->db->where(array(

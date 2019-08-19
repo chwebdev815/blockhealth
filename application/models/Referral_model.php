@@ -31,7 +31,7 @@ class Referral_model extends CI_Model {
 
         //count_all_records
         $result = $this->db->query($sql)->result();
-        // log_message("error", $this->db->last_query());
+        // //log_message("error", $this->db->last_query());
         return $result;
     }
 
@@ -58,7 +58,7 @@ class Referral_model extends CI_Model {
             $this->db->where_in("c_ref.status", array($state, $state2));
         }
         $result = $this->db->get()->result();
-        log_message("error", "msg = " . $this->db->last_query());
+        //log_message("error", "msg = " . $this->db->last_query());
         return ($result) ? true : false;
     }
 
@@ -85,7 +85,7 @@ class Referral_model extends CI_Model {
                 ->or_like("pat.ohip", $term)
                 ->group_end();
         $result = $this->db->get()->result();
-        log_message("error", "Patient search q = " . $this->db->last_query());
+        //log_message("error", "Patient search q = " . $this->db->last_query());
         return $result;
 //        return array();
     }
@@ -142,7 +142,7 @@ class Referral_model extends CI_Model {
                                 ))->update("referral_patient_info", array(
                             "next_visit" => $next_visit
                         ));
-                        log_message("error", "Updated next visit = " . $this->db->last_query());
+                        //log_message("error", "Updated next visit = " . $this->db->last_query());
                         if ($updated) {
                             $this->db->trans_complete();
                             return array(
@@ -218,7 +218,7 @@ class Referral_model extends CI_Model {
                         );
                     }
                 } catch (Exception $ex) {
-                    log_message("error", "exception at set_custom => " . $ex->getMessage());
+                    //log_message("error", "exception at set_custom => " . $ex->getMessage());
                     return array(
                         "result" => "error",
                         "message" => "Operation is not completed"
@@ -275,7 +275,7 @@ class Referral_model extends CI_Model {
                         );
                     }
                 } catch (Exception $ex) {
-                    log_message("error", "exception at set_location => " . $ex->getMessage());
+                    //log_message("error", "exception at set_location => " . $ex->getMessage());
                     return array(
                         "result" => "error",
                         "message" => "Operation is not completed"
@@ -325,8 +325,8 @@ class Referral_model extends CI_Model {
                         "address" => $data["pat_address"],
                     );
                     $this->db->update("referral_patient_info", $new_data);
-                    log_message("error", "updated rows = " . $this->db->affected_rows());
-                    // log_message("error", "updated = " . $updated);
+                    //log_message("error", "updated rows = " . $this->db->affected_rows());
+                    // //log_message("error", "updated = " . $updated);
                     $this->db->select("referral_id");
                     $this->db->from("referral_patient_info");
                     $this->db->where(
@@ -381,9 +381,9 @@ class Referral_model extends CI_Model {
                         "md5(patient_id)" => $data["id"]
                     ));
                     $this->db->update("referral_physician_info", $new_data);
-                    log_message("error", "updated rows = " . $this->db->affected_rows());
+                    //log_message("error", "updated rows = " . $this->db->affected_rows());
                     $updated = ($this->db->affected_rows() == 1) ? true : "Physician information remains same.";
-                    log_message("error", "updated = " . $updated);
+                    //log_message("error", "updated = " . $updated);
 //                    $this->db->select("referral_id");
 //                    $this->db->from("referral_patient_info");
 //                    $this->db->where(array(
@@ -485,8 +485,8 @@ class Referral_model extends CI_Model {
                     "ref_c.patient_id" => $patient_id
                 ));
                 $checklist = $this->db->get()->result();
-                log_message("error", "denied check = " . $this->db->last_query());
-                log_message("error", "denied result = " . json_encode($checklist));
+                //log_message("error", "denied check = " . $this->db->last_query());
+                //log_message("error", "denied result = " . json_encode($checklist));
 
                 $file_name = "referral_denied.html";
                 $replace_stack = array(
@@ -499,7 +499,7 @@ class Referral_model extends CI_Model {
                     "###time2###" => date("F jS")
                 );
                 $fax_number = $result->fax;
-                log_message("error", "not sending fax");
+                //log_message("error", "not sending fax");
                 $response = $this->referral_model->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "New Referral");
 
 
@@ -547,7 +547,7 @@ class Referral_model extends CI_Model {
                     "id" => $referral_id
                 ));
                 $this->db->update("clinic_referrals", array("status" => "Referral Triage"));
-                log_message("error", "accept q = " . $this->db->last_query());
+                //log_message("error", "accept q = " . $this->db->last_query());
                 return ($this->db->affected_rows() == 1) ? true : "Referral already Accepted";
             } else
                 return "You are not authorized for such Operation";
@@ -581,7 +581,7 @@ class Referral_model extends CI_Model {
 
                 $result = $this->db->get()->result();
 
-                log_message("error", "last 1 = > " . $this->db->last_query());
+                //log_message("error", "last 1 = > " . $this->db->last_query());
                 $alert_data = null; // data to be returned
                 if ($result) {
                     // request has been previously sent for that referral
@@ -599,7 +599,7 @@ class Referral_model extends CI_Model {
                     ));
                     $result = $this->db->get()->result();
 
-                    log_message("error", "dr_name = " . $this->db->last_query());
+                    //log_message("error", "dr_name = " . $this->db->last_query());
 
                     if (!$result)
                         $dr_name = "ABC";
@@ -682,15 +682,15 @@ class Referral_model extends CI_Model {
 
                 $file_name = "referral_missing_from_inbox.html";
                 $srfax_number = $info[0]->srfax_number;
-                log_message("error", "srfax = " . $srfax_number);
+                //log_message("error", "srfax = " . $srfax_number);
                 if (strlen($srfax_number) === 10) {
                     $srfax_number = substr($srfax_number, 0, 3) . "-" .
                             substr($srfax_number, 3, 3) . "-" . substr($srfax_number, 6, 4);
-                    log_message("error", " 10 = srfax = " . $srfax_number);
+                    //log_message("error", " 10 = srfax = " . $srfax_number);
                 } else if (strlen($srfax_number) === 11) {
                     $srfax_number = substr($srfax_number, 0, 1) . "-" . substr($srfax_number, 1, 3) . "-" .
                             substr($srfax_number, 4, 3) . "-" . substr($srfax_number, 7, 4);
-                    log_message("error", " 11 = srfax = " . $srfax_number);
+                    //log_message("error", " 11 = srfax = " . $srfax_number);
                 }
                 $pat_dob = $info[0]->pat_dob;
                 $replace_stack = array(
@@ -714,7 +714,7 @@ class Referral_model extends CI_Model {
                 $fax_number = $info[0]->fax;
 
                 $response = $this->send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, "Request Missing Items", $additional_replace);
-                log_message("error", "file sent successfully");
+                //log_message("error", "file sent successfully");
 
                 //store missing item request
                 $patient_id = $this->get_decrypted_id($data["id"], "referral_patient_info");
@@ -749,24 +749,24 @@ class Referral_model extends CI_Model {
     }
 
     public function send_status_fax($file_name, $checklist, $replace_stack, $fax_number, $reason, $additional_replace = array(), $timeout = 60, $clinic_id = "") {
-        log_message("error", "checklist prepared = " . json_encode($checklist));
+        //log_message("error", "checklist prepared = " . json_encode($checklist));
 //        send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", $clinic_id)
-        log_message("error", "$file_name, $fax_number");
+        //log_message("error", "$file_name, $fax_number");
 
         $item_template = '<h3 style="margin-bottom: 0em; margin-top: 0em;  font-size: 16px;"> ###item_name###<br>';
         $tmp = "";
         foreach ($checklist as $key => $value) {
-            log_message("error", "val = " . json_encode($value));
+            //log_message("error", "val = " . json_encode($value));
             $tmp .= str_replace("###item_name###", ($key + 1) . ". " . $value->doc_name, $item_template);
         }
         $replace_stack["###missing_items###"] = $tmp;
-        log_message("error", "replace stack = " . json_encode($replace_stack));
+        //log_message("error", "replace stack = " . json_encode($replace_stack));
 
         $content = "";
         $this->load->helper('file');
         $content = read_file("assets/templates/$file_name");
         foreach ($replace_stack as $key => $value) {
-            log_message("error", "converting $key with $value");
+            //log_message("error", "converting $key with $value");
             $content = str_replace($key, $value, $content);
         }
 
@@ -797,37 +797,37 @@ class Referral_model extends CI_Model {
         curl_close($ch);
         if ($status != 200) {
             // handle API error...
-            log_message("error", "API Error" . $status);
+            //log_message("error", "API Error" . $status);
             return false;
         }
 
 
         $fax_content = "Blockhealth Notification Fax";
         $fax_success = $this->send_fax($fax_number, $fax_content, $dest_file, $reason, $clinic_id);
-        log_message("error", "fax code completed" . $fax_success);
+        //log_message("error", "fax code completed" . $fax_success);
         unlink($dest_file);
         return true;
     }
 
     public function send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, $reason, $additional_replace = array(), $timeout = 60, $clinic_id = "") {
-        log_message("error", "checklist prepared = " . json_encode($checklist));
+        //log_message("error", "checklist prepared = " . json_encode($checklist));
 //        send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", $clinic_id)
-        log_message("error", "$file_name, $fax_number");
+        //log_message("error", "$file_name, $fax_number");
 
         $item_template = '###item_name###<br/>';
         $tmp = "";
         foreach ($checklist as $key => $value) {
-            log_message("error", "val = " . json_encode($value));
+            //log_message("error", "val = " . json_encode($value));
             $tmp .= str_replace("###item_name###", ($key + 1) . ". " . $value["doc_name"], $item_template);
         }
         $replace_stack["###missing_items###"] = $tmp;
-        log_message("error", "replace stack = " . json_encode($replace_stack));
+        //log_message("error", "replace stack = " . json_encode($replace_stack));
 
         $content = "";
         $this->load->helper('file');
         $content = read_file("assets/templates/$file_name");
         foreach ($replace_stack as $key => $value) {
-            log_message("error", "converting $key with $value");
+            //log_message("error", "converting $key with $value");
             $content = str_replace($key, $value, $content);
         }
 
@@ -858,14 +858,14 @@ class Referral_model extends CI_Model {
         curl_close($ch);
         if ($status != 200) {
             // handle API error...
-            log_message("error", "API Error" . $status);
+            //log_message("error", "API Error" . $status);
             return false;
         }
 
 
         $fax_content = "Blockhealth Notification Fax";
         $fax_success = $this->send_fax($fax_number, $fax_content, $dest_file, $reason, $clinic_id);
-        log_message("error", "fax code completed" . $fax_success);
+        //log_message("error", "fax code completed" . $fax_success);
         unlink($dest_file);
         return true;
     }
@@ -932,7 +932,7 @@ class Referral_model extends CI_Model {
                     "###time2###" => date("F jS")
                 );
                 $fax_number = $result->fax;
-                log_message("error", "not sending fax");
+                //log_message("error", "not sending fax");
 //                $response = $this->referral_model->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Accept Referral");
 
                 $this->db->insert("count_accepted_referrals", array(
@@ -952,7 +952,7 @@ class Referral_model extends CI_Model {
                                 ))
                                 ->where("pat.next_visit", "c_vt.visit_type", false)
                                 ->get()->result();
-                log_message("error", "fetching next visit time q = " . $this->db->last_query());
+                //log_message("error", "fetching next visit time q = " . $this->db->last_query());
                 $new_visit_duration = 30;
                 if ($next_visit_info) {
                     $new_visit_duration = $next_visit_info[0]->visit_duration;
@@ -1144,17 +1144,17 @@ class Referral_model extends CI_Model {
         if ($this->form_validation->run()) {
             $data = $this->input->post();
             $file_name = "";
-            log_message("error", "uploading" . json_encode($_FILES));
-            log_message("error", json_encode($_FILES['asdqwe']['name']));
+            //log_message("error", "uploading" . json_encode($_FILES));
+            //log_message("error", json_encode($_FILES['asdqwe']['name']));
             if (!empty($_FILES['asdqwe']['name']) && $_FILES['asdqwe']['name'][0] != "blob") {
                 $clinic_id = md5($this->session->userdata("user_id"));
                 $patient_id = $data["id"];
                 if (!file_exists("./" . files_dir() . "$clinic_id")) {
-                    log_message("error", "creating clinic folder =>" . "./" . files_dir() . "$clinic_id");
+                    //log_message("error", "creating clinic folder =>" . "./" . files_dir() . "$clinic_id");
                     mkdir("./" . files_dir() . "$clinic_id");
                 }
                 if (!file_exists("./" . files_dir() . "$clinic_id/" . $patient_id)) {
-                    log_message("error", "creating patient folder =>" . "./" . files_dir() . "$clinic_id/" . $patient_id);
+                    //log_message("error", "creating patient folder =>" . "./" . files_dir() . "$clinic_id/" . $patient_id);
                     mkdir("./" . files_dir() . "$clinic_id/" . $patient_id);
                 }
                 $target_dir = "./uploads/clinics/$clinic_id/$patient_id/";
@@ -1177,7 +1177,7 @@ class Referral_model extends CI_Model {
                 $config['file_name'] = $file_name;
                 $this->upload->initialize($config);
                 if ($this->upload->do_upload('asdqwe')) {
-                    // log_message("error", "clinical record attachment uploaded");
+                    // //log_message("error", "clinical record attachment uploaded");
                 } else {
                     return $this->upload->display_errors();
                 }
@@ -1253,7 +1253,7 @@ class Referral_model extends CI_Model {
 
     public function add_patient_visit_model() {
         //add patient visit submit from popup in booking and patient details pages
-        log_message("error", "reaching right place");
+        //log_message("error", "reaching right place");
         $this->form_validation->set_rules('id', 'Patient', 'required');
         $new_visit_duration = 30; // static
 
@@ -1268,7 +1268,7 @@ class Referral_model extends CI_Model {
                 $record_id = $data["record_id"];
                 if (isset($data["visit_slot"])) {
 
-                    log_message("error", "=>" . isset($data["visit_slot_1"]) . "," . isset($data["visit_slot_2"]) . "," . isset($data["visit_slot_3"]));
+                    //log_message("error", "=>" . isset($data["visit_slot_1"]) . "," . isset($data["visit_slot_2"]) . "," . isset($data["visit_slot_3"]));
 //                    echo "num = $num <br/>";
                     $num = $data["visit_slot"];
                     $record_data = $this->db->select("*")->from("records_patient_visit_reserved")->where(array(
@@ -1324,7 +1324,7 @@ class Referral_model extends CI_Model {
                         $this->set_next_visit_follow_up($record_data["patient_id"]);
 
                         // send fax code start
-                        log_message("error", "code for fax send on call is started");
+                        //log_message("error", "code for fax send on call is started");
                         $patient_id = $record_data["patient_id"];
                         $clinic_id = $this->session->userdata("user_id");
 
@@ -1356,7 +1356,7 @@ class Referral_model extends CI_Model {
                         $visit_time = DateTime::createFromFormat("H:i:s", $visit_time);
                         $visit_time = $visit_time->format("H:i");
 
-                        log_message("error", "fax info q = " . $this->db->last_query());
+                        //log_message("error", "fax info q = " . $this->db->last_query());
                         if ($fax_data) {
                             $replace_stack = array(
                                 "###clinic_name###" => $fax_data[0]->clinic_institution_name,
@@ -1379,11 +1379,11 @@ class Referral_model extends CI_Model {
 
                             $fax_number = $fax_data[0]->fax;
                             $response = $this->referral_model->send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, "Booking Appintment", $additional_replace);
-                            log_message("error", "booking fax sent to " . $fax_number);
-                            log_message("error", "fax sent code completed");
+                            //log_message("error", "booking fax sent to " . $fax_number);
+                            //log_message("error", "fax sent code completed");
                         } else {
-                            log_message("error", "Issue fetching fax data");
-                            log_message("error", "sql = > " . $this->db->last_query());
+                            //log_message("error", "Issue fetching fax data");
+                            //log_message("error", "sql = > " . $this->db->last_query());
                         }
                         //send fax code is sent
                         //change accepted status to "Booked by Staff"
@@ -1401,7 +1401,7 @@ class Referral_model extends CI_Model {
                             $this->db->where("id", $referral_id)->update("clinic_referrals", array(
                                 "status" => "Scheduled"
                             ));
-                            log_message("error", "changed status with " . $this->db->last_query());
+                            //log_message("error", "changed status with " . $this->db->last_query());
 
                             return true;
                         } else {
@@ -1480,7 +1480,7 @@ class Referral_model extends CI_Model {
                             $this->db->where("id", $referral_id)->update("clinic_referrals", array(
                                 "status" => "Scheduled"
                             ));
-                            log_message("error", "changed status with " . $this->db->last_query());
+                            //log_message("error", "changed status with " . $this->db->last_query());
                             return true;
                         } else {
                             return "Failed to add visit record";
@@ -1506,11 +1506,11 @@ class Referral_model extends CI_Model {
         ))->update("referral_patient_info", array(
             "next_visit" => "Follow up"
         ));
-        log_message("error", "changing next_visit q = " . $this->db->last_query());
+        //log_message("error", "changing next_visit q = " . $this->db->last_query());
     }
 
     public function create_patient_visit($md5_patient_id, $visit_name, $new_visit_duration) {
-        log_message("error", "inside add patient visit auth with name = $visit_name");
+        //log_message("error", "inside add patient visit auth with name = $visit_name");
         $this->db->trans_start();
         $patient_id = $this->get_patient_id($md5_patient_id);
 
@@ -1531,8 +1531,8 @@ class Referral_model extends CI_Model {
         $this->db->where("c_ref.efax_id", "efax.id", false);
         $result = $this->db->get()->result();
 
-        log_message("error", "Add patient visit => " . json_encode($result));
-        log_message("error", "sql for patient info = " . $this->db->last_query());
+        //log_message("error", "Add patient visit => " . json_encode($result));
+        //log_message("error", "sql for patient info = " . $this->db->last_query());
         if ($result) {
             $msg_data = $result[0];
             $confirm_visit_key = generate_random_string(120);
@@ -1542,7 +1542,7 @@ class Referral_model extends CI_Model {
             if ($response["result"] === "error") {
                 $response = false;
             } else if ($response["result"] === "success") {
-                log_message("error", "Result on success => " . json_encode($response));
+                //log_message("error", "Result on success => " . json_encode($response));
                 $allocations = $response["data"];
 //                    echo "<br/> ****************** <br/>" . "slots assigned = " . json_encode($allocations) . "<br/><br/>";
 //                    exit();
@@ -1587,8 +1587,8 @@ class Referral_model extends CI_Model {
                 );
                 //insert for temp storage for 60 min sms response
                 $visit_expire_time = (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s");
-                log_message("error", "Expire time scheduled after $expire_minutes minutes to => " 
-                        . $visit_expire_time);
+                //log_message("error", "Expire time scheduled after $expire_minutes minutes to => " 
+                       // . $visit_expire_time);
                 $insert_data = array(
                     "patient_id" => $patient_id,
                     "visit_name" => $visit_name,
@@ -1625,7 +1625,7 @@ class Referral_model extends CI_Model {
                 //                    echo "date reserved = " . json_encode($insert_data) . "<br/>";
 
                 $this->db->insert("records_patient_visit_reserved", $insert_data);
-                log_message("error", "inserted for new visit = " . json_encode($insert_data));
+                //log_message("error", "inserted for new visit = " . json_encode($insert_data));
                 $insert_id = $this->db->insert_id();
 
                 if ($call_immediately) {
@@ -1657,8 +1657,8 @@ class Referral_model extends CI_Model {
                     ));
 
 
-                    log_message("error", "data for start call = " . json_encode($post_arr));
-                    //                        log_message("error", "Call should start now");
+                    //log_message("error", "data for start call = " . json_encode($post_arr));
+                    //                        //log_message("error", "Call should start now");
                     $ch = curl_init();
                     curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
                     curl_setopt($ch, CURLOPT_URL, base_url() . "call_view/call");
@@ -1667,12 +1667,12 @@ class Referral_model extends CI_Model {
                     curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($post_arr));
                     $resp = curl_exec($ch);
                     if (curl_errno($ch)) {
-                        log_message("error", "Call error => " . json_encode(curl_error($ch)));
+                        //log_message("error", "Call error => " . json_encode(curl_error($ch)));
                         return curl_error($ch);
                     }
                     curl_close($ch);
-                    log_message("error", "<br/> call response = " . $resp . "<br/>");
-                    log_message("error", "Call completed " . json_encode($resp));
+                    //log_message("error", "<br/> call response = " . $resp . "<br/>");
+                    //log_message("error", "Call completed " . json_encode($resp));
                 } else {
 //                            echo "sending sms";
                     $msg = "Hello <patient name>,\n"
@@ -1764,7 +1764,7 @@ class Referral_model extends CI_Model {
                 } else if ($response["result"] === "success") {
                     //reserve for 5 min
                     $allocations = $response["data"];
-                    log_message("error", "Popup allocations = " . json_encode($allocations));
+                    //log_message("error", "Popup allocations = " . json_encode($allocations));
 
                     $patient_data = $this->db->select("*")->from("referral_patient_info")->where(array(
                                 "id" => $patient_id
@@ -1852,7 +1852,7 @@ class Referral_model extends CI_Model {
         $this->db->where(array("active" => 1, "id" => $patient_id));
         $result = $this->db->get()->result();
         $referral_id = $result[0]->referral_id;
-        log_message("error", " STEP Move referral id for update => " . $referral_id);
+        //log_message("error", " STEP Move referral id for update => " . $referral_id);
 
         $this->db->where(array(
             "id" => $referral_id,
@@ -1862,7 +1862,7 @@ class Referral_model extends CI_Model {
             "status" => "Scheduled",
             "scheduled_datetime" => date("Y-m-d H:i:s")
         ));
-        log_message("error", "STEP at status send " . $this->db->last_query());
+        //log_message("error", "STEP at status send " . $this->db->last_query());
         //send status fax
         $this->db->select("c_usr.clinic_institution_name, date_format(c_ref.create_datetime, '%M %D') as referral_received, dr.fax, c_ref.referral_code");
         $this->db->from("clinic_user_info c_usr, efax_info efax, clinic_referrals c_ref, referral_patient_info pat, referral_physician_info dr");
@@ -1879,7 +1879,7 @@ class Referral_model extends CI_Model {
         $this->db->where("efax.id", "c_ref.efax_id", false);
         $this->db->where("pat.referral_id", "c_ref.id", false);
         $result = $this->db->get()->result()[0];
-        log_message("error", "STEP q for fax = " . $this->db->last_query());
+        //log_message("error", "STEP q for fax = " . $this->db->last_query());
 
         $file_name = "referral_scheduled.html";
         $replace_stack = array(
@@ -1889,10 +1889,10 @@ class Referral_model extends CI_Model {
             "###time2###" => date("F jS")
         );
         $fax_number = $result->fax;
-        log_message("error", "sending fax");
+        //log_message("error", "sending fax");
 //        $response = $this->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", array(), 60, $clinic_id);
 
-        log_message("error", "Last query = " . $this->db->last_query());
+        //log_message("error", "Last query = " . $this->db->last_query());
     }
 
     public function confirm_visit_key_model() {
@@ -1950,7 +1950,7 @@ class Referral_model extends CI_Model {
     }
 
     public function update_patient_visit_model() {
-//        log_message("error", "on update patient");
+//        //log_message("error", "on update patient");
         $this->form_validation->set_rules('id', 'Patient', 'required');
         $this->form_validation->set_rules('target', 'Patient Visit', 'required');
         if ($this->form_validation->run()) {
@@ -1965,7 +1965,7 @@ class Referral_model extends CI_Model {
 
                 if (isset($data["visit_slot"])) {
 
-//                    log_message("error", "on update patient visit slot");
+//                    //log_message("error", "on update patient visit slot");
 //                    echo "num = $num <br/>";
                     $num = $data["visit_slot"];
                     $record_data = $this->db->select("*")
@@ -1975,7 +1975,7 @@ class Referral_model extends CI_Model {
                                         "active" => "0"
                                     ))->get()->result_array();
 
-//                    log_message("error", "data to copy from = " . json_encode($record_data));
+//                    //log_message("error", "data to copy from = " . json_encode($record_data));
                     if ($record_data) {
                         $record_data = $record_data[0];
                         //add new visit
@@ -1991,7 +1991,7 @@ class Referral_model extends CI_Model {
                         $updated = $this->db->where("md5(id)", $target_id)
                                 ->update("records_patient_visit", $update_data);
 
-//                        log_message("error", "updated as " . $this->db->last_query());
+//                        //log_message("error", "updated as " . $this->db->last_query());
                         //change accepted status to "Booked by Staff"
                         $referral_id = $this->get_referral_id(md5($record_data["patient_id"]));
                         $this->db->where(array(
@@ -2110,7 +2110,7 @@ class Referral_model extends CI_Model {
         $patient_id = $this->uri->segment(3);
         $table = ($this->session->userdata("user_id") === "7") ?
                 "patient_visit_dash" : "view_patient_visit_emr";
-        log_message("error", "patient visit = " . $table);
+        //log_message("error", "patient visit = " . $table);
         $primaryKey = "id";
         $columns = array(
             array('db' => 'visit_name', 'dt' => 0),
@@ -2152,7 +2152,7 @@ class Referral_model extends CI_Model {
                 ));
                 $this->db->where("c_ref.id", "pat.referral_id", false);
                 $result = $this->db->get()->result();
-                log_message("error", "ref health record sql = " . $this->db->last_query());
+                //log_message("error", "ref health record sql = " . $this->db->last_query());
                 if ($result)
                     return $result;
                 else
@@ -2210,7 +2210,7 @@ class Referral_model extends CI_Model {
                 $this->db->where("r_pv.patient_id", "pat.id", false);
                 $this->db->where("pat.referral_id", "c_ref.id", false);
                 $result = $this->db->get()->result();
-                log_message("error", "false q = " . $this->db->last_query());
+                //log_message("error", "false q = " . $this->db->last_query());
                 if ($result)
                     return $result;
                 else
@@ -2315,7 +2315,7 @@ class Referral_model extends CI_Model {
         $this->db->where("c_ref.efax_id", "efax.id", false);
         $this->db->where("c_ref.id", "pat.referral_id", false);
         $result = $this->db->get()->result();
-//        log_message("error", "ref auth sql = " . $this->db->last_query());
+//        //log_message("error", "ref auth sql = " . $this->db->last_query());
         return ($result) ? true : false;
     }
 
@@ -2335,7 +2335,7 @@ class Referral_model extends CI_Model {
         $this->db->from($table_name);
         $this->db->where(array("md5(id)" => $md5_id));
         $result = $this->db->get()->result();
-        log_message("error", "get decrypted sql = " . $this->db->last_query());
+        //log_message("error", "get decrypted sql = " . $this->db->last_query());
         return ($result) ? $result[0]->id : 0;
     }
 
@@ -2371,8 +2371,8 @@ class Referral_model extends CI_Model {
             );
         }
         curl_close($ch);
-        log_message("error", "sms sent to " . $cell_phone_number);
-        log_message("error", json_encode($resp));
+        //log_message("error", "sms sent to " . $cell_phone_number);
+        //log_message("error", json_encode($resp));
         return true;
     }
 
@@ -2383,7 +2383,7 @@ class Referral_model extends CI_Model {
         if (strlen($fax_num) == 10) {
             $fax_num = "1" . $fax_num;
         }
-        log_message("error", "missing item request to fax = $fax_num");
+        //log_message("error", "missing item request to fax = $fax_num");
         $faxnumber = $fax_num; //"16474981226"; 
         $cpsubject = $fax_text_content;
         $cpcomments = $fax_text_content;
@@ -2436,10 +2436,10 @@ class Referral_model extends CI_Model {
             curl_setopt_array($ch, $curlDefaults);
             $result = curl_exec($ch);
             if (curl_errno($ch)) {
-                log_message("error", "Fax Error – " . curl_error($ch));
+                //log_message("error", "Fax Error – " . curl_error($ch));
                 return false;
             } else {
-                log_message("error", "Fax Result:" . json_encode($result));
+                //log_message("error", "Fax Result:" . json_encode($result));
                 add_fax_count($faxnumber, $clinic->srfax_number, $clinic->id, $reason, "Admin");
                 return true;
             }
@@ -2491,7 +2491,7 @@ class Referral_model extends CI_Model {
 //        }
         //return if end date is less than current date
         if ($end_date < $cur_date || $start_date > $end_date) {
-            log_message("error", "error of dates");
+            //log_message("error", "error of dates");
             return array(
                 "result" => "success",
                 "data" => array()
@@ -2512,7 +2512,7 @@ class Referral_model extends CI_Model {
                             "c_vt.clinic_id" => $clinic_id
                         ))->where("pat.next_visit", "c_vt.visit_type", false)
                         ->get()->result();
-        log_message("error", "next visit check data => " . $this->db->last_query());
+        //log_message("error", "next visit check data => " . $this->db->last_query());
         if ($next_visit_duration_data) {
             $new_visit_duration = intval($next_visit_duration_data[0]->visit_duration);
             //get physician assigned to patient
@@ -2550,7 +2550,7 @@ class Referral_model extends CI_Model {
                                 ->where("pat.referral_id", "c_ref.id", false)
                                 ->order_by("1")->get()->result();
 
-                log_message("error", "visits booked = " . json_encode($visits_booked));
+                //log_message("error", "visits booked = " . json_encode($visits_booked));
 
                 $visits_reserved = $this->db
                                 ->select(
@@ -2597,9 +2597,9 @@ class Referral_model extends CI_Model {
                 $day = $start_date_object;
                 $counter = 0;
                 $slots_counter = array();
-                log_message("error", "starting while with day = " . $day->format("Y-m-d"));
+                //log_message("error", "starting while with day = " . $day->format("Y-m-d"));
                 do {
-                    log_message("error", "day = " . $day->format("Y-m-d"));
+                    //log_message("error", "day = " . $day->format("Y-m-d"));
                     $slots_counter[$day->format("Y-m-d")] = 0;
                     if ($day->format("Y-m-d") > date("Y-m-d")) {
 
@@ -2611,22 +2611,22 @@ class Referral_model extends CI_Model {
                             $day_end_time = $scheduling_day["day_end_time"];
                             $blocks = $scheduling_day["blocks"];
 
-                            log_message("error", "blocks = " . json_encode($blocks) . " will be added to visits");
+                            //log_message("error", "blocks = " . json_encode($blocks) . " will be added to visits");
                             $processed_keys = 0;
                             $time1 = $scheduling_day["day"] . " " . $day_start_time;
 
                             $visits_booked_for_day = $this->get_visit_booked_for_day($day, $visits_booked, $blocks);
 
-                            log_message("error", "visits booked = " . json_encode($visits_booked_for_day));
+                            //log_message("error", "visits booked = " . json_encode($visits_booked_for_day));
 
                             for ($key = 0; $key < sizeof($visits_booked_for_day); $key++) {
-                                log_message("error", "inside for loop <br/> key = " . $key . " size = " .
-                                        sizeof($visits_booked_for_day));
+                                //log_message("error", "inside for loop <br/> key = " . $key . " size = " .
+                                      //  sizeof($visits_booked_for_day));
 
                                 $processed_keys = $key;
                                 $visit_start_time = null;
                                 $visit_end_time = null;
-                                log_message("error", "end = " . json_encode(end($visits_booked_for_day)));
+                                //log_message("error", "end = " . json_encode(end($visits_booked_for_day)));
                                 if (is_object($visits_booked_for_day[$key])) {
                                     $visit_start_time = $visits_booked_for_day[$key]->visit_start_time;
                                     $visit_end_time = $visits_booked_for_day[$key]->visit_start_time;
@@ -2646,25 +2646,25 @@ class Referral_model extends CI_Model {
                                 $counts = $this->count_time_slot_available($time1, $time2, $new_visit_duration);
                                 $slots_counter[$day->format("Y-m-d")] += $counts;
                                 $time1 = $visit_end_time;
-                                log_message("error", "day " . $day->format("Y-m-d") . " => " . " added $counts "
-                                        . "between $time1 and $time2");
+                                //log_message("error", "day " . $day->format("Y-m-d") . " => " . " added $counts "
+                                      //  . "between $time1 and $time2");
                             }
 //                        echo "visits_booked_for_day has no visits <br/>";
                             $time2 = $scheduling_day["day"] . " " . $day_end_time;
 
                             $counts = $this->count_time_slot_available($time1, $time2, $new_visit_duration);
                             $slots_counter[$day->format("Y-m-d")] += $counts;
-                            log_message("error", "day " . $day->format("Y-m-d") . " => " . " added $counts "
-                                    . "between $time1 and $time2");
+                            //log_message("error", "day " . $day->format("Y-m-d") . " => " . " added $counts "
+                                  //  . "between $time1 and $time2");
                         } else {
-                            log_message("error", "day is not available <br/>");
+                            //log_message("error", "day is not available <br/>");
                         }
                     }
                     $day = $day->modify('+1 day');
-                    log_message("error", "moving to " . $day->format("Y-m-d") . "<br/>");
+                    //log_message("error", "moving to " . $day->format("Y-m-d") . "<br/>");
                     $counter++;
 
-                    log_message("error", "day = " . json_encode($day) . " and " . json_encode($end_date_object));
+                    //log_message("error", "day = " . json_encode($day) . " and " . json_encode($end_date_object));
                 } while ($day <= $end_date_object && $counter < 100);
 
 
@@ -2674,14 +2674,14 @@ class Referral_model extends CI_Model {
                     "data" => $slots_counter
                 );
             } else {
-                log_message("error", "Assign physician to patient before scheduling");
+                //log_message("error", "Assign physician to patient before scheduling");
                 return array(
                     "result" => "error",
                     "message" => "Assign physician to patient before scheduling"
                 );
             }
         } else {
-            log_message("error", "Next visit data not found");
+            //log_message("error", "Next visit data not found");
             return array(
                 "result" => "error",
                 "message" => "Next visit data not found"
@@ -2703,7 +2703,7 @@ class Referral_model extends CI_Model {
 //        }
         //return if end date is less than current date
         if ($end_date < $cur_date || $start_date > $end_date) {
-            log_message("error", "error of dates with $start_date and $end_date");
+            //log_message("error", "error of dates with $start_date and $end_date");
             return array(
                 "result" => "success",
                 "data" => array()
@@ -2724,7 +2724,7 @@ class Referral_model extends CI_Model {
                             "c_vt.clinic_id" => $clinic_id
                         ))->where("pat.next_visit", "c_vt.visit_type", false)
                         ->get()->result();
-        log_message("error", "next visit check data => " . $this->db->last_query());
+        //log_message("error", "next visit check data => " . $this->db->last_query());
         if ($next_visit_duration_data) {
             $new_visit_duration = intval($next_visit_duration_data[0]->visit_duration);
             //get physician assigned to patient
@@ -2762,7 +2762,7 @@ class Referral_model extends CI_Model {
                                 ->where("pat.referral_id", "c_ref.id", false)
                                 ->order_by("1")->get()->result();
 
-                log_message("error", "visits booked = " . json_encode($visits_booked));
+                //log_message("error", "visits booked = " . json_encode($visits_booked));
 
                 $visits_reserved = $this->db
                                 ->select(
@@ -2809,11 +2809,11 @@ class Referral_model extends CI_Model {
                 $day = $start_date_object;
                 $counter = 0;
                 $slots_timings = array();
-                log_message("error", "starting while with day = " . $day->format("Y-m-d"));
-                log_message("error", "visit duration = " . $new_visit_duration);
+                //log_message("error", "starting while with day = " . $day->format("Y-m-d"));
+                //log_message("error", "visit duration = " . $new_visit_duration);
 
                 do {
-                    log_message("error", "day = " . $day->format("Y-m-d"));
+                    //log_message("error", "day = " . $day->format("Y-m-d"));
                     if ($day->format("Y-m-d") > date("Y-m-d")) {
 
                         $scheduling_day = $this->check_day_availability($day, $assigned_physician);
@@ -2828,38 +2828,38 @@ class Referral_model extends CI_Model {
 
                             $processed_keys = 0;
                             $time1 = $scheduling_day["day"] . " " . $day_start_time;
-                            log_message("error", "visits booked = " . json_encode($visits_booked));
-                            log_message("error", "blocks = " . json_encode($blocks));
+                            //log_message("error", "visits booked = " . json_encode($visits_booked));
+                            //log_message("error", "blocks = " . json_encode($blocks));
                             $visits_booked_for_day = $this->get_visit_booked_for_day($day, $visits_booked, $blocks);
-                            log_message("error", "just before for loop : visit booked for day = " . json_encode($visits_booked_for_day));
+                            //log_message("error", "just before for loop : visit booked for day = " . json_encode($visits_booked_for_day));
                             for ($key = 0; $key < sizeof($visits_booked_for_day); $key++) {
-                                log_message("error", "inside for loop <br/>");
+                                //log_message("error", "inside for loop <br/>");
                                 $processed_keys = $key;
                                 $week_visit_start_time = $visits_booked_for_day[$key]["visit_start_time"];
                                 $week_visit_end_time = $visits_booked_for_day[$key]["visit_end_time"];
-                                log_message("error", "processing key = " .
-                                        json_encode($visits_booked_for_day[$key]));
+                                //log_message("error", "processing key = " .
+                                       // json_encode($visits_booked_for_day[$key]));
 
                                 if (is_object(end($visits_booked_for_day))) {
                                     $last_visit_end_time = end($visits_booked_for_day)->visit_end_time;
                                 } else {
                                     $last_visit_end_time = end($visits_booked_for_day)["visit_end_time"];
                                 }
-                                log_message("error", "set time222222222222 => " . $week_visit_start_time);
+                                //log_message("error", "set time222222222222 => " . $week_visit_start_time);
                                 $time2 = $week_visit_start_time;
                                 if ($time1 >= $time2) {
-                                    log_message("error", "EROOOOOOOOOOOOOOOOOO => time 1 >= time 2 = $time1");
+                                    //log_message("error", "EROOOOOOOOOOOOOOOOOO => time 1 >= time 2 = $time1");
 //                                    continue;
                                 }
 
-                                log_message("error", "################ check between " . $time1 . " to " . $time2 . " <br/>");
+                                //log_message("error", "################ check between " . $time1 . " to " . $time2 . " <br/>");
                                 $timings = $this->get_time_slot_available($time1, $time2, $new_visit_duration);
                                 foreach ($timings as $key1 => $timing) {
                                     $slots_timings[] = $timing;
                                 }
-                                log_message("error", "day " . $day->format("Y-m-d") . " => " . " added "
-                                        . "between $time1 and $time2 => " . json_encode($timings));
-                                log_message("error", "set time11111111111 => " . $week_visit_end_time);
+                                //log_message("error", "day " . $day->format("Y-m-d") . " => " . " added "
+                                       // . "between $time1 and $time2 => " . json_encode($timings));
+                                //log_message("error", "set time11111111111 => " . $week_visit_end_time);
                                 $time1 = $week_visit_end_time;
                             }
 //                        echo "visits_booked_for_day has no visits <br/>";
@@ -2869,17 +2869,17 @@ class Referral_model extends CI_Model {
                             foreach ($timings as $key2 => $timing) {
                                 $slots_timings[] = $timing;
                             }
-                            log_message("error", "day " . $day->format("Y-m-d") . " => " . " added  "
-                                    . "between $time1 and $time2");
+                            //log_message("error", "day " . $day->format("Y-m-d") . " => " . " added  "
+                                   // . "between $time1 and $time2");
                         } else {
-                            log_message("error", "day is not available <br/>");
+                            //log_message("error", "day is not available <br/>");
                         }
                     }
                     $day = $day->modify('+1 day');
-                    log_message("error", "moving to " . $day->format("Y-m-d") . "<br/>");
+                    //log_message("error", "moving to " . $day->format("Y-m-d") . "<br/>");
                     $counter++;
 
-                    log_message("error", "day = " . json_encode($day) . " and " . json_encode($end_date_object));
+                    //log_message("error", "day = " . json_encode($day) . " and " . json_encode($end_date_object));
                 } while ($day < $end_date_object && $counter < 100);
 
 
@@ -2889,14 +2889,14 @@ class Referral_model extends CI_Model {
                     "data" => $slots_timings
                 );
             } else {
-                log_message("error", "Assign physician to patient before scheduling");
+                //log_message("error", "Assign physician to patient before scheduling");
                 return array(
                     "result" => "error",
                     "message" => "Assign physician to patient before scheduling"
                 );
             }
         } else {
-            log_message("error", "Next visit data not found");
+            //log_message("error", "Next visit data not found");
             return array(
                 "result" => "error",
                 "message" => "Next visit data not found"
@@ -2918,7 +2918,7 @@ class Referral_model extends CI_Model {
                             "c_vt.clinic_id" => $clinic_id
                         ))->where("pat.next_visit", "c_vt.visit_type", false)
                         ->get()->result();
-        log_message("error", "next visit check data => " . $this->db->last_query());
+        //log_message("error", "next visit check data => " . $this->db->last_query());
         if ($next_visit_duration_data) {
             $new_visit_duration = intval($next_visit_duration_data[0]->visit_duration);
             //get physician assigned to patient
@@ -2956,8 +2956,8 @@ class Referral_model extends CI_Model {
                                 ->where("pat.referral_id", "c_ref.id", false)
                                 ->order_by("1")->get()->result();
 
-                log_message("error", "visits booked = " . json_encode($visits_booked));
-                log_message("error", "visits booked = " . $this->db->last_query());
+                //log_message("error", "visits booked = " . json_encode($visits_booked));
+                //log_message("error", "visits booked = " . $this->db->last_query());
 //        echo "visits booked = " . json_encode($visits_booked) . "<br/>";
 //        echo "visits booked = " . $this->db->last_query() . "<br/>";
 
@@ -2993,8 +2993,8 @@ class Referral_model extends CI_Model {
                                 ->order_by("1")->get()->result();
 
 
-                log_message("error", "visits reserved = " . json_encode($visits_reserved));
-                log_message("error", "visits reserved = " . $this->db->last_query());
+                //log_message("error", "visits reserved = " . json_encode($visits_reserved));
+                //log_message("error", "visits reserved = " . $this->db->last_query());
 
                 $visits_reserved = $this->filter_reserved($visits_reserved, $next_day->format('Y-m-d'));
 //        echo "visits booked = " . json_encode($visits_booked) . "<br/>";
@@ -3127,14 +3127,14 @@ class Referral_model extends CI_Model {
                     "data" => $available_visit_slots
                 );
             } else {
-                log_message("error", "Assign physician to patient before scheduling");
+                //log_message("error", "Assign physician to patient before scheduling");
                 return array(
                     "result" => "error",
                     "message" => "Assign physician to patient before scheduling"
                 );
             }
         } else {
-            log_message("error", "Next visit data not found");
+            //log_message("error", "Next visit data not found");
             return array(
                 "result" => "error",
                 "message" => "Next visit data not found"
@@ -3175,18 +3175,18 @@ class Referral_model extends CI_Model {
 
     private function get_time_slot_available($time1, $time2, $new_visit_duration) {
         if ($time1 > $time2) {
-            log_message("error", "EROOOOOOOOOOOOOOOOOOOOOOR => $time1, $time2");
+            //log_message("error", "EROOOOOOOOOOOOOOOOOOOOOOR => $time1, $time2");
             return array();
         }
         $datetime1 = DateTime::createFromFormat('Y-m-d H:i:s', $time1);
         $datetime2 = DateTime::createFromFormat('Y-m-d H:i:s', $time2);
-        log_message("error", "for weekloop start at " . $datetime1->format("Y-m-d H:i:s"));
-        log_message("error", "for weekloop end at " . $datetime2->format("Y-m-d H:i:s"));
+        //log_message("error", "for weekloop start at " . $datetime1->format("Y-m-d H:i:s"));
+        //log_message("error", "for weekloop end at " . $datetime2->format("Y-m-d H:i:s"));
 
         $tmp1 = DateTime::createFromFormat('Y-m-d H:i:s', $datetime1->format("Y-m-d H:i:s"));
         $tmp2 = DateTime::createFromFormat('Y-m-d H:i:s', $datetime1->format("Y-m-d H:i:s"));
         $tmp2->add(new DateInterval("PT{$new_visit_duration}M"));
-        log_message("error", "tmp end is set to " . $tmp2->format("Y-m-d H:i:s"));
+        //log_message("error", "tmp end is set to " . $tmp2->format("Y-m-d H:i:s"));
 
         $response = array();
         while ($tmp2->format("Y-m-d H:i:s") <= $datetime2->format("Y-m-d H:i:s")) {
@@ -3194,15 +3194,15 @@ class Referral_model extends CI_Model {
                 "start_time" => $tmp1->format("Y-m-d H:i:s"),
                 "end_time" => $tmp2->format("Y-m-d H:i:s")
             );
-            log_message("error", "before tmp1 = " . $tmp1->format("Y-m-d H:i:s") . " and "
-                    . "tmp2 = " . $tmp2->format("Y-m-d H:i:s"));
+            //log_message("error", "before tmp1 = " . $tmp1->format("Y-m-d H:i:s") . " and "
+                   // . "tmp2 = " . $tmp2->format("Y-m-d H:i:s"));
             $tmp1 = DateTime::createFromFormat('Y-m-d H:i:s', $tmp2->format("Y-m-d H:i:s"));
             $tmp2 = $tmp2->add(new DateInterval("PT{$new_visit_duration}M"));
-            log_message("error", "after tmp1 = " . $tmp1->format("Y-m-d H:i:s") . " and "
-                    . "tmp2 = " . $tmp2->format("Y-m-d H:i:s"));
-            log_message("error", "added something");
+            //log_message("error", "after tmp1 = " . $tmp1->format("Y-m-d H:i:s") . " and "
+                    //. "tmp2 = " . $tmp2->format("Y-m-d H:i:s"));
+            //log_message("error", "added something");
         }
-        log_message("error", "time slots for this block => " . json_encode($response));
+        //log_message("error", "time slots for this block => " . json_encode($response));
         return $response;
     }
 
@@ -3263,13 +3263,13 @@ class Referral_model extends CI_Model {
                 }
             }
         }
-//        log_message("error", "before visits = " . json_encode($visits_booked_for_day));
+//        //log_message("error", "before visits = " . json_encode($visits_booked_for_day));
 //        $tmp = $visits_booked_for_day;
 //        foreach ($tmp as $key => $value) {
 //            
 //        }
 
-        log_message("error", "before visits 2 = " . json_encode($visits_booked_for_day));
+        //log_message("error", "before visits 2 = " . json_encode($visits_booked_for_day));
         foreach ($blocks as $key => $block) {
             $visits_booked_for_day[] = array(
                 "visit_start_time" => $block["day"] . " " . $block["start_time"],
@@ -3277,11 +3277,11 @@ class Referral_model extends CI_Model {
             );
         }
 
-        log_message("error", "after blocks added = " . json_encode($visits_booked_for_day));
+        //log_message("error", "after blocks added = " . json_encode($visits_booked_for_day));
         //sort them as some new blocks may be added
         for ($i = 0; $i < sizeof($visits_booked_for_day); $i++) {
             for ($j = $i + 1; $j < sizeof($visits_booked_for_day); $j++) {
-                log_message("error", "sorting = " . json_encode($visits_booked_for_day[$i]) . "," . is_object($visits_booked_for_day[$i]));
+                //log_message("error", "sorting = " . json_encode($visits_booked_for_day[$i]) . "," . is_object($visits_booked_for_day[$i]));
                 if ($visits_booked_for_day[$i]["visit_start_time"] >
                         $visits_booked_for_day[$j]["visit_start_time"]) {
                     $tmp = $visits_booked_for_day[$i];
@@ -3291,8 +3291,8 @@ class Referral_model extends CI_Model {
             }
         }
 
-        log_message("error", "visits booked for day ( includes blocks ) = " .
-                json_encode($visits_booked_for_day));
+        //log_message("error", "visits booked for day ( includes blocks ) = " .
+               // json_encode($visits_booked_for_day));
 //        echo json_encode($visits_booked_for_day) . "<br/>";
         return $visits_booked_for_day;
     }
@@ -3309,7 +3309,7 @@ class Referral_model extends CI_Model {
                 return $availability_response;
             }
         } else {
-            log_message("error", "jumped for specific day of for");
+            //log_message("error", "jumped for specific day of for");
             return array(
                 "available" => false
             );
@@ -3334,7 +3334,7 @@ class Referral_model extends CI_Model {
                 ))->get()->result();
 
 //        echo json_encode($day) . "<br/>";
-//        log_message("error", "check_for_weekend_days = " . $this->db->last_query());
+//        //log_message("error", "check_for_weekend_days = " . $this->db->last_query());
 //
 //
         if ($data) {
@@ -3401,7 +3401,7 @@ class Referral_model extends CI_Model {
                     "day_end_time" => $day_end_time,
                     "blocks" => $blocks_filtered
                 );
-//                log_message("error", "according to q data = " . json_encode($response));
+//                //log_message("error", "according to q data = " . json_encode($response));
             } else {
                 $response = array(
                     "available" => false

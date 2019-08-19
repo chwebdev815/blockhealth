@@ -23,7 +23,7 @@ class Tracker_model extends CI_Model {
                 $fax = $fax_result[0]->fax;
             }
 
-            log_message("error", "fetching fax = $fax =>" . $this->db->last_query());
+            //log_message("error", "fetching fax = $fax =>" . $this->db->last_query());
             //rishabh@gmail.com
 
             $signup_data = array(
@@ -41,7 +41,7 @@ class Tracker_model extends CI_Model {
             $inserted = $this->db->insert("referring_physicians", $signup_data);
             if ($inserted) {
                 // set all session data
-                log_message("error", "should successfuly login with user_id");
+                //log_message("error", "should successfuly login with user_id");
                 $this->session->set_userdata("user_id", $this->db->insert_id());
                 $this->session->set_userdata("physician_name", $data["fname"] . ' ' . $data["lname"]);
                 $this->session->set_userdata("signup_done", "yes");
@@ -72,7 +72,7 @@ class Tracker_model extends CI_Model {
             $this->db->where("efax.id", "c_ref.efax_id", false);
             $this->db->where("c_usr.id", "efax.`to`", false);
             $result = $this->db->get()->result();
-           log_message("error", "load tracker sql = " . $this->db->last_query());
+           //log_message("error", "load tracker sql = " . $this->db->last_query());
             $clinic_institution_name = "";
             $clinic_id = "";
             if ($result) {
@@ -114,7 +114,7 @@ class Tracker_model extends CI_Model {
             $this->db->group_by("miss.patient_id");
 
             $stage2 = $this->db->get()->result()[0]->stage2;
-//            log_message("error", "res 2 = $stage2 => " . $this->db->last_query());
+//            //log_message("error", "res 2 = $stage2 => " . $this->db->last_query());
             //check if decline after stage 2.
             if ($stage2 != "Referral has been declined and returned" && $stage2 != "Referral has been triaged and missing items have been requested") {
                 //stage 3
@@ -132,10 +132,10 @@ class Tracker_model extends CI_Model {
                 ));
                 $this->db->where("c_ref.id", "pat.referral_id", false);
                 $result = $this->db->get()->result();
-//                log_message("error", "sql 3 = " . $this->db->last_query());
+//                //log_message("error", "sql 3 = " . $this->db->last_query());
                 if ($result) {
                     $stage3 = $result[0]->stage3;
-//                    log_message("error", "res 3 = $stage3");
+//                    //log_message("error", "res 3 = $stage3");
                     //check if decline after stage 3
                     if ($stage3 != "Patient visit has not yet been scheduled") {
                         //stage 4
@@ -151,7 +151,7 @@ class Tracker_model extends CI_Model {
                         $this->db->group_by("r_pv.patient_id");
                         $result = $this->db->get()->result();
                         $stage4 = $result[0]->stage4;
-//                        log_message("error", "res 4 = $stage4 => " . $this->db->last_query());
+//                        //log_message("error", "res 4 = $stage4 => " . $this->db->last_query());
                         //all stages are fetched
                     } else {
                         $stage4 = "";
@@ -201,7 +201,7 @@ class Tracker_model extends CI_Model {
                             "chk.patient_id" => $patient_id,
                             "chk.attached" => "false"
                 ))->get()->result();
-                log_message("error", "checklist at RP side = " . $this->db->last_query());
+                //log_message("error", "checklist at RP side = " . $this->db->last_query());
             }
 
             //set data
@@ -215,7 +215,7 @@ class Tracker_model extends CI_Model {
                 "missing_items" => $missing_items,
                 "clinic_name" => $clinic_institution_name
             );
-            //        log_message("error", "data = " . json_encode($data));
+            //        //log_message("error", "data = " . json_encode($data));
             return $data;
         } else {
             return "Referral is not accessible";
@@ -373,7 +373,7 @@ class Tracker_model extends CI_Model {
         if ($this->form_validation->run()) {
             $data = $this->input->post();
             $missing_id = $data["id"];
-            log_message("error", "missing id = $missing_id");
+            //log_message("error", "missing id = $missing_id");
             if (1) { //$this->referral_access($ref_code)) {
                 $this->db->select("record_id");
                 $this->db->from("records_missing_items");
@@ -382,7 +382,7 @@ class Tracker_model extends CI_Model {
                 ));
                 $record_id = $this->db->get()->result()[0]->record_id;
 
-                log_message("error", "record id = $record_id");
+                //log_message("error", "record id = $record_id");
                         
                 $this->db->where(array(
                     "id" => $record_id
@@ -391,7 +391,7 @@ class Tracker_model extends CI_Model {
                     "active" => 0
                 ));
 
-            log_message("error", "remove 1 = " . $this->db->last_query());
+            //log_message("error", "remove 1 = " . $this->db->last_query());
                 
                 $this->db->where(array(
                     "id" => $missing_id
@@ -399,7 +399,7 @@ class Tracker_model extends CI_Model {
                 $this->db->update("records_missing_items", array(
                     "active" => 0
                 ));
-            log_message("error", "remove 2 = " . $this->db->last_query());
+            //log_message("error", "remove 2 = " . $this->db->last_query());
                 
                 return array(
                     "result" => "success"

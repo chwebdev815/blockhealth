@@ -15,7 +15,7 @@ class Call_handle extends CI_Controller {
 
     public function call_response() {
         log_message("error", "Call Response");
-        log_message("error", "printin post " . json_encode($this->input->post()));
+        //log_message("error", "printin post " . json_encode($this->input->post()));
     }
     // public function fetch_notifications() {
     // 	if(clinic_login()) {

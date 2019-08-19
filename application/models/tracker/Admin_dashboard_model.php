@@ -8,7 +8,7 @@ class Admin_dashboard_model extends CI_Model {
         $this->db->where("c_ref.create_datetime >= ", "date_sub(now(),INTERVAL 1 WEEK)", false);
         $new_referral_count = $this->db->get()->result()[0]->new_referral_count;
         
-        log_message("error", "sel 1 = " . $this->db->last_query());
+        //log_message("error", "sel 1 = " . $this->db->last_query());
 
 
         $accepted_referral_count = $this->db->select("count(id) as accepted_count")
@@ -16,17 +16,17 @@ class Admin_dashboard_model extends CI_Model {
                         ->where(array(
                             "active" => 1
                         ))->get()->result()[0]->accepted_count;
-        log_message("error", "sel 2 = " . $this->db->last_query());
+        //log_message("error", "sel 2 = " . $this->db->last_query());
 
         $faxes_sent = $this->db->select("count(id) as faxes_sent")->from("count_sent_fax")->where(array(
                     "active" => 1
                 ))->get()->result()[0]->faxes_sent;
-        log_message("error", "sel 3 = " . $this->db->last_query());
+        //log_message("error", "sel 3 = " . $this->db->last_query());
 
         $api_calls = $this->db->select("sum(data_points) as data_points")->from("count_data_points")->where(array(
                     "active" => 1
                 ))->get()->result()[0]->data_points;
-        log_message("error", "sel 4 = " . $this->db->last_query());
+        //log_message("error", "sel 4 = " . $this->db->last_query());
 
         return array(
             "new_referral" => $new_referral_count,

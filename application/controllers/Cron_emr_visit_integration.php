@@ -29,7 +29,7 @@ class Cron_emr_visit_integration extends CI_Controller {
         ))->update("clinic_physician_info", array(
             "status" => "Expired"
         ));
-        log_message("error", "expire q = " . $this->db->last_query());
+        //log_message("error", "expire q = " . $this->db->last_query());
 
         log_message("error", "Cron_emr_visit_integration called $$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$$");
         //get all clinic and loop all

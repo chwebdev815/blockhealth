@@ -90,7 +90,7 @@ class Inbox_model extends CI_Model {
                         "id" => $efax_id,
                         "to" => $this->session->userdata("user_id")
                     ))->get()->result();
-            log_message("error", "efax q = " . $this->db->last_query());
+            //log_message("error", "efax q = " . $this->db->last_query());
 
             $this->db->where(array(
                 "id" => $efax_id
@@ -98,10 +98,10 @@ class Inbox_model extends CI_Model {
             $this->db->update("efax_info", array(
                 "referred" => TRUE
             ));
-            log_message("error", "setting referred => " . $this->db->last_query());
+            //log_message("error", "setting referred => " . $this->db->last_query());
 
             if ($data["patient_dropdown"] != "0") {
-                log_message("error", "inside dropdown");
+                //log_message("error", "inside dropdown");
                 $clinic_id = $this->session->userdata("user_id");
                 $new_patient_id = get_decrypted_id($data["patient_dropdown"], "referral_patient_info");
                 //if patient is assigned
@@ -113,25 +113,25 @@ class Inbox_model extends CI_Model {
                 }
                 // delete tiff
                 $tiff_file = "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name;
-                log_message("error", "deleting tiff = >" . $tiff_file);
+                //log_message("error", "deleting tiff = >" . $tiff_file);
                 unlink($tiff_file);
 
-                log_message("error", "checking if exist = " . "./" . files_dir() . md5($clinic_id));
+                //log_message("error", "checking if exist = " . "./" . files_dir() . md5($clinic_id));
                 if (!file_exists("./" . files_dir() . md5($clinic_id))) {
-                    log_message("error", "creating clinic folder =>" . "./" . files_dir() . md5($clinic_id));
+                    //log_message("error", "creating clinic folder =>" . "./" . files_dir() . md5($clinic_id));
                     mkdir("./" . files_dir() . md5($clinic_id));
                 }
-                log_message("error", "checking if exist = " . "./" . files_dir()
-                        . md5($clinic_id) . "/" . md5($new_patient_id));
+                //log_message("error", "checking if exist = " . "./" . files_dir()
+                        //. md5($clinic_id) . "/" . md5($new_patient_id));
                 if (!file_exists("./" . files_dir() . md5($clinic_id) . "/" . md5($new_patient_id))) {
-                    log_message("error", "creating patient folder =>" . "./" . files_dir() .
-                            md5($clinic_id) . "/" . md5($new_patient_id));
+                    //log_message("error", "creating patient folder =>" . "./" . files_dir() .
+                           // md5($clinic_id) . "/" . md5($new_patient_id));
                     mkdir("./" . files_dir() . md5($clinic_id) . "/" . md5($new_patient_id));
                 }
 
                 // set pdf as doc for patient selected
                 $rename_success = rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./" . files_dir() . md5($clinic_id) . "/" . md5($new_patient_id) . "/" . $efax_info[0]->file_name . ".pdf");
-                log_message("error", "new patient id = " . $new_patient_id);
+                //log_message("error", "new patient id = " . $new_patient_id);
                 if ($rename_success) {
                     //insert health record
                     $inserted = $this->db->insert("records_clinic_notes", array(
@@ -141,7 +141,7 @@ class Inbox_model extends CI_Model {
                         "description" => $data["description"],
                         "record_file" => $efax_info[0]->file_name
                     ));
-                    log_message("error", "inserting = > " . $this->db->last_query());
+                    //log_message("error", "inserting = > " . $this->db->last_query());
 
                     //add Missing item received status 
                     $c_ref_data = $this->db->select("c_ref.id")
@@ -161,7 +161,7 @@ class Inbox_model extends CI_Model {
                             . "style=\"background-color:#88b794\"></span> "
                             . "Items uploaded for review "
                         ));
-                        log_message("error", "referral made green => " . $this->db->last_query());
+                        //log_message("error", "referral made green => " . $this->db->last_query());
                     }
 
                     if ($inserted) {
@@ -215,15 +215,15 @@ class Inbox_model extends CI_Model {
                     "fax_date_time" => $efax_info[0]->create_datetime,
                     "sender_fax_number" => $efax_info[0]->sender_fax_number
                 ));
-                log_message("error", "insert = " . $this->db->last_query());
+                //log_message("error", "insert = " . $this->db->last_query());
                 $task_id = $this->db->insert_id();
 
                 if (!file_exists("./" . files_dir() . "$clinic_id")) {
-                    log_message("error", "creating clinic folder =>" . "./" . files_dir() . "$clinic_id");
+                    //log_message("error", "creating clinic folder =>" . "./" . files_dir() . "$clinic_id");
                     mkdir("./" . files_dir() . "$clinic_id");
                 }
                 if (!file_exists("./" . files_dir() . "$clinic_id/" . md5($patient_id))) {
-                    log_message("error", "creating patient folder =>" . "./" . files_dir() . "$clinic_id/" . md5($patient_id));
+                    //log_message("error", "creating patient folder =>" . "./" . files_dir() . "$clinic_id/" . md5($patient_id));
                     mkdir("./" . files_dir() . "$clinic_id/" . md5($patient_id));
                 }
                 if ((isset($data["id"])) && $data["id"] != "") {
@@ -237,12 +237,12 @@ class Inbox_model extends CI_Model {
                     ));
 
                     copy("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
-                    log_message("error", "patient record => " . $efax_id . " => ./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
+                    //log_message("error", "patient record => " . $efax_id . " => ./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
                 }
 
 
-//            log_message("error", $efax_id . "./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
-//            log_message("error", $efax_id . "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name . " to ./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
+//            //log_message("error", $efax_id . "./uploads/efax/" . $efax_info[0]->file_name . ".pdf to ./uploads/physician_tasks/pdf/" . $new_file_name . ".pdf");
+//            //log_message("error", $efax_id . "./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name . " to ./uploads/physician_tasks/tiff/" . $new_file_name . ".tif");
 
                 rename("./uploads/efax/" . $efax_info[0]->file_name . ".pdf", "./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf");
                 rename("./uploads/efax_tiff/" . $efax_info[0]->tiff_file_name, "./" . files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".tif");
@@ -306,8 +306,8 @@ class Inbox_model extends CI_Model {
                             "assigned_provider" => "Arianna Muskat",
                             "active" => 1
                         ));
-                        log_message("error", "inserted to rpa");
-                        log_message("error", $this->db->last_query());
+                        //log_message("error", "inserted to rpa");
+                        //log_message("error", $this->db->last_query());
 
                         //send to RPA nitegration
                         $request = curl_init('http://52.237.12.245/api/v1/patients/upload-documents');
@@ -326,14 +326,14 @@ class Inbox_model extends CI_Model {
                         $response = curl_exec($request);
                         curl_close($request);
 
-                        log_message("error", "curl log = " . json_encode($response));
+                        //log_message("error", "curl log = " . json_encode($response));
                     }
                 }
 
-//            log_message("error", "insert = " . $this->db->last_query());
+//            //log_message("error", "insert = " . $this->db->last_query());
 
                 $this->db->trans_complete();
-                log_message("error", "transactions saved");
+                //log_message("error", "transactions saved");
                 if ($inserted) {
                     return array(
                         "result" => "success"
@@ -367,7 +367,7 @@ class Inbox_model extends CI_Model {
                         "id" => $efax_id,
                         "to" => $this->session->userdata("user_id")
                     ))->get()->result();
-            log_message("error", "efax q = " . $this->db->last_query());
+            //log_message("error", "efax q = " . $this->db->last_query());
 
             $this->db->where(array(
                 "id" => $efax_id
@@ -375,7 +375,7 @@ class Inbox_model extends CI_Model {
             $this->db->update("efax_info", array(
                 "referred" => TRUE
             ));
-            log_message("error", "setting referred => " . $this->db->last_query());
+            //log_message("error", "setting referred => " . $this->db->last_query());
 
             $new_file_name = generate_random_string(32);
 
@@ -390,7 +390,7 @@ class Inbox_model extends CI_Model {
                 "description" => $data["description"],
                 "record_file" => $new_file_name
             ));
-            log_message("error", "insert = " . $this->db->last_query());
+            //log_message("error", "insert = " . $this->db->last_query());
 
             if ($inserted) {
                 return array(
@@ -457,12 +457,12 @@ class Inbox_model extends CI_Model {
                     "lower(LAST_NAME) = lower('$last_name')"
             );
             $result = $db_predict->get()->result();
-            log_message("error", "matching physician detail with sql = " . $db_predict->last_query());
+            //log_message("error", "matching physician detail with sql = " . $db_predict->last_query());
             //find doctor match for last name, along with either one of first name, phone, and fax
             $matched = false;
             $matched_data = array();
             foreach ($result as $key => $dr) {
-                log_message("error", "checking with" . json_encode($dr));
+                //log_message("error", "checking with" . json_encode($dr));
                 $db_first_names = explode(" ", $dr->FIRST_NAME_LOWERCASE);
 
                 if (in_array($first_name, $db_first_names) || (!empty($fax) && $dr->FAX_1 == $fax) || (!empty($phone) && $dr->PHONE_1 == $phone)) {
@@ -474,7 +474,7 @@ class Inbox_model extends CI_Model {
                     $matched_data["fax"] = $dr->FAX_1;
                     $matched_data["cpso"] = $dr->CPSO;
                     $matched_data["address"] = $dr->ADDRESS_1;
-                    log_message("error", "matched in first");
+                    //log_message("error", "matched in first");
                     break;
                 }
 
@@ -487,7 +487,7 @@ class Inbox_model extends CI_Model {
                     $matched_data["fax"] = $dr->FAX_2;
                     $matched_data["cpso"] = $dr->CPSO;
                     $matched_data["address"] = $dr->ADDRESS_2;
-                    log_message("error", "matched in second");
+                    //log_message("error", "matched in second");
                     // $this->session->set_userdata("physician_match_id", $dr->ID);
                     break;
                 }
@@ -501,7 +501,7 @@ class Inbox_model extends CI_Model {
                     $matched_data["fax"] = $dr->FAX_3;
                     $matched_data["cpso"] = $dr->CPSO;
                     $matched_data["address"] = $dr->ADDRESS_3;
-                    log_message("error", "matched in first");
+                    //log_message("error", "matched in first");
                     // $this->session->set_userdata("physician_match_id", $dr->ID);
                     break;
                 }
@@ -515,7 +515,7 @@ class Inbox_model extends CI_Model {
                     $matched_data["fax"] = $dr->FAX_4;
                     $matched_data["cpso"] = $dr->CPSO;
                     $matched_data["address"] = $dr->ADDRESS_4;
-                    log_message("error", "matched in fourth");
+                    //log_message("error", "matched in fourth");
                     // $this->session->set_userdata("physician_match_id", $dr->ID);
                     break;
                 }
@@ -529,7 +529,7 @@ class Inbox_model extends CI_Model {
                     $matched_data["fax"] = $dr->FAX_5;
                     $matched_data["cpso"] = $dr->CPSO;
                     $matched_data["address"] = $dr->ADDRESS_5;
-                    log_message("error", "matched in fifth");
+                    //log_message("error", "matched in fifth");
                     // $this->session->set_userdata("physician_match_id", $dr->ID);
                     break;
                 }
@@ -559,14 +559,14 @@ class Inbox_model extends CI_Model {
     public function check_patient_data_model() {
         // $this->form_validation->set_rules('id', 'Efax Id', 'required');
         // if ($this->form_validation->run()) {
-        log_message("error", "===========================> check_patient_data_model checking");
+        //log_message("error", "===========================> check_patient_data_model checking");
         $data = $this->input->post();
         $match_found = false;
         $match_ids = array();
         $match_id = null;
         if (isset($data["pat_ohip"])) {
             //check OHIP matches
-            log_message("error", "ohip checking");
+            //log_message("error", "ohip checking");
             $ohip = $data["pat_ohip"];
             $ohip = str_replace(" ", "", str_replace("-", "", $ohip));
             $ohip_numbers = substr($ohip, 0, 10); //DDDD*DDD*DDD
@@ -582,10 +582,10 @@ class Inbox_model extends CI_Model {
             $this->db->where("c_ref.efax_id", "efax.id", false);
             $matched_ohip = $this->db->get()->result();
 
-            log_message("error", "search = " . $this->db->last_query());
+            //log_message("error", "search = " . $this->db->last_query());
 
             if ($matched_ohip) {
-                log_message("error", "found ohip match");
+                //log_message("error", "found ohip match");
                 $match_found = true;
                 // $match_ids[] = array(
                 //     "id" => $matched_ohip[0]->id,
@@ -602,17 +602,17 @@ class Inbox_model extends CI_Model {
                     );
                 }
             }
-            log_message("error", "checking for dob => " . $match_found);
-            log_message("error", "checking for pat_dob_year => " . isset($data["pat_dob_year"]));
-            log_message("error", "checking for pat_dob_month => " . isset($data["pat_dob_month"]));
-            log_message("error", "checking for pat_dob_day => " . isset($data["pat_dob_day"]));
-            log_message("error", "checking for pat_lname => " . isset($data["pat_lname"]));
+            //log_message("error", "checking for dob => " . $match_found);
+            //log_message("error", "checking for pat_dob_year => " . isset($data["pat_dob_year"]));
+            //log_message("error", "checking for pat_dob_month => " . isset($data["pat_dob_month"]));
+            //log_message("error", "checking for pat_dob_day => " . isset($data["pat_dob_day"]));
+            //log_message("error", "checking for pat_lname => " . isset($data["pat_lname"]));
         }
         if (!$match_found && isset($data["pat_dob_year"]) && isset($data["pat_dob_month"]) && isset($data["pat_dob_day"]) && isset($data["pat_lname"])) {
             //check last name and DOB matches
             $dob = $data["pat_dob_year"] . "-" . $data["pat_dob_month"] . "-" . $data["pat_dob_day"];
             $last_name = $data["pat_lname"];
-            log_message("error", "checking dob and lname");
+            //log_message("error", "checking dob and lname");
 
             $this->db->select("pat.id, pat.fname, pat.lname, pat.dob, pat.ohip")->from("referral_patient_info pat, clinic_referrals c_ref, efax_info efax")->where(array(
                 "pat.active" => 1,
@@ -624,10 +624,10 @@ class Inbox_model extends CI_Model {
             $this->db->where("c_ref.efax_id", "efax.id", false);
 
             $matched_dob_last_name = $this->db->get()->result();
-            log_message("error", "result " . $this->db->last_query());
+            //log_message("error", "result " . $this->db->last_query());
 
             if ($matched_dob_last_name) {
-                log_message("error", "found matched_dob_last_name match");
+                //log_message("error", "found matched_dob_last_name match");
                 $match_found = true;
                 foreach ($matched_dob_last_name as $key => $value) {
                     $match_ids[] = array(
@@ -654,9 +654,9 @@ class Inbox_model extends CI_Model {
     }
 
     public function new_referral_model() {
-        log_message("error", "=========================================");
-        log_message("error", "Tracking New Referral ");
-        log_message("error", "=========================================");
+        //log_message("error", "=========================================");
+        //log_message("error", "Tracking New Referral ");
+        //log_message("error", "=========================================");
         $this->form_validation->set_rules('id', 'Efax Id', 'required');
         // $this->form_validation->set_rules('diagnosis', 'Diagnosis', 'required');
         // $this->form_validation->set_rules('referral_reason', 'Reason for Referral', 'required');
@@ -686,7 +686,7 @@ class Inbox_model extends CI_Model {
             if ($result) {
                 try {
                     $referral_code = $this->generate_referral_code();
-                    log_message("error", "ref code = " . $referral_code);
+                    //log_message("error", "ref code = " . $referral_code);
                     $location_id = $this->get_decrypted_id($data["patient_location"], "clinic_locations");
                     $custom_id = (isset($data["custom"]))?
                         get_decrypted_id($data["custom"], "clinic_custom"):0;
@@ -723,7 +723,7 @@ class Inbox_model extends CI_Model {
                     //new referral record added
 
 
-                    log_message("error", "update status  = " . $this->db->last_query());
+                    //log_message("error", "update status  = " . $this->db->last_query());
                     $referral_id = $this->db->insert_id();
                     //remove from inbox by status referred true
                     $this->db->where(array(
@@ -732,7 +732,7 @@ class Inbox_model extends CI_Model {
                     $this->db->update("efax_info", array(
                         "referred" => TRUE
                     ));
-                    log_message("error", "update referred efax = " . $this->db->last_query());
+                    //log_message("error", "update referred efax = " . $this->db->last_query());
 
                     $ohip = $data["pat_ohip"];
                     //store patient details
@@ -756,10 +756,10 @@ class Inbox_model extends CI_Model {
                     );
                     $this->db->insert("referral_patient_info", $patient_data);
                     $patient_id = $this->db->insert_id();
-                    log_message("error", "insert patient = " . $this->db->last_query());
+                    //log_message("error", "insert patient = " . $this->db->last_query());
 
                     $data["dr_fax"] = preg_replace("/[^0-9]/", "", $data["dr_fax"]);
-                    log_message("error", "dr_fax trimmed = " . $data["dr_fax"]);
+                    //log_message("error", "dr_fax trimmed = " . $data["dr_fax"]);
                     //store referring physician data linked to patient id
                     $physician_data = array(
                         "patient_id" => $patient_id,
@@ -772,7 +772,7 @@ class Inbox_model extends CI_Model {
                         "billing_num" => $data["dr_billing_num"]
                     );
                     $this->db->insert("referral_physician_info", $physician_data);
-                    log_message("error", "insert physician  = " . $this->db->last_query());
+                    //log_message("error", "insert physician  = " . $this->db->last_query());
 
                     //store clinical triage info linked to patient id
                     $clinical_triage_data = array(
@@ -783,7 +783,7 @@ class Inbox_model extends CI_Model {
                     );
                     $this->db->insert("referral_clinic_triage", $clinical_triage_data);
                     $clinic_triage_id = $this->db->insert_id();
-                    log_message("error", "triage referral = " . $this->db->last_query());
+                    //log_message("error", "triage referral = " . $this->db->last_query());
 
                     //store all diseases (using loop) patient diseases linked to referral_clinic_triage->id
                     if (isset($data["diseases"])) {
@@ -795,7 +795,7 @@ class Inbox_model extends CI_Model {
                                     "clinic_triage_id" => $clinic_triage_id,
                                     "disease" => $value
                                 ));
-                                log_message("error", "disease q = " . $this->db->last_query());
+                                //log_message("error", "disease q = " . $this->db->last_query());
                             }
                         }
                     }
@@ -810,7 +810,7 @@ class Inbox_model extends CI_Model {
                                     "clinic_triage_id" => $clinic_triage_id,
                                     "symptom" => $value
                                 ));
-                                log_message("error", "symptom q = " . $this->db->last_query());
+                                //log_message("error", "symptom q = " . $this->db->last_query());
                             }
                         }
                     }
@@ -825,7 +825,7 @@ class Inbox_model extends CI_Model {
                                     "clinic_triage_id" => $clinic_triage_id,
                                     "test" => $value
                                 ));
-                                log_message("error", "test q = " . $this->db->last_query());
+                                //log_message("error", "test q = " . $this->db->last_query());
                             }
                         }
                     }
@@ -840,7 +840,7 @@ class Inbox_model extends CI_Model {
                                     "clinic_triage_id" => $clinic_triage_id,
                                     "drug" => $value
                                 ));
-                                log_message("error", "drug q = " . $this->db->last_query());
+                                //log_message("error", "drug q = " . $this->db->last_query());
                             }
                         }
                     }
@@ -855,7 +855,7 @@ class Inbox_model extends CI_Model {
                                     "clinic_triage_id" => $clinic_triage_id,
                                     "device" => $value
                                 ));
-                                log_message("error", "device q = " . $this->db->last_query());
+                                //log_message("error", "device q = " . $this->db->last_query());
                             }
                         }
                     }
@@ -867,7 +867,7 @@ class Inbox_model extends CI_Model {
                         $referral_checklist = array();
                     }
 
-                    log_message("error", "checklist array = " . json_encode($referral_checklist));
+                    //log_message("error", "checklist array = " . json_encode($referral_checklist));
                     //insert default checklist info
                     $this->db->select("md5(id) as id, id as plain_id");
                     $this->db->from("clinic_referral_checklist_items");
@@ -876,13 +876,13 @@ class Inbox_model extends CI_Model {
                         "clinic_id" => $this->session->userdata("user_id")
                     ));
                     $default_checklist = $this->db->get()->result();
-                    log_message("error", "checklist query = " . $this->db->last_query());
-                    log_message("error", "default checklist = " . json_encode($default_checklist));
+                    //log_message("error", "checklist query = " . $this->db->last_query());
+                    //log_message("error", "default checklist = " . json_encode($default_checklist));
 
                     foreach ($default_checklist as $key => $value) {
                         $exist = array_search($value->id, $referral_checklist);
                         $checked = ($exist === false) ? "false" : "true";
-                        // log_message("error", "val = " . $value->id . " and ref = " . json_encode($referral_checklist));
+                        // //log_message("error", "val = " . $value->id . " and ref = " . json_encode($referral_checklist));
                         $check_type = "stored";
                         $this->db->insert("referral_checklist", array(
                             "patient_id" => $patient_id,
@@ -890,17 +890,17 @@ class Inbox_model extends CI_Model {
                             "checklist_id" => $value->plain_id,
                             "attached" => $checked
                         ));
-                        log_message("error", "insert for default = " . $this->db->last_query());
+                        //log_message("error", "insert for default = " . $this->db->last_query());
                     }
 
                     //insert new checlist info
-                    log_message("error", "at custome checklist");
+                    //log_message("error", "at custome checklist");
                     $new_checklist = explode(",", $data["new_checklists"]);
                     foreach ($new_checklist as $key => $value) {
                         if ($value == "")
                             continue;
                         $exist = array_search($value, $referral_checklist);
-                        // log_message("error", "val = " . $value . " and ref = " . json_encode($referral_checklist));
+                        // //log_message("error", "val = " . $value . " and ref = " . json_encode($referral_checklist));
                         $checked = ($exist === false) ? "false" : "true";
                         $check_type = "typed";
                         $this->db->insert("referral_checklist", array(
@@ -909,7 +909,7 @@ class Inbox_model extends CI_Model {
                             "checklist_name" => $value,
                             "attached" => $checked
                         ));
-                        log_message("error", "insert custom = " . $this->db->last_query());
+                        //log_message("error", "insert custom = " . $this->db->last_query());
                     }
 
 
@@ -944,17 +944,17 @@ class Inbox_model extends CI_Model {
                         "description" => "Faxed referral package",
                         "record_file" => $file_new_name
                     ));
-                    log_message("error", "file transfered from " . $source_dir . $file_old_name . " to " . $target_dir . $file_new_name . ".pdf");
+                    //log_message("error", "file transfered from " . $source_dir . $file_old_name . " to " . $target_dir . $file_new_name . ".pdf");
 
                     //send referral code as fax to family physician
                     // $subject = "Referral code = " . $referral_code;
                     //                $this->send_efax("15554567890", $subject);  
                     // $this->send_efax($data["dr_fax"], $subject);
-                    log_message("error", "referral id => '$referral_id' => " . "admin_triage/referral_details/" . md5($referral_id));
-                    log_message("error", "=========================================");
-                    log_message("error", "=====   Referral created            ======");
-                    log_message("error", "=========================================");
-                    log_message("error", "=========================================");
+                    //log_message("error", "referral id => '$referral_id' => " . "admin_triage/referral_details/" . md5($referral_id));
+                    //log_message("error", "=========================================");
+                    //log_message("error", "=====   Referral created            ======");
+                    //log_message("error", "=========================================");
+                    //log_message("error", "=========================================");
 
                     $this->db->select("c_usr.clinic_institution_name, "
                             . "date_format(c_ref.create_datetime, '%M %D') as referral_received, dr.fax");
@@ -992,12 +992,12 @@ class Inbox_model extends CI_Model {
                     );
                     $fax_number = $result->fax;
 
-                    log_message("error", "not sending fax");
+                    //log_message("error", "not sending fax");
 //                    $this->load->model("referral_model");
-//                    log_message("error", "$file_name, checklist, replace, $fax_number");
+//                    //log_message("error", "$file_name, checklist, replace, $fax_number");
 //                    $response = $this->referral_model->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "New Referral");
 
-                    log_message("error", "completed fax send");
+                    //log_message("error", "completed fax send");
 
 
 
@@ -1009,7 +1009,7 @@ class Inbox_model extends CI_Model {
                                     ->from("clinic_user_info")
                                     ->where("id", $this->session->userdata("user_id"))
                                     ->get()->result();
-                    log_message("error", "only trigger RPA events = > " . $this->db->last_query());
+                    //log_message("error", "only trigger RPA events = > " . $this->db->last_query());
 
                     if ($clinic) {
                         $clinic = $clinic[0];
@@ -1085,8 +1085,8 @@ class Inbox_model extends CI_Model {
 
                             $this->db->insert("rpa_integration", $rpa_data);
 
-                            log_message("error", "inserted to rpa");
-                            log_message("error", $this->db->last_query());
+                            //log_message("error", "inserted to rpa");
+                            //log_message("error", $this->db->last_query());
 
 
                             $request = curl_init('http://52.237.12.245/api/v1/patients/upload-documents');
@@ -1106,11 +1106,11 @@ class Inbox_model extends CI_Model {
                             $response = curl_exec($request);
                             curl_close($request);
 
-                            log_message("error", "curl log = " . json_encode($response));
+                            //log_message("error", "curl log = " . json_encode($response));
                         }
                     }
                     $this->db->trans_complete();
-                    log_message("error", "transactions saved");
+                    //log_message("error", "transactions saved");
 
                     // return array(true, base_url() . "admin_triage/referral_details/" . md5($referral_id));
                     return array(true, base_url() . "referral_triage/referral_details/" . md5($patient_id));
@@ -1218,7 +1218,7 @@ class Inbox_model extends CI_Model {
             "dr.active" => 1
         ));
         $result = $this->db->get()->result();
-        log_message("error", "get physician list = > " . $this->db->last_query());
+        //log_message("error", "get physician list = > " . $this->db->last_query());
         return $result;
     }
 
@@ -1239,7 +1239,7 @@ class Inbox_model extends CI_Model {
         $this->db->where("efax.id", "c_ref.efax_id", false);
         $this->db->where("c_usr.id", "efax.to", false);
         $result = $this->db->get()->result();
-        log_message("error", "get patient list = > " . $this->db->last_query());
+        //log_message("error", "get patient list = > " . $this->db->last_query());
         return $result;
     }
 
@@ -1254,36 +1254,36 @@ class Inbox_model extends CI_Model {
             $diseases = json_decode($data["disease_words"]);
             if (sizeof($diseases) > 0) {
                 $this->db->insert_batch("data_points_drug_diseases", $diseases);
-                log_message("error", $this->db->last_query());
+                //log_message("error", $this->db->last_query());
             } else {
-                log_message("error", "No disease data found to insert_btach");
+                //log_message("error", "No disease data found to insert_btach");
             }
         }
         if (isset($data["sign_and_synd_words"])) {
             $sign_and_synd_words = json_decode($data["sign_and_synd_words"]);
             if (sizeof($sign_and_synd_words) > 0) {
                 $this->db->insert_batch("data_points_drug_sign", $sign_and_synd_words);
-                log_message("error", $this->db->last_query());
+                //log_message("error", $this->db->last_query());
             } else {
-                log_message("error", "No sign_and_synd_words data found to insert_btach");
+                //log_message("error", "No sign_and_synd_words data found to insert_btach");
             }
         }
         if (isset($data["devices_and_procedures"])) {
             $devices_and_procedures = json_decode($data["devices_and_procedures"]);
             if (sizeof($devices_and_procedures) > 0) {
                 $this->db->insert_batch("data_points_drug_devices", $devices_and_procedures);
-                log_message("error", $this->db->last_query());
+                //log_message("error", $this->db->last_query());
             } else {
-                log_message("error", "No devices_and_procedures data found to insert_btach");
+                //log_message("error", "No devices_and_procedures data found to insert_btach");
             }
         }
         if (isset($data["pharmacologic_substance"])) {
             $pharmacologic_substance = json_decode($data["pharmacologic_substance"]);
             if (sizeof($pharmacologic_substance) > 0) {
                 $this->db->insert_batch("data_points_drug_medications", $pharmacologic_substance);
-                log_message("error", $this->db->last_query());
+                //log_message("error", $this->db->last_query());
             } else {
-                log_message("error", "No pharmacologic_substance data found to insert_btach");
+                //log_message("error", "No pharmacologic_substance data found to insert_btach");
             }
         }
     }
@@ -1304,7 +1304,7 @@ class Inbox_model extends CI_Model {
         $this->db->from($table_name);
         $this->db->where(array("md5(id)" => $md5_id));
         $result = $this->db->get()->result();
-        log_message("error", "get decrypted sql = " . $this->db->last_query());
+        //log_message("error", "get decrypted sql = " . $this->db->last_query());
         return ($result) ? $result[0]->id : 0;
     }
 
@@ -1312,7 +1312,7 @@ class Inbox_model extends CI_Model {
         if (strlen($fax_number) == 10) {
             $fax_number = "1" . $fax_number;
         }
-        log_message("error", "SrFax => sending subject = " . $subject . " to f.physician fax" . $fax_number);
+        //log_message("error", "SrFax => sending subject = " . $subject . " to f.physician fax" . $fax_number);
 
         $this->db->select("srfax_number, srfax_email, srfax_pass, srfax_account_num");
         $this->db->from("clinic_user_info");
@@ -1357,28 +1357,28 @@ class Inbox_model extends CI_Model {
         curl_setopt_array($ch, $curlDefaults);
         $result = curl_exec($ch);
         if (curl_errno($ch)) {
-            log_message("error", "Error – " . json_encode(curl_error($ch)));
+            //log_message("error", "Error – " . json_encode(curl_error($ch)));
             return array("error", curl_error($ch));
         } else {
-            log_message("error", "Result:" . json_encode($result));
+            //log_message("error", "Result:" . json_encode($result));
             return array("success", $result);
         }
     }
 
     private function generate_referral_code() {
-        log_message("error", "generate_referral_code called");
+        //log_message("error", "generate_referral_code called");
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         $charactersLength = strlen($characters);
         $referral_code = '';
         $repeat = TRUE;
         $length = 7; // length of referral code size
         while ($repeat) {
-            log_message("error", "repeate inside");
+            //log_message("error", "repeate inside");
             $referral_code = '';
             for ($i = 0; $i < $length; $i++) {
                 $referral_code .= $characters[rand(0, $charactersLength - 1)];
             }
-            log_message("error", "code = " . $referral_code);
+            //log_message("error", "code = " . $referral_code);
             //check in db if such referral code already exist
             $this->db->select("count(id) as repeat_count");
             $this->db->from("clinic_referrals");
@@ -1386,7 +1386,7 @@ class Inbox_model extends CI_Model {
                 "referral_code" => $referral_code
             ));
             $result = $this->db->get()->result();
-            log_message("error", "res = " . json_encode($result));
+            //log_message("error", "res = " . json_encode($result));
             if ($result[0]->repeat_count == 0) {
                 //no duplicate code found
                 $repeat = false;
@@ -1426,7 +1426,7 @@ class Inbox_model extends CI_Model {
             if ($result) {
                 try {
                     $referral_code = $this->generate_referral_code();
-                    log_message("error", "ref code = " . $referral_code);
+                    //log_message("error", "ref code = " . $referral_code);
                     $this->db->trans_start();
                     //add referral
                     $efax_id = $result[0]->id;
@@ -1458,7 +1458,7 @@ class Inbox_model extends CI_Model {
                     $this->db->insert("clinic_referrals", $insert_data);
 
                     //new referral record added
-                    log_message("error", "update status  = " . $this->db->last_query());
+                    //log_message("error", "update status  = " . $this->db->last_query());
                     $referral_id = $this->db->insert_id();
                     $ohip = $data["pat_ohip"];
                     //store patient details
@@ -1478,10 +1478,10 @@ class Inbox_model extends CI_Model {
                     );
                     $this->db->insert("referral_patient_info", $patient_data);
                     $patient_id = $this->db->insert_id();
-                    log_message("error", "insert patient = " . $this->db->last_query());
+                    //log_message("error", "insert patient = " . $this->db->last_query());
 
                     $data["dr_fax"] = preg_replace("/[^0-9]/", "", $data["dr_fax"]);
-                    log_message("error", "dr_fax trimmed = " . $data["dr_fax"]);
+                    //log_message("error", "dr_fax trimmed = " . $data["dr_fax"]);
                     //store referring physician data linked to patient id
                     $physician_data = array(
                         "patient_id" => $patient_id,
@@ -1494,7 +1494,7 @@ class Inbox_model extends CI_Model {
                         "billing_num" => $data["dr_billing_num"]
                     );
                     $this->db->insert("referral_physician_info", $physician_data);
-                    log_message("error", "insert physician  = " . $this->db->last_query());
+                    //log_message("error", "insert physician  = " . $this->db->last_query());
 
                     //store clinical triage info linked to patient id
                     $clinical_triage_data = array(
@@ -1505,7 +1505,7 @@ class Inbox_model extends CI_Model {
                     );
                     $this->db->insert("referral_clinic_triage", $clinical_triage_data);
                     $clinic_triage_id = $this->db->insert_id();
-                    log_message("error", "triage referral = " . $this->db->last_query());
+                    //log_message("error", "triage referral = " . $this->db->last_query());
 
                     //store all diseases (using loop) patient diseases linked to referral_clinic_triage->id
                     if (isset($data["diseases"])) {
@@ -1517,7 +1517,7 @@ class Inbox_model extends CI_Model {
                                     "clinic_triage_id" => $clinic_triage_id,
                                     "disease" => $value
                                 ));
-                                log_message("error", "disease q = " . $this->db->last_query());
+                                //log_message("error", "disease q = " . $this->db->last_query());
                             }
                         }
                     }
@@ -1532,7 +1532,7 @@ class Inbox_model extends CI_Model {
                                     "clinic_triage_id" => $clinic_triage_id,
                                     "symptom" => $value
                                 ));
-                                log_message("error", "symptom q = " . $this->db->last_query());
+                                //log_message("error", "symptom q = " . $this->db->last_query());
                             }
                         }
                     }
@@ -1547,7 +1547,7 @@ class Inbox_model extends CI_Model {
                                     "clinic_triage_id" => $clinic_triage_id,
                                     "test" => $value
                                 ));
-                                log_message("error", "test q = " . $this->db->last_query());
+                                //log_message("error", "test q = " . $this->db->last_query());
                             }
                         }
                     }
@@ -1562,7 +1562,7 @@ class Inbox_model extends CI_Model {
                                     "clinic_triage_id" => $clinic_triage_id,
                                     "drug" => $value
                                 ));
-                                log_message("error", "drug q = " . $this->db->last_query());
+                                //log_message("error", "drug q = " . $this->db->last_query());
                             }
                         }
                     }
@@ -1577,7 +1577,7 @@ class Inbox_model extends CI_Model {
                                     "clinic_triage_id" => $clinic_triage_id,
                                     "device" => $value
                                 ));
-                                log_message("error", "device q = " . $this->db->last_query());
+                                //log_message("error", "device q = " . $this->db->last_query());
                             }
                         }
                     }
@@ -1590,7 +1590,7 @@ class Inbox_model extends CI_Model {
                     }
 
 
-                    log_message("error", "checklist array = " . json_encode($referral_checklist));
+                    //log_message("error", "checklist array = " . json_encode($referral_checklist));
                     //insert default checklist info
                     $this->db->select("md5(id) as id, id as plain_id");
                     $this->db->from("clinic_referral_checklist_items");
@@ -1599,13 +1599,13 @@ class Inbox_model extends CI_Model {
                         "clinic_id" => $this->session->userdata("user_id")
                     ));
                     $default_checklist = $this->db->get()->result();
-                    log_message("error", "checklist query = " . $this->db->last_query());
-                    log_message("error", "default checklist = " . json_encode($default_checklist));
+                    //log_message("error", "checklist query = " . $this->db->last_query());
+                    //log_message("error", "default checklist = " . json_encode($default_checklist));
 
                     foreach ($default_checklist as $key => $value) {
                         $exist = array_search($value->id, $referral_checklist);
                         $checked = ($exist === false) ? "false" : "true";
-                        // log_message("error", "val = " . $value->id . " and ref = " . json_encode($referral_checklist));
+                        // //log_message("error", "val = " . $value->id . " and ref = " . json_encode($referral_checklist));
                         $check_type = "stored";
                         $this->db->insert("referral_checklist", array(
                             "patient_id" => $patient_id,
@@ -1613,18 +1613,18 @@ class Inbox_model extends CI_Model {
                             "checklist_id" => $value->plain_id,
                             "attached" => $checked
                         ));
-                        log_message("error", "insert for default = " . $this->db->last_query());
+                        //log_message("error", "insert for default = " . $this->db->last_query());
                     }
 
 
                     //insert new checklist info
-                    log_message("error", "at custome checklist");
+                    //log_message("error", "at custome checklist");
                     $new_checklist = explode(",", $data["new_checklists"]);
                     foreach ($new_checklist as $key => $value) {
                         if ($value == "")
                             continue;
                         $exist = array_search($value, $referral_checklist);
-                        // log_message("error", "val = " . $value . " and ref = " . json_encode($referral_checklist));
+                        // //log_message("error", "val = " . $value . " and ref = " . json_encode($referral_checklist));
                         $checked = ($exist === false) ? "false" : "true";
                         $check_type = "typed";
                         $this->db->insert("referral_checklist", array(
@@ -1633,7 +1633,7 @@ class Inbox_model extends CI_Model {
                             "checklist_name" => $value,
                             "attached" => $checked
                         ));
-                        log_message("error", "insert custom = " . $this->db->last_query());
+                        //log_message("error", "insert custom = " . $this->db->last_query());
                     }
 
                     //create default clinical note
@@ -1665,7 +1665,7 @@ class Inbox_model extends CI_Model {
                         "description" => "Faxed referral package",
                         "record_file" => $file_new_name
                     ));
-                    log_message("error", "file copied from " . $source_dir . $file_old_name . " to " . $target_dir . $file_new_name . ".pdf");
+                    //log_message("error", "file copied from " . $source_dir . $file_old_name . " to " . $target_dir . $file_new_name . ".pdf");
 
 
 
@@ -1677,7 +1677,7 @@ class Inbox_model extends CI_Model {
                             "doc_name" => $value
                         );
                     }
-                    log_message("error", "checklist prepared = " . json_encode($checklist));
+                    //log_message("error", "checklist prepared = " . json_encode($checklist));
 
                     $this->db->select("c_usr.clinic_institution_name, c_usr.srfax_number");
                     $this->db->from("clinic_user_info c_usr");
@@ -1689,23 +1689,23 @@ class Inbox_model extends CI_Model {
 
                     $file_name = "referral_missing_from_inbox.html";
                     $srfax_number = $info[0]->srfax_number;
-                    log_message("error", "srfax = " . $srfax_number);
+                    //log_message("error", "srfax = " . $srfax_number);
                     if (strlen($srfax_number) === 10) {
                         $srfax_number = substr($srfax_number, 0, 3) . "-" .
                                 substr($srfax_number, 3, 3) . "-" . substr($srfax_number, 6, 4);
-                        log_message("error", " 10 = srfax = " . $srfax_number);
+                        //log_message("error", " 10 = srfax = " . $srfax_number);
                     } else if (strlen($srfax_number) === 11) {
                         $srfax_number = substr($srfax_number, 0, 1) . "-" . substr($srfax_number, 1, 3) . "-" .
                                 substr($srfax_number, 4, 3) . "-" . substr($srfax_number, 7, 4);
-                        log_message("error", " 11 = srfax = " . $srfax_number);
+                        //log_message("error", " 11 = srfax = " . $srfax_number);
                     }
                     $pat_dob = "";
-                    log_message("error", "pat dob set");
+                    //log_message("error", "pat dob set");
                     if (!empty($data["pat_dob_day"]) && !empty($data["pat_dob_month"]) && !empty($data["pat_dob_year"])) {
                         $date = DateTime::createFromFormat('d-m-Y', "{$data["pat_dob_month"]}-"
                                         . "{$data["pat_dob_day"]}-{$data["pat_dob_year"]}");
                         $pat_dob = "(" . $date->format("M d, Y") . ")";
-                        log_message("error", "pat dob set as = " . $pat_dob);
+                        //log_message("error", "pat dob set as = " . $pat_dob);
                     }
 
                     $replace_stack = array(
@@ -1726,7 +1726,7 @@ class Inbox_model extends CI_Model {
                     $fax_number = $data["dr_fax"];
                     $this->load->model("referral_model");
                     $response = $this->referral_model->send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, "Request Missing Items", $additional_replace);
-                    log_message("error", "file sent successfully");
+                    //log_message("error", "file sent successfully");
 
                     //store missing item request
                     $result = $this->db->insert("referral_missing_item_request_info", array(

@@ -167,7 +167,7 @@ class Efax extends CI_Controller {
 
     public function call_handle() {
         // echo "call handle" . json_encode($this->input->post());
-        log_message("error", "from call handeling => " . json_encode($this->input->post()));
+        //log_message("error", "from call handeling => " . json_encode($this->input->post()));
 
         $data = $this->input->post();
         $From = $data["to"];
@@ -197,13 +197,13 @@ class Efax extends CI_Controller {
         $this->db->where("r_pv.patient_id", "pat.id", false);
         $result = $this->db->get()->result();
 
-        log_message("error", "webhook sql = " . $this->db->last_query());
+        //log_message("error", "webhook sql = " . $this->db->last_query());
 
         $change_status = false;
 
         $this->db->trans_start();
         foreach ($result as $row) {
-            log_message("error", "row = " . json_encode($row) . "with body = " . $Body . ", status = " . $row->visit_confirmed);
+            //log_message("error", "row = " . json_encode($row) . "with body = " . $Body . ", status = " . $row->visit_confirmed);
             if ($Body == "1") {
                 //change status to confirm
                 $this->db->where(array(
@@ -212,7 +212,7 @@ class Efax extends CI_Controller {
                 $this->db->set("visit_confirmed", "Awaiting Confirmation");
                 $this->db->update("records_patient_visit");
                 $change_status = true;
-                log_message("error", "change (1) " . $this->db->last_query());
+                //log_message("error", "change (1) " . $this->db->last_query());
             }
             if ($Body == "2") {
                 //change status to Change required
@@ -222,7 +222,7 @@ class Efax extends CI_Controller {
                 $this->db->set("visit_confirmed", "Change required");
                 $this->db->update("records_patient_visit");
                 $change_status = true;
-                log_message("error", "change (2) " . $this->db->last_query());
+                //log_message("error", "change (2) " . $this->db->last_query());
             }
         }
         $this->db->trans_complete();

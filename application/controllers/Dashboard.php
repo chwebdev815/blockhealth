@@ -25,8 +25,8 @@ class Dashboard extends CI_Controller {
 
             $this->db->group_by("c_usr.id");
             $clinics = $this->db->get()->result();
-            log_message("error", $this->db->last_query());
-            log_message("error", "clinics result = " . json_encode($clinics));
+            //log_message("error", $this->db->last_query());
+            //log_message("error", "clinics result = " . json_encode($clinics));
             redirect("clinic/referrals/" . $clinics[0]->id);
             exit;
 

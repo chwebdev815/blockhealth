@@ -18,7 +18,7 @@ class Admin_login_model extends CI_Model {
                 "status" => 1
             ));
             $result = $this->db->get()->result();
-            log_message("error", "last q = " . $this->db->last_query());
+            //log_message("error", "last q = " . $this->db->last_query());
             $response = null;
             if ($result) {
                 $info = $result[0];
@@ -31,7 +31,7 @@ class Admin_login_model extends CI_Model {
                     // $this->session->set_userdata("physician_name", "Dr. " . $name);
                     $this->session->set_userdata("physician_name", $name);
                     $this->session->set_userdata("login_role", "admin");
-                    // log_message("error", "clinic admin ".$id.",".$name." logged in");
+                    // //log_message("error", "clinic admin ".$id.",".$name." logged in");
                     return true;
                 }
             } else {

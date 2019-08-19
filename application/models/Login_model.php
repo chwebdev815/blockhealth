@@ -16,7 +16,7 @@ class Login_model extends CI_Model {
                     "active" => 1
                 ));
                 $result = $this->db->get()->result();
-                // log_message("error", "mail res = " . json_encode($result));
+                // //log_message("error", "mail res = " . json_encode($result));
                 if ($result) {
                     $password = $result[0]->password;
                     if (password_verify($data["signup-pw"], $password)) {
@@ -27,7 +27,7 @@ class Login_model extends CI_Model {
                         // $this->session->set_userdata("physician_name", "Dr. " . $name);
                         $this->session->set_userdata("physician_name", $name);
                         $this->session->set_userdata("login_role", "clinic_admin");
-                        // log_message("error", "clinic admin ".$id.",".$name." logged in");
+                        // //log_message("error", "clinic admin ".$id.",".$name." logged in");
                         //set emr pathway
                         $this->session->set_userdata("emr_pathway", $result[0]->emr_pathway);
 
@@ -43,10 +43,10 @@ class Login_model extends CI_Model {
                 ));
 
                 $result = $this->db->get()->result();
-                // log_message("error", "mail res2 = " . json_encode($result));
+                // //log_message("error", "mail res2 = " . json_encode($result));
                 if ($result) {
                     $password = $result[0]->password;
-                    // log_message("error", "pass = " . $password . " and  ". $result[0]->password);
+                    // //log_message("error", "pass = " . $password . " and  ". $result[0]->password);
                     if (password_verify($data["signup-pw"], $password)) {
                         $id = intval($result[0]->id);
                         $name = $result[0]->name;
@@ -55,7 +55,7 @@ class Login_model extends CI_Model {
                         $this->session->set_userdata("physician_name", "Dr. " . $name);
                         $this->session->set_userdata("login_role", "clinic_physician");
                         $this->session->set_userdata("user_id", $result[0]->clinic_id);
-                        // log_message("debug", "clinic physician ".$id.",".$name." logged in");
+                        // //log_message("debug", "clinic physician ".$id.",".$name." logged in");
                         $response = true;
                     } else {
                         $response = "Username or Password is incorrect";
@@ -72,8 +72,8 @@ class Login_model extends CI_Model {
                     "active" => 1
                 ));
                 $result = $this->db->get()->result();
-                log_message("error", "result res = " . json_encode($result));
-                log_message("error", "res = " . json_encode($this->db->last_query()));
+                //log_message("error", "result res = " . json_encode($result));
+                //log_message("error", "res = " . json_encode($this->db->last_query()));
                 if ($result) {
                     $password = $result[0]->password;
                     if ($data["signup-pw"] === $password) {
@@ -85,7 +85,7 @@ class Login_model extends CI_Model {
                         $this->session->set_userdata("physician_name", "Dr. " . $name);
                         $this->session->set_userdata("login_role", "referring_physician");
                         $this->session->set_userdata("fax_number", $result[0]->fax_number);
-                        log_message("error", "referring_physician " . $id . "," . $name . " logged in");
+                        //log_message("error", "referring_physician " . $id . "," . $name . " logged in");
                         return true;
                     } else {
                         $response = "Username or Password is incorrect";
@@ -107,24 +107,24 @@ class Login_model extends CI_Model {
             "login_key" => $login_key
         ));
         $result = $this->db->get()->result();
-        log_message("error", "choose dr active = " . $this->db->last_query());
-        log_message("error", "result = " . json_encode($result));
-        log_message("error", "active = " . $result[0]->active);
+        //log_message("error", "choose dr active = " . $this->db->last_query());
+        //log_message("error", "result = " . json_encode($result));
+        //log_message("error", "active = " . $result[0]->active);
 
         if ($result) {
-            log_message("error", "inside if");
-            log_message("error", "active = " . $result[0]->active);
+            //log_message("error", "inside if");
+            //log_message("error", "active = " . $result[0]->active);
             //check if time is out (1 day)
             $created_at = DateTime::createFromFormat('Y-m-d H:i:s', $result[0]->create_datetime);
 //            $expire_time = $created_at->add(new DateInterval('P1D'))->format("Y-m-d H:i:s");
             $expire_time = $created_at->add(new DateInterval('PT5M'))->format("Y-m-d H:i:s");
             $current_time = date("Y-m-d H:i:s");
-            log_message("error", "comparing time = " . $current_time . " with " . $expire_time);
+            //log_message("error", "comparing time = " . $current_time . " with " . $expire_time);
             
             //check if link is already activated or used
             if ($result[0]->active === "1") {
                 //link is used
-                log_message("error", "link is used , " . json_encode($result));
+                //log_message("error", "link is used , " . json_encode($result));
                 show_error("This link is no longer active", 200, "This link is no longer active");
                 exit();
             }
@@ -138,12 +138,12 @@ class Login_model extends CI_Model {
                 ))->update("clinic_physician_info", array(
                     "status" => "Expired"
                 ));
-                log_message("error", "link is expired - $expire_time ");
+                //log_message("error", "link is expired - $expire_time ");
                 show_error("This link is no longer active", 200, "This link is no longer active");
                 exit();
             }
 
-            log_message("error", "going for activation of physician");
+            //log_message("error", "going for activation of physician");
 
 //            $this->db->select("DATE_FORMAT(CURDATE(), 'Active (%b %D %Y)') as status");
 //            $status = $this->db->get()->result()[0]->status;
@@ -155,7 +155,7 @@ class Login_model extends CI_Model {
             $this->db->update("clinic_physician_info", array(
                 "status" => $status
             ));
-            log_message("error", "make dr active = " . $this->db->last_query());
+            //log_message("error", "make dr active = " . $this->db->last_query());
 
             $this->db->select("email_id, id, concat(first_name, ' ', last_name) as physician_name, clinic_id");
             $this->db->from("clinic_physician_info");
@@ -170,13 +170,13 @@ class Login_model extends CI_Model {
                 $this->session->set_userdata("physician_name", "Dr. " . $result[0]->physician_name);
                 $this->session->set_userdata("login_role", "verify_clinic_physician");
                 $this->session->set_userdata("user_id", $result[0]->clinic_id);
-                log_message("error", "new physician login data = " . json_encode($result));
+                //log_message("error", "new physician login data = " . json_encode($result));
                 redirect("login/new_physician");
             } else {
                 redirect("login");
             }
         } else {
-            log_message("error", "Invalid link");
+            //log_message("error", "Invalid link");
             show_error("This link is not valid", 200, "This link is not valid");
             exit();
         }
@@ -222,7 +222,7 @@ class Login_model extends CI_Model {
         if ($this->form_validation->run()) {
             $data = $this->input->post();
             $ref_code = $data['referral_code'];
-            log_message("error", "code = " . $ref_code);
+            //log_message("error", "code = " . $ref_code);
 
             $this->db->select("dr.fax, dr.id, concat(dr.fname, ' ', dr.lname) as physician_name");
             $this->db->from("clinic_referrals c_ref, referral_patient_info pat, referral_physician_info dr");
@@ -235,13 +235,13 @@ class Login_model extends CI_Model {
             $this->db->where("c_ref.id", "pat.referral_id", false);
             $this->db->where("pat.id", "dr.patient_id", false);
             $result = $this->db->get()->result();
-            log_message("error", "check sql 1 = " . $this->db->last_query());
+            //log_message("error", "check sql 1 = " . $this->db->last_query());
             if ($result) {
                 //referral code exist
                 $sender_fax_number = $result[0]->fax;
 
                 $this->session->set_userdata("fax_number", $sender_fax_number);
-                log_message("error", "session fax_number = " . $sender_fax_number);
+                //log_message("error", "session fax_number = " . $sender_fax_number);
                 // $physician_id = $result[0]->id;
                 // $physician_name = $result[0]->physician_name;
 
@@ -260,13 +260,13 @@ class Login_model extends CI_Model {
                     $this->session->set_userdata("rp_user_id", $user_id);
                     $this->session->set_userdata("physician_name", $physician_name);
                     $this->session->set_userdata("login_role", "referring_physician");
-                    log_message("error", "session signup_done = yes");
-                    log_message("error", "session user_id = $user_id");
+                    //log_message("error", "session signup_done = yes");
+                    //log_message("error", "session user_id = $user_id");
                 } else {
                     $this->session->set_userdata("signup_done", "no");
-                    log_message("error", "session signup_done = no");
+                    //log_message("error", "session signup_done = no");
                     $this->session->set_userdata("referral_code", $ref_code);
-                    log_message("error", "session referral_code = " . $ref_code);
+                    //log_message("error", "session referral_code = " . $ref_code);
                 }
                 return array(
                     "response" => "success",

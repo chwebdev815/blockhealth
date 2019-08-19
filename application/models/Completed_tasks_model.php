@@ -39,7 +39,7 @@ class Completed_tasks_model extends CI_Model {
     
     
     public function update_task_model() {
-        log_message("error", "updating task");
+        //log_message("error", "updating task");
         $this->form_validation->set_rules('task_id', 'Task ID', 'required');
         $this->form_validation->set_rules('record_type', 'Record Type', 'required');
 //        $this->form_validation->set_rules('description', 'Description', 'required');
@@ -66,7 +66,7 @@ class Completed_tasks_model extends CI_Model {
                 "record_type" => $data["record_type"],
                 "notes" => $data["description"]
             ));
-            log_message("error", "update = " . $this->db->last_query());
+            //log_message("error", "update = " . $this->db->last_query());
 
             if ((isset($data["id"])) && $data["id"] != "") {
                 $new_file_name = generate_random_string(32);
@@ -79,7 +79,7 @@ class Completed_tasks_model extends CI_Model {
                 ));
                 
                 copy("./uploads/physician_tasks/pdf/" . $task_info[0]->pdf_file, "./uploads/health_records/" . $new_file_name . ".pdf");
-                log_message("error", "task record => " . $task_id . " => ./uploads/physician_tasks/pdf" . $task_info[0]->pdf_file ." to ./uploads/health_records/" . $new_file_name . ".pdf");
+                //log_message("error", "task record => " . $task_id . " => ./uploads/physician_tasks/pdf" . $task_info[0]->pdf_file ." to ./uploads/health_records/" . $new_file_name . ".pdf");
             
             }
            
@@ -103,7 +103,7 @@ class Completed_tasks_model extends CI_Model {
     }
     
     public function task_completed_model() {
-        log_message("error", "updating task");
+        //log_message("error", "updating task");
         $this->form_validation->set_rules('id', 'Task ID', 'required');
         if ($this->form_validation->run()) {
             $this->db->trans_start();
@@ -116,7 +116,7 @@ class Completed_tasks_model extends CI_Model {
                 "active" => 0
             ));
             $this->db->trans_complete();
-            log_message("error", "remove tasks => " . $this->db->last_query());
+            //log_message("error", "remove tasks => " . $this->db->last_query());
             if($updated) {
                 return array(
                     "result" => "success"
