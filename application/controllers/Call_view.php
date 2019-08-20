@@ -352,7 +352,7 @@ class Call_view extends CI_Controller {
         }
     }
 
-    function step_three() {
+    public function step_three() {
         $clinic_id = $_GET["clinic_id"];
         $date1 = $_GET["date1"];
         $day1 = $_GET["day1"];
@@ -736,7 +736,7 @@ class Call_view extends CI_Controller {
         }
     }
 
-    function step_four() {
+    public function step_four() {
         $clinic_id = $_GET["clinic_id"];
 
         $date1 = $_GET["date1"];
