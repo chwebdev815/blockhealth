@@ -84,7 +84,7 @@ class Fax_manager extends CI_Controller {
             }
             
             if ($faxes != null && $faxes) {
-                log_message("error", "faxes = " . json_encode($faxes));
+//                log_message("error", "faxes = " . json_encode($faxes));
                 foreach ($faxes as $fax) {
 //                    log_message("error", "fax = " . json_encode($fax));
                     $fax_date = DateTime::createFromFormat('M d/y h:i a', $fax->Date);
@@ -118,7 +118,7 @@ class Fax_manager extends CI_Controller {
                 }
             }
             else {
-                log_message("error", "### - skipped error");
+//                log_message("error", "### - skipped error");
             }
         }
 
