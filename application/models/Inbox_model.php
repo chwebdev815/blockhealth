@@ -450,13 +450,13 @@ class Inbox_model extends CI_Model {
             $phone = $data["dr_phone_number"];
             $fax = str_replace("-", "", $data["dr_fax"]);
 
-            $db_predict = $this->load->database('predictions', TRUE);
-            $db_predict->select("ID, lower(`LAST_NAME`) as LAST_NAME_LOWERCASE, lower(`FIRST_NAME`) as FIRST_NAME_LOWERCASE, CPSO, LAST_NAME, FIRST_NAME, ADDRESS_1, PHONE_1, FAX_1, ADDRESS_2, PHONE_2, FAX_2, ADDRESS_3, PHONE_3, FAX_3, ADDRESS_4, PHONE_4, FAX_4, ADDRESS_5, PHONE_5, FAX_5");
-            $db_predict->from("stored_physicians");
-            $db_predict->where(
+//            $db_predict = $this->load->database('predictions', TRUE);
+            $this->db->select("ID, lower(`LAST_NAME`) as LAST_NAME_LOWERCASE, lower(`FIRST_NAME`) as FIRST_NAME_LOWERCASE, CPSO, LAST_NAME, FIRST_NAME, ADDRESS_1, PHONE_1, FAX_1, ADDRESS_2, PHONE_2, FAX_2, ADDRESS_3, PHONE_3, FAX_3, ADDRESS_4, PHONE_4, FAX_4, ADDRESS_5, PHONE_5, FAX_5");
+            $this->db->from("stored_physicians");
+            $this->db->where(
                     "lower(LAST_NAME) = lower('$last_name')"
             );
-            $result = $db_predict->get()->result();
+            $result = $this->db->get()->result();
             //log_message("error", "matching physician detail with sql = " . $db_predict->last_query());
             //find doctor match for last name, along with either one of first name, phone, and fax
             $matched = false;
