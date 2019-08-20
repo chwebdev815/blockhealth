@@ -148,7 +148,7 @@ class Call_view extends CI_Controller {
         "</Redirect>
 		</Response>";
     }
-
+    
     public function step_two() {
 
         $clinic_id = $_GET["clinic_id"];
@@ -353,6 +353,7 @@ class Call_view extends CI_Controller {
     }
 
     public function step_three() {
+        echo "<h1> on 3</h1>";
         $clinic_id = $_GET["clinic_id"];
         $date1 = $_GET["date1"];
         $day1 = $_GET["day1"];
