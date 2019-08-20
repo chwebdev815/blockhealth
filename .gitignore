@@ -4,7 +4,6 @@ application/cache/*
 application/core/*
 application/hooks/*
 application/language/*
-system/*
 application/config/database.php
 application/config/config.php
 application/config/email.php

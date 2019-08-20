@@ -6,11 +6,13 @@ if (!defined('BASEPATH'))
 class Efax extends CI_Controller {
 
     public function check() {
-        $date = $this->db->select("now() as mysql_date")
-                ->get()->result()[0]->mysql_date;
-                
-        echo "app date = " . date("Y-m-d H:i:s");
-        echo "<br/> mysql date = " . $date;
+        $db_predict = $this->load->database('predictions', TRUE);
+        $row_count = $db_predict->select("count(*) as row_counts")
+                ->from("stored_physicians")->get()->result();
+        echo json_encode($row_count);
+        
+        echo CI_VERSION;
+        
     }
 
     public function get_images() {
