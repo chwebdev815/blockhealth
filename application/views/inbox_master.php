@@ -137,7 +137,8 @@
                         <input type="hidden" name="id" id="id" />
                         <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                         <fieldset>
-                            <form id="form_patient_save" class="form-horizontal patients-details-form" autocomplete="off">
+                            
+                <?php echo form_open("", "id='form_patient_save' class='form-horizontal patients-details-form' autocomplete='off'"); ?>
                                 <div class="form-bottom">
 
                                     <div class="form-group mb-7 row left-padd-20px right-padd-5px">
@@ -280,10 +281,8 @@
 
                     <!-- Sidebar -->
                     <div id="sidebar-wrapper">
-                        <form id="signupForm" class="form-horizontal patients-details-form" method="post" action="" enctype="multipart/form-data" autocomplete="off">
+                <?php echo form_open("", "id='signupForm' class='form-horizontal patients-details-form' autocomplete='off'"); ?>
                             <input type="hidden" name="id" id="id" />
-                            <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" 
-                                   value="<?php echo $this->security->get_csrf_hash(); ?>">
                             <fieldset>
                                 <div class="form-bottom">
                                     <div class="form-group row left-padd-20px right-padd-5px">
@@ -732,7 +731,8 @@
                 </div>
             </div>
             <div class="modal-body">
-                <form id="new-referral-form">
+                
+                <?php echo form_open("", "id='new-referral-form' class='' autocomplete='off'"); ?>
                     <div class="row">
                         <div class="col-sm-12">
                             <div class="table-responsive">

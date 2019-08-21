@@ -264,12 +264,12 @@
                     </div>
                 </div>
             </div>
-            <form class="hidden" id="sample_form">
-                <input type="hidden" name="id" id="id"/>
-                <input type="hidden" name="target" id="target"/>
-                <input type="hidden" name="param" id="param"/>
-                <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
-            </form>
+
+            <?php echo form_open("", "id='sample_form' class='hidden'"); ?>
+            <input type="hidden" name="id" id="id"/>
+            <input type="hidden" name="target" id="target"/>
+            <input type="hidden" name="param" id="param"/>
+            <?php echo form_close(); ?>
         </div>
         <div class="db-content bg-white">
             <!-- ===========load content here=========== -->

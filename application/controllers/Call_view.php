@@ -353,6 +353,7 @@ class Call_view extends CI_Controller {
     }
 
     public function step_three() {
+        echo "<h1> on 3</h1>";
         $clinic_id = $_GET["clinic_id"];
         $date1 = $_GET["date1"];
         $day1 = $_GET["day1"];
@@ -370,7 +371,6 @@ class Call_view extends CI_Controller {
         if (isset($_GET["Digits"])) {
             $base_url = base_url();
             if ($_GET['Digits'] == 1) {
-               
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";
                 echo "<Gather  timeout='3' numDigits='1' action='" . $base_url . "call_view/step_four?"
@@ -432,7 +432,6 @@ class Call_view extends CI_Controller {
                 . "address=" . urlencode($_GET['address']) . "&amp;"
                 . "</Redirect>";
                 echo "</Response>";
-                
             } elseif ($_GET['Digits'] == 2) {
                 echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n";
                 echo "<Response>";

@@ -427,7 +427,8 @@
                 <h4 class="modal-title" id="myModalLabel">Add Admin Note</h4>
             </div>
             <div class="modal-body">
-                <form id="new-referral-form">
+                
+                <?php echo form_open("", "id='new-referral-form' class='' autocomplete='off'"); ?>
                     <div class="form-group row">
                         <div class="col-lg-12">
                             <label for="new-patient-birthdate">

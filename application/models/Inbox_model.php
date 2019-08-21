@@ -122,10 +122,10 @@ class Inbox_model extends CI_Model {
                     mkdir("./" . files_dir() . md5($clinic_id));
                 }
                 //log_message("error", "checking if exist = " . "./" . files_dir()
-                        //. md5($clinic_id) . "/" . md5($new_patient_id));
+                //. md5($clinic_id) . "/" . md5($new_patient_id));
                 if (!file_exists("./" . files_dir() . md5($clinic_id) . "/" . md5($new_patient_id))) {
                     //log_message("error", "creating patient folder =>" . "./" . files_dir() .
-                           // md5($clinic_id) . "/" . md5($new_patient_id));
+                    // md5($clinic_id) . "/" . md5($new_patient_id));
                     mkdir("./" . files_dir() . md5($clinic_id) . "/" . md5($new_patient_id));
                 }
 
@@ -142,7 +142,6 @@ class Inbox_model extends CI_Model {
                         "record_file" => $efax_info[0]->file_name
                     ));
                     //log_message("error", "inserting = > " . $this->db->last_query());
-
                     //add Missing item received status 
                     $c_ref_data = $this->db->select("c_ref.id")
                                     ->from("clinic_referrals c_ref, referral_patient_info pat")
@@ -308,7 +307,6 @@ class Inbox_model extends CI_Model {
                         ));
                         //log_message("error", "inserted to rpa");
                         //log_message("error", $this->db->last_query());
-
                         //send to RPA nitegration
                         $request = curl_init('http://52.237.12.245/api/v1/patients/upload-documents');
 
@@ -449,6 +447,7 @@ class Inbox_model extends CI_Model {
             $first_name = strtolower($data["dr_fname"]);
             $phone = $data["dr_phone_number"];
             $fax = str_replace("-", "", $data["dr_fax"]);
+
 
 //            $db_predict = $this->load->database('predictions', TRUE);
             $this->db->select("ID, lower(`LAST_NAME`) as LAST_NAME_LOWERCASE, lower(`FIRST_NAME`) as FIRST_NAME_LOWERCASE, CPSO, LAST_NAME, FIRST_NAME, ADDRESS_1, PHONE_1, FAX_1, ADDRESS_2, PHONE_2, FAX_2, ADDRESS_3, PHONE_3, FAX_3, ADDRESS_4, PHONE_4, FAX_4, ADDRESS_5, PHONE_5, FAX_5");
@@ -688,16 +687,15 @@ class Inbox_model extends CI_Model {
                     $referral_code = $this->generate_referral_code();
                     //log_message("error", "ref code = " . $referral_code);
                     $location_id = $this->get_decrypted_id($data["patient_location"], "clinic_locations");
-                    $custom_id = (isset($data["custom"]))?
-                        get_decrypted_id($data["custom"], "clinic_custom"):0;
+                    $custom_id = (isset($data["custom"])) ?
+                            get_decrypted_id($data["custom"], "clinic_custom") : 0;
 
                     $this->db->trans_start();
                     //add referral
                     $efax_id = $result[0]->id;
                     $efax_file = $result[0]->file_name;
                     $referral_reason = (isset($data["reasons"])) ? $data["reasons"][0] : "";
-                    $assigned_physician_id = $this->get_decrypted_id($data["assigned_physician"], 
-                            "clinic_physician_info");
+                    $assigned_physician_id = $this->get_decrypted_id($data["assigned_physician"], "clinic_physician_info");
                     // $first_status = "Admin Triage";
                     $first_status = "Referral Triage";
                     $this->db->set("last_updated", "now()", false);
@@ -715,14 +713,12 @@ class Inbox_model extends CI_Model {
                                     ->where(array(
                                         "clinic_id" => $this->session->userdata("user_id")
                                     ))->get()->result();
-                    
+
                     if ($physicians && sizeof($physicians) === 1) {
                         $insert_data["assigned_physician"] = $physicians[0]->id;
                     }
                     $this->db->insert("clinic_referrals", $insert_data);
                     //new referral record added
-
-
                     //log_message("error", "update status  = " . $this->db->last_query());
                     $referral_id = $this->db->insert_id();
                     //remove from inbox by status referred true
@@ -773,7 +769,6 @@ class Inbox_model extends CI_Model {
                     );
                     $this->db->insert("referral_physician_info", $physician_data);
                     //log_message("error", "insert physician  = " . $this->db->last_query());
-
                     //store clinical triage info linked to patient id
                     $clinical_triage_data = array(
                         "patient_id" => $patient_id,
@@ -784,7 +779,6 @@ class Inbox_model extends CI_Model {
                     $this->db->insert("referral_clinic_triage", $clinical_triage_data);
                     $clinic_triage_id = $this->db->insert_id();
                     //log_message("error", "triage referral = " . $this->db->last_query());
-
                     //store all diseases (using loop) patient diseases linked to referral_clinic_triage->id
                     if (isset($data["diseases"])) {
                         $diseases = $data["diseases"];
@@ -945,7 +939,6 @@ class Inbox_model extends CI_Model {
                         "record_file" => $file_new_name
                     ));
                     //log_message("error", "file transfered from " . $source_dir . $file_old_name . " to " . $target_dir . $file_new_name . ".pdf");
-
                     //send referral code as fax to family physician
                     // $subject = "Referral code = " . $referral_code;
                     //                $this->send_efax("15554567890", $subject);  
@@ -996,11 +989,7 @@ class Inbox_model extends CI_Model {
 //                    $this->load->model("referral_model");
 //                    //log_message("error", "$file_name, checklist, replace, $fax_number");
 //                    $response = $this->referral_model->send_status_fax($file_name, $checklist, $replace_stack, $fax_number, "New Referral");
-
                     //log_message("error", "completed fax send");
-
-
-
                     //only trigger RPA events (table entry + doc upload API) if pathway name is AccuroCitrix
                     //
                     
@@ -1111,7 +1100,6 @@ class Inbox_model extends CI_Model {
                     }
                     $this->db->trans_complete();
                     //log_message("error", "transactions saved");
-
                     // return array(true, base_url() . "admin_triage/referral_details/" . md5($referral_id));
                     return array(true, base_url() . "referral_triage/referral_details/" . md5($patient_id));
                 } catch (Exception $exception) {
@@ -1495,7 +1483,6 @@ class Inbox_model extends CI_Model {
                     );
                     $this->db->insert("referral_physician_info", $physician_data);
                     //log_message("error", "insert physician  = " . $this->db->last_query());
-
                     //store clinical triage info linked to patient id
                     $clinical_triage_data = array(
                         "patient_id" => $patient_id,
@@ -1506,7 +1493,6 @@ class Inbox_model extends CI_Model {
                     $this->db->insert("referral_clinic_triage", $clinical_triage_data);
                     $clinic_triage_id = $this->db->insert_id();
                     //log_message("error", "triage referral = " . $this->db->last_query());
-
                     //store all diseases (using loop) patient diseases linked to referral_clinic_triage->id
                     if (isset($data["diseases"])) {
                         $diseases = $data["diseases"];
@@ -1666,9 +1652,6 @@ class Inbox_model extends CI_Model {
                         "record_file" => $file_new_name
                     ));
                     //log_message("error", "file copied from " . $source_dir . $file_old_name . " to " . $target_dir . $file_new_name . ".pdf");
-
-
-
                     // now send fax for request missing item
 
                     $checklist = array();
@@ -1727,7 +1710,6 @@ class Inbox_model extends CI_Model {
                     $this->load->model("referral_model");
                     $response = $this->referral_model->send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, "Request Missing Items", $additional_replace);
                     //log_message("error", "file sent successfully");
-
                     //store missing item request
                     $result = $this->db->insert("referral_missing_item_request_info", array(
                         "patient_id" => 0,

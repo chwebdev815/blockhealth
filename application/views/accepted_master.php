@@ -19,10 +19,6 @@
         </thead>
     </table>
 </div>
-<form class="hidden" id="sample_form">
-    <input type="hidden" name="id" id="id"/>
-    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
-</form>
 <!-- Add Patient visit Modal -->
 <div class="modal fade" id="modal_add_patient_visit" tabindex="-1" role="dialog" aria-labelledby="add-record-label">
     <div class="modal-dialog modal-lg" role="document">
@@ -41,9 +37,9 @@
             </div>
             <div class="modal-body">
 <!--                <p class="color-green"><i class="fa fa-exclamation-circle"></i>&nbsp;Cell / Home / Work phone is required to activate patient visit notifications</p>-->
-                <form id="form_add_patient_visit">
+                
+                <?php echo form_open("", "id='form_add_patient_visit' class=''"); ?>
                     <input type="hidden" name="id" id="id"/>
-                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
                     <div class="">
                         <input type="hidden" class="form-control" name="visit_name" placeholder="Enter Patient Visit">
                     </div>
@@ -117,8 +113,7 @@
                 </div>                
             </div>
             <div class="modal-body">
-                <form id="form_add_patient" class="form-horizontal patients-details-form2">
-                    <input type="hidden" name="<?php echo $this->security->get_csrf_token_name(); ?>" value="<?php echo $this->security->get_csrf_hash(); ?>">
+                <?php echo form_open("", "id='form_add_patient' class='form-horizontal patients-details-form2'"); ?>
                     <fieldset>
                         <div class="form-bottom">
                             <div class="form-group left-padd-20px right-padd-20px">

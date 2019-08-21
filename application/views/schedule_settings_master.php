@@ -24,7 +24,7 @@
         <div class="row pmainsec">
             <div class="col-md-6">
                 <div id="checklist_div">
-                    <form id="form_physician_weekdays">
+                    <?php echo form_open("", "id='form_physician_weekdays'"); ?>
                         <label class="maroom-label">Select Available Days</label>
                         <input type="hidden" name="id" id="id">
                         <div style="display:inline-block" class="checkbox">
@@ -79,7 +79,7 @@
                         <button type="button" class="btn btn-theme" id="btn_confirm_update_weekdays">
                             Update
                         </button>
-                    </form>
+                    <?php echo form_close(); ?>
                 </div>
             </div>
         </div>
@@ -87,7 +87,7 @@
 
         <div class="row pmainsec">
             <div class="col-md-12 mob-no-padding">
-                <form id="form_physician_timing">
+                <?php echo form_open("", "id='form_physician_timing'"); ?>
                     <div class="col-md-12 pl0">
                         <input type="hidden" name="id" id="id"/>
 
@@ -140,7 +140,7 @@
                         <div class="col-md-3"></div>        
                         <div class="col-md-4"></div>        
                     </div>
-                </form>
+                <?php echo form_close(); ?>
                 <div class="hidden" id="template_additional_weekday_block">
                     <div class="col-md-12 ptrowblock" id="blocktm">
                         <div class="col-sm-6 col-md-2 col-xs-12 pl0 pdinput text-right">
@@ -221,7 +221,7 @@
                 <h4 class="modal-title">Add Blocked Time (<span id="blocking_date_title"></span>)</h4>
             </div>
             <div class="modal-body">
-                <form id="form_day_specific_blocking">
+                <?php echo form_open("", "id='form_day_specific_blocking'"); ?>
                     <input type="hidden" name="blocking_date" id="blocking_date"/>
                     <input type="hidden" name="id" id="id"/>
                     <input type="hidden" name="type" id="type"/>
@@ -254,7 +254,7 @@
                             <a id="btn_add_blocked_time_fields" class="update">+ Blocked Time</a>
                         </div>
                     </div>
-                </form>
+                <?php echo form_close(); ?>
 
                 <div class="hidden" id="template_additional_blocks">
                     <div class="row">

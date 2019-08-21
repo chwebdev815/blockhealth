@@ -11,6 +11,7 @@ class Efax extends CI_Controller {
                 ->from("stored_physicians")->get()->result();
         echo json_encode($row_count);
         
+        
         echo CI_VERSION;
         
     }
