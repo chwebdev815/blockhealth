@@ -1706,7 +1706,7 @@
             canvas.toBlob(function (blob) {
                 var formData = new FormData();
                 formData.append('file', blob);
-                FormData.append('blockhealth_validation_token', $("#sample_form").find("input[name='blockhealth_validation_token']").val());
+                formData.append('blockhealth_validation_token', $("#sample_form").find("input[name='blockhealth_validation_token']").val());
 //                header = {};
 //                if (global_data.release_type === "prod") {
 //                    header = {
