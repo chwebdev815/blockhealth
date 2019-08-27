@@ -1139,9 +1139,9 @@ class Inbox_model extends CI_Model {
 
     public function predict_api_model() {
         //global_data.predict_url + global_data.predict_api
-        
+
         $api_url = $this->config->item("PREDICTION_URL") . $this->config->item("PREDICTION_API");
-        
+
         $data = $this->input->post();
         $mime = mime_content_type($_FILES['file']['tmp_name']);
         $extension = substr($mime, strpos($mime, "/") + 1);
@@ -1166,18 +1166,11 @@ class Inbox_model extends CI_Model {
                 'message' => curl_error($curl)
             ));
         } else {
-            $response = json_decode($response);
-            if ($response->result == "error") {
-                echo json_encode(array(
-                    'result' => 'error',
-                    'message' => $response->message
-                ));
-            } else if ($response->result == "success") {
-                echo json_encode(array(
-                    "result" => "success",
-                    "message" => json_encode($response)
-                ));
-            }
+            log_message("error", "predict response = " . $response);
+            echo json_encode(array(
+                "result" => "success",
+                "message" => $response
+            ));
         }
         curl_close($curl);
     }
