@@ -1169,10 +1169,7 @@ class Inbox_model extends CI_Model {
         } else {
             header('Content-Type: application/json');
             log_message("error", "predict response = " . $response);
-            return array(
-                "result" => "success",
-                "message" => $response
-            );
+            return json_decode($response);
         }
         curl_close($curl);
     }
