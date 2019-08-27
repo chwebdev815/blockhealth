@@ -1171,7 +1171,7 @@ class Inbox_model extends CI_Model {
             log_message("error", "predict response = " . $response);
             echo json_encode(array(
                 "result" => "success",
-                "message" => $response
+                "message" => json_decode($response)
             ));
         }
         curl_close($curl);
