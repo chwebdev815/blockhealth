@@ -1154,7 +1154,8 @@ class Inbox_model extends CI_Model {
         curl_setopt($curl, CURLOPT_SAFE_UPLOAD, true);
         curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
         curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-            "authorization: Bearer $token"
+            $this->config->item("PREDICT_API_SECRET") . ':' . $this->config->item("PREDICT_API_SECRET_VALUE"),
+            $this->config->item("PREDICT_API_CLIENT") . ':' . $this->config->item("PREDICT_API_CLIENT_VALUE")
         ));
         curl_setopt($curl, CURLOPT_POST, true);
         curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
