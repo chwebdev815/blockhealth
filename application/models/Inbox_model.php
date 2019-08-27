@@ -1137,6 +1137,51 @@ class Inbox_model extends CI_Model {
             return validation_errors();
     }
 
+    public function predict_api_model() {
+        //global_data.predict_url + global_data.predict_api
+        
+        $api_url = $this->config->item("PREDICTION_URL") . $this->config->item("PREDICTION_API");
+        
+        $data = $this->input->post();
+        $mime = mime_content_type($_FILES['file']['tmp_name']);
+        $extension = substr($mime, strpos($mime, "/") + 1);
+        $data["file"] = new \CURLFile(realpath($_FILES['file']['tmp_name']), $mime, "file.$extension");
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_URL, $api_url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SAFE_UPLOAD, true);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            "authorization: Bearer $token"
+        ));
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+        $response = curl_exec($curl);
+        if (curl_errno($curl)) {
+            echo json_encode(array(
+                'result' => 'error',
+                'message' => curl_error($curl)
+            ));
+        } else {
+            $response = json_decode($response);
+            if ($response->result == "error") {
+                echo json_encode(array(
+                    'result' => 'error',
+                    'message' => $response->message
+                ));
+            } else if ($response->result == "success") {
+                echo json_encode(array(
+                    "result" => "success",
+                    "message" => json_encode($response)
+                ));
+            }
+        }
+        curl_close($curl);
+    }
+
     public function add_health_record_model() {
         $this->form_validation->set_rules('id', 'Efax Id', 'required');
         $this->form_validation->set_rules('target', 'Patient Id', 'required');
