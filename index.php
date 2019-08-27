@@ -1,5 +1,11 @@
 <?php
 header( 'X-Frame-Options: DENY' );
+header("X-XSS-Protection: 1; mode=block");
+header('X-Content-Type-Options: nosniff');
+//header("Content-Security-Policy: default-src 'none'; script-src 'self'; "
+//        . "connect-src 'self'; img-src 'self'; style-src 'self' 'unsafe-inline';");
+
+
 /**
  * CodeIgniter
  *
