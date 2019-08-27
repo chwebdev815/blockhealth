@@ -1162,17 +1162,17 @@ class Inbox_model extends CI_Model {
 
         $response = curl_exec($curl);
         if (curl_errno($curl)) {
-            echo json_encode(array(
+            return json_encode(array(
                 'result' => 'error',
                 'message' => curl_error($curl)
             ));
         } else {
             header('Content-Type: application/json');
             log_message("error", "predict response = " . $response);
-            echo json_encode(array(
+            return array(
                 "result" => "success",
-                "message" => json_decode($response)
-            ));
+                "message" => $response
+            );
         }
         curl_close($curl);
     }
