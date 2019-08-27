@@ -707,18 +707,11 @@
             canvas.toBlob(function (blob) {
                 var formData = new FormData();
                 formData.append('file', blob);
+                formData.append('blockhealth_validation_token', $("#sample_form").find("input[name='blockhealth_validation_token']").val());
                 
-                header = {};
-                if (global_data.release_type === "prod") {
-                    header = {
-                        "x-application-secret": "fsk9scdJ1eiU3ZR+vVoanV0RSqlWhLyAp5ri4eXxtC9A61sBmoKlOqg=",
-                        "x-client-name": "scarlet-client"
-                    };
-                }
-                // global_data.api_phy_extract = "running";
                 $("#btn_extract_patient").button("loading");
                 // $.ajax('http://159.89.127.142/phy_extract', {
-                $.ajax(global_data.predict_url + global_data.predict_api, {
+                $.ajax(base + "inbox/predict_api", {
                     method: 'POST',
                     data: formData,
                     processData: false,
