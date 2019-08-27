@@ -1166,6 +1166,7 @@ class Inbox_model extends CI_Model {
                 'message' => curl_error($curl)
             ));
         } else {
+            header('Content-Type: application/json');
             log_message("error", "predict response = " . $response);
             echo json_encode(array(
                 "result" => "success",
