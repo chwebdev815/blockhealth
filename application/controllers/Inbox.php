@@ -154,24 +154,6 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
-    public function predict_api() {
-        if (clinic_login()) {
-            $this->load->model("inbox_model");
-            $response = $this->inbox_model->predict_api_model();
-        } else {
-            $response = "Sesion Expired";
-        }
-        echo json_encode($response);
-    }
-    public function medication_api() {
-        if (clinic_login()) {
-            $this->load->model("inbox_model");
-            $response = $this->inbox_model->medication_api_model();
-        } else {
-            $response = "Sesion Expired";
-        }
-        echo json_encode($response);
-    }
     public function get_referral_checklist() {
         if (clinic_login()) {
             $this->load->model("inbox_model");

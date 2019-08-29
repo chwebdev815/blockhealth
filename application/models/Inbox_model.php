@@ -136,9 +136,9 @@ class Inbox_model extends CI_Model {
                     //insert health record
                     $inserted = $this->db->insert("records_clinic_notes", array(
                         "patient_id" => $new_patient_id,
-                        "record_type" => $data["record_type"],
+                        "record_type" => htmlspecialchars($data["record_type"]),
                         "physician" => $data["assign_physician"],
-                        "description" => $data["description"],
+                        "description" => htmlspecialchars($data["description"]),
                         "record_file" => $efax_info[0]->file_name
                     ));
                     //log_message("error", "inserting = > " . $this->db->last_query());
@@ -192,11 +192,11 @@ class Inbox_model extends CI_Model {
 //            $patient_id = ((isset($data["id"])) ? ($this->get_decrypted_id($data["id"], "referral_patient_info")) : 0);
 //            $patient_id = 2;
                 $this->db->insert("referral_patient_info", array(
-                    "fname" => $data["pat_fname"],
-                    "lname" => $data["pat_lname"],
+                    "fname" => htmlspecialchars($data["pat_fname"]),
+                    "lname" => htmlspecialchars($data["pat_lname"]),
                     "dob" => $data["pat_dob_year"] . "-" . $data["pat_dob_month"] . "-" . $data["pat_dob_day"],
-                    "ohip" => $data["pat_ohip"],
-                    "gender" => $data["pat_gender"]
+                    "ohip" => htmlspecialchars($data["pat_ohip"]),
+                    "gender" => htmlspecialchars($data["pat_gender"])
                 ));
 
                 $patient_id = $this->db->insert_id();
@@ -206,8 +206,8 @@ class Inbox_model extends CI_Model {
                     "clinic_id" => $this->session->userdata("user_id"),
                     "assigned_to" => $physician_id,
                     "patient_id" => $patient_id,
-                    "record_type" => $data["record_type"],
-                    "notes" => $data["description"],
+                    "record_type" => htmlspecialchars($data["record_type"]),
+                    "notes" => htmlspecialchars($data["description"]),
                     "pdf_file" => $new_file_name . ".pdf",
                     "tiff_file" => $new_file_name . ".tif",
                     "page_count" => $efax_info[0]->pages,
@@ -230,8 +230,8 @@ class Inbox_model extends CI_Model {
                     $inserted = $this->db->insert("records_clinic_notes", array(
                         "patient_id" => $this->get_decrypted_id($data["id"], "referral_patient_info"),
                         "physician" => "Admin",
-                        "record_type" => $data["record_type"],
-                        "description" => $data["description"],
+                        "record_type" => htmlspecialchars($data["record_type"]),
+                        "description" => htmlspecialchars($data["description"]),
                         "record_file" => $new_file_name
                     ));
 
@@ -265,16 +265,16 @@ class Inbox_model extends CI_Model {
                             "rec_date" => date("Y-m-d"),
                             "rec_time" => date("H:i:s"),
                             "status" => "NEW",
-                            "first_name" => $data["pat_fname"],
-                            "last_name" => $data["pat_lname"],
-                            "hin" => $data["pat_ohip"],
+                            "first_name" => htmlspecialchars($data["pat_fname"]),
+                            "last_name" => htmlspecialchars($data["pat_lname"]),
+                            "hin" => htmlspecialchars($data["pat_ohip"]),
                             "dob_month" => make_two_digit($data["pat_dob_month"]),
                             "dob_day" => make_two_digit($data["pat_dob_day"]),
                             "dob_year" => $data["pat_dob_year"],
                             "pdf_name" => "$new_file_name.pdf",
                             "pdf_location" => "uploads/clinics/$clinic_id/" .
                             md5($patient_id) . "/" . $new_file_name . ".pdf",
-                            "pdf_type" => $data["record_type"]
+                            "pdf_type" => htmlspecialchars($data["record_type"])
 //                            "active" => 1
                         );
                         $this->db->insert("oscar_integration", $data_object);
@@ -293,12 +293,12 @@ class Inbox_model extends CI_Model {
                             "clinic_name" => $clinic->first_name,
                             "username" => $clinic->emr_uname_1,
                             "password" => $clinic->emr_pwd_1,
-                            "first_name" => $data["pat_fname"],
-                            "last_name" => $data["pat_lname"],
+                            "first_name" => htmlspecialchars($data["pat_fname"]),
+                            "last_name" => htmlspecialchars($data["pat_lname"]),
                             "dob_day" => make_two_digit($data["pat_dob_day"]),
                             "dob_month" => make_two_digit($data["pat_dob_month"]),
-                            "dob_year" => $data["pat_dob_year"],
-                            "hin" => $data["pat_ohip"],
+                            "dob_year" => htmlspecialchars($data["pat_dob_year"]),
+                            "hin" => htmlspecialchars($data["pat_ohip"]),
                             "pdf_name" => "$new_file_name.pdf",
                             "pdf_location" => base_url() . "uploads/clinics/$clinic_id/" . md5($patient_id) . "/" . $new_file_name . ".pdf",
                             "pdf_type" => "Documents",
@@ -384,8 +384,8 @@ class Inbox_model extends CI_Model {
 
             $inserted = $this->db->insert("records_clinic_notes", array(
                 "patient_id" => $patient_id,
-                "record_type" => $data["record_type"],
-                "description" => $data["description"],
+                "record_type" => htmlspecialchars($data["record_type"]),
+                "description" => htmlspecialchars($data["description"]),
                 "record_file" => $new_file_name
             ));
             //log_message("error", "insert = " . $this->db->last_query());
@@ -703,7 +703,7 @@ class Inbox_model extends CI_Model {
                     $insert_data = array(
                         "efax_id" => $efax_id,
                         "referral_code" => $referral_code,
-                        "referral_reason" => $referral_reason,
+                        "referral_reason" => htmlspecialchars($referral_reason),
                         "status" => $first_status,
                         "assigned_physician" => $assigned_physician_id
                     );
@@ -734,18 +734,18 @@ class Inbox_model extends CI_Model {
                     //store patient details
                     $patient_data = array(
                         "referral_id" => $referral_id,
-                        "fname" => $data["pat_fname"],
-                        "lname" => $data["pat_lname"],
+                        "fname" => htmlspecialchars($data["pat_fname"]),
+                        "lname" => htmlspecialchars($data["pat_lname"]),
                         "dob" => filter_only_numbers($data["pat_dob_year"])
                         . "-" . filter_only_numbers($data["pat_dob_month"])
                         . "-" . filter_only_numbers($data["pat_dob_day"]),
-                        "ohip" => str_replace(" ", "", str_replace("-", "", $ohip)),
-                        "gender" => $data["pat_gender"],
+                        "ohip" => htmlspecialchars(str_replace(" ", "", str_replace("-", "", $ohip))),
+                        "gender" => htmlspecialchars($data["pat_gender"]),
                         "cell_phone" => filter_only_numbers($data["pat_cell_phone"]),
                         "home_phone" => filter_only_numbers($data["pat_home_phone"]),
                         "work_phone" => filter_only_numbers($data["pat_work_phone"]),
-                        "email_id" => $data["pat_email"],
-                        "address" => $data["pat_address"],
+                        "email_id" => htmlspecialchars($data["pat_email"]),
+                        "address" => htmlspecialchars($data["pat_address"]),
                         "next_visit" => "Initial consult",
                         "location_id" => $location_id,
                         "custom_id" => $custom_id
@@ -759,13 +759,13 @@ class Inbox_model extends CI_Model {
                     //store referring physician data linked to patient id
                     $physician_data = array(
                         "patient_id" => $patient_id,
-                        "fname" => $data["dr_fname"],
-                        "lname" => $data["dr_lname"],
-                        "phone" => $data["dr_phone_number"],
-                        "fax" => $data["dr_fax"],
-                        "email" => $data["dr_email"],
-                        "address" => $data["dr_address"],
-                        "billing_num" => $data["dr_billing_num"]
+                        "fname" => htmlspecialchars($data["dr_fname"]),
+                        "lname" => htmlspecialchars($data["dr_lname"]),
+                        "phone" => htmlspecialchars($data["dr_phone_number"]),
+                        "fax" => htmlspecialchars($data["dr_fax"]),
+                        "email" => htmlspecialchars($data["dr_email"]),
+                        "address" => htmlspecialchars($data["dr_address"]),
+                        "billing_num" => htmlspecialchars($data["dr_billing_num"])
                     );
                     $this->db->insert("referral_physician_info", $physician_data);
                     //log_message("error", "insert physician  = " . $this->db->last_query());
@@ -774,7 +774,7 @@ class Inbox_model extends CI_Model {
                         "patient_id" => $patient_id,
                         "priority" => (!isset($data["priority"]) ||
                         $data["priority"] == null || empty($data["priority"])) ?
-                        "not_specified" : $data["priority"]
+                        "not_specified" : htmlspecialchars($data["priority"])
                     );
                     $this->db->insert("referral_clinic_triage", $clinical_triage_data);
                     $clinic_triage_id = $this->db->insert_id();
@@ -787,7 +787,7 @@ class Inbox_model extends CI_Model {
                                 //insert if not empty
                                 $this->db->insert("referral_clinic_triage_disease_info", array(
                                     "clinic_triage_id" => $clinic_triage_id,
-                                    "disease" => $value
+                                    "disease" => htmlspecialchars($value)
                                 ));
                                 //log_message("error", "disease q = " . $this->db->last_query());
                             }
@@ -802,7 +802,7 @@ class Inbox_model extends CI_Model {
                                 //insert if not empty
                                 $this->db->insert("referral_clinic_triage_symptom_info", array(
                                     "clinic_triage_id" => $clinic_triage_id,
-                                    "symptom" => $value
+                                    "symptom" => htmlspecialchars($value)
                                 ));
                                 //log_message("error", "symptom q = " . $this->db->last_query());
                             }
@@ -817,7 +817,7 @@ class Inbox_model extends CI_Model {
                                 //insert if not empty
                                 $this->db->insert("referral_clinic_triage_tests_info", array(
                                     "clinic_triage_id" => $clinic_triage_id,
-                                    "test" => $value
+                                    "test" => htmlspecialchars($value)
                                 ));
                                 //log_message("error", "test q = " . $this->db->last_query());
                             }
@@ -832,7 +832,7 @@ class Inbox_model extends CI_Model {
                                 //insert if not empty
                                 $this->db->insert("referral_clinic_triage_drugs_info", array(
                                     "clinic_triage_id" => $clinic_triage_id,
-                                    "drug" => $value
+                                    "drug" => htmlspecialchars($value)
                                 ));
                                 //log_message("error", "drug q = " . $this->db->last_query());
                             }
@@ -847,7 +847,7 @@ class Inbox_model extends CI_Model {
                                 //insert if not empty
                                 $this->db->insert("referral_clinic_triage_devices_info", array(
                                     "clinic_triage_id" => $clinic_triage_id,
-                                    "device" => $value
+                                    "device" => htmlspecialchars($value)
                                 ));
                                 //log_message("error", "device q = " . $this->db->last_query());
                             }
@@ -900,7 +900,7 @@ class Inbox_model extends CI_Model {
                         $this->db->insert("referral_checklist", array(
                             "patient_id" => $patient_id,
                             "checklist_type" => $check_type,
-                            "checklist_name" => $value,
+                            "checklist_name" => htmlspecialchars($value),
                             "attached" => $checked
                         ));
                         //log_message("error", "insert custom = " . $this->db->last_query());
@@ -1015,13 +1015,13 @@ class Inbox_model extends CI_Model {
                                 "last_name" => $data["pat_lname"],
                                 "dob_day" => make_two_digit($data["pat_dob_day"]),
                                 "dob_month" => make_two_digit($data["pat_dob_month"]),
-                                "dob_year" => $data["pat_dob_year"],
-                                "hin" => $ohip,
-                                "email" => $data["pat_email"],
-                                "cell_phone" => $data["pat_cell_phone"],
-                                "home_phone" => $data["pat_home_phone"],
-                                "work_phone" => $data["pat_work_phone"],
-                                "address" => $data["pat_address"],
+                                "dob_year" => htmlspecialchars($data["pat_dob_year"]),
+                                "hin" => htmlspecialchars($ohip),
+                                "email" => htmlspecialchars($data["pat_email"]),
+                                "cell_phone" => filter_only_numbers($data["pat_cell_phone"]),
+                                "home_phone" => filter_only_numbers($data["pat_home_phone"]),
+                                "work_phone" => filter_only_numbers($data["pat_work_phone"]),
+                                "address" => htmlspecialchars($data["pat_address"]),
                                 "pdf_location" => "uploads/clinics/" .
                                 md5($clinic_id) . "/" . md5($patient_id) . "/" . $file_new_name . ".pdf",
                                 "pdf_name" => "$file_new_name.pdf",
@@ -1043,25 +1043,25 @@ class Inbox_model extends CI_Model {
                                 "clinic_name" => "TCN",
                                 "username" => "hahmed",
                                 "password" => "Blockhealth19",
-                                "first_name" => $data["pat_fname"],
-                                "last_name" => $data["pat_lname"],
+                                "first_name" => htmlspecialchars($data["pat_fname"]),
+                                "last_name" => htmlspecialchars($data["pat_lname"]),
                                 "dob_day" => make_two_digit($data["pat_dob_day"]),
                                 "dob_month" => make_two_digit($data["pat_dob_month"]),
-                                "dob_year" => $data["pat_dob_year"],
-                                "hin" => $ohip,
-                                "email_id" => $data["pat_email"],
-                                "cell_phone" => $data["pat_cell_phone"],
-                                "home_phone" => $data["pat_home_phone"],
-                                "work_phone" => $data["pat_work_phone"],
+                                "dob_year" => htmlspecialchars($data["pat_dob_year"]),
+                                "hin" => htmlspecialchars($ohip),
+                                "email_id" => htmlspecialchars($data["pat_email"]),
+                                "cell_phone" => filter_only_numbers($data["pat_cell_phone"]),
+                                "home_phone" => filter_only_numbers($data["pat_home_phone"]),
+                                "work_phone" => filter_only_numbers($data["pat_work_phone"]),
                                 "address" => $data["pat_address"],
                                 "pdf_location" => base_url() . "uploads/clinics/" .
                                 md5($clinic_id) . "/" . md5($patient_id) . "/" . $file_new_name . ".pdf",
                                 "pdf_name" => "$file_new_name.pdf",
                                 "pdf_type" => "Documents",
                                 "assigned_provider" => "Arianna Muskat",
-                                "rp_first_name" => $data["dr_fname"],
-                                "rp_last_name" => $data["dr_lname"],
-                                "rp_number" => $data["dr_billing_num"],
+                                "rp_first_name" => htmlspecialchars($data["dr_fname"]),
+                                "rp_last_name" => htmlspecialchars($data["dr_lname"]),
+                                "rp_number" => htmlspecialchars($data["dr_billing_num"]),
                                 "active" => 1
                             );
 
@@ -1069,7 +1069,7 @@ class Inbox_model extends CI_Model {
                             foreach ($drugs as $key => $value) {
                                 $pos = strpos($value, ",");
                                 $value = ($pos) ? substr($value, 0, $pos) . ")" : $value;
-                                $rpa_data["medication" . ($key + 1)] = $value;
+                                $rpa_data["medication" . ($key + 1)] = htmlspecialchars($value);
                             }
 
                             $this->db->insert("rpa_integration", $rpa_data);
@@ -1136,83 +1136,6 @@ class Inbox_model extends CI_Model {
         } else
             return validation_errors();
     }
-    
-    
-    
-    public function medication_api_model() {
-        //global_data.predict_url + global_data.medication_api
-
-        $api_url = $this->config->item("PREDICTION_URL") . $this->config->item("PREDICT_MEDICATION");
-
-        $data = $this->input->post();
-        $mime = mime_content_type($_FILES['file']['tmp_name']);
-        $extension = substr($mime, strpos($mime, "/") + 1);
-        $data["file"] = new \CURLFile(realpath($_FILES['file']['tmp_name']), $mime, "file.$extension");
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_URL, $api_url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_SAFE_UPLOAD, true);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-            $this->config->item("PREDICT_API_SECRET") . ':' . $this->config->item("PREDICT_API_SECRET_VALUE"),
-            $this->config->item("PREDICT_API_CLIENT") . ':' . $this->config->item("PREDICT_API_CLIENT_VALUE")
-        ));
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-
-        $response = curl_exec($curl);
-        if (curl_errno($curl)) {
-            return json_encode(array(
-                'result' => 'error',
-                'message' => curl_error($curl)
-            ));
-        } else {
-            header('Content-Type: application/json');
-            log_message("error", "predict response = " . $response);
-            return json_decode($response);
-        }
-        curl_close($curl);
-    }
-    
-    
-    public function predict_api_model() {
-        //global_data.predict_url + global_data.predict_api
-
-        $api_url = $this->config->item("PREDICTION_URL") . $this->config->item("PREDICTION_API");
-
-        $data = $this->input->post();
-        $mime = mime_content_type($_FILES['file']['tmp_name']);
-        $extension = substr($mime, strpos($mime, "/") + 1);
-        $data["file"] = new \CURLFile(realpath($_FILES['file']['tmp_name']), $mime, "file.$extension");
-
-        $curl = curl_init();
-        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
-        curl_setopt($curl, CURLOPT_URL, $api_url);
-        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($curl, CURLOPT_SAFE_UPLOAD, true);
-        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
-        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
-            $this->config->item("PREDICT_API_SECRET") . ':' . $this->config->item("PREDICT_API_SECRET_VALUE"),
-            $this->config->item("PREDICT_API_CLIENT") . ':' . $this->config->item("PREDICT_API_CLIENT_VALUE")
-        ));
-        curl_setopt($curl, CURLOPT_POST, true);
-        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
-
-        $response = curl_exec($curl);
-        if (curl_errno($curl)) {
-            return json_encode(array(
-                'result' => 'error',
-                'message' => curl_error($curl)
-            ));
-        } else {
-            header('Content-Type: application/json');
-            log_message("error", "predict response = " . $response);
-            return json_decode($response);
-        }
-        curl_close($curl);
-    }
 
     public function add_health_record_model() {
         $this->form_validation->set_rules('id', 'Efax Id', 'required');
@@ -1245,8 +1168,8 @@ class Inbox_model extends CI_Model {
                 $this->db->insert("records_clinic_notes", array(
                     "efax_id" => $efax_id,
                     "patient_id" => $patient_id,
-                    "record_type" => $data["record_type"],
-                    "description" => $data["description"],
+                    "record_type" => htmlspecialchars($data["record_type"]),
+                    "description" => htmlspecialchars($data["description"]),
                     "record_file" => $file_new_name
                 ));
                 //set referred status true for efax
@@ -1462,7 +1385,7 @@ class Inbox_model extends CI_Model {
 
     public function missing_items_details_model() {
         $data = $this->input->post();
-        $dr_name = $data["dr_fname"] . " " . $data["dr_lname"];
+        $dr_name = htmlspecialchars($data["dr_fname"]) . " " . htmlspecialchars($data["dr_lname"]);
         $alert_data = "Are you sure you would like to send a missing item request to " . $dr_name;
 
         //return result data 
@@ -1503,7 +1426,7 @@ class Inbox_model extends CI_Model {
                     $insert_data = array(
                         "efax_id" => $efax_id,
                         "referral_code" => $referral_code,
-                        "referral_reason" => $referral_reason,
+                        "referral_reason" => htmlspecialchars($referral_reason),
                         "status" => $first_status,
                         "missing_item_status" =>
                         "<span class=\"fc-event-dot\" "
@@ -1529,16 +1452,16 @@ class Inbox_model extends CI_Model {
                     //store patient details
                     $patient_data = array(
                         "referral_id" => $referral_id,
-                        "fname" => $data["pat_fname"],
-                        "lname" => $data["pat_lname"],
+                        "fname" => htmlspecialchars($data["pat_fname"]),
+                        "lname" => htmlspecialchars($data["pat_lname"]),
                         "dob" => $data["pat_dob_year"] . "-" . $data["pat_dob_month"] . "-" . $data["pat_dob_day"],
-                        "ohip" => str_replace(" ", "", str_replace("-", "", $ohip)),
-                        "gender" => $data["pat_gender"],
+                        "ohip" => htmlspecialchars(str_replace(" ", "", str_replace("-", "", $ohip))),
+                        "gender" => htmlspecialchars($data["pat_gender"]),
                         "cell_phone" => $data["pat_cell_phone"],
                         "home_phone" => $data["pat_home_phone"],
                         "work_phone" => $data["pat_work_phone"],
                         "email_id" => $data["pat_email"],
-                        "address" => $data["pat_address"],
+                        "address" => htmlspecialchars($data["pat_address"]),
                         "next_visit" => "Initial consult"
                     );
                     $this->db->insert("referral_patient_info", $patient_data);
@@ -1550,13 +1473,13 @@ class Inbox_model extends CI_Model {
                     //store referring physician data linked to patient id
                     $physician_data = array(
                         "patient_id" => $patient_id,
-                        "fname" => $data["dr_fname"],
-                        "lname" => $data["dr_lname"],
+                        "fname" => htmlspecialchars($data["dr_fname"]),
+                        "lname" => htmlspecialchars($data["dr_lname"]),
                         "phone" => $data["dr_phone_number"],
                         "fax" => $data["dr_fax"],
                         "email" => $data["dr_email"],
-                        "address" => $data["dr_address"],
-                        "billing_num" => $data["dr_billing_num"]
+                        "address" => htmlspecialchars($data["dr_address"]),
+                        "billing_num" => htmlspecialchars($data["dr_billing_num"])
                     );
                     $this->db->insert("referral_physician_info", $physician_data);
                     //log_message("error", "insert physician  = " . $this->db->last_query());
@@ -1578,7 +1501,7 @@ class Inbox_model extends CI_Model {
                                 //insert if not empty
                                 $this->db->insert("referral_clinic_triage_disease_info", array(
                                     "clinic_triage_id" => $clinic_triage_id,
-                                    "disease" => $value
+                                    "disease" => htmlspecialchars($value)
                                 ));
                                 //log_message("error", "disease q = " . $this->db->last_query());
                             }
@@ -1593,7 +1516,7 @@ class Inbox_model extends CI_Model {
                                 //insert if not empty
                                 $this->db->insert("referral_clinic_triage_symptom_info", array(
                                     "clinic_triage_id" => $clinic_triage_id,
-                                    "symptom" => $value
+                                    "symptom" => htmlspecialchars($value)
                                 ));
                                 //log_message("error", "symptom q = " . $this->db->last_query());
                             }
@@ -1608,7 +1531,7 @@ class Inbox_model extends CI_Model {
                                 //insert if not empty
                                 $this->db->insert("referral_clinic_triage_tests_info", array(
                                     "clinic_triage_id" => $clinic_triage_id,
-                                    "test" => $value
+                                    "test" => htmlspecialchars($value)
                                 ));
                                 //log_message("error", "test q = " . $this->db->last_query());
                             }
@@ -1623,7 +1546,7 @@ class Inbox_model extends CI_Model {
                                 //insert if not empty
                                 $this->db->insert("referral_clinic_triage_drugs_info", array(
                                     "clinic_triage_id" => $clinic_triage_id,
-                                    "drug" => $value
+                                    "drug" => htmlspecialchars($value)
                                 ));
                                 //log_message("error", "drug q = " . $this->db->last_query());
                             }
@@ -1638,7 +1561,7 @@ class Inbox_model extends CI_Model {
                                 //insert if not empty
                                 $this->db->insert("referral_clinic_triage_devices_info", array(
                                     "clinic_triage_id" => $clinic_triage_id,
-                                    "device" => $value
+                                    "device" => htmlspecialchars($value)
                                 ));
                                 //log_message("error", "device q = " . $this->db->last_query());
                             }
@@ -1770,8 +1693,8 @@ class Inbox_model extends CI_Model {
 
                     $replace_stack = array(
                         "###clinic_name###" => $info[0]->clinic_institution_name,
-                        "###pat_fname###" => $data["pat_fname"],
-                        "###pat_lname###" => $data["pat_lname"],
+                        "###pat_fname###" => htmlspecialchars($data["pat_fname"]),
+                        "###pat_lname###" => htmlspecialchars($data["pat_lname"]),
                         "###pat_dob###" => $pat_dob,
                         "###fax_number###" => $srfax_number,
                         "###time1###" => "",

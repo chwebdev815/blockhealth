@@ -85,9 +85,9 @@ class My_tasks_model extends CI_Model {
                 //insert health record
                 $inserted = $this->db->insert("records_clinic_notes", array(
                     "patient_id" => $new_patient_id,
-                    "record_type" => $data["record_type"],
-                    "physician" => $data["assign_physician"],
-                    "description" => $data["description"],
+                    "record_type" => htmlspecialchars($data["record_type"]),
+                    "physician" => htmlspecialchars($data["assign_physician"]),
+                    "description" => htmlspecialchars($data["description"]),
                     "record_file" => $task_info[0]->pdf_file
                 ));
 
@@ -133,8 +133,8 @@ class My_tasks_model extends CI_Model {
                     "clinic_id" => $this->session->userdata("user_id"),
                     "assigned_to" => $physician_id,
                     "patient_id" => $patient_id,
-                    "record_type" => $data["record_type"],
-                    "notes" => $data["description"]
+                    "record_type" => htmlspecialchars($data["record_type"]),
+                    "notes" => htmlspecialchars($data["description"])
                 ));
                 //log_message("error", "update = " . $this->db->last_query());
 
@@ -143,8 +143,8 @@ class My_tasks_model extends CI_Model {
                     $inserted = $this->db->insert("records_clinic_notes", array(
                         "patient_id" => $patient_id,
                         "physician" => "Admin",
-                        "record_type" => $data["record_type"],
-                        "description" => $data["description"],
+                        "record_type" => htmlspecialchars($data["record_type"]),
+                        "description" => htmlspecialchars($data["description"]),
                         "record_file" => $task_info[0]->pdf_file
                     ));
 //                copy(files_dir() . "$clinic_id/" . md5($patient_id) . "/" . $task_info[0]->pdf_file, "./uploads/health_records/" . $new_file_name . ".pdf");

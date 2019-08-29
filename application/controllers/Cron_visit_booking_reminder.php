@@ -110,10 +110,10 @@ class Cron_visit_booking_reminder extends CI_Controller {
                 $patient_data = $patient_data[0];
                 echo "checkig for clinic " . $patient_data->clinic_id . "<br/>";
                 $contact_number = $patient_data->cell_phone;
-                if ($patient_data->home_phone != "") {
+                if ($patient_data->home_phone !== "") {
                     //home number
                     $contact_number = $patient_data->home_phone;
-                } else if ($patient_data->work_phone != "") {
+                } else if ($patient_data->work_phone !== "") {
                     //work number
                     $contact_number = $patient_data->work_phone;
                 }

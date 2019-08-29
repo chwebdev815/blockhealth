@@ -1203,7 +1203,7 @@ class Referral_model extends CI_Model {
                 $this->db->insert("records_clinic_notes", array(
                     "patient_id" => $patient_id,
                     "record_type" => $data["record_type"],
-                    "description" => $data["description"],
+                    "description" => htmlspecialchars($data["description"]),
                     "record_file" => $file_name,
                     "physician" => $physician_name
                 ));
@@ -1241,7 +1241,7 @@ class Referral_model extends CI_Model {
                 $this->db->insert("records_admin_notes", array(
                     "patient_id" => $patient_id,
                     "note_type" => $data["note_type"],
-                    "description" => $data["description"]
+                    "description" => htmlspecialchars($data["description"])
                 ));
                 return true;
             } else {

@@ -42,8 +42,8 @@ class Manage_physician_model extends CI_Model {
                 $password = $this->generate_random_string(10);
                 $this->db->insert("clinic_physician_info", array(
                     "clinic_id" => $this->session->userdata("user_id"),
-                    "first_name" => $data["first_name"],
-                    "last_name" => $data["last_name"],
+                    "first_name" => htmlspecialchars($data["first_name"]),
+                    "last_name" => htmlspecialchars($data["last_name"]),
                     "email_id" => $data["email"],
                     "fax_number" => $data["fax_number"],
                     "phone_number" => $data["office_phone"],

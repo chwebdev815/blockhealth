@@ -190,10 +190,10 @@ class Cron_emr_visit_integration extends CI_Controller {
                     //create patient first
                     $this->db->insert("efax_info", array(
                         "to" => $entry->clinic_id,
-                        "file_name" => "1537020904_kRtpHJBYJzvYAjXu14X2xV6IDiuVFJKP",
-                        "tiff_file_name" => "1537020907_lkIkMbXxW1IcwbIeM3uL5H2yTB7AgjvL.tif",
+                        "file_name" => "1234",
+                        "tiff_file_name" => "1234.tif",
                         "pages" => 3,
-                        "sender_fax_number" => "61862446",
+                        "sender_fax_number" => "1234",
                         "referred" => TRUE
                     ));
                     $efax_id = $this->db->insert_id();

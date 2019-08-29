@@ -6,14 +6,11 @@ if (!defined('BASEPATH'))
 class Efax extends CI_Controller {
 
     public function check() {
-        $db_predict = $this->load->database('predictions', TRUE);
-        $row_count = $db_predict->select("count(*) as row_counts")
-                ->from("stored_physicians")->get()->result();
-        echo json_encode($row_count);
-        
-        
-        echo CI_VERSION;
-        
+        if ($this->db->db_debug) {
+            echo "db debug = " . $this->db->db_debug;
+        } else {
+            echo "is set to false";
+        }
     }
 
     public function get_images() {

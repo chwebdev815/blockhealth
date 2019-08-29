@@ -21,7 +21,7 @@ class Call_view extends CI_Controller {
         log_message("error", "at call start from call_view");
         $pname = $this->input->post('defaultContactFormName');
         $patient_lname = $this->input->post('patient_lname');
-        $pvname = $this->input->post('defaultContactFormName2');
+        $pvname = htmlspecialchars($this->input->post('defaultContactFormName2'));
         $cname = $this->input->post('defaultContactFormName3');
         $aDate = $this->input->post('defaultContactFormName4');
         $aTime = $this->input->post('defaultContactFormName5');
@@ -353,7 +353,6 @@ class Call_view extends CI_Controller {
     }
 
     public function step_three() {
-        echo "<h1> on 3</h1>";
         $clinic_id = $_GET["clinic_id"];
         $date1 = $_GET["date1"];
         $day1 = $_GET["day1"];

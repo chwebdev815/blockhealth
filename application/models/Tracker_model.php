@@ -27,8 +27,8 @@ class Tracker_model extends CI_Model {
             //rishabh@gmail.com
 
             $signup_data = array(
-                "first_name" => $data["fname"],
-                "last_name" => $data["lname"],
+                "first_name" => htmlspecialchars($data["fname"]),
+                "last_name" => htmlspecialchars($data["lname"]),
                 "email_id" => $data["email"],
                 "password" => $data["pass"],
                 "address" => isset($data["address"])?$data["address"]:"",
