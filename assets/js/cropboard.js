@@ -431,9 +431,7 @@ function file_upload_triage(data) {
                                     text = Object.keys(tmp[i]);
                                     for (j = 0; j < text.length; j++) {
                                         disease = text[j];
-                                        if (disease != "source" && disease != "source_count"
-                                                && disease.toLowerCase() !== "oltawa"
-                                                && disease.toLowerCase() !== "nepean") {
+                                        if (disease != "source" && disease != "source_count") {
                                             data_points += 1;
                                             add_diseases(disease);
                                             elem.concept = my_string(disease);
