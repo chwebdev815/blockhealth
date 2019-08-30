@@ -2220,6 +2220,19 @@ class Referral_model extends CI_Model {
         } else
             return validation_errors();
     }
+    
+     public function get_file_model() {
+        $uri = $this->uri;
+        echo json_encode($uri);
+        return;
+//        
+//        $file = 'my_path/' . $file_name;
+//        if (file_exists($file)) { // check the file is existing 
+//            header('Content-Type: ' . get_mime_by_extension($file));
+//            readfile($file);
+//        } else
+//            show_404();
+    }
 
     public function update_checklist_item_model() {
         $this->form_validation->set_rules('id', 'Patient', 'required');

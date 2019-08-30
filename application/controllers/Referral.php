@@ -273,6 +273,16 @@ class Referral extends CI_Controller {
         }
         echo json_encode($response);
     }
+    
+    public function get_file() {
+        if (clinic_login()) {
+            $this->load->model("referral_model");
+            $response = $this->referral_model->get_file_model();
+        } else {
+            $response = session_expired();
+        }
+        echo json_encode($response);
+    }
 
     public function get_visit_allocation_for_manual_visit() {
         if (clinic_login()) {
