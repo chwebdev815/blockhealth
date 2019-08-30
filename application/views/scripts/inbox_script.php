@@ -288,8 +288,8 @@
             fax = fax.substr(0, 1) + "-" + fax.substr(1, 3) + "-" + fax.substr(4, 3) + "-" + fax.substr(7);
         }
         modal.find("#file_info").html(fax + " ( " + date + " - " + time + " ) ");
-        global_data.pdf_file = base + "uploads/efax/" + pdf_file_name;
-        global_data.tif_file = base + "uploads/efax_tiff/" + tiff_file_name;
+        global_data.pdf_file = base + "referral/uploads/efax/" + pdf_file_name;
+        global_data.tif_file = base + "referral/uploads/efax_tiff/" + tiff_file_name;
         global_data.efax_id = id;
 
         $("#btn_download_referral").attr("href", global_data.pdf_file + ".pdf");
@@ -1460,7 +1460,7 @@
             $("#table-action").data("preview-index", global_data.table_inbox.row($(this)).index());
 
 
-            $('#table-action').find('#table-hover-delete-trigger').attr("href", base + "uploads/efax/" + $(this).data('file') + ".pdf");
+            $('#table-action').find('#table-hover-delete-trigger').attr("href", base + "referral/uploads/efax/" + $(this).data('file') + ".pdf");
         });
 
         $('table#table_inbox .db-table-link-row').mouseleave(function () {
@@ -1485,7 +1485,7 @@
 
             let tiff_file_name = $(this).parent().data("file-tif");
 
-            tiff_file = base + "uploads/efax_tiff/" + tiff_file_name;
+            tiff_file = base + "referral/uploads/efax_tiff/" + tiff_file_name;
             $("#image_for_preview").attr("src", "");
             get_first_page_from_tif(tiff_file);
         });

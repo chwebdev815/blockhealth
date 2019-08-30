@@ -641,8 +641,8 @@
         }
         modal.find("#file_info").html(fax + " ( " + date + " - " + time + " ) ");
 //        debugger
-        global_data.pdf_file = base + "uploads/clinics/" + global_data.clinic_id + "/" + patient_id + "/" + pdf_file_name;
-        global_data.tif_file = base + "uploads/clinics/" + global_data.clinic_id + "/" + patient_id + "/" + tiff_file_name;
+        global_data.pdf_file = base + "referral/uploads/clinics/" + global_data.clinic_id + "/" + patient_id + "/" + pdf_file_name;
+        global_data.tif_file = base + "referral/uploads/clinics/" + global_data.clinic_id + "/" + patient_id + "/" + tiff_file_name;
         global_data.task_id = id;
 
         $("#btn_download_referral").attr("href", global_data.pdf_file);
@@ -936,7 +936,7 @@
         pagelength = datas.length;
         global_data.preview_images = [];
         for (i = 0; i < pagelength; i++) {
-            tiff_file = base + "uploads/physician_tasks/tiff/" + datas[i][7];
+            tiff_file = base + "referral/uploads/physician_tasks/tiff/" + datas[i][7];
 //            get_first_page_from_tif(tiff_file);
         }
         // tiff_file_path = base + "uploads/physician_tasks/tiff/" + $(this).parent().data().fileTif;
@@ -965,7 +965,7 @@
             let patient_id = $(this).parent().data().patientId;
             global_data.temp = $(this);
             console.log($(this).parent().data());
-            tiff_file = base + "uploads/clinics/" + global_data.clinic_id + "/" +
+            tiff_file = base + "referral/uploads/clinics/" + global_data.clinic_id + "/" +
                     patient_id + "/" + tiff_file_name;
             $("#image_for_preview").attr("src", "");
             get_first_page_from_tif(tiff_file);
@@ -987,7 +987,7 @@
             $('#table-action').data('time', $(this).data('time'));
             $("#table-action").data("preview-index", global_data.table_my_tasks.row($(this)).index());
 
-            $('#table-action').find('#table-hover-delete-trigger').attr("href", base + "uploads/physician_tasks/pdf/" + $(this).data('file-pdf'));
+            $('#table-action').find('#table-hover-delete-trigger').attr("href", base + "referral/uploads/physician_tasks/pdf/" + $(this).data('file-pdf'));
         });
 
         $('table#table_my_tasks .db-table-link-row').mouseleave(function () {

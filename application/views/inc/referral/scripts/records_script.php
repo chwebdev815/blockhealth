@@ -734,10 +734,10 @@
                     root.find("#record_type").html(data.record_type);
                     root.find("#description").html(data.description);
                     if (data.record_file != "") {
-                        global_data.uploaded_file_path = base + "uploads/clinics/" +
+                        global_data.uploaded_file_path = base + "referral/uploads/clinics/" +
                                 global_data.clinic_id + "/" + global_data.referral_id + "/" +
                                 data.record_file + ".pdf";
-                        PDFObject.embed(base + "uploads/clinics/" +
+                        PDFObject.embed(base + "referral/uploads/clinics/" +
                                 global_data.clinic_id + "/" + global_data.referral_id + "/" +
                                 data.record_file + ".pdf", "#pdf_view_div");
                     } else {
