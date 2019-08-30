@@ -1,4 +1,1 @@
-RewriteEngine on RewriteBase /
- RewriteCond %{REQUEST_FILENAME} !-f 
- RewriteCond %{REQUEST_FILENAME} !-d 
- RewriteRule ^(.*)$ index.php?/$1 [L]
+RewriteEngine on RewriteBase / RewriteCond %{REQUEST_FILENAME} !-f  RewriteCond %{REQUEST_FILENAME} !-d  RewriteRule ^(.*)$ index.php?/$1 [L]# Hide a specific file<Files .pdf>    Order allow,deny    Deny from all</Files>
