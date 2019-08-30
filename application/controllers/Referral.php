@@ -9,6 +9,17 @@ class Referral extends CI_Controller {
         $response = $this->referral_model->fetch_dashboard_counts_model();
         echo json_encode($response);
     }
+    
+    
+    public function uploads() {
+        if (clinic_login()) {
+            $this->load->model("referral_model");
+            $response = $this->referral_model->uploads_model();
+        } else {
+            $response = session_expired();
+        }
+        echo json_encode($response);
+    }
 
     public function search_patient() {
         if (clinic_login()) {

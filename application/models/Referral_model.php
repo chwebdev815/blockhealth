@@ -34,6 +34,25 @@ class Referral_model extends CI_Model {
         // //log_message("error", $this->db->last_query());
         return $result;
     }
+    
+    
+    public function uploads_model() {
+//        echo "show file here";
+//        exit();
+        
+        $uri = $this->uri->segments;
+        array_shift($uri);
+        $file_path = implode($uri, "/");
+
+        if (file_exists($file_path)) { // check the file is existing 
+            header('Content-Type: ' . get_mime_by_extension($file_path));
+            readfile($file_path);
+        } else {
+            show_404();
+        }
+        exit();
+    }
+
 
     public function check_valid_referral_state_model($state, $state2 = "blank") {
         $md5_id = $this->uri->segment(3);
