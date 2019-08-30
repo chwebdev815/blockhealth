@@ -41,11 +41,21 @@ class Referral_model extends CI_Model {
 //        exit();
         
         $uri = $this->uri->segments;
+        
         array_shift($uri);
         $file_path = implode($uri, "/");
+        log_message("error", "file path = " . $file_path);
+        $ext = pathinfo($file_path, PATHINFO_EXTENSION);
+        $mime = get_mime_by_extension($file_path);
+        if($ext === "tif" || $ext === "tiff") {
+            $mime = "image/tiff";
+            log_message("error", "tiff uploads");
+        }
+        
+        
 
         if (file_exists($file_path)) { // check the file is existing 
-            header('Content-Type: ' . get_mime_by_extension($file_path));
+            header('Content-Type: ' . $mime);
             readfile($file_path);
         } else {
             show_404();
