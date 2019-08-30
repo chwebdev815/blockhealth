@@ -715,7 +715,6 @@ class Referral_model extends CI_Model {
 
                 $response = $this->send_status_fax2($file_name, $checklist, $replace_stack, $fax_number, "Request Missing Items", $additional_replace);
                 //log_message("error", "file sent successfully");
-
                 //store missing item request
                 $patient_id = $this->get_decrypted_id($data["id"], "referral_patient_info");
                 $result = $this->db->insert("referral_missing_item_request_info", array(
@@ -1588,7 +1587,7 @@ class Referral_model extends CI_Model {
                 //insert for temp storage for 60 min sms response
                 $visit_expire_time = (new DateTime(date("Y-m-d H:i:s")))->add(new DateInterval("PT" . $expire_minutes . "M"))->format("Y-m-d H:i:s");
                 //log_message("error", "Expire time scheduled after $expire_minutes minutes to => " 
-                       // . $visit_expire_time);
+                // . $visit_expire_time);
                 $insert_data = array(
                     "patient_id" => $patient_id,
                     "visit_name" => $visit_name,
@@ -1891,7 +1890,6 @@ class Referral_model extends CI_Model {
         $fax_number = $result->fax;
         //log_message("error", "sending fax");
 //        $response = $this->send_status_fax($file_name, array(), $replace_stack, $fax_number, "Scheduled Referral", array(), 60, $clinic_id);
-
         //log_message("error", "Last query = " . $this->db->last_query());
     }
 
@@ -2220,8 +2218,8 @@ class Referral_model extends CI_Model {
         } else
             return validation_errors();
     }
-    
-     public function get_file_model() {
+
+    public function get_file_model() {
         $uri = $this->uri;
         echo json_encode($uri);
         return;
@@ -2634,7 +2632,7 @@ class Referral_model extends CI_Model {
 
                             for ($key = 0; $key < sizeof($visits_booked_for_day); $key++) {
                                 //log_message("error", "inside for loop <br/> key = " . $key . " size = " .
-                                      //  sizeof($visits_booked_for_day));
+                                //  sizeof($visits_booked_for_day));
 
                                 $processed_keys = $key;
                                 $visit_start_time = null;
@@ -2660,7 +2658,7 @@ class Referral_model extends CI_Model {
                                 $slots_counter[$day->format("Y-m-d")] += $counts;
                                 $time1 = $visit_end_time;
                                 //log_message("error", "day " . $day->format("Y-m-d") . " => " . " added $counts "
-                                      //  . "between $time1 and $time2");
+                                //  . "between $time1 and $time2");
                             }
 //                        echo "visits_booked_for_day has no visits <br/>";
                             $time2 = $scheduling_day["day"] . " " . $day_end_time;
@@ -2668,7 +2666,7 @@ class Referral_model extends CI_Model {
                             $counts = $this->count_time_slot_available($time1, $time2, $new_visit_duration);
                             $slots_counter[$day->format("Y-m-d")] += $counts;
                             //log_message("error", "day " . $day->format("Y-m-d") . " => " . " added $counts "
-                                  //  . "between $time1 and $time2");
+                            //  . "between $time1 and $time2");
                         } else {
                             //log_message("error", "day is not available <br/>");
                         }
@@ -2851,7 +2849,7 @@ class Referral_model extends CI_Model {
                                 $week_visit_start_time = $visits_booked_for_day[$key]["visit_start_time"];
                                 $week_visit_end_time = $visits_booked_for_day[$key]["visit_end_time"];
                                 //log_message("error", "processing key = " .
-                                       // json_encode($visits_booked_for_day[$key]));
+                                // json_encode($visits_booked_for_day[$key]));
 
                                 if (is_object(end($visits_booked_for_day))) {
                                     $last_visit_end_time = end($visits_booked_for_day)->visit_end_time;
@@ -2871,7 +2869,7 @@ class Referral_model extends CI_Model {
                                     $slots_timings[] = $timing;
                                 }
                                 //log_message("error", "day " . $day->format("Y-m-d") . " => " . " added "
-                                       // . "between $time1 and $time2 => " . json_encode($timings));
+                                // . "between $time1 and $time2 => " . json_encode($timings));
                                 //log_message("error", "set time11111111111 => " . $week_visit_end_time);
                                 $time1 = $week_visit_end_time;
                             }
@@ -2883,7 +2881,7 @@ class Referral_model extends CI_Model {
                                 $slots_timings[] = $timing;
                             }
                             //log_message("error", "day " . $day->format("Y-m-d") . " => " . " added  "
-                                   // . "between $time1 and $time2");
+                            // . "between $time1 and $time2");
                         } else {
                             //log_message("error", "day is not available <br/>");
                         }
@@ -3208,11 +3206,11 @@ class Referral_model extends CI_Model {
                 "end_time" => $tmp2->format("Y-m-d H:i:s")
             );
             //log_message("error", "before tmp1 = " . $tmp1->format("Y-m-d H:i:s") . " and "
-                   // . "tmp2 = " . $tmp2->format("Y-m-d H:i:s"));
+            // . "tmp2 = " . $tmp2->format("Y-m-d H:i:s"));
             $tmp1 = DateTime::createFromFormat('Y-m-d H:i:s', $tmp2->format("Y-m-d H:i:s"));
             $tmp2 = $tmp2->add(new DateInterval("PT{$new_visit_duration}M"));
             //log_message("error", "after tmp1 = " . $tmp1->format("Y-m-d H:i:s") . " and "
-                    //. "tmp2 = " . $tmp2->format("Y-m-d H:i:s"));
+            //. "tmp2 = " . $tmp2->format("Y-m-d H:i:s"));
             //log_message("error", "added something");
         }
         //log_message("error", "time slots for this block => " . json_encode($response));
@@ -3281,7 +3279,6 @@ class Referral_model extends CI_Model {
 //        foreach ($tmp as $key => $value) {
 //            
 //        }
-
         //log_message("error", "before visits 2 = " . json_encode($visits_booked_for_day));
         foreach ($blocks as $key => $block) {
             $visits_booked_for_day[] = array(
@@ -3305,7 +3302,7 @@ class Referral_model extends CI_Model {
         }
 
         //log_message("error", "visits booked for day ( includes blocks ) = " .
-               // json_encode($visits_booked_for_day));
+        // json_encode($visits_booked_for_day));
 //        echo json_encode($visits_booked_for_day) . "<br/>";
         return $visits_booked_for_day;
     }
