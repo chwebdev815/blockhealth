@@ -6,11 +6,7 @@ if (!defined('BASEPATH'))
 class Efax extends CI_Controller {
 
     public function check() {
-        if ($this->db->db_debug) {
-            echo "db debug = " . $this->db->db_debug;
-        } else {
-            echo "is set to false";
-        }
+        phpinfo();
     }
 
     public function get_images() {
