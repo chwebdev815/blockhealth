@@ -1227,6 +1227,45 @@ class Inbox_model extends CI_Model {
         curl_close($curl);
     }
     
+    public function phy_extract_api_model() {
+        //global_data.predict_url + global_data.medication_api
+
+        $api_url = $this->config->item("PREDICTION_URL") . $this->config->item("PHY_EXTRACT");
+
+        $data = $this->input->post();
+        $mime = mime_content_type($_FILES['file']['tmp_name']);
+        $extension = substr($mime, strpos($mime, "/") + 1);
+        $data["file"] = new \CURLFile(realpath($_FILES['file']['tmp_name']), $mime, "file.$extension");
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($curl, CURLOPT_URL, $api_url);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($curl, CURLOPT_SAFE_UPLOAD, true);
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "POST");
+        curl_setopt($curl, CURLOPT_HTTPHEADER, array(
+            $this->config->item("PREDICT_API_SECRET") . ':' . $this->config->item("PREDICT_API_SECRET_VALUE"),
+            $this->config->item("PREDICT_API_CLIENT") . ':' . $this->config->item("PREDICT_API_CLIENT_VALUE")
+        ));
+        curl_setopt($curl, CURLOPT_POST, true);
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $data);
+
+        $response = curl_exec($curl);
+        if (curl_errno($curl)) {
+            return json_encode(array(
+                'result' => 'error',
+                'message' => curl_error($curl)
+            ));
+        } else {
+            header('Content-Type: application/json');
+            log_message("error", "predict response = " . $response);
+            return json_decode($response);
+        }
+        curl_close($curl);
+    }
+    
+
+    
     
     public function predict_api_model() {
         //global_data.predict_url + global_data.predict_api
