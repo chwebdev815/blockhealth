@@ -1611,6 +1611,8 @@
             canvas.toBlob(function (blob) {
                 var formData = new FormData();
                 formData.append('file', blob);
+                formData.append('blockhealth_validation_token', $("#sample_form").find("input[name='blockhealth_validation_token']").val());
+                
                 // global_data.api_phy_extract = "running";
                 $("#btn_extract_physician").button("loading");
                 // $.ajax('http://159.89.127.142/phy_extract', {
