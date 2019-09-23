@@ -1,4 +1,3 @@
-
 <script>
     $.getScript("https://maps.googleapis.com/maps/api/js?libraries=places&key=AIzaSyBqFG28QSw6XAtKYjO6xFEMNgkxMiV9FKM", function (data, textStatus, jqxhr) {
         $.getScript("<?php echo base_url(); ?>assets/js/jquery.geocomplete.js", function () {
@@ -1612,10 +1611,12 @@
             canvas.toBlob(function (blob) {
                 var formData = new FormData();
                 formData.append('file', blob);
+                formData.append('blockhealth_validation_token', $("#sample_form").find("input[name='blockhealth_validation_token']").val());
+                
                 // global_data.api_phy_extract = "running";
                 $("#btn_extract_physician").button("loading");
                 // $.ajax('http://159.89.127.142/phy_extract', {
-                $.ajax(global_data.predict_url + '/phy_extract', {
+                $.ajax(base + 'inbox/phy_extract_api', {
                     method: 'POST',
                     data: formData,
                     processData: false,
