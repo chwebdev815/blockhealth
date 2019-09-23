@@ -14,6 +14,7 @@ class Demo extends CI_Controller {
         //set emr pathway
         $this->session->set_userdata("emr_pathway", "");
         redirect("/");
+        
     }
 
 }
