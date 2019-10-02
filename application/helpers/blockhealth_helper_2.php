@@ -277,7 +277,7 @@ function patient_visit_integration($type, $patient_id, $appointment_id, $update_
         ))->update("records_patient_visit_integration", $update_data);
     }
     if ($type === "insert") {
-        //        $clinic_id = $CI->session->userdata("user_id");
+//        $clinic_id = $CI->session->userdata("user_id");
 
         $clinic_data = $CI->db->select("c_usr.id, c_usr.emr_pathway")
                         ->from("clinic_user_info c_usr, referral_patient_info pat, "
@@ -293,11 +293,12 @@ function patient_visit_integration($type, $patient_id, $appointment_id, $update_
                         ->where("c_ref.efax_id", "efax.id", false)
                         ->where("efax.to", "c_usr.id", false)
                         ->get()->result();
-
+        
         $clinic_id = null;
-        if ($clinic_data) {
+        if($clinic_data) {
             $clinic_id = $clinic_data[0]->id;
-        } else {
+        }
+        else {
             //log_message("error", "INTEGRATION DATA NOT SAVED");
             //log_message("error", "false q = " . $CI->db->last_query());
             return;
@@ -382,118 +383,7 @@ function patient_visit_integration($type, $patient_id, $appointment_id, $update_
                 "status" => ($clinic_data->emr_pathway === "OscarEMR") ? "NEW" : ""
             ));
             //log_message("error", "schedule integration data inserted => " .
-            //$CI->db->last_query());
+                    //$CI->db->last_query());
         }
-    }
-}
-
-//telnyx helper
-
-
-function selectOne($key, $call_id) {
-    $CI = & get_instance();
-    $data = $CI->db->select("$key")
-                    ->from("ivr_responses")
-                    ->where(array(
-                        "call_control_id" => $call_id
-                    ))->get()->result();
-    return $data;
-}
-
-function selectCallID($call_leg_id) {
-    $CI = & get_instance();
-    $data = $CI->db->select("call_control_id")
-                    ->from("ivr_responses")
-                    ->where(array(
-                        "call_leg_id" => $call_leg_id
-                    ))->get()->result();
-//        file_put_contents('re.txt', print_r($data, true));
-    return $data;
-}
-
-function updateData($key, $value, $call_id) {
-    $CI = & get_instance();
-    $updated = $CI->db->where(array(
-                "call_control_id" => $call_id
-            ))->update("ivr_responses", array(
-        "$key" => $value
-    ));
-    return $updated;
-}
-
-function getcallType($url, $call_control) {
-    $data = array(
-        'client_state' => base64_encode('NewCall')
-    );
-
-    $POSTdata = json_encode($data);
-    $curl = curl_init();
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_POSTFIELDS => $POSTdata,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        // CURLOPT_USERPWD => '7dfb9f4c-64ed-4a0b-9727-8737d48500e6:g-WQqIOjTQSRrQlHogUDGg',
-        CURLOPT_HTTPHEADER => array(
-            "Content-Type: application/json",
-            "Accept: application/json",
-            "Authorization: Bearer KEY016D1769CF2D40ED3273B5A1E7279F57_cdyFo6KQXLXInbajc8MJew"
-        )
-    ));
-
-    $response = curl_exec($curl);
-    $err = curl_error($curl);
-    $data = curl_getinfo($curl);
-
-    curl_close($curl);
-
-    if ($err) {
-        return "cURL Error #:" . $err;
-    } else {
-        return true;
-    }
-}
-
-/*
-  Post data to telnyx api.
- */
-
-function curlPostData($url, $call_control, $data) {
-
-    $POSTdata = json_encode($data);
-    $curl = curl_init();
-    curl_setopt_array($curl, array(
-        CURLOPT_URL => $url,
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_ENCODING => "",
-        CURLOPT_MAXREDIRS => 10,
-        CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
-        CURLOPT_TIMEOUT => 30,
-        CURLOPT_POSTFIELDS => $POSTdata,
-        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
-        CURLOPT_CUSTOMREQUEST => "POST",
-        CURLOPT_HTTPHEADER => array(
-            "Content-Type: application/json",
-            "Accept: application/json",
-            "Authorization: Bearer KEY016D1769CF2D40ED3273B5A1E7279F57_cdyFo6KQXLXInbajc8MJew"
-        )
-    ));
-
-    $response = curl_exec($curl);
-    $err = curl_error($curl);
-    $data = curl_getinfo($curl);
-
-    curl_close($curl);
-
-    if ($err) {
-        return "cURL Error #:" . $err;
-    } else {
-
-        return $data1 = json_decode($response, true);
     }
 }
