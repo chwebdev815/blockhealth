@@ -397,6 +397,11 @@ function selectOne($key, $call_id) {
                     ->where(array(
                         "call_control_id" => $call_id
                     ))->get()->result();
+    if($key === "recording_saved") {
+        log_message("error", "call_id = " . $call_id);
+        log_message("error", "q = " . $CI->db->last_query());
+        
+    }
     return $data;
 }
 
