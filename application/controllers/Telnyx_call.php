@@ -360,7 +360,8 @@ class Telnyx_call extends CI_Controller {
     }
 
     public function show_data() {
-        $data = $this->db->select("*")->from("ivr_respnoses")
+        $data = $this->db->select("*")
+                        ->from("ivr_responses")
                         ->order_by("id", "desc")
                         ->limit(5)
                         ->get()->result();
