@@ -36,6 +36,9 @@ class Telnyx_call extends CI_Controller {
         if ($recording_saved) {
             log_message("error", "recording saved = " . json_encode($recording_saved));
         }
+        else {
+            log_message("error", "recoding saved is null");
+        }
 
 
         if ($event_type == 'call_initiated' && $payload['direction'] == 'incoming') {
