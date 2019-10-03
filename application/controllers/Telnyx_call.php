@@ -14,7 +14,7 @@ class Telnyx_call extends CI_Controller {
         $paydata = $action['data'];
         $payload = $paydata['payload'];
         $event_type = $paydata['event_type'];
-        log_message("error", "event = > " . $event_type . ", payload = " . base64_decode($payload['client_state']));
+//        log_message("error", "event = > " . $event_type . ", payload = " . base64_decode($payload['client_state']));
 //file_put_contents('demo2.txt', print_r($payload,true) ); 
 
 
@@ -41,7 +41,7 @@ class Telnyx_call extends CI_Controller {
             $data1 = getcallType($url, $call_control_id);
             log_message("error", "end - call.initiated");
         } elseif ($event_type == 'call.answered' && base64_decode($payload['client_state']) == "NewCall") {
-            log_message("error", "start - call_answered");
+            log_message("error", "start - call.answered");
             $text = 'Hello. Thank you for calling Premier Health.';
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
             $encodedString = base64_encode('welcome_first');
@@ -55,9 +55,9 @@ class Telnyx_call extends CI_Controller {
             );
 
             $data = curlPostData($urlNew, $call_control_id, $dataarray);
-            log_message("error", "end - call_answered");
-        } elseif ($event_type == 'speak_ended' && base64_decode($payload['client_state']) == 'welcome_first') {
-            log_message("error", "start - speak_ended");
+            log_message("error", "end - call.answered");
+        } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == 'welcome_first') {
+            log_message("error", "start - call.speak.ended");
             // $urlNew = 'https://api.telnyx.com/v2/calls/'.$call_control_id.'/actions/speak';
             $inserted = $this->db->insert("ivr_responses", array(
                 "call_control_id" => $call_control_id,
@@ -89,7 +89,7 @@ class Telnyx_call extends CI_Controller {
 
             $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
 
-            log_message("error", "end - speak_ended");
+            log_message("error", "end - call.speak.ended");
         } elseif ($event_type == 'dtmf' && base64_decode($payload['client_state']) == "MainMenu") {
             //pressed button 1/2/3
 
@@ -120,10 +120,10 @@ class Telnyx_call extends CI_Controller {
             $data = curlPostData($urlNew, $call_control_id, $dataarray);
 
             log_message("error", "end - dtmf main menu");
-        } elseif ($event_type == 'speak_ended' &&
+        } elseif ($event_type == 'call.speak.ended' &&
                 base64_decode($payload['client_state']) == "user_response_get") {
 
-            log_message("error", "start - speak_ended user_response_get");
+            log_message("error", "start - call.speak.ended user_response_get");
             log_message("error", "select data = " . json_encode($selectData));
             log_message("error", "s1 = " . $selectData->step_one);
 
@@ -169,10 +169,10 @@ class Telnyx_call extends CI_Controller {
             } else {
                 log_message("error", "none of 1/2/3");
             }
-            log_message("error", "end - speak_ended user_response_get");
-        } elseif ($event_type == 'speak_ended' && base64_decode($payload['client_state']) == "user_name_say" && $status_update->status_update == '0') {
+            log_message("error", "end - call.speak.ended user_response_get");
+        } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "user_name_say" && $status_update->status_update == '0') {
 
-            log_message("error", "start - speak_ended user_name_say");
+            log_message("error", "start - call.speak.ended user_name_say");
 
             $update = updateData('status_update', '1', $call_control_id);
             $url_new = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/record_start';
@@ -196,7 +196,7 @@ class Telnyx_call extends CI_Controller {
                 $data1 = curlPostData($url_stop, $call_control_id, $datastop);
             }
 
-            log_message("error", "end - speak_ended user_name_say");
+            log_message("error", "end - call.speak.ended user_name_say");
         } elseif ($event_type == 'recording_saved' && base64_decode($payload['client_state']) == "name_recording_stop" && $recording_saved->recording_saved == '0') {
 //            require 'functions.php';
 
@@ -228,9 +228,9 @@ class Telnyx_call extends CI_Controller {
             $data = curlPostData($urlNew, $call_control_id, $dataarray);
 
             log_message("error", "stop - recording_saved name_recording_stop");
-        } elseif ($event_type == 'speak_ended' && base64_decode($payload['client_state']) == "name_confirmation") {
+        } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "name_confirmation") {
 
-            log_message("error", "start - speak_ended name_confirmation");
+            log_message("error", "start - call.speak.ended name_confirmation");
 
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/gather_using_speak';
             $text = 'Please enter your 10 digit health card number, followed by the pound key. If you don’t have a health card number, please press 0.';
@@ -253,7 +253,7 @@ class Telnyx_call extends CI_Controller {
             $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
 
 
-            log_message("error", "stop - speak_ended name_confirmation");
+            log_message("error", "stop - call.speak.ended name_confirmation");
         } elseif ($event_type == 'dtmf' && base64_decode($payload['client_state']) == "name_recording_stop") {
 
             log_message("error", "start - dtmf name_recording_stop");
@@ -308,7 +308,7 @@ class Telnyx_call extends CI_Controller {
                 $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
                 log_message("error", "stop - gather_ended UserCard");
             }
-        } elseif ($event_type == 'speak_ended' && base64_decode($payload['client_state']) == "thankyou_message_after_card") {
+        } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "thankyou_message_after_card") {
 
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/gather_using_speak';
             $text = 'Please enter your 10 digit phone number, including the area code, followed by the pound key';
@@ -373,7 +373,7 @@ class Telnyx_call extends CI_Controller {
                 );
                 $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
             }
-        } elseif ($event_type == 'speak_ended' && base64_decode($payload['client_state']) == "user_final_callback") {
+        } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "user_final_callback") {
 
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/hangup';
             $encodedString = base64_encode('call_end_command');
