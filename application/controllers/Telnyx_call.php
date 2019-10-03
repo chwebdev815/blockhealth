@@ -90,10 +90,10 @@ class Telnyx_call extends CI_Controller {
             $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
 
             log_message("error", "end - call.speak.ended");
-        } elseif ($event_type == 'dtmf' && base64_decode($payload['client_state']) == "MainMenu") {
+        } elseif ($event_type == 'call.dtmf.received' && base64_decode($payload['client_state']) == "MainMenu") {
             //pressed button 1/2/3
 
-            log_message("error", "start - dtmf main menu");
+            log_message("error", "start - call.dtmf.received main menu");
             log_message("error", "payload = " . json_encode($payload));
             $digits = $payload['digit'];
             $update = updateData('step_one', $digits, $call_control_id);
@@ -119,7 +119,7 @@ class Telnyx_call extends CI_Controller {
 
             $data = curlPostData($urlNew, $call_control_id, $dataarray);
 
-            log_message("error", "end - dtmf main menu");
+            log_message("error", "end - call.dtmf.received main menu");
         } elseif ($event_type == 'call.speak.ended' &&
                 base64_decode($payload['client_state']) == "user_response_get") {
 
@@ -254,9 +254,9 @@ class Telnyx_call extends CI_Controller {
 
 
             log_message("error", "stop - call.speak.ended name_confirmation");
-        } elseif ($event_type == 'dtmf' && base64_decode($payload['client_state']) == "name_recording_stop") {
+        } elseif ($event_type == 'call.dtmf.received' && base64_decode($payload['client_state']) == "name_recording_stop") {
 
-            log_message("error", "start - dtmf name_recording_stop");
+            log_message("error", "start - call.dtmf.received name_recording_stop");
             $url_stop = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/record_stop';
             $datastop = array(
                 'client_state' => base64_encode('name_recording_stop'),
@@ -264,9 +264,9 @@ class Telnyx_call extends CI_Controller {
             );
             $data1 = curlPostData($url_stop, $call_control_id, $datastop);
             log_message("error", "stop - dtmf name_recording_stop");
-        } elseif ($event_type == 'gather_ended' && base64_decode($payload['client_state']) == "UserCard") {
+        } elseif ($event_type == 'call.gather.ended' && base64_decode($payload['client_state']) == "UserCard") {
 
-            log_message("error", "start - gather_ended UserCard");
+            log_message("error", "start - call.gather.ended UserCard");
 
             $digits = $payload['digits'];
             $len = strlen($digits);
@@ -306,7 +306,7 @@ class Telnyx_call extends CI_Controller {
                     'client_state' => $encodedString
                 );
                 $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
-                log_message("error", "stop - gather_ended UserCard");
+                log_message("error", "stop - call.gather.ended UserCard");
             }
         } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "thankyou_message_after_card") {
 
@@ -330,7 +330,7 @@ class Telnyx_call extends CI_Controller {
                 'client_state' => $encodedString
             );
             $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
-        } elseif ($event_type == 'gather_ended' && base64_decode($payload['client_state']) == "UserPhone") {
+        } elseif ($event_type == 'call.gather.ended' && base64_decode($payload['client_state']) == "UserPhone") {
             $digits = $payload['digits'];
             $len = strlen($digits);
             log_message("error", "payload = " . json_encode($payload));
