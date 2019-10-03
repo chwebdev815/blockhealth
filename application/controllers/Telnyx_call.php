@@ -8,6 +8,14 @@ class Telnyx_call extends CI_Controller {
         log_message("error", "telnyx webhook triggerd");
             
         $json = file_get_contents('php://input');
+        log_message("error", "1 = " . $json);
+        
+        $json = json_encode($_REQUEST);
+        log_message("error", "1 = " . $json);
+        
+        $json = json_encode($this->input->get());
+        log_message("error", "1 = " . $json);
+        
         $action = json_decode($json, true);
         
         
