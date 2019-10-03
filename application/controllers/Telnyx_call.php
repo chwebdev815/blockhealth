@@ -212,7 +212,7 @@ class Telnyx_call extends CI_Controller {
             $datalPAyload = selectCallID($payload['call_leg_id']);
             $call_control_id = $datalPAyload[0]->call_control_id;
             $update = updateData('recording_saved', '1', $call_control_id);
-            $run = $this->transcript($payload['recording_urls']['mp3']);
+//            $run = $this->transcript($payload['recording_urls']['mp3']);
             //$nameget = explode(' ', $run);
             //this need to be uncommented
             log_message("error", "mp3 file recorded = " . $payload['recording_urls']['mp3']);
