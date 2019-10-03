@@ -408,9 +408,9 @@ class Telnyx_call extends CI_Controller {
     }
 
     private function transcript($audioFile) {
-        use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
-        use Google\Cloud\Speech\V1\RecognitionConfig;
-        use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
+//        use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+//        use Google\Cloud\Speech\V1\RecognitionConfig;
+//        use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
 
         log_message("error", "inside transcript");
 //        
