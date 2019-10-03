@@ -184,11 +184,12 @@ class Telnyx_call extends CI_Controller {
                 'command_id' => '891510ac-f3e4-11e8-af5b-de00688a49022'
             );
             $data = curlPostData($url_new, $call_control_id, $datarecord);
-
+            
 
             if (isset($data)) {
                 sleep(4);
                 $url_stop = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/record_stop';
+                log_message("error", "stop recording with call url = " . $url_stop);
                 $datastop = array(
                     'client_state' => base64_encode('name_recording_stop'),
                     'command_id' => '891510ac-f3e4-11e8-af5b-de00688a49012'
@@ -196,7 +197,7 @@ class Telnyx_call extends CI_Controller {
                 $data1 = curlPostData($url_stop, $call_control_id, $datastop);
             }
 
-            log_message("error", "end - call.speak.ended user_name_say");
+            log_message("error", "end - call.speak.ended user_name_say with = $call_control_id");
         } elseif ($event_type == 'call.recording.saved' && base64_decode($payload['client_state']) == "name_recording_stop") {
 //            require 'functions.php';
             log_message("error", "inside call saved - " . json_encode($recording_saved));
