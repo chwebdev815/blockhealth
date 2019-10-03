@@ -410,10 +410,14 @@ class Telnyx_call extends CI_Controller {
     private function transcript($audioFile) {
 
 # Imports the Google Cloud client library
-        use Google\Cloud\Speech\V1\SpeechClient;
-        use Google\Cloud\Speech\V1\RecognitionAudio;
-        use Google\Cloud\Speech\V1\RecognitionConfig;
-        use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+//        use Google\Cloud\Speech\V1\SpeechClient;
+//        use Google\Cloud\Speech\V1\RecognitionAudio;
+//        use Google\Cloud\Speech\V1\RecognitionConfig;
+//        use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+        require_once 'vendor/google/cloud-speech/src/V1/SpeechClient.php';
+        require_once 'vendor/google/cloud-speech/src/V1/RecognitionAudio.php';
+        require_once 'vendor/google/cloud-speech/src/V1/RecognitionConfig.php';
+        require_once 'vendor/google/cloud-speech/src/V1/RecognitionConfig/AudioEncoding.php';
 
         log_message("error", "inside transcript");
 //        
