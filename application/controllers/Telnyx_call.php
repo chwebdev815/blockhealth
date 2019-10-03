@@ -408,7 +408,6 @@ class Telnyx_call extends CI_Controller {
     }
 
     private function transcript($audioFile) {
-        require_once APPPATH."vendor/google/auth/autoload.php";
 //        require 'vendor/google/cloud-speech/src/V1/SpeechClient.php';
 //use Google\Cloud\Speech\V1\RecognitionAudio;
 //use Google\Cloud\Speech\V1\RecognitionConfig;
@@ -421,17 +420,17 @@ class Telnyx_call extends CI_Controller {
         # get contents of a file into a string
         $content = file_get_contents($audioFile);
 
-//        # set string as audio content
-//        $audio = (new RecognitionAudio())
-//                ->setContent($content);
-//
-//        # The audio file's encoding, sample rate and language
-//
-//        $config = new RecognitionConfig([
-//            //'encoding' => AudioEncoding::MP3,
-//            'sample_rate_hertz' => 32000,
-//            'language_code' => 'en-US'
-//        ]);
+        # set string as audio content
+        $audio = (new RecognitionAudio())
+                ->setContent($content);
+
+        # The audio file's encoding, sample rate and language
+
+        $config = new RecognitionConfig([
+            //'encoding' => AudioEncoding::MP3,
+            'sample_rate_hertz' => 32000,
+            'language_code' => 'en-US'
+        ]);
 
 
         $cred_file = file_get_contents("uploads/gk.json");
