@@ -427,12 +427,12 @@ class Telnyx_call extends CI_Controller {
         $content = file_get_contents($audioFile);
 
         # set string as audio content
-        $audio = (new RecognitionAudio())
+        $audio = (new Google\Cloud\Speech\V1\RecognitionAudio())
                 ->setContent($content);
 
         # The audio file's encoding, sample rate and language
 
-        $config = new RecognitionConfig([
+        $config = new Google\Cloud\Speech\V1\RecognitionConfig([
             //'encoding' => AudioEncoding::MP3,
             'sample_rate_hertz' => 32000,
             'language_code' => 'en-US'
