@@ -27,6 +27,10 @@ class Telnyx_call extends CI_Controller {
         $selectData = selectOne('step_one', $call_control_id);
         $status_update = selectOne('status_update', $call_control_id);
         $recording_saved = selectOne('recording_saved', $call_control_id);
+        
+        $selectData = ($selectData)?$selectData[0]:$selectData;
+        $status_update = ($status_update)?$status_update[0]:$status_update;
+        $recording_saved = ($recording_saved)?$recording_saved[0]:$recording_saved;
 
 
         if ($event_type == 'call_initiated' && $payload['direction'] == 'incoming') {
@@ -118,7 +122,7 @@ class Telnyx_call extends CI_Controller {
 
             log_message("error", "start - speak_ended user_response_get");
             log_message("error", "select data = " . json_encode($selectData));
-
+            log_message("error", "s1 = " . $selectData['step_one']);
 
             if ($selectData['step_one'] === "1") {
                 log_message("error", "step1 = 1");
