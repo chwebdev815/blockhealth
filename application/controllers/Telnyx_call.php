@@ -14,7 +14,7 @@ class Telnyx_call extends CI_Controller {
         $paydata = $action['data'];
         $payload = $paydata['payload'];
         $event_type = $paydata['event_type'];
-//        log_message("error", "event = > " . $event_type . ", payload = " . base64_decode($payload['client_state']));
+        log_message("error", "event = > " . $event_type . ", payload = " . base64_decode($payload['client_state']));
 //file_put_contents('demo2.txt', print_r($payload,true) ); 
 
 
