@@ -440,36 +440,36 @@ class Telnyx_call extends CI_Controller {
 
 
         $cred_file = file_get_contents("uploads/gk.json");
-        # In//stantiates a client
-//        $client = new SpeechClient([
-//            'credentials' => file_get_contents("uploads/gk.json")
-//        ]);
+        # Instantiates a client
+        $client = new Google\Cloud\Speech\V1\SpeechClient([
+            'credentials' => file_get_contents("uploads/gk.json")
+        ]);
         log_message("error", "all ok till now");
 
 
-//        # Detects speech in the audio file
-//        $response = $client->recognize($config, $audio);
-//
-//        # Print most likely transcription
-//        $datatrans = array();
-//        $getc = array();
-//        foreach ($response->getResults() as $result) {
-//            $alternatives = $result->getAlternatives();
-//            $mostLikely = $alternatives[0];
-//            //$af = $alternatives[1];
-//            $transcript = $mostLikely->getTranscript();
-//            $getConfidence = $mostLikely->getConfidence();
-//
-//            //printf('Transcript: %s' . PHP_EOL, $transcript);
-//            $datatrans[] = $transcript;
-//            $getc[] = $getConfidence;
-//        }
-////        file_put_contents('conf.txt', print_r($getc, true));
-//        log_message("error", "transcription conf = " . json_encode($getConfidence));
-//        log_message("error", "transcription result = " . json_encode($transcript));
-//        $client->close();
-//        $datareturn = implode(' ', $datatrans);
-//        return $datareturn;
+        # Detects speech in the audio file
+        $response = $client->recognize($config, $audio);
+
+        # Print most likely transcription
+        $datatrans = array();
+        $getc = array();
+        foreach ($response->getResults() as $result) {
+            $alternatives = $result->getAlternatives();
+            $mostLikely = $alternatives[0];
+            //$af = $alternatives[1];
+            $transcript = $mostLikely->getTranscript();
+            $getConfidence = $mostLikely->getConfidence();
+
+            //printf('Transcript: %s' . PHP_EOL, $transcript);
+            $datatrans[] = $transcript;
+            $getc[] = $getConfidence;
+        }
+//        file_put_contents('conf.txt', print_r($getc, true));
+        log_message("error", "transcription conf = " . json_encode($getConfidence));
+        log_message("error", "transcription result = " . json_encode($transcript));
+        $client->close();
+        $datareturn = implode(' ', $datatrans);
+        return $datareturn;
     }
 
 }
