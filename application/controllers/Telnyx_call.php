@@ -197,10 +197,10 @@ class Telnyx_call extends CI_Controller {
             }
 
             log_message("error", "end - call.speak.ended user_name_say");
-        } elseif ($event_type == 'recording_saved' && base64_decode($payload['client_state']) == "name_recording_stop" && $recording_saved->recording_saved == '0') {
+        } elseif ($event_type == 'call.recording.saved' && base64_decode($payload['client_state']) == "name_recording_stop" && $recording_saved->recording_saved == '0') {
 //            require 'functions.php';
 
-            log_message("error", "start - recording_saved name_recording_stop");
+            log_message("error", "start - call.recording.saved name_recording_stop");
 
             $datalPAyload = selectCallID($payload['call_leg_id']);
             $call_control_id = $datalPAyload['call_control_id'];
@@ -227,7 +227,7 @@ class Telnyx_call extends CI_Controller {
 
             $data = curlPostData($urlNew, $call_control_id, $dataarray);
 
-            log_message("error", "stop - recording_saved name_recording_stop");
+            log_message("error", "stop - call.recording.saved name_recording_stop");
         } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "name_confirmation") {
 
             log_message("error", "start - call.speak.ended name_confirmation");
