@@ -404,11 +404,11 @@ class Telnyx_call extends CI_Controller {
 //        require  'vendor/autoload.php';
 //        
         # Imports the Google Cloud client library
-//        use Google\Cloud\Speech\V1\SpeechClient;
-//        use Google\Cloud\Speech\V1\RecognitionAudio;
-//        use Google\Cloud\Speech\V1\RecognitionConfig;
-//        use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
-
+        use Google\Cloud\Speech\V1\SpeechClient;
+        use Google\Cloud\Speech\V1\RecognitionAudio;
+        use Google\Cloud\Speech\V1\RecognitionConfig;
+        use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+        echo "hello";
         
         
 //        # get contents of a file into a string
