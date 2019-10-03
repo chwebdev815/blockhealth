@@ -171,6 +171,9 @@ class Telnyx_call extends CI_Controller {
             }
             log_message("error", "end - speak_ended user_response_get");
         } elseif ($event_type == 'speak_ended' && base64_decode($payload['client_state']) == "user_name_say" && $status_update->status_update == '0') {
+            
+            log_message($level, $message)
+            
             $update = updateData('status_update', '1', $call_control_id);
             $url_new = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/record_start';
             $datarecord = array(
@@ -385,13 +388,13 @@ class Telnyx_call extends CI_Controller {
 //use Google\Cloud\Speech\V1\RecognitionAudio;
 //use Google\Cloud\Speech\V1\RecognitionConfig;
 //use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
-        $path = "vendor/cloud-speech/src/V1/";
-        require "{$path}SpeechClient.php";
-        require "{$path}RecognitionAudio.php";
-        require "{$path}RecognitionConfig.php";
-        require "{$path}RecognitionConfig\AudioEncoding.php";
-        
-        echo "hello";
+//        $path = "vendor/cloud-speech/src/V1/";
+//        require "{$path}SpeechClient.php";
+//        require "{$path}RecognitionAudio.php";
+//        require "{$path}RecognitionConfig.php";
+//        require "{$path}RecognitionConfig\AudioEncoding.php";
+//        
+//        echo "hello";
     }
 
 }
