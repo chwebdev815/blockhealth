@@ -401,7 +401,7 @@ class Telnyx_call extends CI_Controller {
     }
 
     public function transcript($audioFile = "empty") {
-//        require  'vendor/autoload.php';
+        require  'vendor/autoload.php';
 //        
         # Imports the Google Cloud client library
 //        use Google\Cloud\Speech\V1\SpeechClient;
