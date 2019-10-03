@@ -5,9 +5,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 class Telnyx_call extends CI_Controller {
 
     public function get_data() {
-        echo "New change arrived";
         log_message("error", "telnyx webhook triggerd");
-        exit;
             
         $json = file_get_contents('php://input');
         $action = json_decode($json, true);
