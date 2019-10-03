@@ -23,7 +23,7 @@ class Telnyx_call extends CI_Controller {
             $call_control_id = $payload['call_control_id'];
         } else {
             $datalPAyload = selectCallID($payload['call_leg_id']);
-            $call_control_id = $datalPAyload['call_control_id'];
+            $call_control_id = $datalPAyload[0]->call_control_id;
         }
         
         $selectData = selectOne('step_one', $call_control_id);
