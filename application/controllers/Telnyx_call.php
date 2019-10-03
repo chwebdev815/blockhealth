@@ -122,9 +122,9 @@ class Telnyx_call extends CI_Controller {
 
             log_message("error", "start - speak_ended user_response_get");
             log_message("error", "select data = " . json_encode($selectData));
-            log_message("error", "s1 = " . $selectData['step_one']);
+            log_message("error", "s1 = " . $selectData->step_one);
 
-            if ($selectData['step_one'] === "1") {
+            if ($selectData->step_one === "1") {
                 log_message("error", "step1 = 1");
                 $text = 'First, I’m going to need to ask you a few questions.
             
@@ -141,7 +141,7 @@ class Telnyx_call extends CI_Controller {
                 );
 
                 $data = curlPostData($urlNew, $call_control_id, $dataarray);
-            } elseif ($selectData['step_one'] == "2") {
+            } elseif ($selectData->step_one == "2") {
                 log_message("error", "step1 = 2");
                 $url_new = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/record_start';
                 $datarecord = array(
@@ -152,7 +152,7 @@ class Telnyx_call extends CI_Controller {
                     'command_id' => '891510ac-f3e4-11e8-af5b-de00688a49022'
                 );
                 $data = curlPostData($url_new, $call_control_id, $datarecord);
-            } elseif ($selectData['step_one'] == "3") {
+            } elseif ($selectData->step_one == "3") {
                 log_message("error", "step1 = 3");
                 $url_new = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/record_start';
                 $datarecord = array(
@@ -167,7 +167,7 @@ class Telnyx_call extends CI_Controller {
                 log_message("error", "none of 1/2/3");
             }
             log_message("error", "end - speak_ended user_response_get");
-        } elseif ($event_type == 'speak_ended' && base64_decode($payload['client_state']) == "user_name_say" && $status_update['status_update'] == '0') {
+        } elseif ($event_type == 'speak_ended' && base64_decode($payload['client_state']) == "user_name_say" && $status_update->status_update == '0') {
             $update = updateData('status_update', '1', $call_control_id);
             $url_new = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/record_start';
             $datarecord = array(
@@ -189,7 +189,7 @@ class Telnyx_call extends CI_Controller {
                 );
                 $data1 = curlPostData($url_stop, $call_control_id, $datastop);
             }
-        } elseif ($event_type == 'recording_saved' && base64_decode($payload['client_state']) == "name_recording_stop" && $recording_saved['recording_saved'] == '0') {
+        } elseif ($event_type == 'recording_saved' && base64_decode($payload['client_state']) == "name_recording_stop" && $recording_saved->recording_saved == '0') {
 //            require 'functions.php';
 
             $datalPAyload = selectCallID($payload['call_leg_id']);
