@@ -117,6 +117,7 @@ class Telnyx_call extends CI_Controller {
                 base64_decode($payload['client_state']) == "user_response_get") {
 
             log_message("error", "start - speak_ended user_response_get");
+            log_message("error", "payload = " . json_encode($payload));
 
             if ($selectData['step_one'] == 1) {
                 log_message("error", "step1 = 1");
