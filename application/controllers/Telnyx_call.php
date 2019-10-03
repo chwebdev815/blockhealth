@@ -197,36 +197,37 @@ class Telnyx_call extends CI_Controller {
             }
 
             log_message("error", "end - call.speak.ended user_name_say");
-        } elseif ($event_type == 'call.recording.saved' && base64_decode($payload['client_state']) == "name_recording_stop" && $recording_saved->recording_saved == '0') {
+        } elseif ($event_type == 'call.recording.saved' && base64_decode($payload['client_state']) == "name_recording_stop") {
 //            require 'functions.php';
+            log_message("error", "inside call saved - " . json_encode($recording_saved));
+            if ($recording_saved->recording_saved == '0') {
+                log_message("error", "start - call.recording.saved name_recording_stop");
 
-            log_message("error", "start - call.recording.saved name_recording_stop");
-
-            $datalPAyload = selectCallID($payload['call_leg_id']);
-            $call_control_id = $datalPAyload['call_control_id'];
-            $update = updateData('recording_saved', '1', $call_control_id);
-            //$run = getTranscription($payload['recording_urls']['mp3']);
-            //$nameget = explode(' ', $run);
-            //this need to be uncommented
-            log_message("error", "mp3 file recorded = " . $payload['recording_urls']['mp3']);
+                $datalPAyload = selectCallID($payload['call_leg_id']);
+                $call_control_id = $datalPAyload['call_control_id'];
+                $update = updateData('recording_saved', '1', $call_control_id);
+                //$run = getTranscription($payload['recording_urls']['mp3']);
+                //$nameget = explode(' ', $run);
+                //this need to be uncommented
+                log_message("error", "mp3 file recorded = " . $payload['recording_urls']['mp3']);
 //            file_put_contents('recording_url.txt', $payload['recording_urls']['mp3']);
-            //file_put_contents('recording_url_trans.txt', $run);
+                //file_put_contents('recording_url_trans.txt', $run);
 
 
-            $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
-            $encodedString = base64_encode('name_confirmation');
-            // $update1 =  updateData('first_name',$run,$call_control_id,$conn);
-            $dataarray = array(
-                'payload' => "Thank you ",
-                'voice' => 'female',
-                'language' => 'en-US',
-                'payload_type' => 'ssml',
-                'command_id' => rand(),
-                'client_state' => $encodedString
-            );
+                $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
+                $encodedString = base64_encode('name_confirmation');
+                // $update1 =  updateData('first_name',$run,$call_control_id,$conn);
+                $dataarray = array(
+                    'payload' => "Thank you ",
+                    'voice' => 'female',
+                    'language' => 'en-US',
+                    'payload_type' => 'ssml',
+                    'command_id' => rand(),
+                    'client_state' => $encodedString
+                );
 
-            $data = curlPostData($urlNew, $call_control_id, $dataarray);
-
+                $data = curlPostData($urlNew, $call_control_id, $dataarray);
+            }
             log_message("error", "stop - call.recording.saved name_recording_stop");
         } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "name_confirmation") {
 
@@ -401,12 +402,10 @@ class Telnyx_call extends CI_Controller {
     }
 
     public function transcript($audioFile) {
-        
+
 //        
         # Imports the Google Cloud client library
 //        echo "hello";
-        
-        
         # get contents of a file into a string
         $content = file_get_contents($audioFile);
 
