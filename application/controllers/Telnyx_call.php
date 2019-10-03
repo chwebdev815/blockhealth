@@ -87,6 +87,7 @@ class Telnyx_call extends CI_Controller {
             //pressed button 1/2/3
 
             log_message("error", "start - dtmf main menu");
+            log_message("error", "payload = " . json_encode($payload));
             $digits = $payload['digit'];
             $update = updateData('step_one', $digits, $call_control_id);
             if ($digits == 1) {
