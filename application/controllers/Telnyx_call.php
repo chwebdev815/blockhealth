@@ -120,7 +120,7 @@ class Telnyx_call extends CI_Controller {
             log_message("error", "select data = " . json_encode($selectData));
 
 
-            if ($selectData['step_one'] == 1) {
+            if ($selectData['step_one'] === "1") {
                 log_message("error", "step1 = 1");
                 $text = 'First, I’m going to need to ask you a few questions.
             
@@ -137,7 +137,7 @@ class Telnyx_call extends CI_Controller {
                 );
 
                 $data = curlPostData($urlNew, $call_control_id, $dataarray);
-            } elseif ($selectData['step_one'] == 2) {
+            } elseif ($selectData['step_one'] == "2") {
                 log_message("error", "step1 = 2");
                 $url_new = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/record_start';
                 $datarecord = array(
@@ -148,7 +148,7 @@ class Telnyx_call extends CI_Controller {
                     'command_id' => '891510ac-f3e4-11e8-af5b-de00688a49022'
                 );
                 $data = curlPostData($url_new, $call_control_id, $datarecord);
-            } elseif ($selectData['step_one'] == 3) {
+            } elseif ($selectData['step_one'] == "3") {
                 log_message("error", "step1 = 3");
                 $url_new = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/record_start';
                 $datarecord = array(
