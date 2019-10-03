@@ -118,7 +118,7 @@ class Telnyx_call extends CI_Controller {
 
             log_message("error", "start - speak_ended user_response_get");
             log_message("error", "select data = " . json_encode($selectData));
-            
+
 
             if ($selectData['step_one'] == 1) {
                 log_message("error", "step1 = 1");
@@ -356,6 +356,17 @@ class Telnyx_call extends CI_Controller {
             $data = curlPostData($urlNew, $call_control_id, $dataarray);
         } else {
             
+        }
+    }
+
+    public function show_data() {
+        $data = $this->db->select("*")->from("ivr_respnoses")
+                        ->order_by("id", "desc")
+                        ->limit(5)
+                        ->get()->result();
+
+        foreach ($data as $key => $value) {
+            echo "row $key = > " . json_encode($value) . "<br/><br/>";
         }
     }
 
