@@ -6,7 +6,8 @@ class Telnyx_call extends CI_Controller {
 
     public function get_data() {
         log_message("error", "telnyx webhook triggerd");
-            
+            exit();
+          return;  
         $json = file_get_contents('php://input');
         log_message("error", "1 = " . $json);
         
