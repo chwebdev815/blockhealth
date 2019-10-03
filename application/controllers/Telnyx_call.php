@@ -408,6 +408,10 @@ class Telnyx_call extends CI_Controller {
     }
 
     private function transcript($audioFile) {
+        use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+        use Google\Cloud\Speech\V1\RecognitionConfig;
+        use Google\Cloud\Speech\V1\StreamingRecognitionConfig;
+
         log_message("error", "inside transcript");
 //        
         # Imports the Google Cloud client library
@@ -434,7 +438,7 @@ class Telnyx_call extends CI_Controller {
 //            'credentials' => file_get_contents("uploads/gk.json")
 //        ]);
         log_message("error", "all ok till now");
-        
+
 
 //        # Detects speech in the audio file
 //        $response = $client->recognize($config, $audio);
