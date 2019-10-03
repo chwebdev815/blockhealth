@@ -397,11 +397,11 @@ function selectOne($key, $call_id) {
                     ->where(array(
                         "call_control_id" => $call_id
                     ))->get()->result();
-    if($key === "recording_saved") {
-        log_message("error", "call_id = " . $call_id);
-        log_message("error", "q = " . $CI->db->last_query());
-        
-    }
+//    if($key === "recording_saved") {
+////        log_message("error", "call_id = " . $call_id);
+////        log_message("error", "q = " . $CI->db->last_query());
+//        
+//    }
     return $data;
 }
 
@@ -413,8 +413,8 @@ function selectCallID($call_leg_id) {
                         "call_leg_id" => $call_leg_id
                     ))->get()->result();
     
-        log_message("error", "call_leg_id = " . $call_leg_id);
-        log_message("error", "q = " . $CI->db->last_query());
+//        log_message("error", "call_leg_id = " . $call_leg_id);
+//        log_message("error", "q = " . $CI->db->last_query());
 //        file_put_contents('re.txt', print_r($data, true));
     return $data;
 }

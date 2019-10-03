@@ -38,6 +38,10 @@ class Telnyx_call extends CI_Controller {
 //        log_message("error", "paylad dir = " . $payload['direction']);
 
         if ($event_type == 'call.initiated') {
+            log_message("error", "===============================================");
+            log_message("error", "===============================================");
+            log_message("error", "===============================================");
+            log_message("error", "===============================================");
             log_message("error", "start - call.initiated");
             $url = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/answer';
             $data1 = getcallType($url, $call_control_id);
