@@ -439,10 +439,10 @@ class Telnyx_call extends CI_Controller {
         ]);
 
 
-        $cred_file = file_get_contents("uploads/gk.json");
+//        $cred_file = file_get_contents("uploads/gk.json");
         # Instantiates a client
         $client = new Google\Cloud\Speech\V1\SpeechClient([
-            'credentials' => file_get_contents("uploads/gk.json")
+            'credentials' => "/uploads/gk.json"
         ]);
         log_message("error", "all ok till now");
 
