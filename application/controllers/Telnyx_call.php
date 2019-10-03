@@ -426,7 +426,7 @@ class Telnyx_call extends CI_Controller {
 
         # In//stantiates a client
         $client = new SpeechClient([
-            'credentials' => $this->config->item("GOOGLE_SPEECH_CREDS")
+            'credentials' => file_get_contents("uploads/gk.json")
         ]);
 
         # Detects speech in the audio file
