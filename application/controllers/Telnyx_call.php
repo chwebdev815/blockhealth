@@ -15,7 +15,6 @@ class Telnyx_call extends CI_Controller {
         $payload = $paydata['payload'];
         $event_type = $paydata['event_type'];
         log_message("error", "telnyx webhook triggerd = > " . $event_type . "," . base64_decode($payload['client_state']));
-        log_message("error", "recording saved = " . json_encode($recording_saved->recording_saved));
 //file_put_contents('demo2.txt', print_r($payload,true) ); 
 
 
@@ -34,6 +33,7 @@ class Telnyx_call extends CI_Controller {
         $recording_saved = ($recording_saved) ? $recording_saved[0] : $recording_saved;
 
         log_message("error", "status update = " . json_encode($status_update));
+        log_message("error", "recording saved = " . json_encode($recording_saved->recording_saved));
 
 
         if ($event_type == 'call_initiated' && $payload['direction'] == 'incoming') {
