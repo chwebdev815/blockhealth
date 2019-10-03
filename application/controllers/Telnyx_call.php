@@ -33,14 +33,14 @@ class Telnyx_call extends CI_Controller {
         $recording_saved = ($recording_saved) ? $recording_saved[0] : $recording_saved;
 
         log_message("error", "status update = " . json_encode($status_update));
+        log_message("error", "paylad dir = " . $payload['direction']);
 
-
-        if ($event_type == 'call_initiated' && $payload['direction'] == 'incoming') {
-            log_message("error", "start - call_initiated");
+        if ($event_type == 'call.initiated') {
+            log_message("error", "start - call.initiated");
             $url = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/answer';
             $data1 = getcallType($url, $call_control_id);
-            log_message("error", "end - call_initiated");
-        } elseif ($event_type == 'call_answered' && base64_decode($payload['client_state']) == "NewCall") {
+            log_message("error", "end - call.initiated");
+        } elseif ($event_type == 'call.answered' && base64_decode($payload['client_state']) == "NewCall") {
             log_message("error", "start - call_answered");
             $text = 'Hello. Thank you for calling Premier Health.';
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
