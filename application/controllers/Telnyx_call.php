@@ -377,5 +377,21 @@ class Telnyx_call extends CI_Controller {
             echo "row $key = > " . json_encode($value) . "<br/><br/>";
         }
     }
+    
+    public function transcript($audioFile) {
+        
+# Imports the Google Cloud client library
+// use Google\Cloud\Speech\V1\SpeechClient;
+//use Google\Cloud\Speech\V1\RecognitionAudio;
+//use Google\Cloud\Speech\V1\RecognitionConfig;
+//use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+        $path = "vendor/cloud-speech/src/V1/";
+        require "{$path}SpeechClient.php";
+        require "{$path}RecognitionAudio.php";
+        require "{$path}RecognitionConfig.php";
+        require "{$path}RecognitionConfig\AudioEncoding.php";
+        
+        echo "hello";
+    }
 
 }
