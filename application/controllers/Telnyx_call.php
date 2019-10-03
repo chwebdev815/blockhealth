@@ -27,11 +27,11 @@ class Telnyx_call extends CI_Controller {
         $selectData = selectOne('step_one', $call_control_id);
         $status_update = selectOne('status_update', $call_control_id);
         $recording_saved = selectOne('recording_saved', $call_control_id);
-        
-        $selectData = ($selectData)?$selectData[0]:$selectData;
-        $status_update = ($status_update)?$status_update[0]:$status_update;
-        $recording_saved = ($recording_saved)?$recording_saved[0]:$recording_saved;
-        
+
+        $selectData = ($selectData) ? $selectData[0] : $selectData;
+        $status_update = ($status_update) ? $status_update[0] : $status_update;
+        $recording_saved = ($recording_saved) ? $recording_saved[0] : $recording_saved;
+
         log_message("error", "status update = " . json_encode($status_update));
 
 
@@ -171,9 +171,9 @@ class Telnyx_call extends CI_Controller {
             }
             log_message("error", "end - speak_ended user_response_get");
         } elseif ($event_type == 'speak_ended' && base64_decode($payload['client_state']) == "user_name_say" && $status_update->status_update == '0') {
-            
-            log_message($level, $message)
-            
+
+            log_message("error", "start - speak_ended user_name_say");
+
             $update = updateData('status_update', '1', $call_control_id);
             $url_new = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/record_start';
             $datarecord = array(
@@ -195,8 +195,12 @@ class Telnyx_call extends CI_Controller {
                 );
                 $data1 = curlPostData($url_stop, $call_control_id, $datastop);
             }
+
+            log_message("error", "end - speak_ended user_name_say");
         } elseif ($event_type == 'recording_saved' && base64_decode($payload['client_state']) == "name_recording_stop" && $recording_saved->recording_saved == '0') {
 //            require 'functions.php';
+
+            log_message("error", "start - recording_saved name_recording_stop");
 
             $datalPAyload = selectCallID($payload['call_leg_id']);
             $call_control_id = $datalPAyload['call_control_id'];
@@ -222,7 +226,12 @@ class Telnyx_call extends CI_Controller {
             );
 
             $data = curlPostData($urlNew, $call_control_id, $dataarray);
+
+            log_message("error", "stop - recording_saved name_recording_stop");
         } elseif ($event_type == 'speak_ended' && base64_decode($payload['client_state']) == "name_confirmation") {
+
+            log_message("error", "start - speak_ended name_confirmation");
+
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/gather_using_speak';
             $text = 'Please enter your 10 digit health card number, followed by the pound key. If you don’t have a health card number, please press 0.';
             $encodedString = base64_encode('UserCard');
@@ -242,14 +251,23 @@ class Telnyx_call extends CI_Controller {
                 'client_state' => $encodedString
             );
             $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
+
+
+            log_message("error", "stop - speak_ended name_confirmation");
         } elseif ($event_type == 'dtmf' && base64_decode($payload['client_state']) == "name_recording_stop") {
+
+            log_message("error", "start - dtmf name_recording_stop");
             $url_stop = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/record_stop';
             $datastop = array(
                 'client_state' => base64_encode('name_recording_stop'),
                 'command_id' => '891510ac-f3e4-11e8-af5b-de00688a49012'
             );
             $data1 = curlPostData($url_stop, $call_control_id, $datastop);
+            log_message("error", "stop - dtmf name_recording_stop");
         } elseif ($event_type == 'gather_ended' && base64_decode($payload['client_state']) == "UserCard") {
+
+            log_message("error", "start - gather_ended UserCard");
+
             $digits = $payload['digits'];
             $len = strlen($digits);
 
@@ -288,6 +306,7 @@ class Telnyx_call extends CI_Controller {
                     'client_state' => $encodedString
                 );
                 $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
+                log_message("error", "stop - gather_ended UserCard");
             }
         } elseif ($event_type == 'speak_ended' && base64_decode($payload['client_state']) == "thankyou_message_after_card") {
 
@@ -380,21 +399,16 @@ class Telnyx_call extends CI_Controller {
             echo "row $key = > " . json_encode($value) . "<br/><br/>";
         }
     }
-    
+
     public function transcript($audioFile) {
-        
-# Imports the Google Cloud client library
-// use Google\Cloud\Speech\V1\SpeechClient;
-//use Google\Cloud\Speech\V1\RecognitionAudio;
-//use Google\Cloud\Speech\V1\RecognitionConfig;
-//use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
-//        $path = "vendor/cloud-speech/src/V1/";
-//        require "{$path}SpeechClient.php";
-//        require "{$path}RecognitionAudio.php";
-//        require "{$path}RecognitionConfig.php";
-//        require "{$path}RecognitionConfig\AudioEncoding.php";
-//        
-//        echo "hello";
+        require  'vendor/autoload.php';
+
+        # Imports the Google Cloud client library
+        use Google\Cloud\Speech\V1\SpeechClient;
+        use Google\Cloud\Speech\V1\RecognitionAudio;
+        use Google\Cloud\Speech\V1\RecognitionConfig;
+        use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+        echo "hello";
     }
 
 }
