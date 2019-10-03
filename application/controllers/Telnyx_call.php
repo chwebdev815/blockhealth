@@ -63,7 +63,8 @@ class Telnyx_call extends CI_Controller {
                 "call_control_id" => $call_control_id,
                 "call_leg_id" => $payload['call_leg_id']
             ));
-
+            log_message("error", "insert = $inserted . " . $this->db->last_query());
+            log_message("error", "insert = " . $this->db->insert_id());
 
 
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/gather_using_speak';
