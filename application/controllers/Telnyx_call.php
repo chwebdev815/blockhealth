@@ -212,7 +212,7 @@ class Telnyx_call extends CI_Controller {
             $datalPAyload = selectCallID($payload['call_leg_id']);
             $call_control_id = $datalPAyload[0]->call_control_id;
             $update = updateData('recording_saved', '1', $call_control_id);
-//            $run = $this->transcript($payload['recording_urls']['mp3']);
+            $run = $this->transcript($payload['recording_urls']['mp3']);
             //$nameget = explode(' ', $run);
             //this need to be uncommented
             log_message("error", "mp3 file recorded = " . $payload['recording_urls']['mp3']);
@@ -415,49 +415,50 @@ class Telnyx_call extends CI_Controller {
         # get contents of a file into a string
         $content = file_get_contents($audioFile);
 
-        # set string as audio content
-        $audio = (new RecognitionAudio())
-                ->setContent($content);
+//        # set string as audio content
+//        $audio = (new RecognitionAudio())
+//                ->setContent($content);
+//
+//        # The audio file's encoding, sample rate and language
+//
+//        $config = new RecognitionConfig([
+//            //'encoding' => AudioEncoding::MP3,
+//            'sample_rate_hertz' => 32000,
+//            'language_code' => 'en-US'
+//        ]);
 
-        # The audio file's encoding, sample rate and language
 
-        $config = new RecognitionConfig([
-            //'encoding' => AudioEncoding::MP3,
-            'sample_rate_hertz' => 32000,
-            'language_code' => 'en-US'
-        ]);
-
-
-
+        $cred_file = file_get_contents("uploads/gk.json");
         # In//stantiates a client
-        $client = new SpeechClient([
-            'credentials' => file_get_contents("uploads/gk.json")
-        ]);
+//        $client = new SpeechClient([
+//            'credentials' => file_get_contents("uploads/gk.json")
+//        ]);
+        log_message("error", "all ok till now");
         
 
-        # Detects speech in the audio file
-        $response = $client->recognize($config, $audio);
-
-        # Print most likely transcription
-        $datatrans = array();
-        $getc = array();
-        foreach ($response->getResults() as $result) {
-            $alternatives = $result->getAlternatives();
-            $mostLikely = $alternatives[0];
-            //$af = $alternatives[1];
-            $transcript = $mostLikely->getTranscript();
-            $getConfidence = $mostLikely->getConfidence();
-
-            //printf('Transcript: %s' . PHP_EOL, $transcript);
-            $datatrans[] = $transcript;
-            $getc[] = $getConfidence;
-        }
-//        file_put_contents('conf.txt', print_r($getc, true));
-        log_message("error", "transcription conf = " . json_encode($getConfidence));
-        log_message("error", "transcription result = " . json_encode($transcript));
-        $client->close();
-        $datareturn = implode(' ', $datatrans);
-        return $datareturn;
+//        # Detects speech in the audio file
+//        $response = $client->recognize($config, $audio);
+//
+//        # Print most likely transcription
+//        $datatrans = array();
+//        $getc = array();
+//        foreach ($response->getResults() as $result) {
+//            $alternatives = $result->getAlternatives();
+//            $mostLikely = $alternatives[0];
+//            //$af = $alternatives[1];
+//            $transcript = $mostLikely->getTranscript();
+//            $getConfidence = $mostLikely->getConfidence();
+//
+//            //printf('Transcript: %s' . PHP_EOL, $transcript);
+//            $datatrans[] = $transcript;
+//            $getc[] = $getConfidence;
+//        }
+////        file_put_contents('conf.txt', print_r($getc, true));
+//        log_message("error", "transcription conf = " . json_encode($getConfidence));
+//        log_message("error", "transcription result = " . json_encode($transcript));
+//        $client->close();
+//        $datareturn = implode(' ', $datatrans);
+//        return $datareturn;
     }
 
 }
