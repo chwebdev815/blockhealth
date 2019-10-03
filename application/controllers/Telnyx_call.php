@@ -33,7 +33,9 @@ class Telnyx_call extends CI_Controller {
         $recording_saved = ($recording_saved) ? $recording_saved[0] : $recording_saved;
 
         log_message("error", "status update = " . json_encode($status_update));
-        log_message("error", "recording saved = " . json_encode($recording_saved));
+        if ($recording_saved) {
+            log_message("error", "recording saved = " . json_encode($recording_saved));
+        }
 
 
         if ($event_type == 'call_initiated' && $payload['direction'] == 'incoming') {
@@ -402,12 +404,10 @@ class Telnyx_call extends CI_Controller {
     }
 
     public function transcript($audioFile) {
-        
+
 //        
         # Imports the Google Cloud client library
 //        echo "hello";
-        
-        
         # get contents of a file into a string
         $content = file_get_contents($audioFile);
 
