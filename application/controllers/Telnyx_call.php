@@ -200,7 +200,7 @@ class Telnyx_call extends CI_Controller {
         } elseif ($event_type == 'call.recording.saved' && base64_decode($payload['client_state']) == "name_recording_stop") {
 //            require 'functions.php';
             log_message("error", "inside call saved - " . json_encode($recording_saved));
-            if ($recording_saved->recording_saved == '0') {
+            if ($recording_saved->recording_saved == '1') {
                 log_message("error", "start - call.recording.saved name_recording_stop");
 
                 $datalPAyload = selectCallID($payload['call_leg_id']);
