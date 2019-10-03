@@ -400,56 +400,56 @@ class Telnyx_call extends CI_Controller {
         }
     }
 
-    public function transcript($audioFile) {
-        
+//    public function transcript($audioFile) {
 //        
-        # Imports the Google Cloud client library
-//        echo "hello";
-        
-        
-        # get contents of a file into a string
-        $content = file_get_contents($audioFile);
-
-        # set string as audio content
-        $audio = (new RecognitionAudio())
-                ->setContent($content);
-
-        # The audio file's encoding, sample rate and language
-
-        $config = new RecognitionConfig([
-            //'encoding' => AudioEncoding::MP3,
-            'sample_rate_hertz' => 32000,
-            'language_code' => 'en-US'
-        ]);
-
-
-
-        # In//stantiates a client
-        $client = new SpeechClient([
-            'credentials' => file_get_contents("uploads/gk.json")
-        ]);
-
-        # Detects speech in the audio file
-        $response = $client->recognize($config, $audio);
-
-        # Print most likely transcription
-        $datatrans = array();
-        $getc = array();
-        foreach ($response->getResults() as $result) {
-            $alternatives = $result->getAlternatives();
-            $mostLikely = $alternatives[0];
-            //$af = $alternatives[1];
-            $transcript = $mostLikely->getTranscript();
-            $getConfidence = $mostLikely->getConfidence();
-
-            //printf('Transcript: %s' . PHP_EOL, $transcript);
-            $datatrans[] = $transcript;
-            $getc[] = $getConfidence;
-        }
-        file_put_contents('conf.txt', print_r($getc, true));
-        $client->close();
-        $datareturn = implode(' ', $datatrans);
-        return $datareturn;
-    }
+////        
+//        # Imports the Google Cloud client library
+////        echo "hello";
+//        
+//        
+//        # get contents of a file into a string
+//        $content = file_get_contents($audioFile);
+//
+//        # set string as audio content
+//        $audio = (new RecognitionAudio())
+//                ->setContent($content);
+//
+//        # The audio file's encoding, sample rate and language
+//
+//        $config = new RecognitionConfig([
+//            //'encoding' => AudioEncoding::MP3,
+//            'sample_rate_hertz' => 32000,
+//            'language_code' => 'en-US'
+//        ]);
+//
+//
+//
+//        # In//stantiates a client
+//        $client = new SpeechClient([
+//            'credentials' => file_get_contents("uploads/gk.json")
+//        ]);
+//
+//        # Detects speech in the audio file
+//        $response = $client->recognize($config, $audio);
+//
+//        # Print most likely transcription
+//        $datatrans = array();
+//        $getc = array();
+//        foreach ($response->getResults() as $result) {
+//            $alternatives = $result->getAlternatives();
+//            $mostLikely = $alternatives[0];
+//            //$af = $alternatives[1];
+//            $transcript = $mostLikely->getTranscript();
+//            $getConfidence = $mostLikely->getConfidence();
+//
+//            //printf('Transcript: %s' . PHP_EOL, $transcript);
+//            $datatrans[] = $transcript;
+//            $getc[] = $getConfidence;
+//        }
+//        file_put_contents('conf.txt', print_r($getc, true));
+//        $client->close();
+//        $datareturn = implode(' ', $datatrans);
+//        return $datareturn;
+//    }
 
 }
