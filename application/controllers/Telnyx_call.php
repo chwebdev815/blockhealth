@@ -8,6 +8,8 @@ class Telnyx_call extends CI_Controller {
         $json = file_get_contents('php://input');
         $action = json_decode($json, true);
 
+        log_message("error", "input = " . $json);
+        exit();
 
         log_message("error", "telnyx webhook triggerd");
 
@@ -409,11 +411,7 @@ class Telnyx_call extends CI_Controller {
 
     private function transcript($audioFile) {
 
-# Imports the Google Cloud client library
-//        use Google\Cloud\Speech\V1\SpeechClient;
-//        use Google\Cloud\Speech\V1\RecognitionAudio;
-//        use Google\Cloud\Speech\V1\RecognitionConfig;
-//        use Google\Cloud\Speech\V1\RecognitionConfig\AudioEncoding;
+        //Imports the Google Cloud client library
         require_once 'vendor/google/cloud-speech/src/V1/SpeechClient.php';
         require_once 'vendor/google/cloud-speech/src/V1/RecognitionAudio.php';
         require_once 'vendor/google/cloud-speech/src/V1/RecognitionConfig.php';

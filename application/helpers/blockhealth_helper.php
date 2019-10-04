@@ -381,8 +381,6 @@ function patient_visit_integration($type, $patient_id, $appointment_id, $update_
                 "operation_type" => "NEW",
                 "status" => ($clinic_data->emr_pathway === "OscarEMR") ? "NEW" : ""
             ));
-            //log_message("error", "schedule integration data inserted => " .
-            //$CI->db->last_query());
         }
     }
 }
@@ -397,11 +395,6 @@ function selectOne($key, $call_id) {
                     ->where(array(
                         "call_control_id" => $call_id
                     ))->get()->result();
-//    if($key === "recording_saved") {
-////        log_message("error", "call_id = " . $call_id);
-////        log_message("error", "q = " . $CI->db->last_query());
-//        
-//    }
     return $data;
 }
 
@@ -412,10 +405,6 @@ function selectCallID($call_leg_id) {
                     ->where(array(
                         "call_leg_id" => $call_leg_id
                     ))->get()->result();
-    
-//        log_message("error", "call_leg_id = " . $call_leg_id);
-//        log_message("error", "q = " . $CI->db->last_query());
-//        file_put_contents('re.txt', print_r($data, true));
     return $data;
 }
 
