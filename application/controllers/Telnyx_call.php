@@ -31,7 +31,7 @@ class Telnyx_call extends CI_Controller {
 
         $clinic_id = 0;
         $clinic_name = "";
-        if($payload["clinic_id"] && $payload["clinic_name"]) {
+        if ($payload["clinic_id"] && $payload["clinic_name"]) {
             $clinic_id = $payload["clinic_id"];
             $clinic_name = $payload["clinic_name"];
         }
@@ -234,12 +234,23 @@ class Telnyx_call extends CI_Controller {
             $datalPAyload = selectCallID($payload['call_leg_id']);
             $call_control_id = $datalPAyload[0]->call_control_id;
             $update = updateData('recording_saved', '1', $call_control_id);
-            $run = $this->transcript($payload['recording_urls']['mp3'], $call_control_id);
-            //$nameget = explode(' ', $run);
-            //this need to be uncommented
-            log_message("error", "mp3 file recorded = " . $payload['recording_urls']['mp3']);
+            $audio_content = file_get_contents($payload['recording_urls']['mp3']);
+            $file_name_chosen = FALSE;
+            $target_dir = "uploads/telnyx/";
+            while (!$file_name_chosen) {
+                $file_name = generate_random_string() . ".mp3";
+                if (!file_exists($target_dir . $file_name)) {
+                    $file_name_chosen = TRUE;
+                }
+            }
+            file_put_contents($target_dir . $file_name, $payload['recording_urls']['mp3']);
+            log_message("error", "mp3 file recorded to " . $target_dir . $file_name);
 //            file_put_contents('recording_url.txt', $payload['recording_urls']['mp3']);
             //file_put_contents('recording_url_trans.txt', $run);
+            
+            $trascription_result = $this->transcript($audio_content);
+            updateData("first_name", $trascription_result["transcript"], $call_control_id);
+            updateData("confidence_score", $trascription_result["confidence"], $call_control_id);
 
 
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
@@ -439,7 +450,7 @@ class Telnyx_call extends CI_Controller {
         return $clinic;
     }
 
-    private function transcript($audioFile, $call_control_id) {
+    private function transcript($audioFile) {
 
         //Imports the Google Cloud client library
         require_once 'vendor/google/cloud-speech/src/V1/SpeechClient.php';
@@ -483,24 +494,18 @@ class Telnyx_call extends CI_Controller {
         foreach ($response->getResults() as $result) {
             $alternatives = $result->getAlternatives();
             $mostLikely = $alternatives[0];
-            //$af = $alternatives[1];
             $transcript = $mostLikely->getTranscript();
             $getConfidence = $mostLikely->getConfidence();
 
-            //printf('Transcript: %s' . PHP_EOL, $transcript);
             $datatrans[] = $transcript;
             $getc[] = $getConfidence;
         }
-//        file_put_contents('conf.txt', print_r($getc, true));
-        log_message("error", "transcription conf = " . json_encode($getConfidence));
-        log_message("error", "transcription result = " . json_encode($transcript));
-        
-        updateData("first_name", $transcript, $call_control_id);
-        updateData("confidence_score", $transcript, $call_control_id);
-        
         $client->close();
-        $datareturn = implode(' ', $datatrans);
-        return $datareturn;
+
+        return array(
+            "transcript" => $transcript,
+            "confidence" => $getConfidence
+        );
     }
 
 }
