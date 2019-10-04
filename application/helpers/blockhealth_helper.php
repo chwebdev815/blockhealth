@@ -530,9 +530,8 @@ function push_telnyx_to_bucket($file_name, $source) {
     curl_close($curl);
 
     if ($err) {
-        return "cURL Error #:" . $err;
+        log_message("error", "bucket request error = " . $err);
     } else {
-
         return $data1 = json_decode($response, true);
     }
 }
