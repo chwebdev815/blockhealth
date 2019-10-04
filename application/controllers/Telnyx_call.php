@@ -8,17 +8,17 @@ class Telnyx_call extends CI_Controller {
         $json = file_get_contents('php://input');
         $action = json_decode($json, true);
 
-        log_message("error", "input = " . $json);
-        exit();
+
 
         log_message("error", "telnyx webhook triggerd");
 
         $paydata = $action['data'];
         $payload = $paydata['payload'];
         $event_type = $paydata['event_type'];
+        $call_to = $payload["to"];
+
         log_message("error", "event = > " . $event_type . ", payload = " . base64_decode($payload['client_state']));
 
-//file_put_contents('demo2.txt', print_r($payload,true) ); 
 
 
         if (isset($payload['call_control_id']) && !empty($payload['call_control_id'])) {
@@ -26,6 +26,14 @@ class Telnyx_call extends CI_Controller {
         } else {
             $datalPAyload = selectCallID($payload['call_leg_id']);
             $call_control_id = $datalPAyload[0]->call_control_id;
+        }
+
+
+        $clinic_id = 0;
+        $clinic_name = "";
+        if($payload["clinic_id"] && $payload["clinic_name"]) {
+            $clinic_id = $payload["clinic_id"];
+            $clinic_name = $payload["clinic_name"];
         }
 
         $selectData = selectOne('step_one', $call_control_id);
@@ -47,13 +55,30 @@ class Telnyx_call extends CI_Controller {
             log_message("error", "start - call.initiated");
             $url = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/answer';
             $data1 = getcallType($url, $call_control_id);
-            log_message("error", "end - call.initiated");
+//            log_message("error", "end - call.initiated");
         } elseif ($event_type == 'call.answered' && base64_decode($payload['client_state']) == "NewCall") {
             log_message("error", "start - call.answered");
-            $text = 'Hello. Thank you for calling Premier Health.';
+
+            //insert incomnig call entry
+
+            $clinic_info = $this->get_tenyx_clinic_info($call_to);
+            if ($clinic_info) {
+                $clinic_id = $clinic_info[0]->id;
+                $clinic_name = $clinic_info[0]->clinic_institution_name;
+            }
+
+            $inserted = $this->db->insert("telnyx_incoming", array(
+                "call_control_id" => $call_control_id,
+                "call_leg_id" => $payload['call_leg_id'],
+                "clinic_id" => $clinic_id
+            ));
+
+            $text = "Hello. Thank you for calling {$clinic_name}.";
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
             $encodedString = base64_encode('welcome_first');
             $dataarray = array(
+                "clinic_id" => $clinic_id,
+                "clinic_name" => $clinic_name,
                 'payload' => $text,
                 'voice' => 'female',
                 'language' => 'en-US',
@@ -66,22 +91,15 @@ class Telnyx_call extends CI_Controller {
             log_message("error", "end - call.answered");
         } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == 'welcome_first') {
             log_message("error", "start - call.speak.ended");
-            // $urlNew = 'https://api.telnyx.com/v2/calls/'.$call_control_id.'/actions/speak';
-            $inserted = $this->db->insert("ivr_responses", array(
-                "call_control_id" => $call_control_id,
-                "call_leg_id" => $payload['call_leg_id']
-            ));
-//            log_message("error", "insert = $inserted . " . $this->db->last_query());
-//            log_message("error", "insert = " . $this->db->insert_id());
-
 
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/gather_using_speak';
-            $text = 'If you are calling to book an appointment with Premier Health, please press 1.
+            $text = "If you are calling to book an appointment with {$clinic_name}, please press 1.
                      If you are calling from a clinic or pharmacy, please press 2.
-                    If you are calling for some other reason, please press 3.
-                ';
+                    If you are calling for some other reason, please press 3.";
             $encodedString = base64_encode('MainMenu');
             $dataarray = array(
+                "clinic_id" => $clinic_id,
+                "clinic_name" => $clinic_name,
                 'payload' => $text,
                 'voice' => 'female',
                 'language' => 'en-US',
@@ -399,7 +417,7 @@ class Telnyx_call extends CI_Controller {
 
     public function show_data() {
         $data = $this->db->select("*")
-                        ->from("ivr_responses")
+                        ->from("telnyx_incoming")
                         ->order_by("id", "desc")
                         ->limit(5)
                         ->get()->result();
@@ -407,6 +425,15 @@ class Telnyx_call extends CI_Controller {
         foreach ($data as $key => $value) {
             echo "row $key = > " . json_encode($value) . "<br/><br/>";
         }
+    }
+
+    private function get_tenyx_clinic_info($call_to) {
+        $clinic = $this->db->select("id, clinic_institution_name")
+                        ->from("clinic_user_info")
+                        ->where(array(
+                            "concat('+1', telnyx_number)" => $call_to
+                        ))->get()->result();
+        return $clinic;
     }
 
     private function transcript($audioFile) {

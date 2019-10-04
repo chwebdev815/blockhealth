@@ -391,7 +391,7 @@ function patient_visit_integration($type, $patient_id, $appointment_id, $update_
 function selectOne($key, $call_id) {
     $CI = & get_instance();
     $data = $CI->db->select("$key")
-                    ->from("ivr_responses")
+                    ->from("telnyx_incoming")
                     ->where(array(
                         "call_control_id" => $call_id
                     ))->get()->result();
@@ -401,7 +401,7 @@ function selectOne($key, $call_id) {
 function selectCallID($call_leg_id) {
     $CI = & get_instance();
     $data = $CI->db->select("call_control_id")
-                    ->from("ivr_responses")
+                    ->from("telnyx_incoming")
                     ->where(array(
                         "call_leg_id" => $call_leg_id
                     ))->get()->result();
@@ -412,7 +412,7 @@ function updateData($key, $value, $call_id) {
     $CI = & get_instance();
     $updated = $CI->db->where(array(
                 "call_control_id" => $call_id
-            ))->update("ivr_responses", array(
+            ))->update("telnyx_incoming", array(
         "$key" => $value
     ));
     return $updated;
