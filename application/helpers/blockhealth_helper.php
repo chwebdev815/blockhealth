@@ -519,7 +519,8 @@ function push_telnyx_to_bucket($file_name, $source) {
         CURLOPT_HTTPHEADER => array(
             "Content-Type: audio/mp3",
             "Accept: application/json",
-            "Authorization: Bearer KEY016D1769CF2D40ED3273B5A1E7279F57_cdyFo6KQXLXInbajc8MJew"
+            "Authorization: Bearer 4/rwGLCL70JeLfaYr2PWRnMYSL4cg0x-nHRddaR33A_35J4cspEr3kwda3NVBkQJJjr3j3wudw37OEQRTY1g2HyW0"
+            
         )
     ));
 
