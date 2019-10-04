@@ -99,7 +99,6 @@ class Telnyx_call extends CI_Controller {
             $encodedString = base64_encode('MainMenu');
             $dataarray = array(
                 "clinic_id" => $clinic_id,
-                "clinic_name" => $clinic_name,
                 'payload' => $text,
                 'voice' => 'female',
                 'language' => 'en-US',
@@ -124,10 +123,13 @@ class Telnyx_call extends CI_Controller {
             $digits = $payload['digit'];
             $update = updateData('step_one', $digits, $call_control_id);
             if ($digits == 1) {
+                $update = updateData('caller', "patient", $call_control_id);
                 $text = "Great, I can help you with that";
             } elseif ($digits == 2) {
+                $update = updateData('caller', "provider", $call_control_id);
                 $text = "Please record a message after the beep, and the clinic staff will be in touch as soon as possible";
             } elseif ($digits == 3) {
+                $update = updateData('caller', "other", $call_control_id);
                 $text = "Please record a message after the beep, and the clinic staff will be in touch as soon as possible";
             } else {
                 $text = "I’m sorry, I didn’t catch that.";
