@@ -494,3 +494,45 @@ function curlPostData($url, $call_control, $data) {
         return $data1 = json_decode($response, true);
     }
 }
+
+function push_telnyx_to_bucket($file_name, $source) {
+//    curl -X POST --data-binary @[OBJECT_LOCATION] \
+//-H "Authorization: Bearer [OAUTH2_TOKEN]" \
+//-H "Content-Type: [OBJECT_CONTENT_TYPE]" \
+//"https://www.googleapis.com/upload/storage/v1/b/[BUCKET_NAME]/o?uploadType=media&name=[OBJECT_NAME]"
+
+    $url = "https://www.googleapis.com/upload/storage/v1/b/blockhealth_bucket/o?uploadType=media&name=telnyx/{$file_name}";
+    $post_data = array(
+        'file' => '@' . realpath($source)
+    );
+    $curl = curl_init();
+    curl_setopt_array($curl, array(
+        CURLOPT_URL => $url,
+        CURLOPT_RETURNTRANSFER => true,
+        CURLOPT_ENCODING => "",
+        CURLOPT_MAXREDIRS => 10,
+        CURLOPT_IPRESOLVE => CURL_IPRESOLVE_V4,
+        CURLOPT_TIMEOUT => 30,
+        CURLOPT_POSTFIELDS => $post_data,
+        CURLOPT_HTTP_VERSION => CURL_HTTP_VERSION_1_1,
+        CURLOPT_CUSTOMREQUEST => "POST",
+        CURLOPT_HTTPHEADER => array(
+            "Content-Type: audio/mp3",
+            "Accept: application/json",
+            "Authorization: Bearer KEY016D1769CF2D40ED3273B5A1E7279F57_cdyFo6KQXLXInbajc8MJew"
+        )
+    ));
+
+    $response = curl_exec($curl);
+    $err = curl_error($curl);
+    $data = curl_getinfo($curl);
+
+    curl_close($curl);
+
+    if ($err) {
+        return "cURL Error #:" . $err;
+    } else {
+
+        return $data1 = json_decode($response, true);
+    }
+}

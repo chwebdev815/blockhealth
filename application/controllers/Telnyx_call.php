@@ -234,25 +234,19 @@ class Telnyx_call extends CI_Controller {
             $datalPAyload = selectCallID($payload['call_leg_id']);
             $call_control_id = $datalPAyload[0]->call_control_id;
             $update = updateData('recording_saved', '1', $call_control_id);
-            
-            $file_name_chosen = FALSE;
-            $target_dir = "./uploads/telnyx/";
-            while (!$file_name_chosen) {
-                $file_name = generate_random_string() . ".mp3";
-                if (!file_exists($target_dir . $file_name)) {
-                    $file_name_chosen = TRUE;
-                }
-            }
-            file_put_contents($target_dir . $file_name, $payload['recording_urls']['mp3']);
-            log_message("error", "mp3 file recorded to " . $target_dir . $file_name);
+
+            $file_name = generate_random_string() . ".mp3";
+            push_telnyx_to_bucket($file_name, $payload['recording_urls']['mp3']);
+//            file_put_contents($target_dir . $file_name, $payload['recording_urls']['mp3']);
+            log_message("error", "mp3 file recorded to bucket as " . $file_name);
 //            file_put_contents('recording_url.txt', $payload['recording_urls']['mp3']);
             //file_put_contents('recording_url_trans.txt', $run);
-            
+
             $trascription_result = $this->transcript($payload['recording_urls']['mp3']);
             updateData("first_name", $trascription_result["transcript"], $call_control_id);
             updateData("confidence_score", $trascription_result["confidence"], $call_control_id);
             updateData("recording_file", $file_name, $call_control_id);
-            
+
 
 
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
@@ -417,7 +411,7 @@ class Telnyx_call extends CI_Controller {
             }
         } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "user_final_callback") {
             updateData("status", "valid", $call_control_id);
-            
+
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/hangup';
             $encodedString = base64_encode('call_end_command');
             $dataarray = array(
