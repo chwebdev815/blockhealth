@@ -431,7 +431,7 @@ class Telnyx_call extends CI_Controller {
         $clinic = $this->db->select("id, clinic_institution_name")
                         ->from("clinic_user_info")
                         ->where(array(
-                            "concat('+1', telnyx_number)" => $call_to
+                            "concat('+1', telnyx_number) = " => $call_to
                         ))->get()->result();
         return $clinic;
     }
