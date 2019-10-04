@@ -236,9 +236,10 @@ class Telnyx_call extends CI_Controller {
             $update = updateData('recording_saved', '1', $call_control_id);
 
             $file_name = generate_random_string() . ".mp3";
-            push_telnyx_to_bucket($file_name, $payload['recording_urls']['mp3']);
-//            file_put_contents($target_dir . $file_name, $payload['recording_urls']['mp3']);
-            log_message("error", "mp3 file recorded to bucket as " . $file_name);
+//            push_telnyx_to_bucket($file_name, $payload['recording_urls']['mp3']);
+            $saved = file_put_contents("/uploads/telnyx/" . $file_name, $payload['recording_urls']['mp3']);
+            log_message("error", "mp3 file saving with name " . $file_name);
+            log_message("error", "save response=  " . $saved);
 //            file_put_contents('recording_url.txt', $payload['recording_urls']['mp3']);
             //file_put_contents('recording_url_trans.txt', $run);
 
