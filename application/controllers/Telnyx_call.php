@@ -433,6 +433,7 @@ class Telnyx_call extends CI_Controller {
                         ->where(array(
                             "concat('+1', telnyx_number) = " => $call_to
                         ))->get()->result();
+        log_message("error", "clinic info q = " . $this->db->last_query());
         return $clinic;
     }
 
