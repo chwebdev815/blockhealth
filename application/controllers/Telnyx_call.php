@@ -234,7 +234,7 @@ class Telnyx_call extends CI_Controller {
             $datalPAyload = selectCallID($payload['call_leg_id']);
             $call_control_id = $datalPAyload[0]->call_control_id;
             $update = updateData('recording_saved', '1', $call_control_id);
-            $run = $this->transcript($payload['recording_urls']['mp3']);
+            $run = $this->transcript($payload['recording_urls']['mp3'], $call_control_id);
             //$nameget = explode(' ', $run);
             //this need to be uncommented
             log_message("error", "mp3 file recorded = " . $payload['recording_urls']['mp3']);
@@ -439,7 +439,7 @@ class Telnyx_call extends CI_Controller {
         return $clinic;
     }
 
-    private function transcript($audioFile, $call_id) {
+    private function transcript($audioFile, $call_control_id) {
 
         //Imports the Google Cloud client library
         require_once 'vendor/google/cloud-speech/src/V1/SpeechClient.php';
@@ -495,8 +495,8 @@ class Telnyx_call extends CI_Controller {
         log_message("error", "transcription conf = " . json_encode($getConfidence));
         log_message("error", "transcription result = " . json_encode($transcript));
         
-        updateData("first_name", $transcript, $call_id);
-        updateData("confidence_score", $transcript, $call_id);
+        updateData("first_name", $transcript, $call_control_id);
+        updateData("confidence_score", $transcript, $call_control_id);
         
         $client->close();
         $datareturn = implode(' ', $datatrans);
