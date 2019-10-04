@@ -236,7 +236,7 @@ class Telnyx_call extends CI_Controller {
             $update = updateData('recording_saved', '1', $call_control_id);
             
             $file_name_chosen = FALSE;
-            $target_dir = "uploads/telnyx/";
+            $target_dir = "./uploads/telnyx/";
             while (!$file_name_chosen) {
                 $file_name = generate_random_string() . ".mp3";
                 if (!file_exists($target_dir . $file_name)) {
@@ -251,6 +251,8 @@ class Telnyx_call extends CI_Controller {
             $trascription_result = $this->transcript($payload['recording_urls']['mp3']);
             updateData("first_name", $trascription_result["transcript"], $call_control_id);
             updateData("confidence_score", $trascription_result["confidence"], $call_control_id);
+            updateData("recording_file", $file_name, $call_control_id);
+            
 
 
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
