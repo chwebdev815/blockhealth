@@ -14,5 +14,15 @@ class Call_center extends CI_Controller {
             redirect("/");
         }
     }
+    
+    public function ssp_call_center() {
+        if (clinic_login()) {
+            $this->load->model("call_center_model");
+            $response = $this->call_center_model->ssp_call_center_model();
+            echo $response;
+        } else {
+            echo false;
+        }
+    }
 
 }
