@@ -367,7 +367,7 @@ class Telnyx_call extends CI_Controller {
                 );
                 $data1 = curlPostData($url_stop, $call_control_id, $datastop);
             }
-        } elseif ($event_type == 'recording_saved' && base64_decode($payload['client_state']) == "dob_recording_stop") {
+        } elseif ($event_type == 'call.recording.saved' && base64_decode($payload['client_state']) == "dob_recording_stop") {
             $datalPAyload = selectCallID($payload['call_leg_id']);
             $call_control_id = $datalPAyload[0]->call_control_id;
             // $update          = updateData('recording_saved', '1', $call_control_id, $conn);
