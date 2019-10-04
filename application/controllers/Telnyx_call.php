@@ -149,7 +149,6 @@ class Telnyx_call extends CI_Controller {
                     'client_state' => $encodedString
                 );
             } else {
-//                $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                 $text = "I’m sorry, I didn’t catch that.";
                 $encodedString = base64_encode('user_response_get');
                 $dataarray = array(
@@ -272,8 +271,8 @@ class Telnyx_call extends CI_Controller {
             }
 
             log_message("error", "end - call.speak.ended user_name_say with = $call_control_id");
-        } elseif ($event_type == 'call.recording.saved' && base64_decode($payload['client_state']) == "   " && $recording_saved->recording_saved == '0') {
-            log_message("error", "start - call.recording.saved blank");
+        } elseif ($event_type == 'call.recording.saved' && base64_decode($payload['client_state']) == "name_recording_stop" && $recording_saved->recording_saved == '0') {
+            log_message("error", "start - call.recording.saved name_recording_stop");
 
             $datalPAyload = selectCallID($payload['call_leg_id']);
             $call_control_id = $datalPAyload[0]->call_control_id;
@@ -309,7 +308,7 @@ class Telnyx_call extends CI_Controller {
             );
             $data = curlPostData($urlNew, $call_control_id, $dataarray);
 
-            log_message("error", "stop - call.recording.saved blank");
+            log_message("error", "stop - call.recording.saved name_recording_stop");
         } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "user_dob_question") {
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
             $encodedString = base64_encode('dob_record');
