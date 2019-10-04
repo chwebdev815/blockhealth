@@ -61,7 +61,7 @@ class Telnyx_call extends CI_Controller {
 
             //insert incomnig call entry
 
-            $clinic_info = $this->get_tenyx_clinic_info($call_to);
+            $clinic_info = $this->get_telnyx_clinic_info($call_to);
             if ($clinic_info) {
                 $clinic_id = $clinic_info[0]->id;
                 $clinic_name = $clinic_info[0]->clinic_institution_name;
@@ -149,6 +149,7 @@ class Telnyx_call extends CI_Controller {
                     'client_state' => $encodedString
                 );
             } else {
+//                $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                 $text = "I’m sorry, I didn’t catch that.";
                 $encodedString = base64_encode('user_response_get');
                 $dataarray = array(
@@ -271,8 +272,8 @@ class Telnyx_call extends CI_Controller {
             }
 
             log_message("error", "end - call.speak.ended user_name_say with = $call_control_id");
-        } elseif ($event_type == 'call.recording.saved' && base64_decode($payload['client_state']) == "name_recording_stop" && $recording_saved->recording_saved == '0') {
-            log_message("error", "start - call.recording.saved name_recording_stop");
+        } elseif ($event_type == 'call.recording.saved' && base64_decode($payload['client_state']) == "   " && $recording_saved->recording_saved == '0') {
+            log_message("error", "start - call.recording.saved blank");
 
             $datalPAyload = selectCallID($payload['call_leg_id']);
             $call_control_id = $datalPAyload[0]->call_control_id;
@@ -308,7 +309,7 @@ class Telnyx_call extends CI_Controller {
             );
             $data = curlPostData($urlNew, $call_control_id, $dataarray);
 
-            log_message("error", "stop - call.recording.saved name_recording_stop");
+            log_message("error", "stop - call.recording.saved blank");
         } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "user_dob_question") {
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
             $encodedString = base64_encode('dob_record');
@@ -606,7 +607,7 @@ class Telnyx_call extends CI_Controller {
         }
     }
 
-    private function get_tenyx_clinic_info($call_to) {
+    private function get_telnyx_clinic_info($call_to) {
         $clinic = $this->db->select("id, clinic_institution_name")
                         ->from("clinic_user_info")
                         ->where(array(
