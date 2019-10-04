@@ -532,6 +532,6 @@ function push_telnyx_to_bucket($file_name, $source) {
     if ($err) {
         log_message("error", "bucket request error = " . $err);
     } else {
-        return $data1 = json_decode($response, true);
+        log_message("error", "bucket response = " . json_encode($response));
     }
 }
