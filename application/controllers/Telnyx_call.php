@@ -439,7 +439,7 @@ class Telnyx_call extends CI_Controller {
         return $clinic;
     }
 
-    private function transcript($audioFile) {
+    private function transcript($audioFile, $call_id) {
 
         //Imports the Google Cloud client library
         require_once 'vendor/google/cloud-speech/src/V1/SpeechClient.php';
@@ -472,7 +472,6 @@ class Telnyx_call extends CI_Controller {
         $client = new Google\Cloud\Speech\V1\SpeechClient([
             'credentials' => "uploads/gk.json"
         ]);
-        log_message("error", "all ok till now");
 
 
         # Detects speech in the audio file
@@ -495,6 +494,10 @@ class Telnyx_call extends CI_Controller {
 //        file_put_contents('conf.txt', print_r($getc, true));
         log_message("error", "transcription conf = " . json_encode($getConfidence));
         log_message("error", "transcription result = " . json_encode($transcript));
+        
+        updateData("first_name", $transcript, $call_id);
+        updateData("confidence_score", $transcript, $call_id);
+        
         $client->close();
         $datareturn = implode(' ', $datatrans);
         return $datareturn;
