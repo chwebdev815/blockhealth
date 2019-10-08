@@ -307,88 +307,89 @@ class Telnyx_call_well_health extends CI_Controller {
                 );
                 $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
             }
-        } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "thankyou_message_after_card") {
-            $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/gather_using_speak';
-            $text = 'Please enter your 10 digit phone number, including the area code, followed by the pound key';
-            $encodedString = base64_encode('UserPhone');
-            $dataarray = array(
-                'payload' => $text,
-                'voice' => 'female',
-                'language' => 'en-US',
-                'payload_type' => 'ssml',
-                'invalid_payload' => 'I’m sorry, I didn’t catch that.',
-                'terminating_digit' => '#',
-                'timeout_millis' => '5000',
-                'inter_digit_timeout_millis' => '5000',
-                'minimum_digits' => '1',
-                'maximum_digits' => '13',
-                'valid_digits' => '0123456789',
-                'terminating_digit' => '#',
-                'command_id' => rand(),
-                'client_state' => $encodedString
-            );
-            $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
-        } elseif ($event_type == 'call.gather.ended' && base64_decode($payload['client_state']) == "UserPhone") {
-            $digits = $payload['digits'];
-            $len = strlen($digits);
-            //file_put_contents('payloadnext.txt', print_r($payload, true));
-            if ($len >= 10 || $digits == '0') {
-
-
-                /* QUERY TO  DATABASE WILL GOES HERE */
-                $update = updateData('user_number', $digits, $call_control_id, $conn);
-                if ($status_update['step_one'] == 1) {
-                    $text = 'Hello Hassan.
-			                 We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch soon to book an appointment. 
-							 Thank you';
-
-                    $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
-                } else {
-                    $text = 'We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch soon to book an appointment. Thank you';
-                    $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
-                }
-                $encodedString = base64_encode('call_hangup');
-                $dataarray = array(
-                    'payload' => $text,
-                    'voice' => 'female',
-                    'language' => 'en-US',
-                    'payload_type' => 'ssml',
-                    'command_id' => rand(),
-                    'client_state' => $encodedString
-                );
-                $data = curlPostData($urlNew, $call_control_id, $dataarray);
-            } elseif ($digits != '0' && $len < 10) {
-                $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/gather_using_speak';
-                $text = 'I’m sorry, I didn’t catch that. Please enter your 10 digit phone number, including the area code, followed by the pound key';
-                $encodedString = base64_encode('UserPhone');
-                $dataarray = array(
-                    'payload' => $text,
-                    'voice' => 'female',
-                    'language' => 'en-US',
-                    'payload_type' => 'ssml',
-                    'invalid_payload' => 'I’m sorry, I didn’t catch that.',
-                    'terminating_digit' => '#',
-                    'timeout_millis' => '5000',
-                    'inter_digit_timeout_millis' => '5000',
-                    'minimum_digits' => '1',
-                    'maximum_digits' => '13',
-                    'valid_digits' => '0123456789',
-                    'terminating_digit' => '#',
-                    'command_id' => rand(),
-                    'client_state' => $encodedString
-                );
-                $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
-            }
-        } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "call_hangup") {
-            $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/hangup';
-            $encodedString = base64_encode('call_end_command');
-            $dataarray = array(
-                'command_id' => rand(),
-                'client_state' => $encodedString
-            );
-
-            $data = curlPostData($urlNew, $call_control_id, $dataarray);
-        }
+        } 
+//        elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "thankyou_message_after_card") {
+//            $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/gather_using_speak';
+//            $text = 'Please enter your 10 digit phone number, including the area code, followed by the pound key';
+//            $encodedString = base64_encode('UserPhone');
+//            $dataarray = array(
+//                'payload' => $text,
+//                'voice' => 'female',
+//                'language' => 'en-US',
+//                'payload_type' => 'ssml',
+//                'invalid_payload' => 'I’m sorry, I didn’t catch that.',
+//                'terminating_digit' => '#',
+//                'timeout_millis' => '5000',
+//                'inter_digit_timeout_millis' => '5000',
+//                'minimum_digits' => '1',
+//                'maximum_digits' => '13',
+//                'valid_digits' => '0123456789',
+//                'terminating_digit' => '#',
+//                'command_id' => rand(),
+//                'client_state' => $encodedString
+//            );
+//            $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
+//        } elseif ($event_type == 'call.gather.ended' && base64_decode($payload['client_state']) == "UserPhone") {
+//            $digits = $payload['digits'];
+//            $len = strlen($digits);
+//            //file_put_contents('payloadnext.txt', print_r($payload, true));
+//            if ($len >= 10 || $digits == '0') {
+//
+//
+//                /* QUERY TO  DATABASE WILL GOES HERE */
+//                $update = updateData('user_number', $digits, $call_control_id, $conn);
+//                if ($status_update['step_one'] == 1) {
+//                    $text = 'Hello Hassan.
+//			                 We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch soon to book an appointment. 
+//							 Thank you';
+//
+//                    $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
+//                } else {
+//                    $text = 'We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch soon to book an appointment. Thank you';
+//                    $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
+//                }
+//                $encodedString = base64_encode('call_hangup');
+//                $dataarray = array(
+//                    'payload' => $text,
+//                    'voice' => 'female',
+//                    'language' => 'en-US',
+//                    'payload_type' => 'ssml',
+//                    'command_id' => rand(),
+//                    'client_state' => $encodedString
+//                );
+//                $data = curlPostData($urlNew, $call_control_id, $dataarray);
+//            } elseif ($digits != '0' && $len < 10) {
+//                $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/gather_using_speak';
+//                $text = 'I’m sorry, I didn’t catch that. Please enter your 10 digit phone number, including the area code, followed by the pound key';
+//                $encodedString = base64_encode('UserPhone');
+//                $dataarray = array(
+//                    'payload' => $text,
+//                    'voice' => 'female',
+//                    'language' => 'en-US',
+//                    'payload_type' => 'ssml',
+//                    'invalid_payload' => 'I’m sorry, I didn’t catch that.',
+//                    'terminating_digit' => '#',
+//                    'timeout_millis' => '5000',
+//                    'inter_digit_timeout_millis' => '5000',
+//                    'minimum_digits' => '1',
+//                    'maximum_digits' => '13',
+//                    'valid_digits' => '0123456789',
+//                    'terminating_digit' => '#',
+//                    'command_id' => rand(),
+//                    'client_state' => $encodedString
+//                );
+//                $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
+//            }
+//        } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "call_hangup") {
+//            $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/hangup';
+//            $encodedString = base64_encode('call_end_command');
+//            $dataarray = array(
+//                'command_id' => rand(),
+//                'client_state' => $encodedString
+//            );
+//
+//            $data = curlPostData($urlNew, $call_control_id, $dataarray);
+//        }
     }
 
     public function show_data() {
