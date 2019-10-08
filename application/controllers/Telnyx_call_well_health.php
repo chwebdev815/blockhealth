@@ -391,9 +391,9 @@ class Telnyx_call_well_health extends CI_Controller {
                         $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at dermlab@wellclinics.ca - d e r m l a b at w e l l c l i n i c s dot c a. "
                                 . "If you would like to speak to a representative, we will do our best to speak with you shortly. "
                                 . "Please hold.";
-                        log_message("error", "forwardig call");
+                        
                         $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
-                        $encodedString = base64_encode('patient_in_op_hours');
+                        $encodedString = base64_encode('speak_for_patient_in_op_hours');
                         $dataarray = array(
                             "clinic_id" => $clinic_id,
                             "clinic_name" => $clinic_name,
@@ -451,7 +451,18 @@ Thank you, and have a great day.";
                 );
                 $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
             }
-        } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "call_hangup") {
+        } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "speak_for_patient_in_op_hours") {
+            //forward call to hassaan
+            $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/transfer';
+            $encodedString = base64_encode('call_forwarded');
+            $dataarray = array(
+                'command_id' => rand(),
+                'client_state' => $encodedString,
+                'to' => "+16479066970"
+            );
+            $data = curlPostData($urlNew, $call_control_id, $dataarray);
+            log_message("error", "trying to fw for " . "+16479066970");
+        }elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "call_hangup") {
             updateData("status", "valid", $call_control_id);
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/hangup';
             $encodedString = base64_encode('call_end_command');
