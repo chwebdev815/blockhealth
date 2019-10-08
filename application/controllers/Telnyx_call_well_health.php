@@ -332,14 +332,35 @@ class Telnyx_call_well_health extends CI_Controller {
             $len = strlen($digits);
             //file_put_contents('payloadnext.txt', print_r($payload, true));
             if ($len >= 10 || $digits == '0') {
+                $hcn = selectOne('health_card', $call_control_id);
+                
+                $patient_data = $this->db->select("pat.fname")
+                        ->from("referral_patient_info pat, referral_info c_ref, efax_info efax")
+                        ->where(array(
+                            "pat.ohip" => $hcn,
+                            "pat.active" => 1,
+                            "c_ref.active" => 1,
+                            "efax.active" => 1,
+                            "efax.to" => $clinic_id,
+                            "c_ref.status" => "Referral Triage"
+                        ))
+                        ->where("pat.referral_id", "c_ref.id", false)
+                        ->where("c_ref.efax_id", "efax.id", false)
+                        ->get()->result();
+                log_message("error", "hcn lookup = " . $this->db->last_query());
 
-
+                $patient_name = "";
+                if($patient_data) {
+                    $patient_data = $patient_data[0];
+                    $patient_name = $patient_data->fname;
+                }
+                
                 /* QUERY TO  DATABASE WILL GOES HERE */
                 $update = updateData('user_number', $digits, $call_control_id);
                 if ($status_update->step_one == 1) {
-                    $text = 'Hello Hassan.
+                    $text = "Hello {$patient_name}.
 			                 We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch soon to book an appointment. 
-							 Thank you';
+							 Thank you";
 
                     $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                 } else {
