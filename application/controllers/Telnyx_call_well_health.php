@@ -418,9 +418,7 @@ class Telnyx_call_well_health extends CI_Controller {
                         ->limit(5)
                         ->get()->result();
 
-        foreach ($data as $key => $value) {
-            echo "row $key = > " . json_encode($value) . "<br/><br/>";
-        }
+        json_encode($data);
     }
 
     private function get_telnyx_clinic_info($call_to) {
