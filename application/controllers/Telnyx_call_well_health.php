@@ -117,6 +117,8 @@ class Telnyx_call_well_health extends CI_Controller {
             $digits = $payload['digits'];
             $update = updateData('step_one', $digits, $call_control_id);
             if ($digits == 1 || $digits == 2) {
+                $update = updateData('caller', ($digits == 1)?"newpatient":"patient", $call_control_id);
+                
                 $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                 $text = "Great, I can help you with that";
                 $encodedString = base64_encode('proceed_to_step_two');
