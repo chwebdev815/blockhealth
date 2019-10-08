@@ -340,10 +340,11 @@ class Telnyx_call_well_health extends CI_Controller {
                 $update = updateData('user_number', $digits, $call_control_id);
                 //phone number is taken fine. now process 3
 
-
+                log_message("error", "phone number is saved. ");
                 $caller = selectOne('caller', $call_control_id);
                 $caller = $caller[0]->caller;
 
+                log_message("error", "caller = $caller");
                 if ($caller === "New patient") {
                     //check hcn if found status = 'referral triage'
 
