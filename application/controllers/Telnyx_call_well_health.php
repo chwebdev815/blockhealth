@@ -334,53 +334,79 @@ class Telnyx_call_well_health extends CI_Controller {
         } elseif ($event_type == 'call.gather.ended' && base64_decode($payload['client_state']) == "UserPhone") {
             $digits = $payload['digits'];
             $len = strlen($digits);
-            //file_put_contents('payloadnext.txt', print_r($payload, true));
+
+
             if ($len >= 10 || $digits == '0') {
-                $hcn = selectOne('health_card', $call_control_id);
-                $hcn = $hcn[0]->health_card;
-
-                $patient_data = $this->db->select("pat.fname")
-                                ->from("referral_patient_info pat, clinic_referrals c_ref, efax_info efax")
-                                ->where(array(
-                                    "pat.ohip" => $hcn,
-                                    "pat.active" => 1,
-                                    "c_ref.active" => 1,
-                                    "efax.active" => 1,
-                                    "efax.to" => $clinic_id,
-                                    "c_ref.status" => "Referral Triage"
-                                ))
-                                ->where("pat.referral_id", "c_ref.id", false)
-                                ->where("c_ref.efax_id", "efax.id", false)
-                                ->get()->result();
-                log_message("error", "hcn lookup = " . $this->db->last_query());
-
-                $patient_name = "";
-                if ($patient_data) {
-                    $patient_data = $patient_data[0];
-                    $patient_name = $patient_data->fname;
-                }
-
-                /* QUERY TO  DATABASE WILL GOES HERE */
                 $update = updateData('user_number', $digits, $call_control_id);
-                if ($status_update->step_one == 1) {
-                    //1 for new patient
-                    $text = "Hello {$patient_name}.
-			                 We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch soon to book an appointment. 
-							 Thank you";
+                //phone number is taken fine. now process 3
 
-                    $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
-                    $encodedString = base64_encode('call_hangup');
-                    $dataarray = array(
-                        'payload' => $text,
-                        'voice' => 'female',
-                        'language' => 'en-US',
-                        'payload_type' => 'ssml',
-                        'command_id' => rand(),
-                        'client_state' => $encodedString
-                    );
-                    $data = curlPostData($urlNew, $call_control_id, $dataarray);
-                } else {
-                    // else for patient
+
+                $caller = selectOne('caller', $call_control_id);
+                $caller = $caller[0]->caller;
+
+                if ($caller === "New patient") {
+                    //check hcn if found status = 'referral triage'
+
+                    /* QUERY TO  DATABASE WILL GOES HERE */
+
+                    $hcn = selectOne('health_card', $call_control_id);
+                    $hcn = $hcn[0]->health_card;
+
+                    $patient_data = $this->db->select("pat.fname")
+                                    ->from("referral_patient_info pat, clinic_referrals c_ref, efax_info efax")
+                                    ->where(array(
+                                        "pat.ohip" => $hcn,
+                                        "pat.active" => 1,
+                                        "c_ref.active" => 1,
+                                        "efax.active" => 1,
+                                        "efax.to" => $clinic_id,
+                                        "c_ref.status" => "Referral Triage"
+                                    ))
+                                    ->where("pat.referral_id", "c_ref.id", false)
+                                    ->where("c_ref.efax_id", "efax.id", false)
+                                    ->get()->result();
+                    log_message("error", "hcn lookup = " . $this->db->last_query());
+
+                    $patient_name = "";
+                    if ($patient_data) {
+                        //stage 4. If caller = ‘newpatient’, and status = ‘referral triage’
+                        log_message("error", "stage 4. If caller = ‘newpatient’, and status = ‘referral triage’");
+                        $text = "Hello {$patient_name}.
+                             We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch soon to book an appointment. 
+                             Thank you";
+
+                        $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
+                        $encodedString = base64_encode('call_hangup');
+                        $dataarray = array(
+                            'payload' => $text,
+                            'voice' => 'female',
+                            'language' => 'en-US',
+                            'payload_type' => 'ssml',
+                            'command_id' => rand(),
+                            'client_state' => $encodedString
+                        );
+                        $data = curlPostData($urlNew, $call_control_id, $dataarray);
+                    } else {
+                        // stage 5. If caller = ‘newpatient’, and status =/= ‘referral triage’
+                        log_message("error", "stage 5. If caller = ‘newpatient’, and status =/= ‘referral triage’");
+                        $text = "Unfortunately, we are currently unable to find your referral. Your details have been passed to the clinic staff, and they will be in touch soon. \n"
+                                . "Thank you. ";
+
+                        $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
+                        $encodedString = base64_encode('call_hangup');
+                        $dataarray = array(
+                            'payload' => $text,
+                            'voice' => 'female',
+                            'language' => 'en-US',
+                            'payload_type' => 'ssml',
+                            'command_id' => rand(),
+                            'client_state' => $encodedString
+                        );
+                        $data = curlPostData($urlNew, $call_control_id, $dataarray);
+                    }
+                } else if ($caller === "Patient") {
+                    log_message("error", "is patient");
+
                     date_default_timezone_set("America/Los_Angeles");
                     $time = date("H:i:s");
                     $w = date("D");
@@ -388,10 +414,12 @@ class Telnyx_call_well_health extends CI_Controller {
                     $Fr = array('Fri');
                     log_message("error", "comparing $time");
                     if ($time >= "10:00:00" && $time <= "14:00:00" && in_array($w, $weekname)) {
-                        $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at dermlab@wellclinics.ca - d e r m l a b at w e l l c l i n i c s dot c a. "
-                                . "If you would like to speak to a representative, we will do our best to speak with you shortly. "
+                        //stage 6. If caller = ‘patient’, and call during operating hours 
+                        log_message("error", "stage 6. If caller = ‘patient’, and call during operating hours ");
+                        $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at dermlab@wellclinics.ca - d e r m l a b at w e l l c l i n i c s dot c a. \n"
+                                . "If you would like to speak to a representative, we will do our best to speak with you shortly. \n"
                                 . "Please hold.";
-                        
+
                         $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                         $encodedString = base64_encode('speak_for_patient_in_op_hours');
                         $dataarray = array(
@@ -410,14 +438,17 @@ class Telnyx_call_well_health extends CI_Controller {
                     } elseif (($time >= "09:00:00" && $time <= "12:00:00" && $w == "Fri") ||
                             ($w == "Sat" || $w == "Sun")) {
 //                        echo $time . " out";
+                        // Stage 7. If caller = ‘patient’, and call outside operating hours
+                        log_message("error", "Stage 7. If caller = ‘patient’, and call outside operating hours");
+
                         $text = "In the case of an emergency, please hang up and report to the emergency department at VGH or Saint Pauls Hospital, where an on-demand dermatologist can assist you.  "
                                 . "Please note our phone lines are currently closed and will reopen from 10 am to 2 pm on Monday to Thursday, and 9 am to 12 pm on Fridays. "
                                 . "Please try back during those hours, or you can reach us is by e-mail at dermlab@wellclinics.ca - d e r m l a b at w e l l c l i n i c s dot c a.
  
 Thank you, and have a great day.";
                         log_message("error", "ending call");
-                        $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/hangup';
-                        $encodedString = base64_encode('call_end_command');
+                        $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
+                        $encodedString = base64_encode('call_hangup');
                         $dataarray = array(
                             'command_id' => rand(),
                             'client_state' => $encodedString
@@ -425,9 +456,6 @@ Thank you, and have a great day.";
 
                         $data = curlPostData($urlNew, $call_control_id, $dataarray);
                     }
-
-                    $text = 'We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch soon to book an appointment. Thank you';
-                    $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                 }
             } elseif ($digits != '0' && $len < 10) {
                 $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/gather_using_speak';
@@ -462,7 +490,7 @@ Thank you, and have a great day.";
             );
             $data = curlPostData($urlNew, $call_control_id, $dataarray);
             log_message("error", "trying to fw for " . "+16479066970");
-        }elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "call_hangup") {
+        } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "call_hangup") {
             updateData("status", "valid", $call_control_id);
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/hangup';
             $encodedString = base64_encode('call_end_command');
