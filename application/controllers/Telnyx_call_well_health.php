@@ -333,6 +333,7 @@ class Telnyx_call_well_health extends CI_Controller {
             //file_put_contents('payloadnext.txt', print_r($payload, true));
             if ($len >= 10 || $digits == '0') {
                 $hcn = selectOne('health_card', $call_control_id);
+                $hcn = $hcn[0]->health_card;
                 
                 $patient_data = $this->db->select("pat.fname")
                         ->from("referral_patient_info pat, referral_info c_ref, efax_info efax")
