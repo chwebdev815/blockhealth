@@ -336,7 +336,7 @@ class Telnyx_call_well_health extends CI_Controller {
                 $hcn = $hcn[0]->health_card;
                 
                 $patient_data = $this->db->select("pat.fname")
-                        ->from("referral_patient_info pat, referral_info c_ref, efax_info efax")
+                        ->from("referral_patient_info pat, clinic_referrals c_ref, efax_info efax")
                         ->where(array(
                             "pat.ohip" => $hcn,
                             "pat.active" => 1,
