@@ -336,7 +336,7 @@ class Telnyx_call_well_health extends CI_Controller {
 
                 /* QUERY TO  DATABASE WILL GOES HERE */
                 $update = updateData('user_number', $digits, $call_control_id);
-                if ($status_update['step_one'] == 1) {
+                if ($status_update->step_one == 1) {
                     $text = 'Hello Hassan.
 			                 We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch soon to book an appointment. 
 							 Thank you';
