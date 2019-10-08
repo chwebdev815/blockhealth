@@ -3,7 +3,8 @@
 class Call_center_model extends CI_Model {
 
     public function ssp_call_center_model() {
-        if ($this->session->userdata("user_id") === "9") {
+        if ($this->session->userdata("user_id") === 9) {
+            //telnyxfirst
             $table = "view_call_center";
 
             $primaryKey = "id";
@@ -34,7 +35,8 @@ class Call_center_model extends CI_Model {
                     SSP::complex($_GET, $sql_details, $table, $primaryKey, $columns, null, $where)
             );
         }
-        if ($this->session->userdata("user_id") === "10") {
+        if ($this->session->userdata("user_id") === 10) {
+            //well health
             $table = "view_well_halth_call_center";
 
             $primaryKey = "id";
