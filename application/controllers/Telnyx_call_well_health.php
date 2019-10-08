@@ -401,6 +401,7 @@ class Telnyx_call_well_health extends CI_Controller {
                 $welcome = curlPostData($urlNew, $call_control_id, $dataarray);
             }
         } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "call_hangup") {
+            updateData("status", "valid", $call_control_id);
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/hangup';
             $encodedString = base64_encode('call_end_command');
             $dataarray = array(
