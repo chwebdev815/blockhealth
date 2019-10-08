@@ -6,6 +6,10 @@ class Telnyx_call_well_health extends CI_Controller {
 
     public function get_data() {
         $json = file_get_contents('php://input');
+        log_message("error", "test 1 = " . $json);
+        log_message("error", "test 2 = " . json_encode($_REQUEST));
+        log_message("error", "test 3 = " . json_encode($this->input->get()));
+        log_message("error", "test 4 = " . json_encode($this->input->post()));
         $action = json_decode($json, true);
 
 
