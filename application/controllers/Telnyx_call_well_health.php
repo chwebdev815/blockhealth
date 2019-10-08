@@ -131,6 +131,7 @@ class Telnyx_call_well_health extends CI_Controller {
                     'client_state' => $encodedString
                 );
             } elseif ($digits == 3) {
+                $update = updateData('caller', "emergency", $call_control_id);
                 $text = 'In the case of an emergency, please hang up and report to the emergency department at VGH or Saint Pauls Hospital, where an on-demand dermatologist can assist you.';
                 $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                 $encodedString = base64_encode('call_hangup');
@@ -143,6 +144,7 @@ class Telnyx_call_well_health extends CI_Controller {
                     'client_state' => $encodedString
                 );
             } elseif ($digits == 4) {
+                $update = updateData('caller', "other", $call_control_id);
                 $text = 'The clinic staff are unable to answer the phone right now.';
                 $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                 $encodedString = base64_encode('user_select_four');
