@@ -487,7 +487,7 @@ class Telnyx_call_well_health extends CI_Controller {
                     log_message("error", "Stage 7. If caller = ‘patient’, and call outside operating hours");
 
 
-                    $text = "Unfortunately, we are currently unable to find your referral. Your details have been passed to the clinic staff, and they will be in touch soon. \n"
+                    $text = "In the case of an emergency, please hang up and report to the emergency department at VGH or Saint Pauls Hospital, where an on-demand dermatologist can assist you.  \n"
                             . "Please note our phone lines are currently closed and will reopen from 10 am to 2 pm on Monday to Thursday, and 9 am to 12 pm on Fridays. \n"
                             . "Please try back during those hours, or you can reach us is by e-mail at dermlab@wellclinics.ca - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
                             . "Thank you, and have a great day.  \n";
