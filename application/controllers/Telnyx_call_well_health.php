@@ -415,7 +415,7 @@ class Telnyx_call_well_health extends CI_Controller {
                     $w = date("D");
                     $weekname = array('Mon', 'Tue', 'Wed', 'Thu');
                     $Fr = array('Fri');
-                    log_message("error", "comparing $time");
+                    log_message("error", "comparing $time and $w");
                     if ($time >= "10:00:00" && $time <= "14:00:00" && in_array($w, $weekname)) {
                         updateData("status", "valid", $call_control_id);
                         //stage 6. If caller = ‘patient’, and call during operating hours 
