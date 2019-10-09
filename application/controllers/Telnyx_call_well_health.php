@@ -439,7 +439,7 @@ class Telnyx_call_well_health extends CI_Controller {
 
                         $data = curlPostData($urlNew, $call_control_id, $dataarray);
 //                        echo $time . " IN";
-                    } elseif (($time >= "09:00:00" && $time <= "12:00:00") ||
+                    } elseif (($time < "10:00:00" && $time > "14:00:00") ||
                             ($w == "Fri" || $w == "Sat" || $w == "Sun")) {
                         updateData("status", "valid", $call_control_id);
 //                        echo $time . " out";
@@ -460,6 +460,9 @@ Thank you, and have a great day.";
                         );
 
                         $data = curlPostData($urlNew, $call_control_id, $dataarray);
+                    }
+                    else {
+                        log_message("error", "Invalid option");
                     }
                 }
             } elseif ($digits != '0' && $len < 10) {
