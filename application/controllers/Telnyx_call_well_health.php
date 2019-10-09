@@ -446,15 +446,19 @@ class Telnyx_call_well_health extends CI_Controller {
                         // Stage 7. If caller = ‘patient’, and call outside operating hours
                         log_message("error", "Stage 7. If caller = ‘patient’, and call outside operating hours");
 
-                        $text = "In the case of an emergency, please hang up and report to the emergency department at VGH or Saint Pauls Hospital, where an on-demand dermatologist can assist you.  "
-                                . "Please note our phone lines are currently closed and will reopen from 10 am to 2 pm on Monday to Thursday, and 9 am to 12 pm on Fridays. "
-                                . "Please try back during those hours, or you can reach us is by e-mail at dermlab@wellclinics.ca - d e r m l a b at w e l l c l i n i c s dot c a.
- 
-Thank you, and have a great day.";
-                        log_message("error", "ending call");
+                        $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at dermlab@wellclinics.ca - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
+                                . "If you would like to speak to a representative, we will do our best to speak with you shortly. \n"
+                                . "Please hold.";
+
                         $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
-                        $encodedString = base64_encode('call_hangup');
+                        $encodedString = base64_encode('speak_for_patient_outside_op_hours');
                         $dataarray = array(
+                            "clinic_id" => $clinic_id,
+                            "clinic_name" => $clinic_name,
+                            'payload' => $text,
+                            'voice' => 'female',
+                            'language' => 'en-US',
+                            'payload_type' => 'ssml',
                             'command_id' => rand(),
                             'client_state' => $encodedString
                         );
@@ -498,7 +502,19 @@ Thank you, and have a great day.";
             );
             $data = curlPostData($urlNew, $call_control_id, $dataarray);
             log_message("error", "trying to fw for " . "+16479066970");
-        } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "call_hangup") {
+        }elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "speak_for_patient_outside_op_hours") {
+            //forward call to hassaan
+            $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/hangup';
+            $encodedString = base64_encode('call_end_command');
+            $dataarray = array(
+                'command_id' => rand(),
+                'client_state' => $encodedString
+            );
+            $data = curlPostData($urlNew, $call_control_id, $dataarray);
+            log_message("error", "trying to hangup ");
+        } 
+        
+        elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "call_hangup") {
             updateData("status", "valid", $call_control_id);
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/hangup';
             $encodedString = base64_encode('call_end_command');
