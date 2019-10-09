@@ -275,6 +275,9 @@ function format_us_number($number) {
     } else if (strlen($number) === 11) {
         return substr($number, 0, 1) . "-" . substr($number, 1, 3) . "-" . substr($number, 4, 3) . "-" . substr($number, 7, 4);
     }
+    else {
+        return $number;
+    }
 }
 
 function patient_visit_integration($type, $patient_id, $appointment_id, $update_data = array()) {
