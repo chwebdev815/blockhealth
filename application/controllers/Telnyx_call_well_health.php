@@ -446,9 +446,10 @@ class Telnyx_call_well_health extends CI_Controller {
                         // Stage 7. If caller = ‘patient’, and call outside operating hours
                         log_message("error", "Stage 7. If caller = ‘patient’, and call outside operating hours");
 
-                        $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at dermlab@wellclinics.ca - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
-                                . "If you would like to speak to a representative, we will do our best to speak with you shortly. \n"
-                                . "Please hold.";
+                        $text = "Unfortunately, we are currently unable to find your referral. Your details have been passed to the clinic staff, and they will be in touch soon. \n"
+                                . "Please note our phone lines are currently closed and will reopen from 10 am to 2 pm on Monday to Thursday, and 9 am to 12 pm on Fridays. \n"
+                                . "Please try back during those hours, or you can reach us is by e-mail at dermlab@wellclinics.ca - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
+                                . "Thank you, and have a great day.  \n";
 
                         $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                         $encodedString = base64_encode('speak_for_patient_outside_op_hours');
