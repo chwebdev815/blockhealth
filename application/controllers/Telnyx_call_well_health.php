@@ -454,7 +454,8 @@ class Telnyx_call_well_health extends CI_Controller {
                 $weekname = array('Mon', 'Tue', 'Wed', 'Thu');
                 $Fr = array('Fri');
                 log_message("error", "comparing $time and $w");
-                if ($time >= "10:00:00" && $time <= "14:00:00" && in_array($w, $weekname)) {
+                if (($time >= "10:00:00" && $time <= "14:00:00" && in_array($w, $weekname))
+                        || $time >= "09:00:00" && $time <= "12:00:00" && in_array($Fr, $weekname)) {
                     updateData("status", "valid", $call_control_id);
                     updateData("progress_status", "Forwarded", $call_control_id);
                     //stage 6. If caller = ‘patient’, and call during operating hours 
@@ -478,8 +479,7 @@ class Telnyx_call_well_health extends CI_Controller {
 
                     $data = curlPostData($urlNew, $call_control_id, $dataarray);
 //                        echo $time . " IN";
-                } elseif (($time < "10:00:00" || $time > "14:00:00") ||
-                        ($w == "Fri" || $w == "Sat" || $w == "Sun")) {
+                } else {
                     updateData("status", "valid", $call_control_id);
                     updateData("progress_status", "Awaiting reply", $call_control_id);
 //                        echo $time . " out";
@@ -506,8 +506,6 @@ class Telnyx_call_well_health extends CI_Controller {
                     );
 
                     $data = curlPostData($urlNew, $call_control_id, $dataarray);
-                } else {
-                    log_message("error", "Invalid option");
                 }
             }
         } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "speak_for_patient_in_op_hours") {
