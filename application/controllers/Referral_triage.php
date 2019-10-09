@@ -1,6 +1,9 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
+
 class Referral_triage extends CI_Controller {
+
     public function index() {
         if (clinic_login()) {
             $data['page_content'] = $this->load->view('referral_triage_master', NULL, TRUE);
@@ -11,6 +14,7 @@ class Referral_triage extends CI_Controller {
             redirect("/");
         }
     }
+
     public function ssp_referral_triage() {
         if (clinic_login()) {
             $this->load->model("referral_triage_model");
@@ -20,6 +24,7 @@ class Referral_triage extends CI_Controller {
             echo false;
         }
     }
+
     // *********************************************************************
     // Admin Triage Patient Details 
     // *********************************************************************
@@ -43,6 +48,7 @@ class Referral_triage extends CI_Controller {
             redirect("/");
         }
     }
+
     public function get_referral_dash_info() {
         if (clinic_login()) {
             $this->load->model("referral_triage_model");
@@ -52,4 +58,15 @@ class Referral_triage extends CI_Controller {
         }
         echo json_encode($response);
     }
+    
+    public function new_referral() {
+        if (clinic_login()) {
+            $this->load->model("referral_triage_model");
+            $response = $this->referral_triage_model->new_referral_model();
+        } else {
+            $response = "Sesion Expired";
+        }
+        echo json_encode($response);
+    }
+
 }
