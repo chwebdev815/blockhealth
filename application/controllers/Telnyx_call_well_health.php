@@ -439,8 +439,8 @@ class Telnyx_call_well_health extends CI_Controller {
 
                         $data = curlPostData($urlNew, $call_control_id, $dataarray);
 //                        echo $time . " IN";
-                    } elseif (($time >= "09:00:00" && $time <= "12:00:00" && $w == "Fri") ||
-                            ($w == "Sat" || $w == "Sun")) {
+                    } elseif (($time >= "09:00:00" && $time <= "12:00:00") ||
+                            ($w == "Fri" || $w == "Sat" || $w == "Sun")) {
                         updateData("status", "valid", $call_control_id);
 //                        echo $time . " out";
                         // Stage 7. If caller = ‘patient’, and call outside operating hours
