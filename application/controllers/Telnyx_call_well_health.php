@@ -420,7 +420,7 @@ class Telnyx_call_well_health extends CI_Controller {
                         updateData("status", "valid", $call_control_id);
                         //stage 6. If caller = ‘patient’, and call during operating hours 
                         log_message("error", "stage 6. If caller = ‘patient’, and call during operating hours ");
-                        $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at dermlab@wellclinics.ca - d e r m l a b at w e l l c l i n i c s dot c a. \n"
+                        $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at dermlab@wellclinics.ca - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
                                 . "If you would like to speak to a representative, we will do our best to speak with you shortly. \n"
                                 . "Please hold.";
 
