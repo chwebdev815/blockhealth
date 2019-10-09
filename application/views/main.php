@@ -155,7 +155,7 @@
                 <?php if ($this->session->userdata("user_id") === 8 || $this->session->userdata("telnyx") === "yes") { ?>
                     <li id="li_call_center" data-toggle="tooltip" data-placement="right" title="Call Center">
                         <a class="clearfix" href="<?php echo base_url(); ?>call_center">
-                            <span>Call Center</span><i class="numb-notifies">4</i>
+                            <span>Call Center</span><i class="numb-notifies" id="count_call_center"></i>
                         </a>
                     </li>
                 <?php } ?>
@@ -431,6 +431,8 @@ echo "global_data.medication_api = '" . $this->config->item("PREDICT_MEDICATION"
                         list.find("#count_accepted").html(data.count_accepted);
                         list.find("#count_scheduled").html(data.count_scheduled);
                         list.find("#count_my_tasks").html(data.count_my_tasks);
+                        list.find("#count_call_center").html(data.count_call_center);
+                        
                         // $("#second_menu_list").find("#count_completed_tasks").html(data.count_completed_tasks);
                     }
                 });
