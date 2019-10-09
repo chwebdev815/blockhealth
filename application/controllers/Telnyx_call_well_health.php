@@ -371,6 +371,7 @@ class Telnyx_call_well_health extends CI_Controller {
                     $patient_name = "";
                     if ($patient_data) {
                         //stage 4. If caller = ‘newpatient’, and status = ‘referral triage’
+                        updateData("status", "valid", $call_control_id);
                         log_message("error", "stage 4. If caller = ‘newpatient’, and status = ‘referral triage’");
                         $text = "Hello {$patient_name}.
                              We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch soon to book an appointment. 
@@ -388,6 +389,7 @@ class Telnyx_call_well_health extends CI_Controller {
                         );
                         $data = curlPostData($urlNew, $call_control_id, $dataarray);
                     } else {
+                        updateData("status", "valid", $call_control_id);
                         // stage 5. If caller = ‘newpatient’, and status =/= ‘referral triage’
                         log_message("error", "stage 5. If caller = ‘newpatient’, and status =/= ‘referral triage’");
                         $text = "Unfortunately, we are currently unable to find your referral. Your details have been passed to the clinic staff, and they will be in touch soon. \n"
@@ -415,6 +417,7 @@ class Telnyx_call_well_health extends CI_Controller {
                     $Fr = array('Fri');
                     log_message("error", "comparing $time");
                     if ($time >= "10:00:00" && $time <= "14:00:00" && in_array($w, $weekname)) {
+                        updateData("status", "valid", $call_control_id);
                         //stage 6. If caller = ‘patient’, and call during operating hours 
                         log_message("error", "stage 6. If caller = ‘patient’, and call during operating hours ");
                         $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at dermlab@wellclinics.ca - d e r m l a b at w e l l c l i n i c s dot c a. \n"
@@ -438,6 +441,7 @@ class Telnyx_call_well_health extends CI_Controller {
 //                        echo $time . " IN";
                     } elseif (($time >= "09:00:00" && $time <= "12:00:00" && $w == "Fri") ||
                             ($w == "Sat" || $w == "Sun")) {
+                        updateData("status", "valid", $call_control_id);
 //                        echo $time . " out";
                         // Stage 7. If caller = ‘patient’, and call outside operating hours
                         log_message("error", "Stage 7. If caller = ‘patient’, and call outside operating hours");
