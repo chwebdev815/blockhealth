@@ -42,7 +42,9 @@ class Call_center_model extends CI_Model {
             $primaryKey = "id";
             $columns = array(
                 array('db' => 'patient_name', 'dt' => 0),
-                array('db' => 'phone_number', 'dt' => 1),
+                array('db' => 'phone_number', 'dt' => 1, 'formatter' => function( $data ) {
+                    return format_us_number($data);
+                }),
                 array('db' => 'caller', 'dt' => 2),
                 array('db' => 'recording', 'dt' => 3),
                 array('db' => 'status', 'dt' => 4),

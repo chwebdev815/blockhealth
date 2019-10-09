@@ -269,6 +269,15 @@ function session_expired() {
     );
 }
 
+function format_us_number($number) {
+    if(strlen($number) === 10) {
+        return substr($number, 1, 3) . "-" . substr($number, 4, 3) . "-" . substr($number, 7, 4);
+    }
+    else if(strlen($number) === 11) {
+        return  substr($number, 1, 1) . "-" . substr($number, 2, 3) . "-" . substr($number, 5, 3) . "-" . substr($number, 8, 4);
+    }
+}
+
 function patient_visit_integration($type, $patient_id, $appointment_id, $update_data = array()) {
     $CI = & get_instance();
     if ($type === "update") {
