@@ -665,9 +665,13 @@
                                 <div class="cropheader">
                                     <label  id ="currentPage" class="pageInf"></label>
                                     <label  id ="clippedData" class="pageInf"></label>
-                                    <div class="btn-group" role="group" style="float:right;">
+                                    
+                                    <div class="btn-group" role="group" style="float:left;">
                                         <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-left" title="Rotate Left"><span class="fa fa-rotate-left"></span></button>
                                         <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-right" title="Rotate Right"><span class="fa fa-rotate-right"></span></button>
+                                    </div>
+                                    
+                                    <div class="btn-group" role="group" style="float:right;">
                                         <button id="btnPrevPage" type="button" class="btn btn-secondary" title="Prev Page"><span class="glyphicon glyphicon-menu-left"></span></button>
                                         <button id="btnNextPage" type="button" class="btn btn-secondary" title="Next Page"><span class="glyphicon glyphicon-menu-right"></span></button>
                                     </div>
