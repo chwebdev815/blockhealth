@@ -508,7 +508,7 @@ Thank you, and have a great day.";
         $data = $this->db->select("*")
                         ->from("telnyx_incoming")
                         ->order_by("id", "desc")
-                        ->limit(5)
+                        ->limit(15)
                         ->get()->result();
 
         echo json_encode($data);
