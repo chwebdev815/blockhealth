@@ -225,7 +225,7 @@
                 <h1 id="page_header">
                     <?php echo $page_title; ?> <!-- ===========page title here=========== -->
                     <?php
-                    if ($this->uri->segment(1) === "accepted" && $this->uri->segment(2) !== "referral_details") {
+                    if (($this->uri->segment(1) === "accepted" && $this->uri->segment(2) !== "referral_details") || ($this->uri->segment(1) === "referral_triage" && $this->uri->segment(2) !== "referral_details")) {
                         ?>
                         &nbsp; &nbsp; 
                         <button id="btn_view_add_new_patient" type="button" class="btn btn-theme pull-right bttn-circle btn-theme btn-alt-theme">
@@ -432,7 +432,7 @@ echo "global_data.medication_api = '" . $this->config->item("PREDICT_MEDICATION"
                         list.find("#count_scheduled").html(data.count_scheduled);
                         list.find("#count_my_tasks").html(data.count_my_tasks);
                         list.find("#count_call_center").html(data.count_call_center);
-                        
+
                         // $("#second_menu_list").find("#count_completed_tasks").html(data.count_completed_tasks);
                     }
                 });
