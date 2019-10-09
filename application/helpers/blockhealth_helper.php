@@ -270,11 +270,10 @@ function session_expired() {
 }
 
 function format_us_number($number) {
-    if(strlen($number) === 10) {
-        return substr($number, 1, 3) . "-" . substr($number, 4, 3) . "-" . substr($number, 7, 4);
-    }
-    else if(strlen($number) === 11) {
-        return  substr($number, 1, 1) . "-" . substr($number, 2, 3) . "-" . substr($number, 5, 3) . "-" . substr($number, 8, 4);
+    if (strlen($number) === 10) {
+        echo substr($number, 0, 3) . "-" . substr($number, 3, 3) . "-" . substr($number, 6, 4);
+    } else if (strlen($number) === 11) {
+        echo substr($number, 0, 1) . "-" . substr($number, 1, 3) . "-" . substr($number, 4, 3) . "-" . substr($number, 7, 4);
     }
 }
 
@@ -529,7 +528,6 @@ function push_telnyx_to_bucket($file_name, $source) {
             "Content-Type: audio/mp3",
             "Accept: application/json",
             "Authorization: Bearer 4/rwGLCL70JeLfaYr2PWRnMYSL4cg0x-nHRddaR33A_35J4cspEr3kwda3NVBkQJJjr3j3wudw37OEQRTY1g2HyW0"
-            
         )
     ));
 
