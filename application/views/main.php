@@ -155,7 +155,7 @@
                 <?php if ($this->session->userdata("user_id") === 8 || $this->session->userdata("telnyx") === "yes") { ?>
                     <li id="li_call_center" data-toggle="tooltip" data-placement="right" title="Call Center">
                         <a class="clearfix" href="<?php echo base_url(); ?>call_center">
-                            <span>Call Center</span><i class="numb-notifies" id="count_call_center"></i>
+                            <span>Call Center</span><i class="numb-notifies" id="count_call_center">&nbsp;</i>
                         </a>
                     </li>
                 <?php } ?>

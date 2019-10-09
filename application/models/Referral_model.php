@@ -26,7 +26,7 @@ class Referral_model extends CI_Model {
             concat(r_pv.visit_date, ' ', r_pv.visit_time) > now() and r_pv.active = 1 and c_ref.efax_id = efax.id and 
             pat.active = 1 and c_ref.active = 1 and efax.active = 1 and efax.to ='" . $clinic_id . "') as count_scheduled,";
         $sql .= "(select count(*) from view_my_tasks where $where_for_task_count) as count_my_tasks,";
-        $sql .= "(select count(*) from view_completed_tasks where $where_for_task_count) as count_completed_tasks";
+        $sql .= "(select count(*) from view_completed_tasks where $where_for_task_count) as count_completed_tasks,";
         $sql .= "(select count(*) from call_center_well_health where clinic_id = {$clinic_id}) as count_call_center";
 
 
