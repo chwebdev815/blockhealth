@@ -435,7 +435,7 @@ class Telnyx_call_well_health extends CI_Controller {
                     $data = curlPostData($urlNew, $call_control_id, $dataarray);
                 } else {
                     updateData("status", "valid", $call_control_id);
-                    updateData("progress_status", "Awaiting reply", $call_control_id);
+                    updateData("progress_status", "Referral not found", $call_control_id);
                     // stage 5. If caller = ‘newpatient’, and status =/= ‘referral triage’
                     log_message("error", "stage 5. If caller = ‘newpatient’, and status =/= ‘referral triage’");
                     $text = "Unfortunately, we are currently unable to find your referral. Your details have been passed to the clinic staff, and they will be in touch shortly . \n"
