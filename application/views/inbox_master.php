@@ -118,6 +118,7 @@
                 </div>
                 <div class="col-md-8 text-right">
                     <span class="eFax-bar-actions marg-top-10px">
+                        Form use = <?= $this->session->userdata("referral_form_use"); ?>
                         <a href="javascript:void(0)" id="btn_view_print_referral">Print </a> &nbsp;
                         <a href="javascript:void(0)" id="btn_view_delete_referral">Delete </a> &nbsp;
                         <a href="javascript:void(0)" id="btn_download_referral" download>Download </a>

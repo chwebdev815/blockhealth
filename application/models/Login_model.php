@@ -9,7 +9,7 @@ class Login_model extends CI_Model {
             $data = $this->input->post();
 
             if ($data["login_type"] == "c") {
-                $this->db->select("id, concat(first_name, ' ', last_name) as name, password, emr_pathway, telnyx_number");
+                $this->db->select("id, concat(first_name, ' ', last_name) as name, password, emr_pathway, telnyx_number, referral_form_use");
                 $this->db->from("clinic_user_info");
                 $this->db->where(array(
                     "email_id" => $data["signup-email"],
@@ -55,6 +55,7 @@ class Login_model extends CI_Model {
                         $this->session->set_userdata("physician_name", "Dr. " . $name);
                         $this->session->set_userdata("login_role", "clinic_physician");
                         $this->session->set_userdata("user_id", $result[0]->clinic_id);
+                        $this->session->set_userdata("referral_form_use", $result[0]->referral_form_use);
                         
                         
                         $this->session->set_userdata("telnyx", "no");//($result[0]->telnyx_number)?"yes":"no");
