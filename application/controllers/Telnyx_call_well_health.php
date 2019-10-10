@@ -34,6 +34,10 @@ class Telnyx_call_well_health extends CI_Controller {
             $clinic_id = $payload["clinic_id"];
             $clinic_name = $payload["clinic_name"];
         }
+        else {
+            $clinic_id = selectOne('clinic_id', $call_control_id);
+            $clinic_id = $clinic_id[0]->clinic_id;
+        }
 
         $selectData = selectOne('step_one', $call_control_id);
         $status_update = selectOne('status_update', $call_control_id);
