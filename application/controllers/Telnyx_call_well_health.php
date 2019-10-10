@@ -465,7 +465,7 @@ class Telnyx_call_well_health extends CI_Controller {
                 if (($time >= "10:00:00" && $time <= "14:00:00" && in_array($w, $weekname))
                         || $time >= "09:00:00" && $time <= "12:00:00" && in_array($Fr, $weekname)) {
                     updateData("status", "valid", $call_control_id);
-                    updateData("progress_status", "Forwarded", $call_control_id);
+                    updateData("progress_status", "Call Forwarded", $call_control_id);
                     //stage 6. If caller = ‘patient’, and call during operating hours 
                     log_message("error", "stage 6. If caller = ‘patient’, and call during operating hours ");
                     $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at. dermlab. at. wellclinics. dot. ca. That is spelt - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
