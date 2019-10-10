@@ -66,19 +66,43 @@ class Inbox_model extends CI_Model {
     }
 
     public function get_clinic_referral_usage_forms_model() {
-        log_message("error", "get_clinic_referral_usage_forms");
         $form_data = $this->db->select("form_name, md5(id) as id")
                         ->from("referral_form_use")
                         ->where(array(
                             "active" => 1,
                             "clinic_id" => $this->session->userdata("user_id")
                         ))->get()->result();
-        
-        log_message("error", "form q = " . $this->db->last_query());
+
         return array(
             "result" => "success",
             "data" => $form_data
         );
+    }
+
+    public function get_clinic_referral_usage_forms_subsections_model() {
+        $this->form_validation->set_rules('id', 'Form ID', 'required');
+
+        if ($this->form_validation->run()) {
+            $this->db->trans_start();
+            $data = $this->input->post();
+
+            $form_data = $this->db->select("form_name, md5(id) as id")
+                            ->from("referral_form_subsections")
+                            ->where(array(
+                                "active" => 1,
+                                "md5(form_id)" => $data["id"]
+                            ))->get()->result();
+
+            return array(
+                "result" => "success",
+                "data" => $form_data
+            );
+        } else {
+            return array(
+                "result" => "error",
+                "msg" => validation_errors()
+            );
+        }
     }
 
     public function save_task_model() {
