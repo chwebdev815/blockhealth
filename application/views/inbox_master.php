@@ -585,7 +585,6 @@
                             <div id="container_form_usage_yes" style="display: none">
                                 <div class="form-group row">
                                     <div class="col-lg-12">
-                                        <h4 style="display: block;" class="modal-title" id="myModalLabel">Clinical Triage</h4>
                                         <label for="referral_form_type">
                                             Form Type
                                         </label>
