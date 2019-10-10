@@ -30,6 +30,7 @@ class Login_model extends CI_Model {
                         // //log_message("error", "clinic admin ".$id.",".$name." logged in");
                         //set emr pathway
                         $this->session->set_userdata("emr_pathway", $result[0]->emr_pathway);
+                        $this->session->set_userdata("referral_form_use", $result[0]->referral_form_use);
                         $this->session->set_userdata("telnyx", ($result[0]->telnyx_number)?"yes":"no");
                         return true;
                     }
@@ -55,9 +56,7 @@ class Login_model extends CI_Model {
                         $this->session->set_userdata("physician_name", "Dr. " . $name);
                         $this->session->set_userdata("login_role", "clinic_physician");
                         $this->session->set_userdata("user_id", $result[0]->clinic_id);
-                        $this->session->set_userdata("referral_form_use", $result[0]->referral_form_use);
-                        
-                        
+                        $this->session->set_userdata("referral_form_use", "no");
                         $this->session->set_userdata("telnyx", "no");//($result[0]->telnyx_number)?"yes":"no");
                         // //log_message("debug", "clinic physician ".$id.",".$name." logged in");
                         $response = true;
