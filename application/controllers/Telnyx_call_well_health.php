@@ -120,7 +120,7 @@ class Telnyx_call_well_health extends CI_Controller {
             $digits = $payload['digits'];
             $update = updateData('step_one', $digits, $call_control_id);
             if ($digits == 1 || $digits == 2) {
-                $caller = ($digits == 1) ? "New patient" : "Patient";
+                $caller = ($digits == 1) ? "New Patient" : "Existing Patient";
                 $update = updateData('caller', $caller, $call_control_id);
 
                 $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
@@ -384,7 +384,7 @@ class Telnyx_call_well_health extends CI_Controller {
             $caller = $caller[0]->caller;
 
             log_message("error", "caller = $caller");
-            if ($caller === "New patient") {
+            if ($caller === "New Patient") {
                 //check hcn if found status = 'referral triage'
 
                 /* QUERY TO  DATABASE WILL GOES HERE */
@@ -392,7 +392,7 @@ class Telnyx_call_well_health extends CI_Controller {
                 $hcn = selectOne('health_card', $call_control_id);
                 $hcn = $hcn[0]->health_card;
 
-                $patient_data = $this->db->select("pat.fname")
+                $patient_data = $this->db->select("id, pat.fname")
                                 ->from("referral_patient_info pat, clinic_referrals c_ref, efax_info efax")
                                 ->where(array(
                                     "pat.ohip" => $hcn,
@@ -410,11 +410,15 @@ class Telnyx_call_well_health extends CI_Controller {
                 $patient_name = "";
                 if ($patient_data) {
                     //stage 4. If caller = ‘newpatient’, and status = ‘referral triage’
+                    $patient_data = $patient_data[0];
                     updateData("status", "valid", $call_control_id);
                     updateData("progress_status", "Referral triage", $call_control_id);
+                    updateData("patient_id", $patient_data->id, $call_control_id);
+                    
+                    $patient_name = $patient_data->fname;
                     
                     log_message("error", "stage 4. If caller = ‘newpatient’, and status = ‘referral triage’");
-                    $text = "Hello {$patient_name}.
+                    $text = "Thank you {$patient_name}.
                              We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch soon to book an appointment. 
                              Thank you";
 
@@ -449,8 +453,8 @@ class Telnyx_call_well_health extends CI_Controller {
                     );
                     $data = curlPostData($urlNew, $call_control_id, $dataarray);
                 }
-            } else if ($caller === "Patient") {
-                log_message("error", "is patient");
+            } else if ($caller === "Existing Patient") {
+                log_message("error", "is Existing Patient");
 
                 date_default_timezone_set("America/Los_Angeles");
                 $time = date("H:i:s");
@@ -464,7 +468,7 @@ class Telnyx_call_well_health extends CI_Controller {
                     updateData("progress_status", "Forwarded", $call_control_id);
                     //stage 6. If caller = ‘patient’, and call during operating hours 
                     log_message("error", "stage 6. If caller = ‘patient’, and call during operating hours ");
-                    $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at dermlab. at. wellclinics. dot. ca. That is spelt - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
+                    $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at. dermlab. at. wellclinics. dot. ca. That is spelt - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
                             . "If you would like to speak to a representative, we will do our best to speak with you shortly. \n"
                             . "Please hold.";
 
@@ -493,7 +497,7 @@ class Telnyx_call_well_health extends CI_Controller {
 
                     $text = "In the case of an emergency, please hang up and report to the emergency department at VGH or Saint Pauls Hospital, where an on-demand dermatologist can assist you.  \n"
                             . "Please note our phone lines are currently closed and will reopen from 10 am to 2 pm on Monday to Thursday, and 9 am to 12 pm on Fridays. \n"
-                            . "Please try back during those hours, or you can reach us is by e-mail at dermlab. at. wellclinics.  dot. ca. That is spelt - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
+                            . "Please try back during those hours, or you can reach us is by e-mail at. dermlab. at. wellclinics.  dot. ca. That is spelt - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
                             . "Thank you, and have a great day.  \n";
 
                     $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
