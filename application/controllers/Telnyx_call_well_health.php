@@ -136,7 +136,7 @@ class Telnyx_call_well_health extends CI_Controller {
                 );
             } elseif ($digits == 3) {
                 $update = updateData('caller', "Emergency", $call_control_id);
-                $text = 'In the case of an emergency, please hang up and visit to the emergency department at VGH or Saint Pauls Hospital, where an on-demand dermatologist can assist you. Thank you.';
+                $text = 'In the case of an emergency, please hang up and visit the emergency department at VGH or Saint Pauls Hospital, where an on-demand dermatologist can assist you. Thank you.';
                 $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                 $encodedString = base64_encode('call_hangup');
                 $dataarray = array(
