@@ -784,15 +784,15 @@
 
 <div id="templates" class="hidden">
     <div id="template_subsection_checkbox">
-        <label>
-            <div class="checkbox">
+        <div class="checkbox">
+            <label>
                 <input type="checkbox" value="###id###" name="subsection_checklist[]">
                 <span class="cr">
                     <i class="cr-icon fa fa-check"></i>
                 </span>
                 ###item_name###
-            </div>
-        </label>
+            </label>
+        </div>
     </div>
 </div>
 
