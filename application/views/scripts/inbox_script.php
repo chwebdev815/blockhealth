@@ -532,7 +532,7 @@
                     //patient location
                     options = "";
                     data.forEach(function (value, index) {
-                        options += "<option value='" + value.id + "'>" + value.name + "</option>";
+                        options += "<option value='" + value.id + "'>" + value.form_name + "</option>";
                     });
                     $("#signupForm").find("#referral_form_type").html(options);
                 } else {
