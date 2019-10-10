@@ -557,12 +557,12 @@
                 response = JSON.parse(response);
                 if (response.result === "success") {
                     data = response.data;
-                    //patient location
-                    options = "";
-                    data.forEach(function (value, index) {
-                        options += "<option value='" + value.id + "'>" + value.form_name + "</option>";
-                    });
-                    $("#signupForm").find("#referral_form_type").html(options);
+                    console.log(data);
+//                    options = "";
+//                    data.forEach(function (value, index) {
+//                        options += "<option value='" + value.id + "'>" + value.form_name + "</option>";
+//                    });
+//                    $("#signupForm").find("#referral_form_type").html(options);
                 } else {
                     error("Error getting locations and customs");
                 }
