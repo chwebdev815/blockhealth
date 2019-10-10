@@ -73,6 +73,7 @@ class Inbox_model extends CI_Model {
                             "clinic_id" => $this->session->userdata("user_id")
                         ))->get()->result();
         
+        log_message("error", "form q = " . $this->db->last_query());
         return array(
             "result" => "success",
             "data" => $form_data
