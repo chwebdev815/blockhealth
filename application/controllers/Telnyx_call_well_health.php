@@ -136,7 +136,7 @@ class Telnyx_call_well_health extends CI_Controller {
                 );
             } elseif ($digits == 3) {
                 $update = updateData('caller', "Emergency", $call_control_id);
-                $text = 'In the case of an emergency, please hang up and report to the emergency department at VGH or Saint Pauls Hospital, where an on-demand dermatologist can assist you.';
+                $text = 'In the case of an emergency, please hang up and report to the emergency department at VGH or Saint Pauls Hospital, where an on-demand dermatologist can assist you. Thank you.';
                 $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                 $encodedString = base64_encode('call_hangup');
                 $dataarray = array(
@@ -256,7 +256,7 @@ class Telnyx_call_well_health extends CI_Controller {
             $data = curlPostData($url_new, $call_control_id, $datarecord);
         } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "proceed_to_step_two") {
             $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/gather_using_speak';
-            $text = 'Please enter your 10 digit health card number, followed by the pound key. If you don’t have a health card number, please press 0.';
+            $text = 'Using the keypad. Please enter your 10 digit personal health number, followed by the pound key. If you don’t have a personal health number, please press 0.';
             $encodedString = base64_encode('UserCard');
             $dataarray = array(
                 'payload' => $text,
@@ -294,7 +294,7 @@ class Telnyx_call_well_health extends CI_Controller {
                 $data = curlPostData($urlNew, $call_control_id, $dataarray);
             } elseif ($digits != '0' && $len < 10) {
                 $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/gather_using_speak';
-                $text = 'I’m sorry, I didn’t catch that. Please enter your 10 digit health card number, followed by the pound key. ';
+                $text = 'I’m sorry, I didn’t catch that. Using the keypad, Please enter your 10 digit personal health number, followed by the pound key. ';
                 $encodedString = base64_encode('UserCard');
                 $dataarray = array(
                     'payload' => $text,
@@ -419,8 +419,8 @@ class Telnyx_call_well_health extends CI_Controller {
                     
                     log_message("error", "stage 4. If caller = ‘newpatient’, and status = ‘referral triage’");
                     $text = "Thank you {$patient_name}.
-                             We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch soon to book an appointment. 
-                             Thank you";
+                             We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch shortly to book an appointment. 
+                             Thank you, and have a great day.";
 
                     $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                     $encodedString = base64_encode('call_hangup');
@@ -438,8 +438,8 @@ class Telnyx_call_well_health extends CI_Controller {
                     updateData("progress_status", "Awaiting reply", $call_control_id);
                     // stage 5. If caller = ‘newpatient’, and status =/= ‘referral triage’
                     log_message("error", "stage 5. If caller = ‘newpatient’, and status =/= ‘referral triage’");
-                    $text = "Unfortunately, we are currently unable to find your referral. Your details have been passed to the clinic staff, and they will be in touch soon. \n"
-                            . "Thank you. ";
+                    $text = "Unfortunately, we are currently unable to find your referral. Your details have been passed to the clinic staff, and they will be in touch shortly . \n"
+                            . "Thank you, and have a great day.";
 
                     $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
                     $encodedString = base64_encode('call_hangup');
@@ -468,8 +468,8 @@ class Telnyx_call_well_health extends CI_Controller {
                     updateData("progress_status", "Call Forwarded", $call_control_id);
                     //stage 6. If caller = ‘patient’, and call during operating hours 
                     log_message("error", "stage 6. If caller = ‘patient’, and call during operating hours ");
-                    $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at. dermlab. at. wellclinics. dot. ca. That is spelt - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
-                            . "If you would like to speak to a representative, we will do our best to speak with you shortly. \n"
+                    $text = "Please note. we have limited phone hours, and the best way to reach us is by e-mail at. dermlab. at. wellclinics. dot. ca. That is spelt - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
+                            . "If you would like to speak to a representative, we will do our best to connect you shortly. \n"
                             . "Please hold.";
 
                     $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
@@ -496,8 +496,8 @@ class Telnyx_call_well_health extends CI_Controller {
 
 
                     $text = "In the case of an emergency, please hang up and report to the emergency department at VGH or Saint Pauls Hospital, where an on-demand dermatologist can assist you.  \n"
-                            . "Please note our phone lines are currently closed and will reopen from 10 am to 2 pm on Monday to Thursday, and 9 am to 12 pm on Fridays. \n"
-                            . "Please try back during those hours, or you can reach us is by e-mail at. dermlab. at. wellclinics.  dot. ca. That is spelt - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
+                            . "Please note. Our phone lines are currently closed and will reopen from 10 am to 2 pm on Monday to Thursday, and 9 am to 12 pm on Fridays. \n"
+                            . "You can also reach us by e-mail at. dermlab. at. wellclinics.  dot. ca. That is spelt - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
                             . "Thank you, and have a great day.  \n";
 
                     $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
