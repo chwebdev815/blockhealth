@@ -460,7 +460,7 @@ class Telnyx_call_well_health extends CI_Controller {
                     updateData("progress_status", "Forwarded", $call_control_id);
                     //stage 6. If caller = ‘patient’, and call during operating hours 
                     log_message("error", "stage 6. If caller = ‘patient’, and call during operating hours ");
-                    $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at dermlab. at. wellclinics. ca. - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
+                    $text = "Please note, that we have limited phone hours, and the best way to reach us is by e-mail at dermlab. at. wellclinics. dot. ca. That is spelt - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
                             . "If you would like to speak to a representative, we will do our best to speak with you shortly. \n"
                             . "Please hold.";
 
@@ -489,7 +489,7 @@ class Telnyx_call_well_health extends CI_Controller {
 
                     $text = "In the case of an emergency, please hang up and report to the emergency department at VGH or Saint Pauls Hospital, where an on-demand dermatologist can assist you.  \n"
                             . "Please note our phone lines are currently closed and will reopen from 10 am to 2 pm on Monday to Thursday, and 9 am to 12 pm on Fridays. \n"
-                            . "Please try back during those hours, or you can reach us is by e-mail at dermlab. at. wellclinics. ca. - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
+                            . "Please try back during those hours, or you can reach us is by e-mail at dermlab. at. wellclinics.  dot. ca. That is spelt - d. e. r. m. l. a. b. at. w. e. l. l. c. l. i. n. i. c. s. dot. c. a. \n"
                             . "Thank you, and have a great day.  \n";
 
                     $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/speak';
