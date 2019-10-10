@@ -65,6 +65,9 @@ class Call_center_model extends CI_Model {
             }
 
             require('ssp.class.php');
+            log_message("error", "sql = " . json_encode(
+                    SSP::complex($_GET, $sql_details, $table, $primaryKey, $columns, null, $where)
+            ));
             return json_encode(
                     SSP::complex($_GET, $sql_details, $table, $primaryKey, $columns, null, $where)
             );
