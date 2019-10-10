@@ -531,7 +531,7 @@
                     data = response.data;
                     //patient location
                     options = "";
-                    data.locations.forEach(function (value, index) {
+                    data.forEach(function (value, index) {
                         options += "<option value='" + value.id + "'>" + value.name + "</option>";
                     });
                     $("#signupForm").find("#referral_form_type").html(options);
