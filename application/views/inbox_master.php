@@ -118,7 +118,6 @@
                 </div>
                 <div class="col-md-8 text-right">
                     <span class="eFax-bar-actions marg-top-10px">
-                        Form use = <?= $this->session->userdata("referral_form_use"); ?>
                         <a href="javascript:void(0)" id="btn_view_print_referral">Print </a> &nbsp;
                         <a href="javascript:void(0)" id="btn_view_delete_referral">Delete </a> &nbsp;
                         <a href="javascript:void(0)" id="btn_download_referral" download>Download </a>
@@ -580,6 +579,22 @@
                                         </div>
                                     </div>
                                 </div>
+                                
+                                
+                                <div class="form-group row">
+                                    <div class="col-lg-12">
+                                        <h4 style="display: block;" class="modal-title" id="myModalLabel">Clinical Triage</h4>
+                                        <label for="referral_form_type">
+                                            Form Type
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <select id="referral_form_type" name="referral_form_type" class="form-control">
+                                        </select>
+                                        
+                                        <div class="">Checkbox will appear here</div>
+                                    </div>
+                                </div>
 
                             </fieldset>
                             <fieldset>
@@ -673,8 +688,6 @@
                                     </div>
                                     
                                     <div class="btn-group" role="group" style="float:right;">
-                                        <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-left" title="Rotate Left"><span class="fa fa-rotate-left"></span></button>
-                                        <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-right" title="Rotate Right"><span class="fa fa-rotate-right"></span></button>
                                         <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-left" title="Rotate Left"><span class="fa fa-rotate-left"></span></button>
                                         <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-right" title="Rotate Right"><span class="fa fa-rotate-right"></span></button>
                                     </div>

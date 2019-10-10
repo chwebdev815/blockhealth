@@ -1,6 +1,9 @@
 <?php
+
 defined('BASEPATH') OR exit('No direct script access allowed');
+
 class Inbox extends CI_Controller {
+
     public function index() {
         if (clinic_login()) {
             $data['page_content'] = $this->load->view('inbox_master', NULL, TRUE);
@@ -11,6 +14,7 @@ class Inbox extends CI_Controller {
             redirect("/");
         }
     }
+
     public function ssp_inbox() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -20,6 +24,7 @@ class Inbox extends CI_Controller {
             echo false;
         }
     }
+
     public function ssp_clinic_patients() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -29,6 +34,7 @@ class Inbox extends CI_Controller {
             echo false;
         }
     }
+
     public function check_physician_data() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -38,6 +44,17 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
+
+    public function get_clinic_referral_usage_forms() {
+        if (clinic_login()) {
+            $this->load->model("inbox_model");
+            $response = $this->inbox_model->get_clinic_referral_usage_forms_model();
+        } else {
+            $response = "Sesion Expired";
+        }
+        echo json_encode($response);
+    }
+
     public function check_patient_data() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -47,6 +64,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
+
     public function save_patient_record() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -56,6 +74,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
+
     public function save_task() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -65,7 +84,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function new_referral() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -75,7 +94,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function missing_items_details() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -95,7 +114,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function delete_referral() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -105,7 +124,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function get_clinic_patients() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -115,7 +134,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function get_physician_list_save_patient() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -125,7 +144,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function get_patient_list_save_patient() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -135,7 +154,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function save_referral() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -145,6 +164,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
+
     public function add_health_record() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -154,6 +174,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
+
     public function predict_api() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -163,7 +184,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
-    
+
     public function phy_extract_api() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -183,6 +204,7 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
+
     public function get_referral_checklist() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -192,29 +214,29 @@ class Inbox extends CI_Controller {
         }
         echo json_encode($response);
     }
+
     public function save_data_points_predict() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
             $this->inbox_model->save_data_points_predict_model();
         }
     }
+
     public function save_data_points_drug() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
             $this->inbox_model->save_data_points_drug_model();
         }
     }
-    
+
     public function patient_autocomplete() {
         $response = "Sesion Expired";
         if (clinic_login()) {
             $this->load->model("inbox_model");
             $response = $this->inbox_model->patient_autocomplete_model();
-        } 
+        }
         echo json_encode($response);
     }
-
-
 
     public function valid_ohip($ohip) {
         if ($ohip == "")
@@ -236,4 +258,5 @@ class Inbox extends CI_Controller {
         }
         return true;
     }
+
 }

@@ -183,7 +183,7 @@
     }
 </style>
 <script>
-
+    global_data.referral_form_use = "<?= $this->session->userdata("referral_form_use"); ?>";
     function set_row3(id, fax, tif_file_name, pdf_file_name, row) {
         $(row).attr("data-id", id);
         $(row).addClass("clinic_patients_row");
@@ -519,6 +519,31 @@
         });
     }
 
+    function get_clinic_referral_usage_forms() {
+        url = base + "inbox/get_clinic_referral_usage_forms";
+        $.post({
+            url: url,
+            data: $("#sample_form").serialize()
+        }).done(function (response) {
+            if (IsJsonString(response)) {
+                response = JSON.parse(response);
+                if (response.result === "success") {
+                    data = response.data;
+                    //patient location
+                    options = "";
+                    data.locations.forEach(function (value, index) {
+                        options += "<option value='" + value.id + "'>" + value.name + "</option>";
+                    });
+                    $("#signupForm").find("#referral_form_type").html(options);
+                } else {
+                    error("Error getting locations and customs");
+                }
+            } else {
+                error("Error getting locations and customs");
+            }
+        });
+    }
+
     function get_location_and_custom() {
         url = base + "referral/get_location_and_custom";
         $.post({
@@ -562,6 +587,9 @@
         get_patient_list_save_patient();
         get_location_and_custom();
         get_clinic_physicians();
+        if(global_data.referral_form_use === "yes") {
+            get_clinic_referral_usage_forms();
+        }
 
         $("#li_inbox").addClass("active");
         $("#btn_view_print_referral").on("click", function () {

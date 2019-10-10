@@ -65,6 +65,20 @@ class Inbox_model extends CI_Model {
             return validation_errors();
     }
 
+    public function get_clinic_referral_usage_forms_model() {
+        $form_data = $this->select("form_name, md5(id) as id")
+                        ->from("referral_form_use")
+                        ->where(array(
+                            "active" => 1,
+                            "clinic_id" => $this->session->userdata("user_id")
+                        ))->get()->result();
+        
+        return array(
+            "result" => "success",
+            "data" => $form_data
+        );
+    }
+
     public function save_task_model() {
 //        $this->form_validation->set_rules('id', 'Patient', 'required');
         $this->form_validation->set_rules('efax_id', 'Efax Id', 'required');
@@ -1189,7 +1203,6 @@ class Inbox_model extends CI_Model {
             return validation_errors();
     }
 
-    
     public function medication_api_model() {
         //global_data.predict_url + global_data.medication_api
 
@@ -1226,7 +1239,7 @@ class Inbox_model extends CI_Model {
         }
         curl_close($curl);
     }
-    
+
     public function phy_extract_api_model() {
         //global_data.predict_url + global_data.medication_api
 
@@ -1263,10 +1276,7 @@ class Inbox_model extends CI_Model {
         }
         curl_close($curl);
     }
-    
 
-    
-    
     public function predict_api_model() {
         //global_data.predict_url + global_data.predict_api
 
@@ -1303,7 +1313,7 @@ class Inbox_model extends CI_Model {
         }
         curl_close($curl);
     }
-    
+
     public function get_referral_checklist_model() {
         $this->db->select("md5(id) as id, name");
         $this->db->from("clinic_referral_checklist_items");
