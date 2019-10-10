@@ -248,7 +248,8 @@
             cropper.destroy();
             cropper_activated = false;
         }
-
+        debugger
+        cropper.zoomTo(3);
         if (typeof $("#eFax-modal").find("form")[0] !== "undefined") {
             $("#eFax-modal").find("form")[0].reset();
         }

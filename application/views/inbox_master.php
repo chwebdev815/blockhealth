@@ -674,6 +674,8 @@
                                     <div class="btn-group" role="group" style="float:right;">
                                         <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-left" title="Rotate Left"><span class="fa fa-rotate-left"></span></button>
                                         <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-right" title="Rotate Right"><span class="fa fa-rotate-right"></span></button>
+                                        <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-left" title="Rotate Left"><span class="fa fa-rotate-left"></span></button>
+                                        <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-right" title="Rotate Right"><span class="fa fa-rotate-right"></span></button>
                                     </div>
                                 </div>
                                 <div class="toolbar">
