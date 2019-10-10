@@ -558,11 +558,15 @@
                 if (response.result === "success") {
                     data = response.data;
                     console.log(data);
-//                    options = "";
-//                    data.forEach(function (value, index) {
-//                        options += "<option value='" + value.id + "'>" + value.form_name + "</option>";
-//                    });
-//                    $("#signupForm").find("#referral_form_type").html(options);
+                    template = $("#templates").find("#template_subsection_checkbox").html();
+                    checkboxes = "";
+                    data.forEach(function (value, index) {
+                        let checkbox = template;
+                        checkbox = checkbox.replace(/###id###/g, value.id);
+                        checkbox = checkbox.replace(/###item_name###/g, value.form_name);
+                        checkboxes += checkbox;
+                    });
+                    $("#signupForm").find("#referral_form_subsection").html(checkboxes);
                 } else {
                     error("Error getting locations and customs");
                 }
