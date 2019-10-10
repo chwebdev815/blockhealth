@@ -518,7 +518,7 @@ class Telnyx_call_well_health extends CI_Controller {
             }
         } elseif ($event_type == 'call.speak.ended' && base64_decode($payload['client_state']) == "speak_for_patient_in_op_hours") {
             //forward call to hassaan
-            $urlNew = 'https://api.telnyx.com/v2/calls/' . $call_control_id . '/actions/transfer';
+            $urlNew = 'https://api.telnyx.com/calls/' . $call_control_id . '/actions/transfer';
             $encodedString = base64_encode('call_forwarded');
             $dataarray = array(
                 'command_id' => rand(),
