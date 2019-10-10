@@ -546,9 +546,9 @@
     }
 
     function get_clinic_referral_usage_subsection() {
-        id = $("#signupForm").find("#referral_form_type").value();
+        id = $("#signupForm").find("#referral_form_type").val();
         url = base + "inbox/get_clinic_referral_usage_subsection";
-        $("#sample_form").find("#id").value(id);
+        $("#sample_form").find("#id").val(id);
         $.post({
             url: url,
             data: $("#sample_form").serialize()
