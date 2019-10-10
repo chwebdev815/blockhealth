@@ -520,6 +520,9 @@
     }
 
     function get_clinic_referral_usage_forms() {
+        $("#container_form_usage_yes").show();
+        $("#container_form_usage_no").hide();
+        
         url = base + "inbox/get_clinic_referral_usage_forms";
         $.post({
             url: url,
@@ -537,10 +540,10 @@
                     $("#signupForm").find("#referral_form_type").html(options);
                     get_clinic_referral_usage_subsection();
                 } else {
-                    error("Error getting locations and customs");
+                    error("Error getting referral usage form");
                 }
             } else {
-                error("Error getting locations and customs");
+                error("Error getting referral usage form");
             }
         });
     }
@@ -568,10 +571,10 @@
                     });
                     $("#signupForm").find("#referral_form_subsection").html(checkboxes);
                 } else {
-                    error("Error getting locations and customs");
+                    error("Error getting referral usage subsection");
                 }
             } else {
-                error("Error getting locations and customs");
+                error("Error getting referral usage subsection");
             }
         });
     }

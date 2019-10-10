@@ -511,94 +511,96 @@
                             </div>
 
 
-                            <div class="form-group row">
-                                <div class="col-lg-12 cl-t-listing wrapper_div">
-                                    <ul>
-                                        <li><strong>Conditions</strong></li>
-                                    </ul>
+                            <div id="container_form_usage_no">
+                                <div class="form-group row">
+                                    <div class="col-lg-12 cl-t-listing wrapper_div">
+                                        <ul>
+                                            <li><strong>Conditions</strong></li>
+                                        </ul>
 
-                                    <div>
-                                        <div class="input_fields_wrap edit_diseases"></div>
-                                        <button type="button" id="btn_add_diseases" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
-                                    </div>
+                                        <div>
+                                            <div class="input_fields_wrap edit_diseases"></div>
+                                            <button type="button" id="btn_add_diseases" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
+                                        </div>
 
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="col-lg-12 cl-t-listing wrapper_div">
-                                    <ul>
-                                        <li><strong>Symptoms</strong></li>
-                                    </ul>
-                                    <div>
-                                        <div class="input_fields_wrap edit_symptoms"></div>
-                                        <button type="button" id="btn_add_symptoms" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
-                                    </div>                                          
-                                </div>                                  
-                            </div>  
-
-
-                            <div class="form-group row">
-                                <div class="col-lg-12 cl-t-listing wrapper_div">
-                                    <ul>
-                                        <li><strong>Procedures</strong></li>
-                                    </ul>
-                                    <div>
-                                        <div class="input_fields_wrap edit_devices"></div>
-                                        <button type="button" id="btn_add_devices" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
-                                    </div>              
-
-                                </div>
-                            </div>
-
-                            <div class="form-group row">
-                                <div class="col-lg-12 cl-t-listing wrapper_div">
-                                    <ul>
-                                        <li><strong>Medications</strong></li>
-                                    </ul>
-                                    <div>
-                                        <div class="input_fields_wrap edit_medications"></div>
-                                        <button type="button" id="btn_add_medications" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
-                                    </div>              
-
-                                </div>
-                            </div>        
-
-
-                            <div class="form-group row hidden">
-                                <div class="col-lg-12 cl-t-listing wrapper_div">
-                                    <ul>
-                                        <li>
-                                            <strong>Lab or Test Results</strong>
-                                            <a href="javascript:void(0)" id="btn_labtest_autofill" style="color:red">Auto Fill</a>
-                                        </li>
-                                    </ul>
-                                    <div>
-                                        <div class="input_fields_wrap edit_tests"></div>
-                                        <button type="button" id="btn_add_tests" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
                                     </div>
                                 </div>
-                            </div>
+
+                                <div class="form-group row">
+                                    <div class="col-lg-12 cl-t-listing wrapper_div">
+                                        <ul>
+                                            <li><strong>Symptoms</strong></li>
+                                        </ul>
+                                        <div>
+                                            <div class="input_fields_wrap edit_symptoms"></div>
+                                            <button type="button" id="btn_add_symptoms" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
+                                        </div>                                          
+                                    </div>                                  
+                                </div>  
 
 
-                            <div class="form-group row">
-                                <div class="col-lg-12">
-                                    <h4 style="display: block;" class="modal-title" id="myModalLabel">Clinical Triage</h4>
-                                    <label for="referral_form_type">
-                                        Form Type
-                                    </label>
+                                <div class="form-group row">
+                                    <div class="col-lg-12 cl-t-listing wrapper_div">
+                                        <ul>
+                                            <li><strong>Procedures</strong></li>
+                                        </ul>
+                                        <div>
+                                            <div class="input_fields_wrap edit_devices"></div>
+                                            <button type="button" id="btn_add_devices" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
+                                        </div>              
+
+                                    </div>
                                 </div>
-                                <div class="col-lg-12">
-                                    <select id="referral_form_type" name="referral_form_type" class="form-control">
-                                    </select>
 
-                                    <div id="referral_form_subsection">
-                                        <div class="checkbox">
+                                <div class="form-group row">
+                                    <div class="col-lg-12 cl-t-listing wrapper_div">
+                                        <ul>
+                                            <li><strong>Medications</strong></li>
+                                        </ul>
+                                        <div>
+                                            <div class="input_fields_wrap edit_medications"></div>
+                                            <button type="button" id="btn_add_medications" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
+                                        </div>              
+
+                                    </div>
+                                </div>        
+
+
+                                <div class="form-group row hidden">
+                                    <div class="col-lg-12 cl-t-listing wrapper_div">
+                                        <ul>
+                                            <li>
+                                                <strong>Lab or Test Results</strong>
+                                                <a href="javascript:void(0)" id="btn_labtest_autofill" style="color:red">Auto Fill</a>
+                                            </li>
+                                        </ul>
+                                        <div>
+                                            <div class="input_fields_wrap edit_tests"></div>
+                                            <button type="button" id="btn_add_tests" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
 
+                            <div id="container_form_usage_yes" style="display: none">
+                                <div class="form-group row">
+                                    <div class="col-lg-12">
+                                        <h4 style="display: block;" class="modal-title" id="myModalLabel">Clinical Triage</h4>
+                                        <label for="referral_form_type">
+                                            Form Type
+                                        </label>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <select id="referral_form_type" name="referral_form_type" class="form-control">
+                                        </select>
+
+                                        <div id="referral_form_subsection">
+                                            <div class="checkbox">
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </fieldset>
                         <fieldset>
                             <div class="form-group row">
@@ -783,11 +785,13 @@
 <div id="templates" class="hidden">
     <div id="template_subsection_checkbox">
         <label>
-            <input type="checkbox" value="###id###" name="subsection_checklist[]">
-            <span class="cr">
-                <i class="cr-icon fa fa-check"></i>
-            </span>
-            ###item_name###
+            <div class="checkbox">
+                <input type="checkbox" value="###id###" name="subsection_checklist[]">
+                <span class="cr">
+                    <i class="cr-icon fa fa-check"></i>
+                </span>
+                ###item_name###
+            </div>
         </label>
     </div>
 </div>
