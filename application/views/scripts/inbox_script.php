@@ -535,6 +535,7 @@
                         options += "<option value='" + value.id + "'>" + value.form_name + "</option>";
                     });
                     $("#signupForm").find("#referral_form_type").html(options);
+                    get_clinic_referral_usage_subsection();
                 } else {
                     error("Error getting locations and customs");
                 }
@@ -543,6 +544,34 @@
             }
         });
     }
+
+    function get_clinic_referral_usage_subsection() {
+        id = $("#signupForm").find("#referral_form_type").value();
+        url = base + "inbox/get_clinic_referral_usage_subsection";
+        $("#sample_form").find("#id").value(id);
+        $.post({
+            url: url,
+            data: $("#sample_form").serialize()
+        }).done(function (response) {
+            if (IsJsonString(response)) {
+                response = JSON.parse(response);
+                if (response.result === "success") {
+                    data = response.data;
+                    //patient location
+                    options = "";
+                    data.forEach(function (value, index) {
+                        options += "<option value='" + value.id + "'>" + value.form_name + "</option>";
+                    });
+                    $("#signupForm").find("#referral_form_type").html(options);
+                } else {
+                    error("Error getting locations and customs");
+                }
+            } else {
+                error("Error getting locations and customs");
+            }
+        });
+    }
+
 
     function get_location_and_custom() {
         url = base + "referral/get_location_and_custom";
@@ -587,11 +616,16 @@
         get_patient_list_save_patient();
         get_location_and_custom();
         get_clinic_physicians();
-        if(global_data.referral_form_use === "yes") {
+        if (global_data.referral_form_use === "yes") {
             get_clinic_referral_usage_forms();
         }
 
         $("#li_inbox").addClass("active");
+
+        $("#signupForm").find("#referral_form_type").on("change", function () {
+            get_clinic_referral_usage_subsection();
+        });
+
         $("#btn_view_print_referral").on("click", function () {
             printJS(global_data.pdf_file + ".pdf");
         });
@@ -1639,7 +1673,7 @@
                 var formData = new FormData();
                 formData.append('file', blob);
                 formData.append('blockhealth_validation_token', $("#sample_form").find("input[name='blockhealth_validation_token']").val());
-                
+
                 // global_data.api_phy_extract = "running";
                 $("#btn_extract_physician").button("loading");
                 // $.ajax('http://159.89.127.142/phy_extract', {

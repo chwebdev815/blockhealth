@@ -79,7 +79,7 @@ class Inbox_model extends CI_Model {
         );
     }
 
-    public function get_clinic_referral_usage_forms_subsections_model() {
+    public function get_clinic_referral_usage_subsection_model() {
         $this->form_validation->set_rules('id', 'Form ID', 'required');
 
         if ($this->form_validation->run()) {
