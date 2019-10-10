@@ -67,18 +67,18 @@ class Inbox_model extends CI_Model {
 
     public function get_clinic_referral_usage_forms_model() {
         log_message("error", "get_clinic_referral_usage_forms");
-//        $form_data = $this->select("form_name, md5(id) as id")
-//                        ->from("referral_form_use")
-//                        ->where(array(
-//                            "active" => 1,
-//                            "clinic_id" => $this->session->userdata("user_id")
-//                        ))->get()->result();
-//        
-//        log_message("error", "form q = " . $this->db->last_query());
-//        return array(
-//            "result" => "success",
-//            "data" => $form_data
-//        );
+        $form_data = $this->db->select("form_name, md5(id) as id")
+                        ->from("referral_form_use")
+                        ->where(array(
+                            "active" => 1,
+                            "clinic_id" => $this->session->userdata("user_id")
+                        ))->get()->result();
+        
+        log_message("error", "form q = " . $this->db->last_query());
+        return array(
+            "result" => "success",
+            "data" => $form_data
+        );
     }
 
     public function save_task_model() {
