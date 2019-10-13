@@ -45,10 +45,10 @@ class Inbox extends CI_Controller {
         echo json_encode($response);
     }
 
-    public function get_clinic_referral_usage_forms() {
+    public function get_clinic_referral_usage_form1() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
-            $response = $this->inbox_model->get_clinic_referral_usage_forms_model();
+            $response = $this->inbox_model->get_clinic_referral_usage_form1_model();
         } else {
             $response = "Sesion Expired";
         }

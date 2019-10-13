@@ -594,8 +594,6 @@
                                         </select>
 
                                         <div id="referral_form_subsection">
-                                            <div class="checkbox">
-                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -791,6 +789,19 @@
                 </span>
                 ###item_name###
             </label>
+        </div>
+    </div>
+    <div id="clinic_triage_title">
+        <div class="form-group row">
+            <div class="col-lg-12 cl-t-listing wrapper_div">
+                <ul>
+                    <li><strong>###title_text###</strong></li>
+                </ul>
+
+                <div>
+                    ###checkboxes###
+                </div>
+            </div>
         </div>
     </div>
 </div>

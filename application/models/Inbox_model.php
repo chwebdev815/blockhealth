@@ -65,9 +65,9 @@ class Inbox_model extends CI_Model {
             return validation_errors();
     }
 
-    public function get_clinic_referral_usage_forms_model() {
+    public function get_clinic_referral_usage_form1_model() {
         $form_data = $this->db->select("form_name, md5(id) as id")
-                        ->from("referral_form_use")
+                        ->from("referral_form_use_1")
                         ->where(array(
                             "active" => 1,
                             "clinic_id" => $this->session->userdata("user_id")
@@ -86,16 +86,34 @@ class Inbox_model extends CI_Model {
             $this->db->trans_start();
             $data = $this->input->post();
 
-            $form_data = $this->db->select("form_name, md5(id) as id")
-                            ->from("referral_form_subsections")
+            $response = array();
+
+            $form2_data = $this->db->select("frm2.form_name, md5(frm2.id) as id")
+                            ->from("referral_form_use_1 frm1")
+                            ->join("referral_form_use_2 frm2", "frm2.active = 1 and frm2.form1_id = frm1.id", "left")
                             ->where(array(
-                                "active" => 1,
-                                "md5(form_id)" => $data["id"]
+                                "frm1.active" => 1,
+                                "md5(frm1.id)" => $data["id"]
                             ))->get()->result();
+
+            foreach ($form2_data as $key => $form2) {
+                $form3_data = $this->db->select("frm3.form_name, md5(frm3.id) as id")
+                        ->from("referral_form_use_2 frm2")
+                        ->join("referral_form_use_3 frm3", "frm3.active = 1 and frm3.form2_id = frm2.id", "left")
+                        ->where(array(
+                            "frm2.active" => 1,
+                            "md5(frm2.id)" => $data["id"]
+                        ))->get()->result();
+                
+                $response[] = array(
+                    "label" => $form2->form_name,
+                    "checkboxes" => $form3_data
+                );
+            }
 
             return array(
                 "result" => "success",
-                "data" => $form_data
+                "data" => $response
             );
         } else {
             return array(

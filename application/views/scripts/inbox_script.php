@@ -523,7 +523,7 @@
         $("#container_form_usage_yes").show();
         $("#container_form_usage_no").hide();
         
-        url = base + "inbox/get_clinic_referral_usage_forms";
+        url = base + "inbox/get_clinic_referral_usage_form1";
         $.post({
             url: url,
             data: $("#sample_form").serialize()
@@ -561,15 +561,15 @@
                 if (response.result === "success") {
                     data = response.data;
                     console.log(data);
-                    template = $("#templates").find("#template_subsection_checkbox").html();
-                    checkboxes = "";
-                    data.forEach(function (value, index) {
-                        let checkbox = template;
-                        checkbox = checkbox.replace(/###id###/g, value.id);
-                        checkbox = checkbox.replace(/###item_name###/g, value.form_name);
-                        checkboxes += checkbox;
-                    });
-                    $("#signupForm").find("#referral_form_subsection").html(checkboxes);
+//                    template = $("#templates").find("#template_subsection_checkbox").html();
+//                    checkboxes = "";
+//                    data.forEach(function (value, index) {
+//                        let checkbox = template;
+//                        checkbox = checkbox.replace(/###id###/g, value.id);
+//                        checkbox = checkbox.replace(/###item_name###/g, value.form_name);
+//                        checkboxes += checkbox;
+//                    });
+//                    $("#signupForm").find("#referral_form_subsection").html(checkboxes);
                 } else {
                     error("Error getting referral usage subsection");
                 }
