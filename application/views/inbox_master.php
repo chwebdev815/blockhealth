@@ -511,7 +511,8 @@
                             </div>
 
 
-                            <div id="container_form_usage_no">
+
+                            <?php if ($this->session->userdata("referral_form_use") === "no") { ?>
                                 <div class="form-group row">
                                     <div class="col-lg-12 cl-t-listing wrapper_div">
                                         <ul>
@@ -580,9 +581,8 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
 
-                            <div id="container_form_usage_yes" style="display: none">
+                            <?php } else if ($this->session->userdata("referral_form_use") === "yes") { ?>
                                 <div class="form-group row">
                                     <div class="col-lg-12">
                                         <label for="referral_form_type">
@@ -599,7 +599,7 @@
                                         </div>
                                     </div>
                                 </div>
-                            </div>
+                            <?php } ?>
                         </fieldset>
                         <fieldset>
                             <div class="form-group row">
