@@ -522,7 +522,7 @@
     function get_clinic_referral_usage_forms() {
         $("#container_form_usage_yes").show();
         $("#container_form_usage_no").hide();
-        
+
         url = base + "inbox/get_clinic_referral_usage_form1";
         $.post({
             url: url,
@@ -561,15 +561,27 @@
                 if (response.result === "success") {
                     data = response.data;
                     console.log(data);
-//                    template = $("#templates").find("#template_subsection_checkbox").html();
-//                    checkboxes = "";
-//                    data.forEach(function (value, index) {
-//                        let checkbox = template;
-//                        checkbox = checkbox.replace(/###id###/g, value.id);
-//                        checkbox = checkbox.replace(/###item_name###/g, value.form_name);
-//                        checkboxes += checkbox;
-//                    });
-//                    $("#signupForm").find("#referral_form_subsection").html(checkboxes);
+                    template_title = $("#templates").find("#clinic_triage_title").html();
+                    template_checkbox = $("#templates").find("#template_subsection_checkbox").html();
+                    let html = "";
+                    data.forEach(function (form2, index) {
+                        let str_checkboxes = "";
+                        checkboxes = form2.checkboxes;
+                        checkboxes.forEach(function (checkbox, index) {
+                            let checkbox = template_checkbox;
+                            checkbox = checkbox.replace(/###id###/g, value.id);
+                            checkbox = checkbox.replace(/###item_name###/g, value.form_name);
+                            str_checkboxes += checkbox;
+                        });
+                        
+                        let str_title = template_title;
+                        str_title = str_title.replace(/###title_text###/g, form2.label);
+                        str_title = str_title.replace(/###checkboxes###/g, str_checkboxes);
+                        
+                        html += str_title;
+                    });
+
+                    $("#signupForm").find("#referral_form_subsection").html(html);
                 } else {
                     error("Error getting referral usage subsection");
                 }
