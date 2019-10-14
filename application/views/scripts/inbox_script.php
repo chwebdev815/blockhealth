@@ -560,24 +560,24 @@
                 response = JSON.parse(response);
                 if (response.result === "success") {
                     data = response.data;
-                    console.log(data);
+//                    console.log(data);
                     template_title = $("#templates").find("#clinic_triage_title").html();
                     template_checkbox = $("#templates").find("#template_subsection_checkbox").html();
                     let html = "";
                     data.forEach(function (form2, index) {
                         let str_checkboxes = "";
                         checkboxes = form2.checkboxes;
-                        checkboxes.forEach(function (item, index) {
-                            let item = template_checkbox;
-                            item = item.replace(/###id###/g, value.id);
-                            item = item.replace(/###item_name###/g, value.form_name);
+                        checkboxes.forEach(function (form3, index) {
+                            let form3 = template_checkbox;
+                            form3 = form3.replace(/###id###/g, value.id);
+                            form3 = form3.replace(/###item_name###/g, value.form_name);
                             str_checkboxes += checkbox;
                         });
-                        
+
                         let str_title = template_title;
                         str_title = str_title.replace(/###title_text###/g, form2.label);
                         str_title = str_title.replace(/###checkboxes###/g, str_checkboxes);
-                        
+
                         html += str_title;
                     });
 
