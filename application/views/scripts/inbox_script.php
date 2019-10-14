@@ -568,7 +568,7 @@
                         let str_checkboxes = "";
                         checkboxes = form2.checkboxes;
                         checkboxes.forEach(function (form3, index) {
-                            let form3 = template_checkbox;
+                            form3 = template_checkbox;
                             form3 = form3.replace(/###id###/g, value.id);
                             form3 = form3.replace(/###item_name###/g, value.form_name);
                             str_checkboxes += checkbox;
