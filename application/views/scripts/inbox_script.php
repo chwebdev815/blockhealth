@@ -569,8 +569,8 @@
                         checkboxes = form2.checkboxes;
                         checkboxes.forEach(function (form3, index) {
                             form3 = template_checkbox;
-                            form3 = form3.replace(/###id###/g, value.id);
-                            form3 = form3.replace(/###item_name###/g, value.form_name);
+                            form3 = form3.replace(/###id###/g, form3.id);
+                            form3 = form3.replace(/###item_name###/g, form3.form_name);
                             str_checkboxes += checkbox;
                         });
 
