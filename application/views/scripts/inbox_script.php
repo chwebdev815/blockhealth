@@ -567,10 +567,10 @@
                     data.forEach(function (form2, index) {
                         let str_checkboxes = "";
                         checkboxes = form2.checkboxes;
-                        checkboxes.forEach(function (checkbox, index) {
-                            let checkbox = template_checkbox;
-                            checkbox = checkbox.replace(/###id###/g, value.id);
-                            checkbox = checkbox.replace(/###item_name###/g, value.form_name);
+                        checkboxes.forEach(function (item, index) {
+                            let item = template_checkbox;
+                            item = item.replace(/###id###/g, value.id);
+                            item = item.replace(/###item_name###/g, value.form_name);
                             str_checkboxes += checkbox;
                         });
                         
