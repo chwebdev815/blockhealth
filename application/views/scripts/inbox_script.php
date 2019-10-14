@@ -568,10 +568,10 @@
                         let str_checkboxes = "";
                         checkboxes = form2.checkboxes;
                         checkboxes.forEach(function (form3, index) {
-                            form3 = template_checkbox;
-                            form3 = form3.replace(/###id###/g, form3.id);
-                            form3 = form3.replace(/###item_name###/g, form3.form_name);
-                            str_checkboxes += checkbox;
+                            template_form3 = template_checkbox;
+                            template_form3 = template_form3.replace(/###id###/g, form3.id);
+                            template_form3 = template_form3.replace(/###item_name###/g, form3.form_name);
+                            str_checkboxes += template_form3;
                         });
 
                         let str_title = template_title;
