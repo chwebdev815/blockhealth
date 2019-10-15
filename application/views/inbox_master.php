@@ -980,10 +980,16 @@
                                                     </label>
                                                 </div>
 
-                                                <button type="button" id="btn_add2">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                    &nbsp;&nbsp;Details
-                                                </button>
+                                                
+                                                <div class="add_wrapper">
+                                                    <button type="button" class="btn_add_dummy">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        &nbsp;&nbsp;Details
+                                                    </button>
+                                                    <div class="inside_wrapper">
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1040,10 +1046,16 @@
                                                     </label>
                                                 </div>
 
-                                                <button type="button" id="btn_add3">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                    &nbsp;&nbsp;Details
-                                                </button>
+                                                
+                                                <div class="add_wrapper">
+                                                    <button type="button" class="btn_add_dummy">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        &nbsp;&nbsp;Details
+                                                    </button>
+                                                    <div class="inside_wrapper">
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1144,10 +1156,16 @@
                                                     </label>
                                                 </div>
 
-                                                <button type="button" id="btn_add4">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                    &nbsp;&nbsp;Details
-                                                </button>
+                                                
+                                                <div class="add_wrapper">
+                                                    <button type="button" class="btn_add_dummy">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        &nbsp;&nbsp;Details
+                                                    </button>
+                                                    <div class="inside_wrapper">
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1239,10 +1257,16 @@
                                                     </label>
                                                 </div>
 
-                                                <button type="button" id="btn_add5">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                    &nbsp;&nbsp;Details
-                                                </button>
+                                                
+                                                <div class="add_wrapper">
+                                                    <button type="button" class="btn_add_dummy">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        &nbsp;&nbsp;Details
+                                                    </button>
+                                                    <div class="inside_wrapper">
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -1271,10 +1295,16 @@
                                                     </label>
                                                 </div>
 
-                                                <button type="button" id="btn_add6">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                    &nbsp;&nbsp;Details
-                                                </button>
+                                                
+                                                <div class="add_wrapper">
+                                                    <button type="button" class="btn_add_dummy">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        &nbsp;&nbsp;Details
+                                                    </button>
+                                                    <div class="inside_wrapper">
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
