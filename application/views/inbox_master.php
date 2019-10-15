@@ -497,22 +497,21 @@
                                 </div>
                             </div>
 
-                            <div class="form-group row">
-                                <div class="col-lg-12 cl-t-listing wrapper_div">
-                                    <ul>
-                                        <li><strong>Reason for Referral</strong></li>
-                                    </ul>
+                            <?php if ($this->session->userdata("referral_form_use") === "no") { ?>
 
-                                    <div>
-                                        <div class="input_fields_wrap edit_reasons"></div>
-                                        <button type="button" id="btn_add_reason" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
+                                <div class="form-group row">
+                                    <div class="col-lg-12 cl-t-listing wrapper_div">
+                                        <ul>
+                                            <li><strong>Reason for Referral</strong></li>
+                                        </ul>
+
+                                        <div>
+                                            <div class="input_fields_wrap edit_reasons"></div>
+                                            <button type="button" id="btn_add_reason" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
+                                        </div>
                                     </div>
                                 </div>
-                            </div>
 
-
-
-                            <?php if ($this->session->userdata("referral_form_use") === "no") { ?>
                                 <div class="form-group row">
                                     <div class="col-lg-12 cl-t-listing wrapper_div">
                                         <ul>
@@ -592,10 +591,24 @@
                                     <div class="col-lg-12">
                                         <select id="referral_form_type" name="referral_form_type" class="form-control">
                                         </select>
+                                    </div>
+                                </div>
 
-                                        <div id="referral_form_subsection">
+
+                                <div class="form-group row">
+                                    <div class="col-lg-12 cl-t-listing wrapper_div">
+                                        <ul>
+                                            <li><strong>Reason for Referral</strong></li>
+                                        </ul>
+
+                                        <div>
+                                            <div class="input_fields_wrap edit_reasons"></div>
+                                            <button type="button" id="btn_add_reason" class="add_field_button"><i class="fa fa-plus" aria-hidden="true"></i>&nbsp;&nbsp;Entry</button>
                                         </div>
                                     </div>
+                                </div>
+
+                                <div id="referral_form_subsection">
                                 </div>
                             <?php } ?>
                         </fieldset>
@@ -795,7 +808,6 @@
         <div class="form-group row">
             <div class="col-lg-12 wrapper_div">
                 <strong>###title_text###</strong>
-
                 <div>
                     ###checkboxes###
                 </div>
