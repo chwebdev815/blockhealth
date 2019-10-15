@@ -98,13 +98,13 @@ class Inbox_model extends CI_Model {
 
             foreach ($form2_data as $key => $form2) {
                 $form3_data = $this->db->select("frm3.form_name, md5(frm3.id) as id")
-                        ->from("referral_form_use_2 frm2")
-                        ->join("referral_form_use_3 frm3", "frm3.active = 1 and frm3.form2_id = frm2.id", "left")
-                        ->where(array(
-                            "frm2.active" => 1,
-                            "md5(frm2.id)" => $data["id"]
-                        ))->get()->result();
-                
+                                ->from("referral_form_use_2 frm2")
+                                ->join("referral_form_use_3 frm3", "frm3.active = 1 and frm3.form2_id = frm2.id", "left")
+                                ->where(array(
+                                    "frm2.active" => 1,
+                                    "md5(frm2.id)" => $data["id"]
+                                ))->get()->result();
+
                 $response[] = array(
                     "label" => $form2->form_name,
                     "checkboxes" => $form3_data
@@ -827,87 +827,119 @@ class Inbox_model extends CI_Model {
                     );
                     $this->db->insert("referral_physician_info", $physician_data);
                     //log_message("error", "insert physician  = " . $this->db->last_query());
-                    //store clinical triage info linked to patient id
-                    $clinical_triage_data = array(
-                        "patient_id" => $patient_id,
-                        "priority" => (!isset($data["priority"]) ||
-                        $data["priority"] == null || empty($data["priority"])) ?
-                        "not_specified" : htmlspecialchars($data["priority"])
-                    );
-                    $this->db->insert("referral_clinic_triage", $clinical_triage_data);
-                    $clinic_triage_id = $this->db->insert_id();
-                    //log_message("error", "triage referral = " . $this->db->last_query());
-                    //store all diseases (using loop) patient diseases linked to referral_clinic_triage->id
-                    if (isset($data["diseases"])) {
-                        $diseases = $data["diseases"];
-                        foreach ($diseases as $key => $value) {
-                            if ($value != "") {
-                                //insert if not empty
-                                $this->db->insert("referral_clinic_triage_disease_info", array(
-                                    "clinic_triage_id" => $clinic_triage_id,
-                                    "disease" => htmlspecialchars($value)
-                                ));
-                                //log_message("error", "disease q = " . $this->db->last_query());
+
+                    if ($this->session->userdata("referral_form_use") === "yes") {
+
+                        //store clinical triage info linked to patient id
+                        $priority = (!isset($data["priority"]) ||
+                                $data["priority"] == null || empty($data["priority"])) ?
+                                "not_specified" : htmlspecialchars($data["priority"]);
+                        $form_type = get_decrypted_id($data["referral_form_type"], "referral_form_use_1");
+                        $clinical_triage_data = array(
+                            "patient_id" => $patient_id,
+                            "form_type" => $form_type,
+                            "priority" => $priority
+                        );
+                        $this->db->insert("referral_clinic_triage", $clinical_triage_data);
+                        log_message("error", "subsection q1 = " . $this->db->last_query());
+                        $clinic_triage_id = $this->db->insert_id();
+                        //log_message("error", "triage referral = " . $this->db->last_query());
+                        //referral_form_type
+                        //subsection_checklist[] 
+                        $subsection_checklist = $data["subsection_checklist"];
+                        foreach ($subsection_checklist as $key => $subsection_md5) {
+                            //form_subsection
+                            $form_subsection = get_decrypted_id($subsection_md5, "referral_form_use_1");
+                            $this->db->insert("subsection_checklist", array(
+                                "form_subsection" => $form_subsection,
+                                "clinic_triage_id" => $clinic_triage_id
+                            ));
+                            log_message("error", "subsection q2 = " . $this->db->last_query());
+                        }
+                    } else if ($this->session->userdata("referral_form_use") === "no") {
+
+                        //store clinical triage info linked to patient id
+                        $clinical_triage_data = array(
+                            "patient_id" => $patient_id,
+                            "priority" => (!isset($data["priority"]) ||
+                            $data["priority"] == null || empty($data["priority"])) ?
+                            "not_specified" : htmlspecialchars($data["priority"])
+                        );
+                        $this->db->insert("referral_clinic_triage", $clinical_triage_data);
+                        $clinic_triage_id = $this->db->insert_id();
+                        //log_message("error", "triage referral = " . $this->db->last_query());
+                        //store all diseases (using loop) patient diseases linked to referral_clinic_triage->id
+                        if (isset($data["diseases"])) {
+                            $diseases = $data["diseases"];
+                            foreach ($diseases as $key => $value) {
+                                if ($value != "") {
+                                    //insert if not empty
+                                    $this->db->insert("referral_clinic_triage_disease_info", array(
+                                        "clinic_triage_id" => $clinic_triage_id,
+                                        "disease" => htmlspecialchars($value)
+                                    ));
+                                    //log_message("error", "disease q = " . $this->db->last_query());
+                                }
                             }
                         }
-                    }
 
-                    //store all symptoms (using loop) patient symptoms linked to referral_clinic_triage->id
-                    if (isset($data["symptoms"])) {
-                        $symptoms = $data["symptoms"];
-                        foreach ($symptoms as $key => $value) {
-                            if ($value != "") {
-                                //insert if not empty
-                                $this->db->insert("referral_clinic_triage_symptom_info", array(
-                                    "clinic_triage_id" => $clinic_triage_id,
-                                    "symptom" => htmlspecialchars($value)
-                                ));
-                                //log_message("error", "symptom q = " . $this->db->last_query());
+                        //store all symptoms (using loop) patient symptoms linked to referral_clinic_triage->id
+                        if (isset($data["symptoms"])) {
+                            $symptoms = $data["symptoms"];
+                            foreach ($symptoms as $key => $value) {
+                                if ($value != "") {
+                                    //insert if not empty
+                                    $this->db->insert("referral_clinic_triage_symptom_info", array(
+                                        "clinic_triage_id" => $clinic_triage_id,
+                                        "symptom" => htmlspecialchars($value)
+                                    ));
+                                    //log_message("error", "symptom q = " . $this->db->last_query());
+                                }
                             }
                         }
-                    }
 
-                    //store all lab tests (using loop) patient tests linked to referral_clinic_triage->id
-                    if (isset($data["tests"])) {
-                        $tests = $data["tests"];
-                        foreach ($tests as $key => $value) {
-                            if ($value != "") {
-                                //insert if not empty
-                                $this->db->insert("referral_clinic_triage_tests_info", array(
-                                    "clinic_triage_id" => $clinic_triage_id,
-                                    "test" => htmlspecialchars($value)
-                                ));
-                                //log_message("error", "test q = " . $this->db->last_query());
+                        //store all lab tests (using loop) patient tests linked to referral_clinic_triage->id
+                        if (isset($data["tests"])) {
+                            $tests = $data["tests"];
+                            foreach ($tests as $key => $value) {
+                                if ($value != "") {
+                                    //insert if not empty
+                                    $this->db->insert("referral_clinic_triage_tests_info", array(
+                                        "clinic_triage_id" => $clinic_triage_id,
+                                        "test" => htmlspecialchars($value)
+                                    ));
+                                    //log_message("error", "test q = " . $this->db->last_query());
+                                }
                             }
                         }
-                    }
 
-                    //store all medications (using loop) patient tests linked to referral_clinic_triage->id
-                    if (isset($data["medications"])) {
-                        $drugs = $data["medications"];
-                        foreach ($drugs as $key => $value) {
-                            if ($value != "") {
-                                //insert if not empty
-                                $this->db->insert("referral_clinic_triage_drugs_info", array(
-                                    "clinic_triage_id" => $clinic_triage_id,
-                                    "drug" => htmlspecialchars($value)
-                                ));
-                                //log_message("error", "drug q = " . $this->db->last_query());
+                        //store all medications (using loop) patient tests linked to referral_clinic_triage->id
+                        if (isset($data["medications"])) {
+                            $drugs = $data["medications"];
+                            foreach ($drugs as $key => $value) {
+                                if ($value != "") {
+                                    //insert if not empty
+                                    $this->db->insert("referral_clinic_triage_drugs_info", array(
+                                        "clinic_triage_id" => $clinic_triage_id,
+                                        "drug" => htmlspecialchars($value)
+                                    ));
+                                    //log_message("error", "drug q = " . $this->db->last_query());
+                                }
                             }
                         }
-                    }
 
-                    //store all procedure and devices (using loop) patient tests linked to referral_clinic_triage->id
-                    if (isset($data["devices"])) {
-                        $devices = $data["devices"];
-                        foreach ($devices as $key => $value) {
-                            if ($value != "") {
-                                //insert if not empty
-                                $this->db->insert("referral_clinic_triage_devices_info", array(
-                                    "clinic_triage_id" => $clinic_triage_id,
-                                    "device" => htmlspecialchars($value)
-                                ));
-                                //log_message("error", "device q = " . $this->db->last_query());
+                        //store all procedure and devices (using loop) patient tests linked to referral_clinic_triage->id
+                        if (isset($data["devices"])) {
+                            $devices = $data["devices"];
+                            foreach ($devices as $key => $value) {
+                                if ($value != "") {
+                                    //insert if not empty
+                                    $this->db->insert("referral_clinic_triage_devices_info", array(
+                                        "clinic_triage_id" => $clinic_triage_id,
+                                        "device" => htmlspecialchars($value)
+                                    ));
+                                    //log_message("error", "device q = " . $this->db->last_query());
+                                }
                             }
                         }
                     }
