@@ -893,11 +893,11 @@
                                                     </label>
                                                 </div>
                                                 <div class="add_wrapper">
-                                                    <button type="button" class="btn_add_dummy">
+                                                    <button type="button" class="btn_add_dummy add_field_button">
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                         &nbsp;&nbsp;Details
                                                     </button>
-                                                    <div class="inside_wrapper">
+                                                    <div class="inside_wrapper hidden">
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </div>
@@ -982,11 +982,11 @@
 
                                                 
                                                 <div class="add_wrapper">
-                                                    <button type="button" class="btn_add_dummy">
+                                                    <button type="button" class="btn_add_dummy add_field_button">
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                         &nbsp;&nbsp;Details
                                                     </button>
-                                                    <div class="inside_wrapper">
+                                                    <div class="inside_wrapper hidden">
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </div>
@@ -1048,11 +1048,11 @@
 
                                                 
                                                 <div class="add_wrapper">
-                                                    <button type="button" class="btn_add_dummy">
+                                                    <button type="button" class="btn_add_dummy add_field_button">
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                         &nbsp;&nbsp;Details
                                                     </button>
-                                                    <div class="inside_wrapper">
+                                                    <div class="inside_wrapper hidden">
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </div>
@@ -1158,11 +1158,11 @@
 
                                                 
                                                 <div class="add_wrapper">
-                                                    <button type="button" class="btn_add_dummy">
+                                                    <button type="button" class="btn_add_dummy add_field_button">
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                         &nbsp;&nbsp;Details
                                                     </button>
-                                                    <div class="inside_wrapper">
+                                                    <div class="inside_wrapper hidden">
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </div>
@@ -1259,11 +1259,11 @@
 
                                                 
                                                 <div class="add_wrapper">
-                                                    <button type="button" class="btn_add_dummy">
+                                                    <button type="button" class="btn_add_dummy add_field_button">
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                         &nbsp;&nbsp;Details
                                                     </button>
-                                                    <div class="inside_wrapper">
+                                                    <div class="inside_wrapper hidden">
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </div>
@@ -1297,11 +1297,11 @@
 
                                                 
                                                 <div class="add_wrapper">
-                                                    <button type="button" class="btn_add_dummy">
+                                                    <button type="button" class="btn_add_dummy add_field_button">
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                         &nbsp;&nbsp;Details
                                                     </button>
-                                                    <div class="inside_wrapper">
+                                                    <div class="inside_wrapper hidden">
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </div>
