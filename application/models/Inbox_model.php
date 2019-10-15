@@ -850,7 +850,7 @@ class Inbox_model extends CI_Model {
                         foreach ($subsection_checklist as $key => $subsection_md5) {
                             //form_subsection
                             $form_subsection = get_decrypted_id($subsection_md5, "referral_form_use_1");
-                            $this->db->insert("subsection_checklist", array(
+                            $this->db->insert("referral_clinic_triage_subsection_info", array(
                                 "form_subsection" => $form_subsection,
                                 "clinic_triage_id" => $clinic_triage_id
                             ));
