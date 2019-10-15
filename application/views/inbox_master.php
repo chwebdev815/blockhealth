@@ -892,7 +892,10 @@
                                                         Other
                                                     </label>
                                                 </div>
-                                                
+                                                <button type="button" id="btn_add1">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    &nbsp;&nbsp;Details
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -971,7 +974,11 @@
                                                         Other
                                                     </label>
                                                 </div>
-
+                                                
+                                                <button type="button" id="btn_add2">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    &nbsp;&nbsp;Details
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -1027,7 +1034,11 @@
                                                         Other
                                                     </label>
                                                 </div>
-
+                                                
+                                                <button type="button" id="btn_add3">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    &nbsp;&nbsp;Details
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -1127,6 +1138,11 @@
                                                         Other
                                                     </label>
                                                 </div>
+                                                
+                                                <button type="button" id="btn_add4">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    &nbsp;&nbsp;Details
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -1217,7 +1233,11 @@
                                                         Other        
                                                     </label>
                                                 </div>
-
+                                                
+                                                <button type="button" id="btn_add5">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    &nbsp;&nbsp;Details
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
@@ -1245,7 +1265,11 @@
                                                         If yes
                                                     </label>
                                                 </div>
-
+                                                
+                                                <button type="button" id="btn_add6">
+                                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                                    &nbsp;&nbsp;Details
+                                                </button>
                                             </div>
                                         </div>
                                     </div>
