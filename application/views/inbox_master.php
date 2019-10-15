@@ -793,10 +793,8 @@
     </div>
     <div id="clinic_triage_title">
         <div class="form-group row">
-            <div class="col-lg-12 cl-t-listing wrapper_div">
-                <ul>
-                    <li><strong>###title_text###</strong></li>
-                </ul>
+            <div class="col-lg-12 wrapper_div">
+                <strong>###title_text###</strong>
 
                 <div>
                     ###checkboxes###
