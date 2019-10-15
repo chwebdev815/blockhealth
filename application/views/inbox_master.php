@@ -589,7 +589,7 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-12">
-<!--                                        <select id="referral_form_type" name="referral_form_type" class="form-control">
+    <!--                                        <select id="referral_form_type" name="referral_form_type" class="form-control">
                                         </select>-->
                                         <select id="referral_form_type" name="referral_form_type" class="form-control">
                                             <option value="1">KMH Cardiology Consult Form</option>
@@ -623,7 +623,7 @@
 
                                                 <div class="checkbox">
                                                     <label>
-                                                        <input type="checkbox" value="c4ca4238a0b923820dcc509a6f75849b" name="subsection_checklist[]">
+                                                        <input type="checkbox"">
                                                         <span class="cr">
                                                             <i class="cr-icon fa fa-check"></i>
                                                         </span>
@@ -656,25 +656,66 @@
                                                         <span class="cr">
                                                             <i class="cr-icon fa fa-check"></i>
                                                         </span>
-                                                        Consult
+                                                        Myocardial Perfusion - Exercise
                                                     </label>
                                                 </div>
 
                                                 <div class="checkbox">
                                                     <label>
-                                                        <input type="checkbox" value="c81e728d9d4c2f636f067f89cc14862c" name="subsection_checklist[]">
+                                                        <input type="checkbox">
                                                         <span class="cr">
                                                             <i class="cr-icon fa fa-check"></i>
                                                         </span>
-                                                        Consult (if test abnormal)
+                                                        Myocardial Perfusion - Persantine
                                                     </label>
                                                 </div>
-
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Myocardial Perfusion - Exercise OR Persantine
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Myocardial Perfusion - Dobutamine
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Ventricular Function (MUGA) - Rest
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Ventricular Function (MUGA) - Dobutamine
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Viability Study - Rest
+                                                    </label>
+                                                </div>
                                             </div>
                                         </div>
-                                    </div>
-                                    <div id="subsection2">
-                                        Subsection 2
                                     </div>
 
                                     <div class="form-group row">
@@ -684,21 +725,524 @@
 
                                                 <div class="checkbox">
                                                     <label>
-                                                        <input type="checkbox" value="c4ca4238a0b923820dcc509a6f75849b" name="subsection_checklist[]">
+                                                        <input type="checkbox">
                                                         <span class="cr">
                                                             <i class="cr-icon fa fa-check"></i>
                                                         </span>
-                                                        Consult
+                                                        Graded Exercise Test (GXT)
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Ambulatory Blood Pressure Monitor
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        24 Hrs Holter Monitor
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        48 Hrs Holter Monitor
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Loop/Cardiac Event Monitor (2 weeks)
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Echocardiography
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Echocardiography w/ Contrast
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Stress Echo
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Stress Echo / Contrast
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Resting ECG
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Carotid Ultrasound
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div id="subsection2">
+                                    <div class="form-group row">
+                                        <div class="col-lg-12 wrapper_div">
+                                            <strong>Cardiac Consult</strong>
+                                            <div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Brain
                                                     </label>
                                                 </div>
 
                                                 <div class="checkbox">
                                                     <label>
-                                                        <input type="checkbox" value="c81e728d9d4c2f636f067f89cc14862c" name="subsection_checklist[]">
+                                                        <input type="checkbox">
                                                         <span class="cr">
                                                             <i class="cr-icon fa fa-check"></i>
                                                         </span>
-                                                        Consult (if test abnormal)
+                                                        Posterior Fossa
+                                                    </label>
+                                                </div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Internal Auditory Canal
+                                                    </label>
+                                                </div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Sella
+                                                    </label>
+                                                </div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        MRI of Circle of Willis
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Other
+                                                    </label>
+                                                </div>
+                                                
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-lg-12 wrapper_div">
+                                            <strong>Head & Neck</strong>
+                                            <div>
+                                                
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        MRA of Carotid Arteries
+                                                    </label>
+                                                </div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Routine Neck
+                                                    </label>
+                                                </div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Orbits
+                                                    </label>
+                                                </div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Nasopharynx
+                                                    </label>
+                                                </div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Salivary Glands
+                                                    </label>
+                                                </div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        TM Joints
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Other
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-lg-12 wrapper_div">
+                                            <strong>Spine</strong>
+                                            <div>
+
+                                                
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Cervical
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Lumbar
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Sacroiliac Joints
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Thoracic
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Other
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-lg-12 wrapper_div">
+                                            <strong>Abdomen</strong>
+                                            <div>
+
+                                                
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Adrenal Glands
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Biliary System
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Kidneys
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Liver
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        MRA of Renal Arteries
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        MR Enterography
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        MR Enterography
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Enterography
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Pancreas
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Other
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-lg-12 wrapper_div">
+                                            <strong>Musculoskeletal System</strong>
+                                            <div>
+
+                                                
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Ankle
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Elbow       
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Foot          
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Hip            
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Knee          
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Shoulder  
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Wrist        
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Pelvis        
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Other        
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <div class="col-lg-12 wrapper_div">
+                                            <strong>Patient Safety Screening</strong>
+                                            <div>
+
+                                                
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        No to all
+                                                    </label>
+                                                </div>
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span> 
+                                                        If yes
                                                     </label>
                                                 </div>
 
