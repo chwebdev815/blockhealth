@@ -897,7 +897,7 @@
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                         &nbsp;&nbsp;Details
                                                     </button>
-                                                    <div class="inside_wrapper hidden">
+                                                    <div class="inside_wrapper" style="display:none">
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </div>
@@ -986,7 +986,7 @@
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                         &nbsp;&nbsp;Details
                                                     </button>
-                                                    <div class="inside_wrapper hidden">
+                                                    <div class="inside_wrapper" style="display:none">
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </div>
@@ -1052,7 +1052,7 @@
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                         &nbsp;&nbsp;Details
                                                     </button>
-                                                    <div class="inside_wrapper hidden">
+                                                    <div class="inside_wrapper" style="display:none">
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </div>
@@ -1162,7 +1162,7 @@
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                         &nbsp;&nbsp;Details
                                                     </button>
-                                                    <div class="inside_wrapper hidden">
+                                                    <div class="inside_wrapper" style="display:none">
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </div>
@@ -1263,7 +1263,7 @@
                                                         <i class="fa fa-plus" aria-hidden="true"></i>
                                                         &nbsp;&nbsp;Details
                                                     </button>
-                                                    <div class="inside_wrapper hidden">
+                                                    <div class="inside_wrapper" style="display:none">
                                                         <input type="text" class="form-control">
                                                     </div>
                                                 </div>
