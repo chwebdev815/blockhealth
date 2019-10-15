@@ -717,6 +717,11 @@
             }
             $(".toolbar").show();
         });
+        
+        
+        $(".btn_add_dummy").on("click", function() {
+            $(this).closest(".inside_wrapper").toggle();
+        });
 
         $("#save-patient-wrapper").find("#btn_extract_patient").on("click", function () {
             console.log("method btn_extract_patient click");

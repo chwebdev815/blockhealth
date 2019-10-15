@@ -828,7 +828,7 @@
                                     </div>
                                 </div>
 
-                                <div id="subsection2">
+                                <div id="subsection2" style="display:none">
                                     <div class="form-group row">
                                         <div class="col-lg-12 wrapper_div">
                                             <strong>Cardiac Consult</strong>
@@ -892,10 +892,15 @@
                                                         Other
                                                     </label>
                                                 </div>
-                                                <button type="button" id="btn_add1">
-                                                    <i class="fa fa-plus" aria-hidden="true"></i>
-                                                    &nbsp;&nbsp;Details
-                                                </button>
+                                                <div class="add_wrapper">
+                                                    <button type="button" class="btn_add_dummy">
+                                                        <i class="fa fa-plus" aria-hidden="true"></i>
+                                                        &nbsp;&nbsp;Details
+                                                    </button>
+                                                    <div class="inside_wrapper">
+                                                        <input type="text" class="form-control">
+                                                    </div>
+                                                </div>
                                             </div>
                                         </div>
                                     </div>
@@ -904,7 +909,7 @@
                                         <div class="col-lg-12 wrapper_div">
                                             <strong>Head & Neck</strong>
                                             <div>
-                                                
+
 
                                                 <div class="checkbox">
                                                     <label>
@@ -974,7 +979,7 @@
                                                         Other
                                                     </label>
                                                 </div>
-                                                
+
                                                 <button type="button" id="btn_add2">
                                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                                     &nbsp;&nbsp;Details
@@ -988,7 +993,7 @@
                                             <strong>Spine</strong>
                                             <div>
 
-                                                
+
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox">
@@ -1034,7 +1039,7 @@
                                                         Other
                                                     </label>
                                                 </div>
-                                                
+
                                                 <button type="button" id="btn_add3">
                                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                                     &nbsp;&nbsp;Details
@@ -1047,7 +1052,7 @@
                                             <strong>Abdomen</strong>
                                             <div>
 
-                                                
+
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox">
@@ -1138,7 +1143,7 @@
                                                         Other
                                                     </label>
                                                 </div>
-                                                
+
                                                 <button type="button" id="btn_add4">
                                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                                     &nbsp;&nbsp;Details
@@ -1151,7 +1156,7 @@
                                             <strong>Musculoskeletal System</strong>
                                             <div>
 
-                                                
+
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox">
@@ -1233,7 +1238,7 @@
                                                         Other        
                                                     </label>
                                                 </div>
-                                                
+
                                                 <button type="button" id="btn_add5">
                                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                                     &nbsp;&nbsp;Details
@@ -1246,7 +1251,7 @@
                                             <strong>Patient Safety Screening</strong>
                                             <div>
 
-                                                
+
                                                 <div class="checkbox">
                                                     <label>
                                                         <input type="checkbox">
@@ -1265,7 +1270,7 @@
                                                         If yes
                                                     </label>
                                                 </div>
-                                                
+
                                                 <button type="button" id="btn_add6">
                                                     <i class="fa fa-plus" aria-hidden="true"></i>
                                                     &nbsp;&nbsp;Details
