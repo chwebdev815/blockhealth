@@ -636,7 +636,7 @@
         get_location_and_custom();
         get_clinic_physicians();
         if (global_data.referral_form_use === "yes") {
-            get_clinic_referral_usage_forms();
+//            get_clinic_referral_usage_forms();
         }
 
         $("#li_inbox").addClass("active");
@@ -647,7 +647,7 @@
                   $("#subsection2").hide();
                   $("#subsection1").show();
               }
-              else {
+              else if($(this).val() === "2"){
                   $("#subsection1").hide();
                   $("#subsection2").show();
               }

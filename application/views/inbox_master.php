@@ -589,7 +589,11 @@
                                         </label>
                                     </div>
                                     <div class="col-lg-12">
+<!--                                        <select id="referral_form_type" name="referral_form_type" class="form-control">
+                                        </select>-->
                                         <select id="referral_form_type" name="referral_form_type" class="form-control">
+                                            <option value="1">KMH Cardiology Consult Form</option>
+                                            <option value="2">KMH MRI Req Form</option>
                                         </select>
                                     </div>
                                 </div>
