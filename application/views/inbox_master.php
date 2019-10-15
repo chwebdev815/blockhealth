@@ -898,7 +898,7 @@
                                                         &nbsp;&nbsp;Details
                                                     </button>
                                                     <div class="inside_wrapper" style="display:none">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" placeholder="Type your text" value="" class="dummy_checkbox">
                                                     </div>
                                                 </div>
                                             </div>
@@ -987,7 +987,7 @@
                                                         &nbsp;&nbsp;Details
                                                     </button>
                                                     <div class="inside_wrapper" style="display:none">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" placeholder="Type your text" value="" class="dummy_checkbox">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1053,7 +1053,7 @@
                                                         &nbsp;&nbsp;Details
                                                     </button>
                                                     <div class="inside_wrapper" style="display:none">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" placeholder="Type your text" value="" class="dummy_checkbox">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1163,7 +1163,7 @@
                                                         &nbsp;&nbsp;Details
                                                     </button>
                                                     <div class="inside_wrapper" style="display:none">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" placeholder="Type your text" value="" class="dummy_checkbox">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1264,7 +1264,7 @@
                                                         &nbsp;&nbsp;Details
                                                     </button>
                                                     <div class="inside_wrapper" style="display:none">
-                                                        <input type="text" class="form-control">
+                                                        <input type="text" placeholder="Type your text" value="" class="dummy_checkbox">
                                                     </div>
                                                 </div>
                                             </div>
@@ -1295,7 +1295,7 @@
                                                     </label>
                                                 </div>
                                                 <div class="inside_wrapper">
-                                                    <input type="text" class="form-control">
+                                                    <input type="text" placeholder="Type your text" value="" class="dummy_checkbox">
                                                 </div>
                                             </div>
                                         </div>
