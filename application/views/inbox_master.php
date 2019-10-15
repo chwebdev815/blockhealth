@@ -608,7 +608,99 @@
                                     </div>
                                 </div>
 
-                                <div id="referral_form_subsection">
+                                <div id="referral_form_subsection" class="hidden">
+                                </div>
+
+                                <div id="subsection1">
+                                    <div class="form-group row">
+                                        <div class="col-lg-12 wrapper_div">
+                                            <strong>Cardiac Consult</strong>
+                                            <div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" value="c4ca4238a0b923820dcc509a6f75849b" name="subsection_checklist[]">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Consult
+                                                    </label>
+                                                </div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" value="c81e728d9d4c2f636f067f89cc14862c" name="subsection_checklist[]">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Consult (if test abnormal)
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-lg-12 wrapper_div">
+                                            <strong>Nuclear Cardiology Tests</strong>
+                                            <div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" value="c4ca4238a0b923820dcc509a6f75849b" name="subsection_checklist[]">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Consult
+                                                    </label>
+                                                </div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" value="c81e728d9d4c2f636f067f89cc14862c" name="subsection_checklist[]">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Consult (if test abnormal)
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div id="subsection2">
+                                        Subsection 2
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <div class="col-lg-12 wrapper_div">
+                                            <strong>Cardiology Tests</strong>
+                                            <div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" value="c4ca4238a0b923820dcc509a6f75849b" name="subsection_checklist[]">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Consult
+                                                    </label>
+                                                </div>
+
+                                                <div class="checkbox">
+                                                    <label>
+                                                        <input type="checkbox" value="c81e728d9d4c2f636f067f89cc14862c" name="subsection_checklist[]">
+                                                        <span class="cr">
+                                                            <i class="cr-icon fa fa-check"></i>
+                                                        </span>
+                                                        Consult (if test abnormal)
+                                                    </label>
+                                                </div>
+
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             <?php } ?>
                         </fieldset>

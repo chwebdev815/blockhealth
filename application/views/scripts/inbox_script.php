@@ -642,7 +642,15 @@
         $("#li_inbox").addClass("active");
 
         $("#signupForm").find("#referral_form_type").on("change", function () {
-            get_clinic_referral_usage_subsection();
+//            get_clinic_referral_usage_subsection();
+              if($(this).val() === "1") {
+                  $("#subsection2").hide();
+                  $("#subsection1").show();
+              }
+              else {
+                  $("#subsection1").hide();
+                  $("#subsection2").show();
+              }
         });
 
         $("#btn_view_print_referral").on("click", function () {
