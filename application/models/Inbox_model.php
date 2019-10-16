@@ -1190,7 +1190,7 @@ class Inbox_model extends CI_Model {
             return validation_errors();
     }
     public function doc_classifier_model() {
-        $api_url = $this->config->item("PREDICTION_URL") . "doc-classifier";
+        $api_url = $this->config->item("PREDICTION_URL") . "/doc-classifier";
         
         $data = $this->input->post();
         $mime = mime_content_type($_FILES['file']['tmp_name']);
