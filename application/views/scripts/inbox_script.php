@@ -568,7 +568,7 @@
                 formData.append('file', blob);
                 formData.append('blockhealth_validation_token', $("#sample_form").find("input[name='blockhealth_validation_token']").val());
                 console.log("sending ajax for " + global_data.slider_ajax_counter);
-                $.ajax(base + "doc_classifier", {
+                $.ajax(base + "inbox/doc_classifier", {
                     method: 'POST',
                     data: formData,
                     processData: false,
