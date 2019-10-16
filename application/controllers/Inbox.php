@@ -195,6 +195,16 @@ class Inbox extends CI_Controller {
         echo json_encode($response);
     }
 
+    public function doc_classifier() {
+        if (clinic_login()) {
+            $this->load->model("inbox_model");
+            $response = $this->inbox_model->doc_classifier_model();
+        } else {
+            $response = "Sesion Expired";
+        }
+        echo json_encode($response);
+    }
+
     public function phy_extract_api() {
         if (clinic_login()) {
             $this->load->model("inbox_model");

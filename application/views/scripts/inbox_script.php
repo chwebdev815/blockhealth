@@ -567,7 +567,7 @@
                 var formData = new FormData();
                 formData.append('file', blob);
                 console.log("sending ajax for " + global_data.slider_ajax_counter);
-                $.ajax("http://165.227.45.30/doc-classifier", {
+                $.ajax(base + "doc_classifier", {
                     method: 'POST',
                     data: formData,
                     processData: false,
