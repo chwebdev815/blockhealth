@@ -15,56 +15,6 @@ class Inbox extends CI_Controller {
         }
     }
 
-    public function perform_fax_split() {
-        if (clinic_login()) {
-            $this->load->model("inbox_model");
-            $response = $this->inbox_model->perform_fax_split_model();
-        } else {
-            $response = session_expired();
-        }
-        echo json_encode($response);
-    }
-
-    public function save_slider_response() {
-        if (clinic_login()) {
-            $this->load->model("inbox_model");
-            $response = $this->inbox_model->save_slider_response_model();
-        } else {
-            $response = session_expired();
-        }
-        echo json_encode($response);
-    }
-
-    public function check_slider_saved() {
-        if (clinic_login()) {
-            $this->load->model("inbox_model");
-            $response = $this->inbox_model->check_slider_saved_model();
-        } else {
-            $response = session_expired();
-        }
-        echo json_encode($response);
-    }
-    
-    public function search_physician() {
-        if (clinic_login()) {
-            $this->load->model("inbox_model");
-            $response = $this->inbox_model->search_physician_model();
-        } else {
-            $response = session_expired();
-        }
-        echo json_encode($response);
-    }
-    
-    public function get_fill_physician_details() {
-        if (clinic_login()) {
-            $this->load->model("inbox_model");
-            $response = $this->inbox_model->get_fill_physician_details_model();
-        } else {
-            $response = session_expired();
-        }
-        echo json_encode($response);
-    }
-
     public function ssp_inbox() {
         if (clinic_login()) {
             $this->load->model("inbox_model");
@@ -89,6 +39,26 @@ class Inbox extends CI_Controller {
         if (clinic_login()) {
             $this->load->model("inbox_model");
             $response = $this->inbox_model->check_physician_data_model();
+        } else {
+            $response = "Sesion Expired";
+        }
+        echo json_encode($response);
+    }
+
+    public function get_clinic_referral_usage_form1() {
+        if (clinic_login()) {
+            $this->load->model("inbox_model");
+            $response = $this->inbox_model->get_clinic_referral_usage_form1_model();
+        } else {
+            $response = "Sesion Expired";
+        }
+        echo json_encode($response);
+    }
+
+    public function get_clinic_referral_usage_subsection() {
+        if (clinic_login()) {
+            $this->load->model("inbox_model");
+            $response = $this->inbox_model->get_clinic_referral_usage_subsection_model();
         } else {
             $response = "Sesion Expired";
         }

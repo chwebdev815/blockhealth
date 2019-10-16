@@ -181,233 +181,9 @@
         background-color: #675e67 !important;
         border-bottom: 3px solid #7c8584 !important;
     }
-
-    /* thumbnail slider css */
-
-    .carousel-inner {
-        //height: 100%; /*Note: set specific height here if not, there will be some issues with IE browser*/
-    }
-    .carousel-inner > .item {
-        -webkit-transition: .6s ease-in-out top;
-        -o-transition: .6s ease-in-out top;
-        transition: .6s ease-in-out top;
-    }
-
-    @media all and (transform-3d),
-    (-webkit-transform-3d) {
-        .carousel-inner > .item {
-            -webkit-transition: -webkit-transform .6s ease-in-out;
-            -o-transition: -o-transform .6s ease-in-out;
-            transition: transform .6s ease-in-out;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            -webkit-perspective: 1000;
-            perspective: 1000;
-        }
-        .carousel-inner > .item.next,
-        .carousel-inner > .item.active.right {
-            -webkit-transform: translate3d(0, 33.33%, 0);
-            transform: translate3d(0, 33.33%, 0);
-            top: 0;
-        }
-        .carousel-inner > .item.prev,
-        .carousel-inner > .item.active.left {
-            -webkit-transform: translate3d(0, -33.33%, 0);
-            transform: translate3d(0, -33.33%, 0);
-            top: 0;
-        }
-        .carousel-inner > .item.next.left,
-        .carousel-inner > .item.prev.right,
-        .carousel-inner > .item.active {
-            -webkit-transform: translate3d(0, 0, 0);
-            transform: translate3d(0, 0, 0);
-            top: 0;
-        }
-    }
-
-    .carousel-inner > .active {
-        top: 0;
-    }
-    .carousel-inner > .next,
-    .carousel-inner > .prev {
-        top: 0;
-        height: 100%;
-        width: auto;
-    }
-    .carousel-inner > .next {
-        left: 0;
-        top: 33.33%;
-        right:0;
-    }
-    .carousel-inner > .prev {
-        left: 0;
-        top: -33.33%;
-        right:0;
-    }
-    .carousel-inner > .next.left,
-    .carousel-inner > .prev.right {
-        top: 0;
-    }
-    .carousel-inner > .active.left {
-        left: 0;
-        top: -33.33%;
-        right:0;
-    }
-    .carousel-inner > .active.right {
-        left: 0;
-        top: 33.33%;
-        right:0;
-    }
-
-    #carousel-pager .carousel-control.left {
-        bottom: initial;
-        width: 100%;
-    }
-    #carousel-pager .carousel-control.right {
-        top: initial;
-        width: 100%;
-    }
-    div#carousel-pager {
-        width: 15%;
-        background: #eee;
-        height: 100%;
-        display: inline-block;
-        left: 0;
-        padding: 24px;
-        text-align: center;
-        margin-top: 20px;
-        overflow-y: scroll;
-        float: left;
-    }
-    .inner {
-        margin-bottom: 20px !important;
-    }
-    .thumbnail {
-        margin-bottom: 5px;
-    }
-    .canvas {
-        background-color: #696565;
-        width: 82.9%;
-        /*width: 82.9%;
-        padding-top: 15px !important;
-        padding-top: 30px !important;
-        width: calc(100% - 230px);*/
-    }
-    #cropboard {
-        position: absolute;
-        top: 35px !important;
-    }
-    .cropheader {
-        padding-right: 15px;
-    }
-    ./*cropheader {
-        top: -20px !important;
-    }*/
-    .visHide{
-        visibility : hidden;
-    }
-    .toggle-bar {
-        width: 1%;
-        background: #eee;
-        height: 100%;
-        float: left;
-        display: table;
-    }
-    .toggle-bar span{
-        display: table-cell;
-        vertical-align: middle;
-        margin: 0 auto;
-        width: 75%;
-    }
-
-    .cropper-container {
-        position: absolute;
-        top: 35px !important;
-    }
-    .fullView {
-        width: 97.9%;
-    }
-    .carousel-item{
-        display:block !important
-    }
-    .splitBtndiv{
-        float:left;
-    }
-    .active_btn_split {
-        background: #aa1d1f !important;
-        color: #fff !important;
-    }
-    #txt_split{
-        position: absolute;
-        height: 40px !important;
-        width: 150px;
-        background: #fff;
-        box-shadow: none;
-    }
-
-    /* Scrollbar css */
-    ::-webkit-scrollbar {
-        width: 10px;
-        border-radius:10px;
-    }
-
-    /* Track */
-    ::-webkit-scrollbar-track {
-        background: #f1f1f1; 
-    }
-
-    /* Handle */
-    ::-webkit-scrollbar-thumb {
-        background: #9e9e9e; 
-        border-radius:30px;
-    }
-
-    /* Handle on hover */
-    ::-webkit-scrollbar-thumb:hover {
-        background: #555; 
-    }
-
-    .cropb_header_btn button{
-        background : #fff;
-    }
-    .thumb-active .thumbnail {
-        border: 1.2px solid #7e7eff;
-    }
-    @media only screen and (max-width: 991px) {
-        .canvas {
-            width: 81.9%;
-        }
-    }
-    @media only screen and (max-width: 768px) {
-        div#carousel-pager{
-            display:none;
-        }
-        .toggle-bar{
-            display:none;
-        }
-    }
 </style>
 <script>
-    $('#btn_split').click(function () {
-        $(this).toggleClass('active_btn_split');
-        $('#txt_split').toggle(500);
-    });
-
-    $('.toggle-bar').click(function () {
-        $('#carousel-pager').toggle();
-        $('.canvas').toggleClass('fullView');
-        $('.hideShow').toggleClass('glyphicon-chevron-right').toggleClass('glyphicon-chevron-left');
-    });
-
-    function loadVerticalSliderJS() {
-        $('.carousel-item').first().addClass('active');
-
-        $('.carousel .vertical .item').click(function () {
-            $('.thumb-active').toggleClass('thumb-active');
-            $(this).addClass('thumb-active');
-        });
-    }
-
+    global_data.referral_form_use = "<?= $this->session->userdata("referral_form_use"); ?>";
     function set_row3(id, fax, tif_file_name, pdf_file_name, row) {
         $(row).attr("data-id", id);
         $(row).addClass("clinic_patients_row");
@@ -446,7 +222,7 @@
 
 
     function get_first_page_from_tif(url) {
-        console.log(url);
+
         var xhr = new XMLHttpRequest();
         xhr.onload = function () {
             var reader = new FileReader();
@@ -466,163 +242,12 @@
         xhr.send();
     }
 
-    global_data.slider_images = [];
-
-    function get_slider_images(url, page) {
-        var xhr = new XMLHttpRequest();
-        xhr.onload = function () {
-            var reader = new FileReader();
-            reader.onload = function (e) {
-                var image = new Tiff({
-                    buffer: e.target.result
-                });
-                pages = image.countDirectory();
-                slider_html = "";
-                slider_template = $("#templates").find("#template_slider").html();
-                for (i = 0; i < pages; i++) {
-                    image.setDirectory(i);
-                    temp_canvas = image.toCanvas();
-                    slider = slider_template;
-                    slider = slider.replace(/###img_src###/g, temp_canvas.toDataURL());
-                    slider = slider.replace(/##current##/g, (i));
-                    slider = slider.replace(/###number###/g, (i + 1));
-                    slider_html += slider;
-                    global_data.slider_images.push(temp_canvas);
-                }
-                $("#slider_container").html(slider_html);
-                loadVerticalSliderJS();
-                //now get doc type
-                //check if serer have saved doc types
-                form = $("#sample_form");
-                form.find("#id").val(global_data.efax_id);
-
-                $.post({
-                    url: base + "inbox/check_slider_saved",
-                    data: form.serialize()
-                }).success(function (response) {
-                    response = JSON.parse(response);
-
-                    if (response.result === "success") {
-                        if (response.saved === "yes") {
-                            console.log("got saved docs");
-                            data = response.data;
-
-                            for (i = 0; i < data.length; i++) {
-                                if (data[i].success === "true") {
-                                    $("#slider_" + (parseInt(data[i].counter) + 1)).text(data[i].output);
-                                } else {
-                                    $("#slider_" + (parseInt(data[i].counter) + 1)).text("");
-                                }
-                            }
-                        } else if (response.saved === "no") {
-                            console.log("get custom doc");
-                            global_data.slider_ajax_counter = 0;
-                            get_doc_types();
-                        }
-                    } else {
-                        console.log("get custom doc");
-                        global_data.slider_ajax_counter = 0;
-                        get_doc_types();
-                    }
-                }).error(function () {
-                    $("#btn_save_task").button("reset");
-                    error("Patient record not saved");
-                });
-
-            };
-            reader.readAsArrayBuffer(xhr.response);
-        };
-        xhr.open('GET', url);
-        xhr.responseType = 'blob';
-        xhr.send();
-    }
-
-    function save_slider_response(efax_id, counter, output, success) {
-        form = $("#sample_form");
-        form.find("#id").val(efax_id);
-        form.find("#target").val(counter);
-        form.find("#param").val(output);
-        form.find("#param2").val(success);
-        $.post({
-            url: base + "inbox/save_slider_response",
-            data: form.serialize()
-        }).success(function (response) {
-            console.log(response);
-        }).error(function () {
-            $("#btn_save_task").button("reset");
-            error("Patient record not saved");
-        });
-    }
-
-    global_data.slider_ajax_counter = 0;
-
-    function get_doc_types() {
-        images = global_data.slider_images;
-        console.log("on doc call " + global_data.slider_ajax_counter + " images len = " + images.length);
-        if (global_data.slider_ajax_counter < images.length) {
-            canvas = images[global_data.slider_ajax_counter];
-            canvas.toBlob(function (blob) {
-                var formData = new FormData();
-                formData.append('file', blob);
-                console.log("sending ajax for " + global_data.slider_ajax_counter);
-                $.ajax("http://165.227.45.30/doc-classifier", {
-                    method: 'POST',
-                    data: formData,
-                    processData: false,
-                    contentType: false,
-                    success: function (response) {
-
-                        //save it in db
-                        save_slider_response(global_data.efax_id,
-                                global_data.slider_ajax_counter,
-                                response.output,
-                                response.success);
-
-                        console.log("output for" + global_data.slider_ajax_counter + "=>");
-                        console.log(response);
-                        if (response.success === true) {
-                            $("#slider_" + (global_data.slider_ajax_counter + 1)).text(response.output);
-                        } else {
-                            $("#slider_" + (global_data.slider_ajax_counter + 1)).text("result = false");
-                        }
-                    },
-                    error: function (response) {
-                        console.log("error");
-                        console.log(response);
-                        uploadingFile = false;
-                    },
-                    complete: function (response) {
-//                        uploadingFile = false;
-                        console.log("got response for " + global_data.slider_ajax_counter);
-                        setTimeout(function () {
-                            global_data.slider_ajax_counter += 1;
-                            //get next image
-                            images = global_data.slider_images;
-                            if (global_data.slider_ajax_counter < images.length) {
-                                get_doc_types();
-                            } else {
-                                console.log("all requests completed");
-                            }
-                        }, 100);
-
-                    }
-
-                });
-            });
-        } else {
-            global_data.slider_ajax_counter = 0;
-        }
-    }
-
 
     function open_efax(id, tiff_file_name, pdf_file_name, date, time, fax) {
-
-
         if (cropper !== null) {
             cropper.destroy();
             cropper_activated = false;
         }
-
         if (typeof $("#eFax-modal").find("form")[0] !== "undefined") {
             $("#eFax-modal").find("form")[0].reset();
         }
@@ -671,13 +296,7 @@
         setTimeout(function () {
             init(global_data.tif_file);
         }, 100);
-
-        //slider
-        global_data.slider_images = [];
-        $("#slider_container").html("");
-        get_slider_images(global_data.tif_file);
     }
-
     function get_referral_checklist() {
         url = base + "inbox/get_referral_checklist";
         $.post({
@@ -900,6 +519,79 @@
         });
     }
 
+    function get_clinic_referral_usage_forms() {
+        $("#container_form_usage_yes").show();
+        $("#container_form_usage_no").hide();
+
+        url = base + "inbox/get_clinic_referral_usage_form1";
+        $.post({
+            url: url,
+            data: $("#sample_form").serialize()
+        }).done(function (response) {
+            if (IsJsonString(response)) {
+                response = JSON.parse(response);
+                if (response.result === "success") {
+                    data = response.data;
+                    //patient location
+                    options = "";
+                    data.forEach(function (value, index) {
+                        options += "<option value='" + value.id + "'>" + value.form_name + "</option>";
+                    });
+                    $("#signupForm").find("#referral_form_type").html(options);
+                    get_clinic_referral_usage_subsection();
+                } else {
+                    error("Error getting referral usage form");
+                }
+            } else {
+                error("Error getting referral usage form");
+            }
+        });
+    }
+
+    function get_clinic_referral_usage_subsection() {
+        id = $("#signupForm").find("#referral_form_type").val();
+        url = base + "inbox/get_clinic_referral_usage_subsection";
+        $("#sample_form").find("#id").val(id);
+        $.post({
+            url: url,
+            data: $("#sample_form").serialize()
+        }).done(function (response) {
+            if (IsJsonString(response)) {
+                response = JSON.parse(response);
+                if (response.result === "success") {
+                    data = response.data;
+//                    console.log(data);
+                    template_title = $("#templates").find("#clinic_triage_title").html();
+                    template_checkbox = $("#templates").find("#template_subsection_checkbox").html();
+                    let html = "";
+                    data.forEach(function (form2, index) {
+                        let str_checkboxes = "";
+                        checkboxes = form2.checkboxes;
+                        checkboxes.forEach(function (form3, index) {
+                            template_form3 = template_checkbox;
+                            template_form3 = template_form3.replace(/###id###/g, form3.id);
+                            template_form3 = template_form3.replace(/###item_name###/g, form3.form_name);
+                            str_checkboxes += template_form3;
+                        });
+
+                        let str_title = template_title;
+                        str_title = str_title.replace(/###title_text###/g, form2.label);
+                        str_title = str_title.replace(/###checkboxes###/g, str_checkboxes);
+
+                        html += str_title;
+                    });
+
+                    $("#signupForm").find("#referral_form_subsection").html(html);
+                } else {
+                    error("Error getting referral usage subsection");
+                }
+            } else {
+                error("Error getting referral usage subsection");
+            }
+        });
+    }
+
+
     function get_location_and_custom() {
         url = base + "referral/get_location_and_custom";
         $.post({
@@ -936,103 +628,31 @@
         });
     }
 
-    function fill_physician_info(physician_id) {
-
-        let form = $("#sample_form");
-        form.find("#id").val(physician_id);
-
-        $.post({
-            url: base + "inbox/get_fill_physician_details",
-            data: form.serialize()
-        }).success(function (response) {
-            if (IsJsonString(response)) {
-                response = JSON.parse(response);
-                if (response.result === "success") {
-                    data = response.data;
-                    form = $("#signupForm");
-                    form.find("#dr_fname").val(data.FIRST_NAME);
-                    form.find("#dr_lname").val(data.LAST_NAME);
-                    form.find("#dr_phone_number").val(data.PHONE_1);
-                    form.find("#dr_fax").val(data.FAX_1);
-                    form.find("#dr_geocomplete").val(data.ADDRESS_1);
-                } else {
-                    error(response.msg);
-                }
-            } else {
-                error("Patient record not saved");
-            }
-        }).error(function () {
-//            $("#btn_save_task").button("reset");
-            error("Internal server error");
-        });
-    }
-
     $(document).ready(function () {
 
-        $("#txt_physician_search").autocomplete({
-            source: base + "inbox/search_physician",
-            minLength: 2,
-            select: function (event, ui) {
-                event.preventDefault();
-                fill_physician_info(ui.item.value);
-            }
-        });
-
-        $("#btn_split").on("click", function () {
-            let split_text = $("#txt_split").val();
-            let efax_id = global_data.efax_id;
-
-            let form = $("#sample_form");
-            form.find("#id").val(efax_id);
-            form.find("#target").val(split_text);
-
-            $.post({
-                url: base + "inbox/perform_fax_split",
-                data: form.serialize()
-            }).success(function (response) {
-                console.log(response);
-//                $("#btn_save_task").button("reset");
-
-//                if (IsJsonString(response)) {
-//                    response = JSON.parse(response);
-//                    if (response.result == "success") {
-//                        global_data.table_inbox.ajax.reload();
-//                        get_latest_dashboard_counts();
-//                        // success("Patient record saved successfully");
-//                        $("#patient_success_display").show("slow");
-//
-//                        $("#btn_save_task").button("reset");
-//                        $("#eFax-modal").modal("hide");
-//
-//                    } else {
-//                        error(response.msg);
-//                    }
-//                } else {
-//                    error("Patient record not saved");
-//                }
-            }).error(function () {
-                $("#btn_save_task").button("reset");
-                error("Patient record not saved");
-            });
-
-        });
-
-        $('#carousel-pager').bind('mousewheel', function (e) {
-            //if (e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
-            if (e.originalEvent.wheelDelta / 120 > 0) {
-                $(this).carousel('prev');
-            } else {
-                $(this).carousel('next');
-            }
-
-        });
         get_referral_checklist();
         get_physician_list_save_patient();
         get_patient_list_save_patient();
         get_location_and_custom();
         get_clinic_physicians();
+        if (global_data.referral_form_use === "yes") {
+//            get_clinic_referral_usage_forms();
+        }
 
         $("#li_inbox").addClass("active");
+
+        $("#signupForm").find("#referral_form_type").on("change", function () {
+//            get_clinic_referral_usage_subsection();
+              if($(this).val() === "1") {
+                  $("#subsection2").hide();
+                  $("#subsection1").show();
+              }
+              else if($(this).val() === "2"){
+                  $("#subsection1").hide();
+                  $("#subsection2").show();
+              }
+        });
+
         $("#btn_view_print_referral").on("click", function () {
             printJS(global_data.pdf_file + ".pdf");
         });
@@ -1096,6 +716,11 @@
                 createCropper();
             }
             $(".toolbar").show();
+        });
+        
+        
+        $(".btn_add_dummy").on("click", function() {
+            $(this).closest(".add_wrapper").find(".inside_wrapper").toggle();
         });
 
         $("#save-patient-wrapper").find("#btn_extract_patient").on("click", function () {
@@ -2080,6 +1705,7 @@
                 var formData = new FormData();
                 formData.append('file', blob);
                 formData.append('blockhealth_validation_token', $("#sample_form").find("input[name='blockhealth_validation_token']").val());
+
                 // global_data.api_phy_extract = "running";
                 $("#btn_extract_physician").button("loading");
                 // $.ajax('http://159.89.127.142/phy_extract', {
