@@ -403,6 +403,12 @@
                                 </div>
                                 <div class="form-group left-padd-20px right-padd-5px">
                                     <h4 class="modal-title" id="myModalLabel">Add Physician Details</h4>
+
+                                    <div class="db-nav-search">
+                                        <i class="fa fa-search"></i>
+                                        <input type="text" placeholder="Search..." class="db-nav-search-input ui-autocomplete-input" id="txt_physician_search" autocomplete="off">
+                                    </div>
+                                    
                                     <div class="alert alert-danger" id="physician_error" style="display: none;"></div>
                                     <div class="alert alert-success" id="physician_success" style="display: none;"></div>
                                     <div class="form-group row">
@@ -1374,20 +1380,45 @@
                         <img src="" id="overlay_image" class="ov_image_close" style="display: none; " />
                         <div class="container-fluid image-viewer-height">
                             <div class="editor">
+
+
+                                <div id="carousel-pager" class="carousel" data-ride="carousel" data-interval="false" data-wrap="false">
+                                    <!-- Carousel items -->
+                                    <div id="slider_container" class="carousel-inner vertical">
+
+                                    </div>
+                                </div>
+
+
+                                <div class="toggle-bar">
+                                    <span>
+                                        <span class="glyphicon hideShow glyphicon-chevron-left" aria-hidden="true"></span>
+                                        <span class="sr-only">Hide/Show</span>
+                                    </span>
+                                </div>
+
                                 <div class="canvas">
                                     <img id="cropboard" src="#" alt="Picture">
                                 </div>
                                 <img id="_blob" src="#" alt="test" class="hidden">
                                 <div class="cropheader">
-                                    <label  id ="currentPage" class="pageInf"></label>
-                                    <label  id ="clippedData" class="pageInf"></label>
-
-                                    <div class="btn-group" role="group" style="float:left;">
+                                    <div class="splitBtndiv cropb_header_btn">
+                                        <button data-loading-text="<i class='fa fa-circle-o-notch fa-spin'></i> Loading..." class="btn btn-secondary" id="btn_split">
+                                            Split
+                                        </button>
+                                        <input type="text" class="form-control" name="txt_split" id="txt_split" placeholder="Split criteria" autocomplete="off" style="display: none;">
+                                    </div>
+                                    <div class="btn-group cropb_header_btn" role="group" style="float:left;">
                                         <button id="btnPrevPage" type="button" class="btn btn-secondary" title="Prev Page"><span class="glyphicon glyphicon-menu-left"></span></button>
                                         <button id="btnNextPage" type="button" class="btn btn-secondary" title="Next Page"><span class="glyphicon glyphicon-menu-right"></span></button>
                                     </div>
+                                    <label  id ="currentPage" class="pageInf"></label>
+                                    <label  id ="clippedData" class="pageInf"></label>
 
-                                    <div class="btn-group" role="group" style="float:right;">
+                                    <div class="btn-group cropb_header_btn" role="group" style="float:right;">
+                                        <button type="button" class="btn btn-secondary topbar_button" data-action="move" title="Move"><span class="fa fa-arrows"></span></button>
+                                        <button type="button" class="btn btn-secondary topbar_button" data-action="zoom-in" title="Zoom In"><span class="fa fa-search-plus"></span></button>
+                                        <button type="button" class="btn btn-secondary topbar_button" data-action="zoom-out" title="Zoom Out"><span class="fa fa-search-minus"></span></button>
                                         <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-left" title="Rotate Left"><span class="fa fa-rotate-left"></span></button>
                                         <button type="button" class="btn btn-secondary topbar_button" data-action="rotate-right" title="Rotate Right"><span class="fa fa-rotate-right"></span></button>
                                     </div>
@@ -1496,6 +1527,17 @@
                 <div>
                     ###checkboxes###
                 </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="template_slider">
+        <div class="carousel-item item" page="##current##">
+            <div class="inner">
+                <a href="javascript:mainSlider(##current##)" class="thumbnail">
+                    <img src="###img_src###" class="img-responsive page-slider-image" data-target="#carousel-main" data-slide-to="##current##">
+                </a>
+                <span id="slider_###number###"></span>
             </div>
         </div>
     </div>
