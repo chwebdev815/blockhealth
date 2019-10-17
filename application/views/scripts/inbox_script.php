@@ -619,10 +619,13 @@
 
 
     function open_efax(id, tiff_file_name, pdf_file_name, date, time, fax) {
+
+
         if (cropper !== null) {
             cropper.destroy();
             cropper_activated = false;
         }
+
         if (typeof $("#eFax-modal").find("form")[0] !== "undefined") {
             $("#eFax-modal").find("form")[0].reset();
         }

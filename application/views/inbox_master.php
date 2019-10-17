@@ -26,6 +26,9 @@
     .mb-7 {
         margin-bottom: 7px !important;
     }
+    .search_container{
+        margin-bottom:20px;
+    }
 </style>
 
 <!-- <button class="popup2_open">Click me 2!</button>
@@ -404,7 +407,7 @@
                                 <div class="form-group left-padd-20px right-padd-5px">
                                     <h4 class="modal-title" id="myModalLabel">Add Physician Details</h4>
 
-                                    <div class="db-nav-search">
+                                    <div class="db-nav-search search_container">
                                         <i class="fa fa-search"></i>
                                         <input type="text" placeholder="Search..." class="db-nav-search-input ui-autocomplete-input" id="txt_physician_search" autocomplete="off">
                                     </div>
@@ -517,6 +520,7 @@
                                         </div>
                                     </div>
                                 </div>
+
 
                                 <div class="form-group row">
                                     <div class="col-lg-12 cl-t-listing wrapper_div">
@@ -1508,6 +1512,20 @@
 
 <script src="https://cdn.jsdelivr.net/gh/vast-engineering/jquery-popup-overlay@2/jquery.popupoverlay.min.js"></script>
 
+
+<script>
+    $('#popup2, #popup3').popup({
+        pagecontainer: '#page',
+        type: 'tooltip',
+        background: true,
+        color: '#fff',
+        escape: true,
+        horizontal: 'left',
+        vertical: 'middle'
+
+    });
+</script>	
+
 <div id="templates" class="hidden">
     <div id="template_subsection_checkbox">
         <div class="checkbox">
@@ -1542,16 +1560,3 @@
         </div>
     </div>
 </div>
-
-<script>
-    $('#popup2, #popup3').popup({
-        pagecontainer: '#page',
-        type: 'tooltip',
-        background: true,
-        color: '#fff',
-        escape: true,
-        horizontal: 'left',
-        vertical: 'middle'
-
-    });
-</script>	
