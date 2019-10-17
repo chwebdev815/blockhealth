@@ -269,6 +269,7 @@
             <input type="hidden" name="id" id="id"/>
             <input type="hidden" name="target" id="target"/>
             <input type="hidden" name="param" id="param"/>
+            <input type="hidden" name="param2" id="param2"/>
             <?php echo form_close(); ?>
         </div>
         <div class="db-content bg-white">
