@@ -100,7 +100,7 @@ function createCropper() {
     cropper_activated = true;
 }
 function updatePageButton(index) {
-    console.log("method updatePageButton called");
+    console.log("method updatePageButton called"+index);
     // debugger
     if (index == 0)
         $('#btnPrevPage').attr('disabled', 'disabled');
@@ -111,6 +111,8 @@ function updatePageButton(index) {
     else
         $('#btnNextPage').removeAttr('disabled');
     $('#currentPage').text("Page: " + (current + 1) + " / " + fileList.length);
+    $('.thumb-active').toggleClass('thumb-active');
+    $(".carousel-item[page="+current+"]").addClass("thumb-active");
 }
 function updateCropBoard(index) {
     console.log("method updateCropBoard called");
@@ -160,6 +162,16 @@ function fileUpload(data) {
         setTimeout(function () {
             global_data.showing_overlay = false;
         }, 2000);
+
+        //debugger
+        console.log("downloding should have started");
+        let dt = canvas.toDataURL('image/png'); //to download image
+        console.log(dt);
+        global_data.dt = dt;
+        $('body').append('<a id="link" href="'+dt+'">&nbsp;</a>');
+        $('#link')[0].click();
+        console.log("downloding should have started");
+
 
         imageObj.attr('src', canvas.toDataURL());
         imageObj.css('width', canvas.width + 'px');
@@ -682,7 +694,31 @@ function check_rotate_cropbox() {
     }
 }
 
+function mainSlider(current_index)
+{   
+    current=current_index;
+        $(".toolbar").hide();
+        if (current < 0) {
+            current = 0;
+            return;
+        }
+        if (cropper_activated) {
+            global_data.crop_data = cropper.getCropBoxData();
+            global_data.crop_rotate = cropper.getData().rotate;
+        }
+        set_load_tiff_page(current);
+        updatePageButton(current);
+}
+
 $(document).ready(function () {
+    $("#btnStartCrop,#btnStartCrop2").on("click", function () {
+        console.log("method btnStartCrop click from cropboradjs");
+        cropper.destroy();
+        createCropper();
+        drag_mode = 'crop';
+        activeAutoFillButton(true);
+        cropper.setDragMode('crop');
+    });
 
     $('#btnAutoFill').on('click', function () {
         console.log("method btnAutoFill click");
@@ -773,6 +809,27 @@ $(document).ready(function () {
                     check_rotate_cropbox();
                     cropper.rotate(90);
                     break;
+                case 'move':
+                    {
+                        if (!cropper)
+                            break;
+                        drag_mode = 'move';
+                        activeAutoFillButton(false);
+                        cropper.setDragMode(action);
+                        break;
+            }
+                    case 'zoom-in':
+                        if (!cropper)
+                            break;
+                        cropper.zoom(0.1);
+                        cropper.moveTo('auto',0);
+                        break;
+                    case 'zoom-out':
+                        if (!cropper)
+                            break;
+                        cropper.zoom(-0.1);
+                        cropper.moveTo('auto',0);
+                        break;
             }
         }, 300);
 
@@ -795,6 +852,8 @@ $(document).ready(function () {
             {
                 if (!cropper)
                     break;
+                    cropper.destroy();
+                    createCropper();
                 drag_mode = 'crop';
                 activeAutoFillButton(true);
                 cropper.setDragMode(action);
@@ -804,11 +863,13 @@ $(document).ready(function () {
                 if (!cropper)
                     break;
                 cropper.zoom(0.1);
+                cropper.moveTo('auto',0);
                 break;
             case 'zoom-out':
                 if (!cropper)
                     break;
                 cropper.zoom(-0.1);
+                cropper.moveTo('auto',0);
                 break;
             case 'rotate-left':
                 cropper.rotate(-90);
