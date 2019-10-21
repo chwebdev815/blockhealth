@@ -1916,7 +1916,8 @@ class Inbox_model extends CI_Model {
                     'pdf' => $output
                 );
 
-                $api_url = $this->config->item("PREDICTION_URL") . "/Doc-split";
+//                $api_url = $this->config->item("PREDICTION_URL") . "/Doc-split";
+                $api_url = "http://165.227.45.30/Doc-split";
 
                 log_message("error", "api = $api_url ");
 
