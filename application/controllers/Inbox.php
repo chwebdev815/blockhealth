@@ -301,6 +301,18 @@ class Inbox extends CI_Controller {
         echo json_encode($response);
     }
 
+    public function clear_old_docs() {
+        if (clinic_login()) {
+            $this->load->model("inbox_model");
+            $response = $this->inbox_model->clear_old_docs_model();
+        } else {
+            $response = session_expired();
+        }
+        echo json_encode($response);
+    }
+    
+    
+
     public function check_slider_saved() {
         if (clinic_login()) {
             $this->load->model("inbox_model");

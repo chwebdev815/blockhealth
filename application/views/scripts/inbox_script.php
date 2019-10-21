@@ -389,7 +389,7 @@
 </style>
 <script>
     global_data.referral_form_use = "<?= $this->session->userdata("referral_form_use"); ?>";
-    
+
     $('#btn_split').click(function () {
         if ($(this).hasClass("active_btn_split")) {
             let split_text = $("#txt_split").val();
@@ -546,17 +546,24 @@
 
                     if (response.result === "success") {
                         if (response.saved === "yes") {
-                            console.log("got saved docs");
-                            data = response.data;
+                            if (response.data.length < fileList.length) {
+                                clear_old_docs();
+                                console.log("get custom doc");
+                                global_data.slider_ajax_counter = 0;
+                                get_doc_types();
+                            } else {
+                                console.log("got saved docs");
+                                data = response.data;
 
-                            for (i = 0; i < data.length; i++) {
-                                if (data[i].success === "true") {
-                                    $("#slider_" + (parseInt(data[i].counter) + 1)).text(data[i].output);
-                                } else {
-                                    $("#slider_" + (parseInt(data[i].counter) + 1)).text("");
+                                for (i = 0; i < data.length; i++) {
+                                    if (data[i].success === "true") {
+                                        $("#slider_" + (parseInt(data[i].counter) + 1)).text(data[i].output);
+                                    } else {
+                                        $("#slider_" + (parseInt(data[i].counter) + 1)).text("");
+                                    }
                                 }
                             }
-                        } else if (response.saved === "no") {
+                        } else {
                             console.log("get custom doc");
                             global_data.slider_ajax_counter = 0;
                             get_doc_types();
@@ -577,6 +584,19 @@
         xhr.open('GET', url);
         xhr.responseType = 'blob';
         xhr.send();
+    }
+    
+    function clear_old_docs() {
+        form = $("#sample_form");
+        form.find("#id").val(global_data.efax_id);
+        $.post({
+            url: base + "inbox/clear_old_docs",
+            data: form.serialize()
+        }).success(function (response) {
+            console.log(response);
+        }).error(function () {
+            console.log("error clear_old_docs");
+        });
     }
 
     function save_slider_response(efax_id, counter, output, success) {
@@ -1116,12 +1136,12 @@
         $("#signupForm").find("#referral_form_type").on("change", function () {
 //            get_clinic_referral_usage_subsection();
             if ($(this).val() === "1") {
-                  $("#subsection2").hide();
-                  $("#subsection1").show();
+                $("#subsection2").hide();
+                $("#subsection1").show();
             } else if ($(this).val() === "2") {
-                  $("#subsection1").hide();
-                  $("#subsection2").show();
-              }
+                $("#subsection1").hide();
+                $("#subsection2").show();
+            }
         });
 
         $("#btn_view_print_referral").on("click", function () {
@@ -1188,8 +1208,8 @@
             }
             $(".toolbar").show();
         });
-        
-        
+
+
         $(".btn_add_dummy").on("click", function () {
             $(this).closest(".add_wrapper").find(".inside_wrapper").toggle();
         });

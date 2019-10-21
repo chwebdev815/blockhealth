@@ -2172,4 +2172,32 @@ class Inbox_model extends CI_Model {
         }
     }
 
+    public function clear_old_docs_model() {
+
+        $this->form_validation->set_rules('id', 'Efax Id', 'required');
+        if ($this->form_validation->run()) {
+            $data = $this->input->post();
+
+            $saved = $this->db->where(array(
+                        "md5(efax_id)" => $data["id"]
+                    ))->update("inbox_slider_doc_type", array(
+                "active" => 0
+            ));
+
+            if ($saved) {
+                return array(
+                    "result" => "success",
+                    "message" => "Cleared Successfully"
+                );
+            } else {
+                return array(
+                    "result" => "error",
+                    "message" => "Failed to clear"
+                );
+            }
+        } else {
+            return validation_errors();
+        }
+    }
+
 }
