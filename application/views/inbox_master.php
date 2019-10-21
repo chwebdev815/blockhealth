@@ -863,7 +863,7 @@
                                 <div id="subsection2" style="display:none">
                                     <div class="form-group row">
                                         <div class="col-lg-12 wrapper_div">
-                                            <strong>Cardiac Consult</strong>
+                                            <strong>Brain</strong>
                                             <div>
 
                                                 <div class="checkbox">
