@@ -872,7 +872,7 @@
                                                         <span class="cr">
                                                             <i class="cr-icon fa fa-check"></i>
                                                         </span>
-                                                        Brain
+                                                        Routine Brain
                                                     </label>
                                                 </div>
 
