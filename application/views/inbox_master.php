@@ -70,6 +70,28 @@
     </table>
 </div>
 
+
+
+<div id="modal_confirm_split" class="modal fade" role="dialog" style="z-index: 2056 !important;">
+    <div class="modal-dialog modal-md">
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Confirm Fax Split</h4>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger">
+                    Are you sure you would like to split this fax?
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" id="btn_confirm_split_fax" class="btn btn-theme btn-alt-theme" data-dismiss="modal">Confirm Split</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div id="modal_delete_referral" class="modal fade" role="dialog" style="z-index: 2056 !important;">
     <div class="modal-dialog modal-md">
         <!-- Modal content-->

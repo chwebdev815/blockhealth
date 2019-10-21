@@ -391,8 +391,48 @@
     global_data.referral_form_use = "<?= $this->session->userdata("referral_form_use"); ?>";
     
     $('#btn_split').click(function () {
+        if ($(this).hasClass("active_btn_split")) {
+            let split_text = $("#txt_split").val();
+            if (split_text !== "") {
+                global_data.split_text = split_text;
+                view("modal_confirm_split");
+            }
+        }
+
         $(this).toggleClass('active_btn_split');
         $('#txt_split').toggle(500);
+    });
+
+    $("#btn_confirm_split_fax").on("click", function () {
+        let split_text = global_data.split_text;
+        let efax_id = global_data.efax_id;
+        let form = $("#sample_form");
+
+        form.find("#id").val(efax_id);
+        form.find("#target").val(split_text);
+
+        $.post({
+            url: base + "inbox/perform_fax_split",
+            data: form.serialize()
+        }).success(function (response) {
+            console.log(response);
+//            debugger
+            if (IsJsonString(response)) {
+                response = JSON.parse(response);
+                if (response.result === "success") {
+                    success("Fax successfully splitted");
+                    setTimeout(function () {
+                        location.reload();
+                    }, 1500);
+                } else {
+                    error(response.message);
+                }
+            } else {
+                error("Failed to split fax");
+            }
+        }).error(function () {
+            error("Failed to split fax");
+        });
     });
 
     $('.toggle-bar').click(function () {
@@ -551,8 +591,7 @@
         }).success(function (response) {
             console.log(response);
         }).error(function () {
-            $("#btn_save_task").button("reset");
-            error("Patient record not saved");
+            console.log("error saving slider data");
         });
     }
 
@@ -1054,45 +1093,6 @@
             }
         });
 
-        $("#btn_split").on("click", function () {
-            let split_text = $("#txt_split").val();
-            let efax_id = global_data.efax_id;
-
-            let form = $("#sample_form");
-            form.find("#id").val(efax_id);
-            form.find("#target").val(split_text);
-
-            $.post({
-                url: base + "inbox/perform_fax_split",
-                data: form.serialize()
-            }).success(function (response) {
-                console.log(response);
-//                $("#btn_save_task").button("reset");
-
-//                if (IsJsonString(response)) {
-//                    response = JSON.parse(response);
-//                    if (response.result == "success") {
-//                        global_data.table_inbox.ajax.reload();
-//                        get_latest_dashboard_counts();
-//                        // success("Patient record saved successfully");
-//                        $("#patient_success_display").show("slow");
-//
-//                        $("#btn_save_task").button("reset");
-//                        $("#eFax-modal").modal("hide");
-//
-//                    } else {
-//                        error(response.msg);
-//                    }
-//                } else {
-//                    error("Patient record not saved");
-//                }
-            }).error(function () {
-                $("#btn_save_task").button("reset");
-                error("Patient record not saved");
-            });
-
-        });
-
         $('#carousel-pager').bind('mousewheel', function (e) {
             //if (e.originalEvent.wheelDelta > 0 || e.originalEvent.detail < 0) {
             if (e.originalEvent.wheelDelta / 120 > 0) {
@@ -1115,11 +1115,10 @@
 
         $("#signupForm").find("#referral_form_type").on("change", function () {
 //            get_clinic_referral_usage_subsection();
-              if($(this).val() === "1") {
+            if ($(this).val() === "1") {
                   $("#subsection2").hide();
                   $("#subsection1").show();
-              }
-              else if($(this).val() === "2"){
+            } else if ($(this).val() === "2") {
                   $("#subsection1").hide();
                   $("#subsection2").show();
               }
@@ -1191,7 +1190,7 @@
         });
         
         
-        $(".btn_add_dummy").on("click", function() {
+        $(".btn_add_dummy").on("click", function () {
             $(this).closest(".add_wrapper").find(".inside_wrapper").toggle();
         });
 

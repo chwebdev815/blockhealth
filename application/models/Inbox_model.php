@@ -2,7 +2,6 @@
 
 class Inbox_model extends CI_Model {
 
-
     public function ssp_inbox_model() {
         $table = "inbox_dash";
         $primaryKey = "id";
@@ -1189,6 +1188,7 @@ class Inbox_model extends CI_Model {
         } else
             return validation_errors();
     }
+
     public function doc_classifier_model() {
         $api_url = $this->config->item("PREDICTION_URL") . "/doc-classifier";
         
@@ -1886,8 +1886,6 @@ class Inbox_model extends CI_Model {
         }
     }
 
-
-    
     public function perform_fax_split_model() {
         $this->form_validation->set_rules('id', 'Efax Id', 'required');
         $this->form_validation->set_rules('target', 'Split Text', 'required');
@@ -1904,24 +1902,145 @@ class Inbox_model extends CI_Model {
 
             if ($record) {
                 $record = $record[0];
-                $tiff_path = BASEPATH . "uploads/efax_tiff/" . $record->tiff_file_name . ".tiff";
-                $pdf_path = BASEPATH . "uploads/efax/" . $record->pdf_file_name;
-                $python_file = APPPATH . "libraries/fax_split/main.py";
+                $tiff_path = "./uploads/efax_tiff/" . $record->tiff_file_name;
+                $pdf_path = "./uploads/efax/" . $record->pdf_file_name . ".pdf";
+                $param = $data["target"];
 
-                log_message("error", "tiff = $tiff_path");
-                log_message("error", "pdf = $pdf_path ");
-                log_message("error", "python = $python_file");
-                //sudo -u root -S 
-                $command = "python $python_file -p $pdf_path -param 1,3-5,7";
-                $result = system($command);
+                $mime = mime_content_type($pdf_path);
+                $info = pathinfo($pdf_path);
+                $name = $info['basename'];
+                $output = new CURLFile($pdf_path, $mime, $name);
 
-                log_message("error", "command = " . $command);
-                log_message("error", "output of fax split = " . json_encode($result));
-
-                return array(
-                    "result" => "success",
-                    "output" => $result
+                $pdf_data = array(
+                    "param" => $param,
+                    'pdf' => $output
                 );
+
+                $api_url = $this->config->item("PREDICTION_URL") . "/Doc-split";
+
+                log_message("error", "api = $api_url ");
+
+                $headers = array();
+                $headers[] = 'Content-Type: multipart/form-data';
+
+                $ch = curl_init();
+                curl_setopt($ch, CURLOPT_URL, $api_url);
+                curl_setopt($ch, CURLOPT_POST, 1);
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                curl_setopt($ch, CURLOPT_POSTFIELDS, $pdf_data);
+
+                $response1 = curl_exec($ch);
+                if (curl_errno($ch)) {
+                    log_message("error", "split 1 curl error : " . curl_error($ch));
+                    return json_encode(array(
+                        'result' => 'error',
+                        'message' => "Internal server error"
+                    ));
+                } else {
+                    //close curl
+                    curl_close($ch);
+
+                    //now go for second
+                    $mime = mime_content_type($tiff_path);
+                    $info = pathinfo($tiff_path);
+                    $name = $info['basename'];
+                    $output = new CURLFile($tiff_path, $mime, $name);
+
+                    $tiff_data = array(
+                        "param" => $param,
+                        'image' => $output
+                    );
+
+                    $ch = curl_init();
+                    curl_setopt($ch, CURLOPT_URL, $api_url);
+                    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                    curl_setopt($ch, CURLOPT_POST, 1);
+                    curl_setopt($ch, CURLOPT_POSTFIELDS, $tiff_data);
+
+                    $response2 = curl_exec($ch);
+                    if (curl_errno($ch)) {
+                        log_message("error", "split 2 curl error : " . curl_error($ch));
+                        return json_encode(array(
+                            'result' => 'error',
+                            'message' => "Internal server error"
+                        ));
+                    } else {
+                        log_message("error", "r1 = " . $response1);
+                        log_message("error", "r2 = " . $response2);
+
+                        $response1 = json_decode($response1);
+                        $response2 = json_decode($response2);
+
+                        if ($response1->success && $response2->success) {
+                            //start splitting faxes
+                            $pdfs = array();
+                            $pages = array();
+                            $docs1 = $response1->documents;
+                            foreach ($docs1 as $key => $doc) {
+                                $pdfs[] = file_get_contents($doc->url);
+                                $pages[] = count($doc->pages);
+                            }
+
+                            $tiffs = array();
+                            $docs2 = $response2->documents;
+                            foreach ($docs2 as $key => $doc) {
+                                $tiffs[] = file_get_contents($doc->url);
+                            }
+
+                            //save fax files
+                            $pdf_names = [];
+                            foreach ($pdfs as $key => $pdf) {
+                                $name = generate_random_string();
+                                $pdf_names[] = $name;
+                                file_put_contents("./uploads/efax/" . $name . ".pdf", $pdf);
+                            }
+
+                            $tiff_names = [];
+                            foreach ($tiffs as $key => $tiff) {
+                                $name = generate_random_string() . ".tif";
+                                $tiff_names[] = $name;
+                                file_put_contents("./uploads/efax_tiff/" . $name, $tiff);
+                            }
+
+                            //make each as separate inbox entry
+                            $cur_efax_info = $this->db->select("*")
+                                            ->from("efax_info")
+                                            ->where(array(
+                                                "md5(id)" => $data["id"]
+                                            ))->get()->result();
+
+                            $cur_efax_info = $cur_efax_info[0];
+
+                            $this->db->where(array(
+                                "md5(id)" => $data["id"]
+                            ))->update("efax_info", array(
+                                "active" => 0
+                            ));
+
+                            foreach ($tiff_names as $key => $value) {
+                                $this->db->insert("efax_info", array(
+                                    "to" => $this->session->userdata("user_id"),
+                                    "file_name" => $pdf_names[$key],
+                                    "tiff_file_name" => $tiff_names[$key],
+                                    "pages" => $pages[$key],
+                                    "sender_fax_number" => $cur_efax_info->sender_fax_number
+                                ));
+                                log_message("error", "fax split $key inserted " . $this->db->last_query());
+                            }
+                            header('Content-Type: application/json');
+                return array(
+                                "result" => "success"
+                );
+            } else {
+                return array(
+                    "result" => "error",
+                                "message" => $response1->errors[0]
+                            );
+                        }
+                        
+                    }
+                    curl_close($ch);
+                }
             } else {
                 return array(
                     "result" => "error",
