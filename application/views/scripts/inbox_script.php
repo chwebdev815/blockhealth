@@ -420,7 +420,7 @@
             if (IsJsonString(response)) {
                 response = JSON.parse(response);
                 if (response.result === "success") {
-                    success("Fax successfully splitted");
+                    $(".modal").hide();
                     setTimeout(function () {
                         location.reload();
                     }, 1500);
