@@ -1191,7 +1191,7 @@ class Inbox_model extends CI_Model {
 
     public function doc_classifier_model() {
         $api_url = $this->config->item("PREDICTION_URL") . "/doc-classifier";
-        
+
         $data = $this->input->post();
         $mime = mime_content_type($_FILES['file']['tmp_name']);
         $extension = substr($mime, strpos($mime, "/") + 1);
@@ -1223,7 +1223,7 @@ class Inbox_model extends CI_Model {
         }
         curl_close($curl);
     }
-    
+
     public function medication_api_model() {
         //global_data.predict_url + global_data.medication_api
 
@@ -2028,17 +2028,16 @@ class Inbox_model extends CI_Model {
                                 ));
                                 log_message("error", "fax split $key inserted " . $this->db->last_query());
                             }
-                            header('Content-Type: application/json');
-                return array(
+//                            header('Content-Type: application/json');
+                            return array(
                                 "result" => "success"
-                );
-            } else {
-                return array(
-                    "result" => "error",
+                            );
+                        } else {
+                            return array(
+                                "result" => "error",
                                 "message" => $response1->errors[0]
                             );
                         }
-                        
                     }
                     curl_close($ch);
                 }
