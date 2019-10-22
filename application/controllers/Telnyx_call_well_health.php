@@ -33,8 +33,7 @@ class Telnyx_call_well_health extends CI_Controller {
         if ($payload["clinic_id"] && $payload["clinic_name"]) {
             $clinic_id = $payload["clinic_id"];
             $clinic_name = $payload["clinic_name"];
-        }
-        else {
+        } else {
             $clinic_id = selectOne('clinic_id', $call_control_id);
             $clinic_id = $clinic_id[0]->clinic_id;
         }
@@ -384,39 +383,61 @@ class Telnyx_call_well_health extends CI_Controller {
             $caller = $caller[0]->caller;
 
             log_message("error", "caller = $caller");
+
+            /* QUERY TO  DATABASE WILL GO HERE */
+
+            $hcn = selectOne('health_card', $call_control_id);
+            $hcn = $hcn[0]->health_card;
+
+            $patient_data = $this->db->select("pat.id, pat.fname")
+                            ->from("referral_patient_info pat, clinic_referrals c_ref, efax_info efax")
+                            ->where(array(
+                                "pat.ohip" => $hcn,
+                                "pat.active" => 1,
+                                "c_ref.active" => 1,
+                                "efax.active" => 1,
+                                "efax.to" => $clinic_id
+                            ))
+                            ->where_in("c_ref.status", array(
+                                "Referral Triage",
+                                "Accepted", //Booking
+                                "Scheduled",
+                                "Completed",
+                                "Cancelled",
+                                "Declined"
+                            ))
+                            ->where("pat.referral_id", "c_ref.id", false)
+                            ->where("c_ref.efax_id", "efax.id", false)
+                            ->get()->result();
+            log_message("error", "hcn lookup = " . $this->db->last_query());
+
+            $hcn_status = "Not found";
+            if ($patient_data) {
+                $patient_data = $patient_data[0];
+                if ($temp_data->status === "Accepted") {
+                    $hcn_status = "Booking";
+                } else if ($temp_data->status === "Referral Triage") {
+                    $hcn_status = "Referral Triage";
+                } else {
+                    $hcn_status = "EMR";
+                }
+            }
+            updateData("hcn_query", $hcn_status, $call_control_id);
+            
+
+
             if ($caller === "New Patient") {
                 //check hcn if found status = 'referral triage'
 
-                /* QUERY TO  DATABASE WILL GOES HERE */
-
-                $hcn = selectOne('health_card', $call_control_id);
-                $hcn = $hcn[0]->health_card;
-
-                $patient_data = $this->db->select("pat.id, pat.fname")
-                                ->from("referral_patient_info pat, clinic_referrals c_ref, efax_info efax")
-                                ->where(array(
-                                    "pat.ohip" => $hcn,
-                                    "pat.active" => 1,
-                                    "c_ref.active" => 1,
-                                    "efax.active" => 1,
-                                    "efax.to" => $clinic_id,
-                                    "c_ref.status" => "Referral Triage"
-                                ))
-                                ->where("pat.referral_id", "c_ref.id", false)
-                                ->where("c_ref.efax_id", "efax.id", false)
-                                ->get()->result();
-                log_message("error", "hcn lookup = " . $this->db->last_query());
-
                 $patient_name = "";
-                if ($patient_data) {
+                if ($hcn_status === "Referral Triage") {
                     //stage 4. If caller = ‘newpatient’, and status = ‘referral triage’
-                    $patient_data = $patient_data[0];
                     updateData("status", "valid", $call_control_id);
                     updateData("progress_status", "Referral triage", $call_control_id);
                     updateData("patient_id", $patient_data->id, $call_control_id);
-                    
+
                     $patient_name = $patient_data->fname;
-                    
+
                     log_message("error", "stage 4. If caller = ‘newpatient’, and status = ‘referral triage’");
                     $text = "Thank you {$patient_name}.
                              We have successfully received your referral, and are working with the doctor to find the best date and time. We will be in touch shortly to book an appointment. 
@@ -462,8 +483,7 @@ class Telnyx_call_well_health extends CI_Controller {
                 $weekname = array('Mon', 'Tue', 'Wed', 'Thu');
                 $Fr = array('Fri');
                 log_message("error", "comparing $time and $w");
-                if (($time >= "10:00:00" && $time <= "14:00:00" && in_array($w, $weekname))
-                        || $time >= "09:00:00" && $time <= "12:00:00" && in_array($Fr, $weekname)) {
+                if (($time >= "10:00:00" && $time <= "14:00:00" && in_array($w, $weekname)) || $time >= "09:00:00" && $time <= "12:00:00" && in_array($Fr, $weekname)) {
                     updateData("status", "valid", $call_control_id);
                     updateData("progress_status", "Call Forwarded", $call_control_id);
                     //stage 6. If caller = ‘patient’, and call during operating hours 
